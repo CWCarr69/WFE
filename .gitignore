@@ -3,3 +3,17 @@
 ################################################################################
 
 /.vs/Timesheet/config
+/.vs/Timesheet/DesignTimeBuild
+/.vs/Timesheet/v17
+/Architecture.Tests/bin
+/Architecture.Tests/obj
+/Timesheet.Application/bin/Debug/net6.0
+/Timesheet.Application/obj
+/Timesheet.Domain/bin/Debug/net6.0
+/Timesheet.Domain/obj
+/Timesheet.Infrastructure.Persistence/bin/Debug/net6.0
+/Timesheet.Infrastructure.Persistence/obj
+/Timesheet.Presentation/obj
+/Timesheet.Web.Api/bin/Debug/net6.0
+/Timesheet.Web.Api/obj
+/Timesheet.Presentation/bin/Debug/net6.0
