@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Timesheet.Application.Employees.EventHandlers;
+using Timesheet.Application.Employees.CommandHandlers;
 using Timesheet.Application.Holidays.CommandHandlers;
-using Timesheet.Domain.DomainEvents;
+using Timesheet.Application.Timesheets.EventHandlers;
 
 namespace Timesheet.Application
 {
@@ -18,7 +18,6 @@ namespace Timesheet.Application
             services.AddScoped<HolidayAddedHandler, HolidayAddedHandler>();
             services.AddScoped<HolidayDeletedHandler, HolidayDeletedHandler>();
             services.AddScoped<HolidayGeneralInformationsUpdatedHandler, HolidayGeneralInformationsUpdatedHandler>();
-
         }
 
         public static void RegisterCommandHandlers(this IServiceCollection services)
@@ -27,6 +26,9 @@ namespace Timesheet.Application
             services.AddScoped<DeleteHolidayCommandHandler, DeleteHolidayCommandHandler>();
             services.AddScoped<SetHolidayAsRecurrentCommandHandler, SetHolidayAsRecurrentCommandHandler>();
             services.AddScoped<UpdateHolidayGeneralInformationsCommandHandler, UpdateHolidayGeneralInformationsCommandHandler>();
+
+            services.AddScoped<CreateTimeoffCommandHandler, CreateTimeoffCommandHandler>();
+            services.AddScoped<AddEnryToTimeoffCommandHandler, AddEnryToTimeoffCommandHandler>();
         }
     }
 }

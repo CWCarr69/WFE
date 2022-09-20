@@ -1,6 +1,6 @@
 ﻿using Timesheet.Domain.Repositories;
 
-namespace Timesheet.Application.Holidays.CommandHandlers
+namespace Timesheet.Application
 {
     internal abstract class BaseCommandHandler<TCommand> : ICommandHandler<TCommand> where TCommand : ICommand
     {
@@ -46,5 +46,7 @@ namespace Timesheet.Application.Holidays.CommandHandlers
 
         }
         private void PublishEvents() => this._eventDispatcher.Publish(Events);
+
+        public virtual bool CanExecute(TCommand command) => true;
     }
 }

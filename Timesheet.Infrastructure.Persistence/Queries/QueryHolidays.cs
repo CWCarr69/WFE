@@ -8,7 +8,7 @@ using Timesheet.Domain.Models;
 
 namespace Timesheet.Infrastructure.Persistence.Queries
 {
-    internal class QueryHolidays : ReadRepository<Holiday>, IHolidayQuery
+    internal class QueryHolidays : ReadRepository<Holiday>, IQueryHoliday
     {
         public QueryHolidays(TimesheetDbContext context) : base(context)
         {

@@ -18,7 +18,8 @@ namespace Timesheet.Infrastructure.Persistence
             });
 
             services.AddScoped<IWriteRepository<Holiday>, WriteRepository<Holiday>>();
-            services.AddScoped<IHolidayQuery, QueryHolidays>();
+            services.AddScoped<IWriteRepository<Employee>, WriteRepository<Employee>>();
+            services.AddScoped<IQueryHoliday, QueryHolidays>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }

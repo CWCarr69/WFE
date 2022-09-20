@@ -37,7 +37,8 @@ namespace Timesheet.Application
             }
         }
 
-        public async Task RunCommand<TCommand>(TCommand command, CancellationToken token) where TCommand : ICommand
+        public async Task RunCommand<TCommand>(TCommand command, CancellationToken token)
+            where TCommand : ICommand
         {
             using var scopedService = _service.CreateScope();
             if (command is null)
@@ -51,6 +52,25 @@ namespace Timesheet.Application
                 $"Command {nameof(command)} is not registered.",
                 $"Command handler for {nameof(command)} is not registered.");
 
+            await handler.HandleAsync(command, token);
+        }
+
+        public async Task RunSubCommand<TCommand>(TCommand command, IDictionary<string, object> context, CancellationToken token)
+            where TCommand : ICommand
+        {
+            using var scopedService = _service.CreateScope();
+            if (command is null)
+            {
+                throw new ArgumentNullException(nameof(command));
+            }
+
+            dynamic handler = GetHandler(
+                command.GetType(),
+                _configuration.CommandHandlerRegistry,
+                $"Command {nameof(command)} is not registered.",
+                $"Command handler for {nameof(command)} is not registered.");
+
+            handler.SetParentCommandContext(context);
             await handler.HandleAsync(command, token);
         }
 

@@ -6,15 +6,15 @@ using Timesheet.Domain.Repositories;
 
 namespace Timesheet.Application.Holidays.CommandHandlers
 {
-    internal class DeleteHolidayCommandHandler : BaseCommandHandler<DeleteHoliday>
+    internal class DeleteHolidayCommandHandler : BaseEmployeeCommandHandler<DeleteHoliday>
     {
         public readonly IWriteRepository<Holiday> _writeRepository;
-        public readonly IHolidayQuery _readRepository;
+        public readonly IQueryHoliday _readRepository;
 
         public DeleteHolidayCommandHandler(IDispatcher dispatcher,
             IUnitOfWork unitOfWork,
             IWriteRepository<Holiday> writeRepository,
-            IHolidayQuery readRepository) : base(dispatcher, unitOfWork)
+            IQueryHoliday readRepository) : base(dispatcher, unitOfWork)
         {
             _writeRepository = writeRepository;
             _readRepository = readRepository;
