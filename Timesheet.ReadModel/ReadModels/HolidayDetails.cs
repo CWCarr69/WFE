@@ -1,6 +1,6 @@
-﻿namespace Timesheet.Application.Holidays.Commands
+﻿namespace Timesheet.ReadModel.ReadModels
 {
-    public class AddHoliday : ICommand
+    public class HolidayDetails
     {
         public DateTime Date { get; set; }
         public string Description { get; set; }

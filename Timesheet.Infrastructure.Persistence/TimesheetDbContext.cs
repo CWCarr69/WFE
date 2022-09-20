@@ -10,5 +10,6 @@ namespace Timesheet.Infrastructure.Persistence
         }
 
         public DbSet<Holiday> Holidays { get; set; }
+        public DbSet<Employee> Employees { get; set; }
     }
 }

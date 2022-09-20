@@ -1,4 +1,5 @@
-﻿using Timesheet.Domain.Repositories;
+﻿using Timesheet.Domain;
+using Timesheet.Domain.Repositories;
 
 namespace Timesheet.Application
 {

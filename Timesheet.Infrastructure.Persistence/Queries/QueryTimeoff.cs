@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Timesheet.Application.Employees.Queries;
-using Timesheet.Domain.Models;
+﻿using Timesheet.Domain.Models;
+using Timesheet.ReadModel.Queries;
 
 namespace Timesheet.Infrastructure.Persistence.Queries
 {

@@ -1,7 +1,6 @@
 ﻿using Timesheet.Domain.Models;
-using Timesheet.Domain.Repositories;
 
-namespace Timesheet.Application.Employees.Queries
+namespace Timesheet.ReadModel.Queries
 {
     public interface IQueryTimeoff
     {

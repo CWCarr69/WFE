@@ -1,5 +1,6 @@
 ﻿using Timesheet.Application.Employees.Commands;
 using Timesheet.Application.Workflow;
+using Timesheet.Domain;
 using Timesheet.Domain.Models;
 using Timesheet.Domain.Repositories;
 

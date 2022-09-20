@@ -1,4 +1,4 @@
-﻿namespace Timesheet.Domain.Workflow
+﻿namespace Timesheet.Domain
 {
     public class AssemblyReference
     {

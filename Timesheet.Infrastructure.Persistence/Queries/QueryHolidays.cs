@@ -1,44 +1,62 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Timesheet.Application.Queries;
-using Timesheet.Domain.Models;
+﻿using Timesheet.Domain.Models;
+using Timesheet.ReadModel.Queries;
+using Timesheet.ReadModel.ReadModels;
 
 namespace Timesheet.Infrastructure.Persistence.Queries
 {
-    internal class QueryHolidays : ReadRepository<Holiday>, IQueryHoliday
+    internal class QueryHolidays : IQueryHoliday
     {
-        public QueryHolidays(TimesheetDbContext context) : base(context)
+        private readonly TimesheetDbContext _context;
+
+        public QueryHolidays(TimesheetDbContext context)
         {
+            this._context = context;
         }
 
-        public Holiday? GetByDate(DateTime date) => _context.Holidays.SingleOrDefault(h => h.Date == date);
-
-        public IEnumerable<Holiday> GetAllHolidays(DateTime? start = null, DateTime? end = null)
+        public HolidayDetails? GetDetails(string id)
         {
-            if(start is null && end is null)
+            var holiday = _context.Holidays.Find(id);
+            if (holiday == null)
             {
-                return Get();
+                return null;
             }
-
-            if(end is null)
-            {
-                return _context.Holidays.Where(h => h.Date >= start).AsEnumerable();
-            }
-
-            if(start is null)
-            {
-                return _context.Holidays.Where(h => h.Date <= end).AsEnumerable();
-            }
-
-            return _context.Holidays.Where(h => h.Date >= start && h.Date <= end).AsEnumerable();
+            return ToHolidayDetails(holiday);
         }
 
-        public Task<IEnumerable<Holiday>> GetAllHolidays(DateTime start, DateTime end)
+        public HolidayDetails? GetByDate(DateTime date)
         {
-            throw new NotImplementedException();
+            var holiday = _context.Holidays.SingleOrDefault(h => h.Date == date);
+            return ToHolidayDetails(holiday);
         }
+
+        public IEnumerable<HolidayDetails> GetAllHolidays(DateTime? start = null, DateTime? end = null)
+        {
+            var holidays = Enumerable.Empty<Holiday>();
+
+            if (start is null && end is null)
+            {
+                holidays = _context.Holidays;
+            }else if (end is null)
+            {
+                holidays = _context.Holidays.Where(h => h.Date >= start).AsEnumerable();
+            }else if (start is null)
+            {
+                holidays = _context.Holidays.Where(h => h.Date <= end).AsEnumerable();
+            }
+            else
+            {
+                holidays = _context.Holidays.Where(h => h.Date >= start && h.Date <= end).AsEnumerable();
+            }
+
+            return holidays.Select(holiday => ToHolidayDetails(holiday));
+        }
+
+        private HolidayDetails ToHolidayDetails(Holiday holiday) => new HolidayDetails
+        {
+            Date = holiday.Date,
+            Description = holiday.Description,
+            Notes = holiday.Notes,
+            IsRecurrent = holiday.IsRecurrent,
+        };
     }
 }

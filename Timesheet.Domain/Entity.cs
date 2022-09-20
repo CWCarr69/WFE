@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Timesheet.Domain
+﻿namespace Timesheet.Domain
 {
     public abstract class Entity : IEquatable<Entity>
     {
@@ -19,7 +13,12 @@ namespace Timesheet.Domain
         }
 
         public string Id { get; set; }
+
         public static string GenerateId() => Guid.NewGuid().ToString();
+
+        public DateTime CreatedDate { get; set; }
+
+        public DateTime ModifiedDate { get; set; }
 
         public override bool Equals(object? obj)
         {

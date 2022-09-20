@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Timesheet.Application\Timesheet.Application.csproj" />
+    <ProjectReference Include="..\Timesheet.ReadModel\Timesheet.ReadModel.csproj" />
   </ItemGroup>
 
 </Project>

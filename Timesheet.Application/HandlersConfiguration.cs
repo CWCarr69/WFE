@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Timesheet.Domain;
 
 namespace Timesheet.Application
 {

@@ -1,20 +1,20 @@
 ﻿using Timesheet.Application.Holidays.Commands;
-using Timesheet.Application.Queries;
+using Timesheet.Domain;
 using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Models;
 using Timesheet.Domain.Repositories;
 
 namespace Timesheet.Application.Holidays.CommandHandlers
 {
-    internal class DeleteHolidayCommandHandler : BaseEmployeeCommandHandler<DeleteHoliday>
+    internal class DeleteHolidayCommandHandler : BaseCommandHandler<DeleteHoliday>
     {
         public readonly IWriteRepository<Holiday> _writeRepository;
-        public readonly IQueryHoliday _readRepository;
+        public readonly IHolidayReadRepository _readRepository;
 
         public DeleteHolidayCommandHandler(IDispatcher dispatcher,
             IUnitOfWork unitOfWork,
             IWriteRepository<Holiday> writeRepository,
-            IQueryHoliday readRepository) : base(dispatcher, unitOfWork)
+            IHolidayReadRepository readRepository) : base(dispatcher, unitOfWork)
         {
             _writeRepository = writeRepository;
             _readRepository = readRepository;

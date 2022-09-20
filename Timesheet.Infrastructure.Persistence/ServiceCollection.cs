@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Timesheet.Application.Queries;
 using Timesheet.Domain.Models;
 using Timesheet.Domain.Repositories;
 using Timesheet.Infrastructure.Persistence.Queries;
 using Timesheet.Infrastructure.Persistence.Writes;
+using Timesheet.ReadModel.Queries;
 
 namespace Timesheet.Infrastructure.Persistence
 {
@@ -17,9 +17,16 @@ namespace Timesheet.Infrastructure.Persistence
                 options.UseSqlServer(connectionString);
             });
 
+
+            services.AddScoped<IReadRepository<Employee>, ReadRepository<Employee>>();
+            services.AddScoped<IHolidayReadRepository, HolidayReadRepository>();
+
             services.AddScoped<IWriteRepository<Holiday>, WriteRepository<Holiday>>();
             services.AddScoped<IWriteRepository<Employee>, WriteRepository<Employee>>();
+
             services.AddScoped<IQueryHoliday, QueryHolidays>();
+            services.AddScoped<IQueryEmployee, QueryEmployee>();
+            services.AddScoped<IQueryTimeoff, QueryTimeoff>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }

@@ -1,20 +1,20 @@
 ﻿using Timesheet.Application.Holidays.Commands;
-using Timesheet.Application.Queries;
+using Timesheet.Domain;
 using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Models;
 using Timesheet.Domain.Repositories;
 
 namespace Timesheet.Application.Holidays.CommandHandlers
 {
-    internal class SetHolidayAsRecurrentCommandHandler : BaseEmployeeCommandHandler<SetHolidayAsRecurrent>
+    internal class SetHolidayAsRecurrentCommandHandler : BaseCommandHandler<SetHolidayAsRecurrent>
     {
         public readonly IWriteRepository<Holiday> _writeRepository;
-        public readonly IQueryHoliday _readRepository;
+        public readonly IHolidayReadRepository _readRepository;
 
         public SetHolidayAsRecurrentCommandHandler(IDispatcher dispatcher,
             IUnitOfWork unitOfWork,
             IWriteRepository<Holiday> writeRepository,
-            IQueryHoliday readRepository) : base(dispatcher, unitOfWork)
+            IHolidayReadRepository readRepository) : base(dispatcher, unitOfWork)
         {
             _writeRepository = writeRepository;
             _readRepository = readRepository;

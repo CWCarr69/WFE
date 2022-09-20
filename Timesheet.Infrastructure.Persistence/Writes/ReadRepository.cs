@@ -2,9 +2,9 @@
 using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Repositories;
 
-namespace Timesheet.Infrastructure.Persistence.Queries
+namespace Timesheet.Infrastructure.Persistence.Writes
 {
-    internal abstract class ReadRepository<TEntity> : IReadRepository<TEntity> where TEntity : Entity
+    internal class ReadRepository<TEntity> : IReadRepository<TEntity> where TEntity : Entity
     {
         protected readonly TimesheetDbContext _context;
 

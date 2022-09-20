@@ -23,7 +23,23 @@ namespace Timesheet.Domain.Models
         public EmployeeBenefits Benefits { get; private set; }
         public IReadOnlyCollection<Timeoff> Timeoffs { get; set; }
         public EmployeeStatus Status { get; private set; }
-        public TimeoffStatus LastTimeoffStatus { get; private set; }
+
+        public TimeoffStatus? LastTimeoffStatus() {
+            if (!Timeoffs.Any())
+            {
+                return null;
+            }
+
+            var waitingValidations = Timeoffs.Any(t => t.Status == TimeoffStatus.SUBMITTED);
+
+            if (waitingValidations)
+            {
+                return TimeoffStatus.SUBMITTED;
+            }
+
+            return Timeoffs.OrderBy(t => t.CreatedDate).Last()?.Status;
+        }
+
         public TimesheetStatus LastTimesheetStatus { get; private set; }
 
         public string UserId { get; private set; }
@@ -67,9 +83,14 @@ namespace Timesheet.Domain.Models
             }
 
             timeoff.AddEntry(requestDate, type, hours, timeoff);
+            timeoff.Update();
         }
 
-        public void DeleteTimeoffEntry(Timeoff timeoff, TimeoffEntry timeoffEntry) => timeoff.DeleteEntry(timeoffEntry);
+        public void DeleteTimeoffEntry(Timeoff timeoff, TimeoffEntry timeoffEntry)
+        {
+            timeoff.DeleteEntry(timeoffEntry);
+            timeoff.Update();
+        }
 
         public void UpdateTimeoffEntry(Timeoff timeoff, TimeoffEntry timeoffEntry, TimeoffType type, double hours)
         {
@@ -90,6 +111,18 @@ namespace Timesheet.Domain.Models
         }
         #endregion
 
+        public bool IsInEmployeeTeam(string teamApproverId, bool directReports = false)
+        {
+            if (directReports)
+            {
+                string? directApproverId = EmploymentData.Supervisor?.Id ?? EmploymentData.Manager?.Id;
+                return teamApproverId != null && teamApproverId == directApproverId;
+            }
+            
+            return teamApproverId != null
+            && (EmploymentData.Manager?.Id == teamApproverId || EmploymentData.Supervisor?.Id == teamApproverId);
+        }
+
         public Timeoff? GetTimeoff(string timeoffId) => _timeoffs.SingleOrDefault(t => t.Id == timeoffId);
 
         public TimeoffEntry? GetTimeoffEntry(string timeoffId, string timeoffEntryId)
@@ -97,6 +130,7 @@ namespace Timesheet.Domain.Models
             var timeoff = GetTimeoff(timeoffId);
             return timeoff?.GetTimeoffEntry(timeoffEntryId);
         }
+
     }
 }
 
