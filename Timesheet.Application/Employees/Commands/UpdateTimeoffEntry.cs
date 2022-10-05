@@ -1,4 +1,5 @@
-﻿using Timesheet.Domain.Models;
+﻿using Timesheet.Application.Shared;
+using Timesheet.Domain.Models.Employees;
 
 namespace Timesheet.Application.Employees.Commands
 {
@@ -9,5 +10,7 @@ namespace Timesheet.Application.Employees.Commands
         public string TimeoffEntryId { get; set; }
         public TimeoffType Type { get; set; }
         public double Hours { get; set; }
+        public CommandActionType ActionType() => CommandActionType.MODIFICATION;
+
     }
 }

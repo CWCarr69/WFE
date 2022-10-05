@@ -4,7 +4,7 @@ namespace Timesheet.Application.Timesheets.EventHandlers
 {
     internal sealed class HolidayDeletedHandler : IEventHandler<HolidayDeleted>
     {
-        public void Handle(HolidayDeleted @event)
+        public Task Handle(HolidayDeleted @event)
         {
             throw new NotImplementedException();
         }

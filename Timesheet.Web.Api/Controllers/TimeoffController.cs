@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Timesheet.Application;
 using Timesheet.Application.Employees.Commands;
-using Timesheet.ReadModel.Queries;
+using Timesheet.Application.Employees.Queries;
+using Timesheet.Domain.ReadModels.Employees;
 
 namespace Timesheet.Web.Api.Controllers
 {
@@ -16,6 +17,35 @@ namespace Timesheet.Web.Api.Controllers
         {
             _timeoffQuery = timeoffQuery;
             _dispatcher = dispatcher;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<EmployeeTimeoff>>> GetTimeoffHistory(string employeeId)
+        {
+            var timeoffs = await _timeoffQuery.GetEmployeeTimeoffs(employeeId);
+            return Ok(timeoffs);
+        }
+
+        [HttpGet("/MonthsStatistics")]
+        public async Task<ActionResult<EmployeeTimeoffMonthStatistics>> GetTimeoffHistoryMonthsStatistics(string employeeId, string timeoffId)
+        {
+            var timeoffs = await _timeoffQuery.GetEmployeeTimeoffsMonthStatistics(employeeId);
+            return Ok(timeoffs);
+        }
+
+
+        [HttpGet("{timeoffId}")]
+        public async Task<ActionResult<IEnumerable<EmployeeTimeoffDetail>>> GetTimeoff(string employeeId, string timeoffId)
+        {
+            var timeoffs = await _timeoffQuery.GetEmployeeTimeoffDetails(employeeId, timeoffId);
+            return Ok(timeoffs);
+        }
+
+        [HttpGet("{timeoffId}/Summary")]
+        public async Task<ActionResult<EmployeeTimeoffDetailSummary>> GetTimeoffSummary(string employeeId, string timeoffId)
+        {
+            var timeoffs = await _timeoffQuery.GetEmployeeTimeoffSummary(employeeId, timeoffId);
+            return Ok(timeoffs);
         }
 
         [HttpPost]

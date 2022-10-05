@@ -1,5 +1,5 @@
 ﻿using Timesheet.Domain;
-using Timesheet.Domain.Models;
+using Timesheet.Domain.Models.Employees;
 
 namespace Timesheet.Application.Workflow
 {
@@ -23,7 +23,7 @@ namespace Timesheet.Application.Workflow
 
             WorkflowDefinition workflow = entity switch
             {
-                Timeoff => _timeoffWorkflow ,
+                TimeoffHeader => _timeoffWorkflow,
                 TimeoffEntry => _timeoffEntryWorkflow,
                 _ => throw new InvalidOperationException($"No workflow is available for {typeof(TEntity)}")
             };

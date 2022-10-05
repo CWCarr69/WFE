@@ -1,5 +1,6 @@
 ﻿using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Models;
+using Timesheet.Domain.Models.Holidays;
 using Timesheet.Domain.Repositories;
 
 namespace Timesheet.Infrastructure.Persistence.Writes
@@ -12,12 +13,7 @@ namespace Timesheet.Infrastructure.Persistence.Writes
 
         public Holiday? GetByDate(DateTime date)
         {
-            var holiday = _context.Holidays.FirstOrDefault(e => e.Date.ToShortDateString == date.ToShortDateString);
-            if(holiday == null)
-            {
-                throw new HolidayAlreadyExistException(date);
-            }
-            return holiday;
+            return _context.Holidays.ToList().FirstOrDefault(e => e.Date.ToShortDateString == date.ToShortDateString);
         }
     }
 }

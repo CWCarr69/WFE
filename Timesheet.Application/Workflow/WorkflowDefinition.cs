@@ -3,7 +3,7 @@ using Timesheet.Exceptions;
 
 namespace Timesheet.Application.Workflow
 {
-    internal class WorkflowDefinition
+    public class WorkflowDefinition
     {
         private readonly Dictionary<Enum, IList<Enum>> _permissionStatus = new();
 

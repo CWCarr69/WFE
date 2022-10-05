@@ -1,20 +1,21 @@
 ﻿using Timesheet.Application.Employees.Commands;
 using Timesheet.Application.Workflow;
 using Timesheet.Domain;
-using Timesheet.Domain.Models;
+using Timesheet.Domain.Models.Employees;
 using Timesheet.Domain.Repositories;
 
 namespace Timesheet.Application.Employees.CommandHandlers
 {
-    internal class ApproveTimeoffCommandHandler : BaseEmployeeCommandHandler<ApproveTimeoff>
+    internal class ApproveTimeoffCommandHandler : BaseEmployeeCommandHandler<TimeoffHeader, ApproveTimeoff>
     {
         private readonly IWorkflowService _workflowService;
 
         public ApproveTimeoffCommandHandler(
+            IAuditHandler auditHandler,
             IReadRepository<Employee> readRepository, 
             IWorkflowService workflowService,
             IDispatcher dispatcher,
-            IUnitOfWork unitOfWork) : base(readRepository, dispatcher, unitOfWork)
+            IUnitOfWork unitOfWork) : base(auditHandler, readRepository, dispatcher, unitOfWork)
         {
             this._workflowService = workflowService;
         }
@@ -22,7 +23,9 @@ namespace Timesheet.Application.Employees.CommandHandlers
         public async override Task<IEnumerable<IDomainEvent>> HandleCore(ApproveTimeoff command, CancellationToken token)
         {
             var employee = await GetEmployee(command.EmployeeId);
+
             var timeoff = GetTimeoffOrThrowException(employee, command.TimeoffId);
+            this.RelatedAuditableEntity = timeoff;
 
             _workflowService.AuthorizeTransition(timeoff, TimeoffTransitions.APPROVE, timeoff.Status);
 

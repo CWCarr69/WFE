@@ -1,4 +1,5 @@
-﻿using Timesheet.Domain.Exceptions;
+﻿using Timesheet.Application.Shared;
+using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Models;
 using Timesheet.Domain.Repositories;
 
@@ -9,5 +10,7 @@ namespace Timesheet.Application.Holidays.Commands
         public string Id { get; set; }
         public string Description { get; set; }
         public string Notes { get; set; }
+        public CommandActionType ActionType() => CommandActionType.MODIFICATION;
+
     }
 }

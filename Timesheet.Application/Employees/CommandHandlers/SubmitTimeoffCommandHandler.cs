@@ -2,19 +2,21 @@
 using Timesheet.Application.Workflow;
 using Timesheet.Domain;
 using Timesheet.Domain.Models;
+using Timesheet.Domain.Models.Employees;
 using Timesheet.Domain.Repositories;
 
 namespace Timesheet.Application.Employees.CommandHandlers
 {
-    internal class SubmitTimeoffCommandHandler : BaseEmployeeCommandHandler<SubmitTimeoff>
+    internal class SubmitTimeoffCommandHandler : BaseEmployeeCommandHandler<TimeoffHeader, SubmitTimeoff>
     {
         private readonly IWorkflowService _workflowService;
 
         public SubmitTimeoffCommandHandler(
+            IAuditHandler auditHandler,
             IReadRepository<Employee> readRepository, 
             IWorkflowService workflowService,
             IDispatcher dispatcher,
-            IUnitOfWork unitOfWork) : base(readRepository, dispatcher, unitOfWork)
+            IUnitOfWork unitOfWork) : base(auditHandler, readRepository, dispatcher, unitOfWork)
         {
             this._workflowService = workflowService;
         }
@@ -23,6 +25,8 @@ namespace Timesheet.Application.Employees.CommandHandlers
         {
             var employee = await GetEmployee(command.EmployeeId);
             var timeoff = GetTimeoffOrThrowException(employee, command.TimeoffId);
+
+            this.RelatedAuditableEntity = timeoff;
 
             _workflowService.AuthorizeTransition(timeoff, TimeoffTransitions.SUBMIT, timeoff.Status);
 

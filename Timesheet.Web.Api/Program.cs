@@ -1,7 +1,6 @@
 using Timesheet.Application;
 using Timesheet.Infrastructure.Persistence;
-using Timesheet.Web.Api.Middleware;
-using Timesheet.Web.Api;
+using Timesheet.ReadModel;
 
 namespace Timesheet.Web.Api
 {
@@ -13,6 +12,9 @@ namespace Timesheet.Web.Api
 
             // Add services to the container.
             builder.Services.AddTimesheetContext(builder.Configuration.GetConnectionString("Timesheet"));
+            builder.Services.AddTimesheedReadModelDatabase(builder.Configuration.GetConnectionString("Timesheet"));
+
+            builder.Services.AddWorkflowService();
             builder.Services.RegisterEventDispatcher();
             builder.Services.RegisterEventHandlers();
             builder.Services.RegisterCommandHandlers();
@@ -21,7 +23,10 @@ namespace Timesheet.Web.Api
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.CustomSchemaIds(type => type.ToString());
+            });
 
             var app = builder.Build();
 

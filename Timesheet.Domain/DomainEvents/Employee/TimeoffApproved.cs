@@ -1,6 +1,4 @@
 ﻿namespace Timesheet.Domain.DomainEvents
 {
-    internal class TimeoffApproved
-    {
-    }
+    public record TimeoffEntryApproved(string Date, string type, double hours) : IDomainEvent;
 }

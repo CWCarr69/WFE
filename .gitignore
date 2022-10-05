@@ -18,3 +18,13 @@
 /Timesheet.Web.Api/obj
 /Timesheet.Presentation/bin/Debug/net6.0
 /Timesheet.ReadModel
+/TImesheet.BenefitsProcessor/obj
+/Timesheet.EmployeesIntegrator/obj
+/TImesheet.ReferentialIntegrator/obj
+/TImesheet.PayrollsIntegrator/obj
+/TImesheet.BenefitsProcessor/bin/Debug/net6.0
+/Timesheet.EmailSender/bin/Debug/net6.0
+/Timesheet.EmailSender/obj/Debug/net6.0
+/Timesheet.EmailSender/obj
+/Timesheet.EmployeesIntegrator/bin/Debug/net6.0
+/TImesheet.PayrollsIntegrator/bin/Debug/net6.0

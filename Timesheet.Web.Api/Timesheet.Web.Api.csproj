@@ -17,9 +17,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Timesheet.Application\Timesheet.Application.csproj" />
-    <ProjectReference Include="..\Timesheet.Domain\Timesheet.csproj" />
+    <ProjectReference Include="..\Timesheet.Domain\Timesheet.Domain.csproj" />
     <ProjectReference Include="..\Timesheet.Infrastructure.Persistence\Timesheet.Infrastructure.Persistence.csproj" />
-    <ProjectReference Include="..\Timesheet.ReadModel\Timesheet.ReadModel.csproj" />
+    <ProjectReference Include="..\Timesheet.ReadModel\Timesheet.Infrastruture.ReadModel.csproj" />
   </ItemGroup>
 
 </Project>

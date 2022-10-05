@@ -1,18 +1,21 @@
-﻿using Timesheet.Application.Workflow;
+﻿using Timesheet.Domain;
 using Timesheet.Domain.Exceptions;
-using Timesheet.Domain.Models;
+using Timesheet.Domain.Models.Employees;
 using Timesheet.Domain.Repositories;
 
 namespace Timesheet.Application.Employees.CommandHandlers
 {
-    internal abstract class BaseEmployeeCommandHandler<TCommand> : BaseSubCommandHandler<TCommand> where TCommand : ICommand
+    internal abstract class BaseEmployeeCommandHandler<TEntity, TCommand> : BaseSubCommandHandler<TEntity, TCommand> 
+        where TEntity : Entity
+        where TCommand : ICommand
     {
         private readonly IReadRepository<Employee> _readRepository;
 
         protected BaseEmployeeCommandHandler(
+            IAuditHandler auditHandler,
             IReadRepository<Employee> readRepository,
             IDispatcher dispatcher,
-            IUnitOfWork unitOfWork) : base(dispatcher, unitOfWork)
+            IUnitOfWork unitOfWork) : base(auditHandler, dispatcher, unitOfWork)
         {
             this._readRepository = readRepository;
         }
@@ -29,7 +32,7 @@ namespace Timesheet.Application.Employees.CommandHandlers
             return employee;
         }
 
-        protected TimeoffEntry GetTimeoffEntryOrThrowException(Employee employee, Timeoff timeoff, string timeoffEntryId)
+        protected TimeoffEntry GetTimeoffEntryOrThrowException(Employee employee, TimeoffHeader timeoff, string timeoffEntryId)
         {
             var timeoffEntry = timeoff?.GetTimeoffEntry(timeoffEntryId);
             if (timeoffEntry is null)
@@ -39,12 +42,12 @@ namespace Timesheet.Application.Employees.CommandHandlers
             return timeoffEntry;
         }
 
-        protected Timeoff GetTimeoffOrThrowException(Employee employee, string timeoffId)
+        protected TimeoffHeader GetTimeoffOrThrowException(Employee employee, string timeoffId)
         {
             var timeoffEntry = employee.GetTimeoff(timeoffId);
             if (timeoffEntry is null)
             {
-                throw new EntityNotFoundException<Timeoff>(timeoffId);
+                throw new EntityNotFoundException<TimeoffHeader>(timeoffId);
             }
             return timeoffEntry;
         }

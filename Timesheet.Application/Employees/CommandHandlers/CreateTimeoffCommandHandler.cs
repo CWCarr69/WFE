@@ -1,21 +1,22 @@
 ﻿using Timesheet.Application.Employees.Commands;
 using Timesheet.Domain;
 using Timesheet.Domain.Exceptions;
-using Timesheet.Domain.Models;
+using Timesheet.Domain.Models.Employees;
 using Timesheet.Domain.Repositories;
 
 namespace Timesheet.Application.Employees.CommandHandlers
 {
-    internal class CreateTimeoffCommandHandler : BaseSubCommandHandler<CreateTimeoff>
+    internal class CreateTimeoffCommandHandler : BaseSubCommandHandler<TimeoffHeader, CreateTimeoff>
     {
         private readonly IReadRepository<Employee> _readRepository;
         private readonly IDispatcher _dispatcher;
 
         public CreateTimeoffCommandHandler(
+            IAuditHandler auditHandler,
             IReadRepository<Employee> readRepository,
             IDispatcher dispatcher,
             IUnitOfWork unitOfWork
-            ) : base(dispatcher, unitOfWork)
+            ) : base(auditHandler, dispatcher, unitOfWork)
         {
             _readRepository = readRepository;
             _dispatcher = dispatcher;
@@ -30,7 +31,8 @@ namespace Timesheet.Application.Employees.CommandHandlers
 
             Employee employee = await GetEmployee(command.EmployeeId);
 
-            employee.CreateTimeoff(command.RequestStartDate, command.RequestEndDate, command.EmployeeComment, command.SupervisorComment);
+            var timeoff = employee.CreateTimeoff(command.RequestStartDate, command.RequestEndDate, command.EmployeeComment, command.ApproverComment);
+            this.RelatedAuditableEntity = timeoff;
 
             var commandContext = new Dictionary<string, object>() { { "Employee", employee } };
             command.Entries?.ToList().ForEach(async entryCommand => await _dispatcher.RunSubCommand(entryCommand, commandContext, token));

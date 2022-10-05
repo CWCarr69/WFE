@@ -1,4 +1,5 @@
 ﻿using Timesheet.Domain.Models;
+using Timesheet.Domain.Models.Holidays;
 
 namespace Timesheet.Domain.Repositories
 {

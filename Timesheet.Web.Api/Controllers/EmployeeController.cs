@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Timesheet.Application;
-using Timesheet.Domain.Models;
-using Timesheet.ReadModel.Queries;
-using Timesheet.ReadModel.ReadModels;
+using Timesheet.Application.Employees.Queries;
+using Timesheet.Domain.ReadModels.Employees;
 
 namespace Timesheet.Web.Api.Controllers
 {
@@ -19,26 +18,49 @@ namespace Timesheet.Web.Api.Controllers
             _dispatcher = dispatcher;
         }
 
-        [HttpGet]
-        public ActionResult<EmployeeProfileWithApproversAndBenefit> Get(string employeeId)
+        [HttpGet("{employeeId}")]
+        public async Task<ActionResult<EmployeeProfile>> Get(string employeeId)
         {
-            var employee = _employeeQuery.GetEmployeeProfile(employeeId);
+            var employee = await _employeeQuery.GetEmployeeProfile(employeeId);
+            return Ok(employee);
+        }
+
+
+        [HttpGet("{employeeId}/Approvers")]
+        public async Task<ActionResult<EmployeeApprovers>> GetApprovers(string employeeId)
+        {
+            var employee = await _employeeQuery.GetEmployeeApprovers(employeeId);
+            return Ok(employee);
+        }
+
+        [HttpGet("{employeeId}/Benefits")]
+        public async Task<ActionResult<EmployeeApprovers>> GetBenefits(string employeeId)
+        {
+            var employee = await _employeeQuery.GetEmployeeBenefits(employeeId);
             return Ok(employee);
         }
 
         [HttpGet("Team")]
-        public ActionResult<IEnumerable<EmployeeWithTimeStatus>> GetTeamTimeRecordStatus(bool directReport)
+        public async Task<ActionResult<IEnumerable<EmployeeWithTimeStatus>>> GetTeamTimeRecordStatus(bool directReport)
         {
             string managerId = "";
-            var employees = _employeeQuery.GetEmployeesWithTimeRecordStatus(managerId, directReport);
+            var employees = await _employeeQuery.GetEmployeesTimeRecordStatus(managerId, directReport);
             return Ok(employees);
         }
 
         [HttpGet("Timeoff/Pending")]
-        public ActionResult<IEnumerable<EmployeeWithPendingTimeoffs>> GetTeamPendingTimeoffs(bool directReport)
+        public ActionResult<IEnumerable<EmployeeTimeoff>> GetTeamPendingTimeoffs(bool directReport)
         {
             string managerId = "";
-            var employees = _employeeQuery.GetEmployeesWithPendingTimeoffs(managerId, directReport);
+            var employees = _employeeQuery.GetEmployeesPendingTimeoffs(managerId, directReport);
+            return Ok(employees);
+        }
+
+        [HttpGet("Timesheet/Pending")]
+        public async Task<ActionResult<IEnumerable<EmployeeTimeoff>>> GetTeamPendingTimesheets(bool directReport)
+        {
+            string managerId = "";
+            var employees = await _employeeQuery.GetEmployeesPendingTimeoffs(managerId, directReport);
             return Ok(employees);
         }
 

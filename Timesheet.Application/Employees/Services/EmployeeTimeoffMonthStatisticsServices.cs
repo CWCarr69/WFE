@@ -1,4 +1,4 @@
-﻿using Timesheet.Domain.Models;
+﻿using Timesheet.Domain.Models.Employees;
 
 namespace Timesheet.Application.Employees.Services
 {
@@ -16,7 +16,7 @@ namespace Timesheet.Application.Employees.Services
                 && t.RequestStartDate.Year == currentYear && t.RequestEndDate.Year == currentYear;
             });
 
-            Func<Timeoff, double?> SumHours = timeoff => timeoff.TimeoffEntries?.Sum(e => e.Hours);
+            Func<TimeoffHeader, double?> SumHours = timeoff => timeoff.TimeoffEntries?.Sum(e => e.Hours);
 
             var statictics = new EmployeeMonthStatistics
             {

@@ -31,7 +31,7 @@ namespace Timesheet.Application
                 (type, handler) => TryRegisterCommandHandlers(type, handler));
         }
 
-        private void RegisterHandlers(Type handlerBaseType, Type handledBaseType, Action<Type, Type> register)
+        private void RegisterHandlers(Type handlerBaseType, Type requestBasedType, Action<Type, Type> register)
         {
             var _handlerTypes = AppDomain.CurrentDomain.GetAssemblies()
                             .SelectMany(s =>
@@ -41,9 +41,9 @@ namespace Timesheet.Application
                                             .Any(i => i.IsGenericType &&
                                                  i.GetGenericTypeDefinition().Equals(handlerBaseType))));
 
-            var _types = AppDomain.CurrentDomain.GetAssemblies()
+            var _requestsTypes = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(s => s.GetTypes())
-                .Where(t => !t.IsInterface && t.IsAssignableTo(handledBaseType));
+                .Where(t => !t.IsInterface && t.IsAssignableTo(requestBasedType));
 
             foreach (var handlerType in _handlerTypes)
             {
@@ -53,7 +53,7 @@ namespace Timesheet.Application
                 {
                     continue;
                 }
-                foreach (var type in _types)
+                foreach (var type in _requestsTypes)
                 {
                     var handlerInterfaceType = handlerType.GetInterfaces().FirstOrDefault();
                     if (handlerInterfaceType?.GetGenericArguments()[0] == type)

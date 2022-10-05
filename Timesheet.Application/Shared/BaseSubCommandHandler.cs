@@ -3,13 +3,18 @@ using Timesheet.Domain.Repositories;
 
 namespace Timesheet.Application
 {
-    internal abstract class BaseSubCommandHandler<TCommand> : BaseCommandHandler<TCommand>, ISubCommandHandler<TCommand> where TCommand : ICommand
+    internal abstract class BaseSubCommandHandler<TEntity, TCommand> : BaseCommandHandler<TEntity, TCommand>, ISubCommandHandler<TCommand>
+        where TEntity : Entity
+        where TCommand : ICommand
     {
         protected IDictionary<string, object> _parentCommandContext;
 
         protected bool LaunchedAsSubCommand => _parentCommandContext != null;
 
-        public BaseSubCommandHandler(IDispatcher dispatcher, IUnitOfWork unitOfWork) : base(dispatcher, unitOfWork)
+        public BaseSubCommandHandler(IAuditHandler auditHandler,
+            IDispatcher dispatcher,
+            IUnitOfWork unitOfWork)
+            : base(auditHandler, dispatcher, unitOfWork)
         {
         }
 

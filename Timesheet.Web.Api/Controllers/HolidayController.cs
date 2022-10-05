@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Timesheet.Application;
 using Timesheet.Application.Holidays.Commands;
-using Timesheet.ReadModel.Queries;
-using Timesheet.ReadModel.ReadModels;
+using Timesheet.Application.Holidays.Queries;
+using Timesheet.Domain.ReadModels.Holidays;
 
 namespace Timesheet.Web.Api.Controllers
 {
@@ -20,9 +20,10 @@ namespace Timesheet.Web.Api.Controllers
         }
 
         [HttpGet()]
-        public ActionResult<IEnumerable<HolidayDetails>> Get()
+        public async Task<ActionResult<IEnumerable<HolidayDetails>>> Get()
         {
-            return Ok(_holidayQuery.GetAllHolidays());
+            var holidays = await _holidayQuery.GetAllHolidays();
+            return Ok(holidays);
         }
 
 

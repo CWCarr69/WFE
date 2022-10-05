@@ -2,19 +2,22 @@
 using Timesheet.Domain;
 using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Models;
+using Timesheet.Domain.Models.Holidays;
 using Timesheet.Domain.Repositories;
 
 namespace Timesheet.Application.Holidays.CommandHandlers
 {
-    internal class SetHolidayAsRecurrentCommandHandler : BaseCommandHandler<SetHolidayAsRecurrent>
+    internal class SetHolidayAsRecurrentCommandHandler : BaseCommandHandler<Holiday, SetHolidayAsRecurrent>
     {
         public readonly IWriteRepository<Holiday> _writeRepository;
         public readonly IHolidayReadRepository _readRepository;
 
-        public SetHolidayAsRecurrentCommandHandler(IDispatcher dispatcher,
+        public SetHolidayAsRecurrentCommandHandler(
+            IAuditHandler auditHandler,
+            IDispatcher dispatcher,
             IUnitOfWork unitOfWork,
             IWriteRepository<Holiday> writeRepository,
-            IHolidayReadRepository readRepository) : base(dispatcher, unitOfWork)
+            IHolidayReadRepository readRepository) : base(auditHandler, dispatcher, unitOfWork)
         {
             _writeRepository = writeRepository;
             _readRepository = readRepository;
@@ -35,6 +38,8 @@ namespace Timesheet.Application.Holidays.CommandHandlers
 
             existingHoliday.SetAsRecurrent();
             await _writeRepository.Add(existingHoliday);
+
+            this.RelatedAuditableEntity = existingHoliday;
 
             return Enumerable.Empty<IDomainEvent>();
         }
