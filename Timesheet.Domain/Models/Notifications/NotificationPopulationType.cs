@@ -1,4 +1,4 @@
-﻿namespace Timesheet.Domain.Models
+﻿namespace Timesheet.Domain.Models.Notifications
 {
     public enum NotificationPopulationType
     {

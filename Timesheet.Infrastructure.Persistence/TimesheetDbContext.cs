@@ -2,6 +2,7 @@
 using Timesheet.Domain.Models;
 using Timesheet.Domain.Models.Employees;
 using Timesheet.Domain.Models.Holidays;
+using Timesheet.Domain.Models.Notifications;
 using Timesheet.Domain.Models.Timesheets;
 
 namespace Timesheet.Infrastructure.Persistence
@@ -24,10 +25,10 @@ namespace Timesheet.Infrastructure.Persistence
             var employee = builder.Entity<Employee>();
 
             employee.OwnsOne(e => e.EmploymentData);
-            employee.OwnsOne(e => e.PersonalData);
+            employee.OwnsOne(e => e.Contacts);
             employee.HasOne(e => e.PrimaryApprover);
             employee.HasOne(e => e.SecondaryApprover);
-            employee.OwnsOne(e => e.Benefits);
+            //employee.OwnsOne(e => e.Benefits);
         }
     }
 }

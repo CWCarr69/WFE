@@ -1,0 +1,864 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="Transfer">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FPDTSTransferName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="FPDTSInboundData" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="TransferResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="TransferResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GZipTransfer">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FPDTSTransferName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="FPDTSInboundData" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GZipTransferResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GZipTransferResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Transfer2FA">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FPDTSTransferName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="FPDTSInboundData" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserAuthenticationType" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="AccessToken" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IDToken" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="RefreshToken" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserName2FA" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Transfer2FAResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Transfer2FAResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GZipTransfer2FA">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FPDTSTransferName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="FPDTSInboundData" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserAuthenticationType" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="AccessToken" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="RefreshToken" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IDToken" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserName2FA" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GZipTransfer2FAResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GZipTransfer2FAResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ConnectDelegate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DelegatedSessionUserName" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ConnectDelegateResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="Connect">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ConnectResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="ConnectUsingLDAPorFieldpointID">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="pstrLDAPorFieldpointUserID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="pstrLDAPorFieldpointPassword" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="pstrResolvedFieldpointUserID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ConnectUsingLDAPorFieldpointIDResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="pstrResolvedFieldpointUserID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Disconnect">
+        <s:complexType />
+      </s:element>
+      <s:element name="DisconnectResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="IsSessionActive">
+        <s:complexType />
+      </s:element>
+      <s:element name="IsSessionActiveResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="IsSessionActiveResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SetUser">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="pstrUserID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SetUserResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="VerifySessionIsActive">
+        <s:complexType />
+      </s:element>
+      <s:element name="VerifySessionIsActiveResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="string" nillable="true" type="s:string" />
+      <s:element name="boolean" type="s:boolean" />
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="TransferSoapIn">
+    <wsdl:part name="parameters" element="tns:Transfer" />
+  </wsdl:message>
+  <wsdl:message name="TransferSoapOut">
+    <wsdl:part name="parameters" element="tns:TransferResponse" />
+  </wsdl:message>
+  <wsdl:message name="GZipTransferSoapIn">
+    <wsdl:part name="parameters" element="tns:GZipTransfer" />
+  </wsdl:message>
+  <wsdl:message name="GZipTransferSoapOut">
+    <wsdl:part name="parameters" element="tns:GZipTransferResponse" />
+  </wsdl:message>
+  <wsdl:message name="Transfer2FASoapIn">
+    <wsdl:part name="parameters" element="tns:Transfer2FA" />
+  </wsdl:message>
+  <wsdl:message name="Transfer2FASoapOut">
+    <wsdl:part name="parameters" element="tns:Transfer2FAResponse" />
+  </wsdl:message>
+  <wsdl:message name="GZipTransfer2FASoapIn">
+    <wsdl:part name="parameters" element="tns:GZipTransfer2FA" />
+  </wsdl:message>
+  <wsdl:message name="GZipTransfer2FASoapOut">
+    <wsdl:part name="parameters" element="tns:GZipTransfer2FAResponse" />
+  </wsdl:message>
+  <wsdl:message name="ConnectDelegateSoapIn">
+    <wsdl:part name="parameters" element="tns:ConnectDelegate" />
+  </wsdl:message>
+  <wsdl:message name="ConnectDelegateSoapOut">
+    <wsdl:part name="parameters" element="tns:ConnectDelegateResponse" />
+  </wsdl:message>
+  <wsdl:message name="ConnectSoapIn">
+    <wsdl:part name="parameters" element="tns:Connect" />
+  </wsdl:message>
+  <wsdl:message name="ConnectSoapOut">
+    <wsdl:part name="parameters" element="tns:ConnectResponse" />
+  </wsdl:message>
+  <wsdl:message name="ConnectUsingLDAPorFieldpointIDSoapIn">
+    <wsdl:part name="parameters" element="tns:ConnectUsingLDAPorFieldpointID" />
+  </wsdl:message>
+  <wsdl:message name="ConnectUsingLDAPorFieldpointIDSoapOut">
+    <wsdl:part name="parameters" element="tns:ConnectUsingLDAPorFieldpointIDResponse" />
+  </wsdl:message>
+  <wsdl:message name="DisconnectSoapIn">
+    <wsdl:part name="parameters" element="tns:Disconnect" />
+  </wsdl:message>
+  <wsdl:message name="DisconnectSoapOut">
+    <wsdl:part name="parameters" element="tns:DisconnectResponse" />
+  </wsdl:message>
+  <wsdl:message name="IsSessionActiveSoapIn">
+    <wsdl:part name="parameters" element="tns:IsSessionActive" />
+  </wsdl:message>
+  <wsdl:message name="IsSessionActiveSoapOut">
+    <wsdl:part name="parameters" element="tns:IsSessionActiveResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetUserSoapIn">
+    <wsdl:part name="parameters" element="tns:SetUser" />
+  </wsdl:message>
+  <wsdl:message name="SetUserSoapOut">
+    <wsdl:part name="parameters" element="tns:SetUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="VerifySessionIsActiveSoapIn">
+    <wsdl:part name="parameters" element="tns:VerifySessionIsActive" />
+  </wsdl:message>
+  <wsdl:message name="VerifySessionIsActiveSoapOut">
+    <wsdl:part name="parameters" element="tns:VerifySessionIsActiveResponse" />
+  </wsdl:message>
+  <wsdl:message name="TransferHttpGetIn">
+    <wsdl:part name="FPDTSTransferName" type="s:string" />
+    <wsdl:part name="FPDTSInboundData" type="s:string" />
+    <wsdl:part name="UserName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="TransferHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GZipTransferHttpGetIn">
+    <wsdl:part name="FPDTSTransferName" type="s:string" />
+    <wsdl:part name="FPDTSInboundData" type="s:string" />
+    <wsdl:part name="UserName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GZipTransferHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="Transfer2FAHttpGetIn">
+    <wsdl:part name="FPDTSTransferName" type="s:string" />
+    <wsdl:part name="FPDTSInboundData" type="s:string" />
+    <wsdl:part name="UserAuthenticationType" type="s:string" />
+    <wsdl:part name="AccessToken" type="s:string" />
+    <wsdl:part name="IDToken" type="s:string" />
+    <wsdl:part name="RefreshToken" type="s:string" />
+    <wsdl:part name="UserName2FA" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="Transfer2FAHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GZipTransfer2FAHttpGetIn">
+    <wsdl:part name="FPDTSTransferName" type="s:string" />
+    <wsdl:part name="FPDTSInboundData" type="s:string" />
+    <wsdl:part name="UserAuthenticationType" type="s:string" />
+    <wsdl:part name="AccessToken" type="s:string" />
+    <wsdl:part name="RefreshToken" type="s:string" />
+    <wsdl:part name="IDToken" type="s:string" />
+    <wsdl:part name="UserName2FA" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GZipTransfer2FAHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="ConnectDelegateHttpGetIn">
+    <wsdl:part name="UserID" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="DelegatedSessionUserName" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ConnectDelegateHttpGetOut" />
+  <wsdl:message name="ConnectHttpGetIn">
+    <wsdl:part name="UserID" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ConnectHttpGetOut" />
+  <wsdl:message name="DisconnectHttpGetIn" />
+  <wsdl:message name="DisconnectHttpGetOut" />
+  <wsdl:message name="IsSessionActiveHttpGetIn" />
+  <wsdl:message name="IsSessionActiveHttpGetOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="SetUserHttpGetIn">
+    <wsdl:part name="pstrUserID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SetUserHttpGetOut" />
+  <wsdl:message name="VerifySessionIsActiveHttpGetIn" />
+  <wsdl:message name="VerifySessionIsActiveHttpGetOut" />
+  <wsdl:message name="TransferHttpPostIn">
+    <wsdl:part name="FPDTSTransferName" type="s:string" />
+    <wsdl:part name="FPDTSInboundData" type="s:string" />
+    <wsdl:part name="UserName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="TransferHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GZipTransferHttpPostIn">
+    <wsdl:part name="FPDTSTransferName" type="s:string" />
+    <wsdl:part name="FPDTSInboundData" type="s:string" />
+    <wsdl:part name="UserName" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GZipTransferHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="Transfer2FAHttpPostIn">
+    <wsdl:part name="FPDTSTransferName" type="s:string" />
+    <wsdl:part name="FPDTSInboundData" type="s:string" />
+    <wsdl:part name="UserAuthenticationType" type="s:string" />
+    <wsdl:part name="AccessToken" type="s:string" />
+    <wsdl:part name="IDToken" type="s:string" />
+    <wsdl:part name="RefreshToken" type="s:string" />
+    <wsdl:part name="UserName2FA" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="Transfer2FAHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GZipTransfer2FAHttpPostIn">
+    <wsdl:part name="FPDTSTransferName" type="s:string" />
+    <wsdl:part name="FPDTSInboundData" type="s:string" />
+    <wsdl:part name="UserAuthenticationType" type="s:string" />
+    <wsdl:part name="AccessToken" type="s:string" />
+    <wsdl:part name="RefreshToken" type="s:string" />
+    <wsdl:part name="IDToken" type="s:string" />
+    <wsdl:part name="UserName2FA" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GZipTransfer2FAHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="ConnectDelegateHttpPostIn">
+    <wsdl:part name="UserID" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="DelegatedSessionUserName" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ConnectDelegateHttpPostOut" />
+  <wsdl:message name="ConnectHttpPostIn">
+    <wsdl:part name="UserID" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ConnectHttpPostOut" />
+  <wsdl:message name="DisconnectHttpPostIn" />
+  <wsdl:message name="DisconnectHttpPostOut" />
+  <wsdl:message name="IsSessionActiveHttpPostIn" />
+  <wsdl:message name="IsSessionActiveHttpPostOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="SetUserHttpPostIn">
+    <wsdl:part name="pstrUserID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SetUserHttpPostOut" />
+  <wsdl:message name="VerifySessionIsActiveHttpPostIn" />
+  <wsdl:message name="VerifySessionIsActiveHttpPostOut" />
+  <wsdl:portType name="FPDTSWSSoap">
+    <wsdl:operation name="Transfer">
+      <wsdl:input message="tns:TransferSoapIn" />
+      <wsdl:output message="tns:TransferSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GZipTransfer">
+      <wsdl:input message="tns:GZipTransferSoapIn" />
+      <wsdl:output message="tns:GZipTransferSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Transfer2FA">
+      <wsdl:input message="tns:Transfer2FASoapIn" />
+      <wsdl:output message="tns:Transfer2FASoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GZipTransfer2FA">
+      <wsdl:input message="tns:GZipTransfer2FASoapIn" />
+      <wsdl:output message="tns:GZipTransfer2FASoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ConnectDelegate">
+      <wsdl:input message="tns:ConnectDelegateSoapIn" />
+      <wsdl:output message="tns:ConnectDelegateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Connect">
+      <wsdl:input message="tns:ConnectSoapIn" />
+      <wsdl:output message="tns:ConnectSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ConnectUsingLDAPorFieldpointID">
+      <wsdl:input message="tns:ConnectUsingLDAPorFieldpointIDSoapIn" />
+      <wsdl:output message="tns:ConnectUsingLDAPorFieldpointIDSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Disconnect">
+      <wsdl:input message="tns:DisconnectSoapIn" />
+      <wsdl:output message="tns:DisconnectSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="IsSessionActive">
+      <wsdl:input message="tns:IsSessionActiveSoapIn" />
+      <wsdl:output message="tns:IsSessionActiveSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SetUser">
+      <wsdl:input message="tns:SetUserSoapIn" />
+      <wsdl:output message="tns:SetUserSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="VerifySessionIsActive">
+      <wsdl:input message="tns:VerifySessionIsActiveSoapIn" />
+      <wsdl:output message="tns:VerifySessionIsActiveSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="FPDTSWSHttpGet">
+    <wsdl:operation name="Transfer">
+      <wsdl:input message="tns:TransferHttpGetIn" />
+      <wsdl:output message="tns:TransferHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GZipTransfer">
+      <wsdl:input message="tns:GZipTransferHttpGetIn" />
+      <wsdl:output message="tns:GZipTransferHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Transfer2FA">
+      <wsdl:input message="tns:Transfer2FAHttpGetIn" />
+      <wsdl:output message="tns:Transfer2FAHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GZipTransfer2FA">
+      <wsdl:input message="tns:GZipTransfer2FAHttpGetIn" />
+      <wsdl:output message="tns:GZipTransfer2FAHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ConnectDelegate">
+      <wsdl:input message="tns:ConnectDelegateHttpGetIn" />
+      <wsdl:output message="tns:ConnectDelegateHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Connect">
+      <wsdl:input message="tns:ConnectHttpGetIn" />
+      <wsdl:output message="tns:ConnectHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Disconnect">
+      <wsdl:input message="tns:DisconnectHttpGetIn" />
+      <wsdl:output message="tns:DisconnectHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="IsSessionActive">
+      <wsdl:input message="tns:IsSessionActiveHttpGetIn" />
+      <wsdl:output message="tns:IsSessionActiveHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SetUser">
+      <wsdl:input message="tns:SetUserHttpGetIn" />
+      <wsdl:output message="tns:SetUserHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="VerifySessionIsActive">
+      <wsdl:input message="tns:VerifySessionIsActiveHttpGetIn" />
+      <wsdl:output message="tns:VerifySessionIsActiveHttpGetOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="FPDTSWSHttpPost">
+    <wsdl:operation name="Transfer">
+      <wsdl:input message="tns:TransferHttpPostIn" />
+      <wsdl:output message="tns:TransferHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GZipTransfer">
+      <wsdl:input message="tns:GZipTransferHttpPostIn" />
+      <wsdl:output message="tns:GZipTransferHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Transfer2FA">
+      <wsdl:input message="tns:Transfer2FAHttpPostIn" />
+      <wsdl:output message="tns:Transfer2FAHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GZipTransfer2FA">
+      <wsdl:input message="tns:GZipTransfer2FAHttpPostIn" />
+      <wsdl:output message="tns:GZipTransfer2FAHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ConnectDelegate">
+      <wsdl:input message="tns:ConnectDelegateHttpPostIn" />
+      <wsdl:output message="tns:ConnectDelegateHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Connect">
+      <wsdl:input message="tns:ConnectHttpPostIn" />
+      <wsdl:output message="tns:ConnectHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Disconnect">
+      <wsdl:input message="tns:DisconnectHttpPostIn" />
+      <wsdl:output message="tns:DisconnectHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="IsSessionActive">
+      <wsdl:input message="tns:IsSessionActiveHttpPostIn" />
+      <wsdl:output message="tns:IsSessionActiveHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SetUser">
+      <wsdl:input message="tns:SetUserHttpPostIn" />
+      <wsdl:output message="tns:SetUserHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="VerifySessionIsActive">
+      <wsdl:input message="tns:VerifySessionIsActiveHttpPostIn" />
+      <wsdl:output message="tns:VerifySessionIsActiveHttpPostOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="FPDTSWSSoap" type="tns:FPDTSWSSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Transfer">
+      <soap:operation soapAction="http://tempuri.org/Transfer" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GZipTransfer">
+      <soap:operation soapAction="http://tempuri.org/GZipTransfer" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Transfer2FA">
+      <soap:operation soapAction="http://tempuri.org/Transfer2FA" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GZipTransfer2FA">
+      <soap:operation soapAction="http://tempuri.org/GZipTransfer2FA" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConnectDelegate">
+      <soap:operation soapAction="http://tempuri.org/ConnectDelegate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Connect">
+      <soap:operation soapAction="http://tempuri.org/Connect" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConnectUsingLDAPorFieldpointID">
+      <soap:operation soapAction="http://tempuri.org/ConnectUsingLDAPorFieldpointID" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Disconnect">
+      <soap:operation soapAction="http://tempuri.org/Disconnect" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsSessionActive">
+      <soap:operation soapAction="http://tempuri.org/IsSessionActive" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetUser">
+      <soap:operation soapAction="http://tempuri.org/SetUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="VerifySessionIsActive">
+      <soap:operation soapAction="http://tempuri.org/VerifySessionIsActive" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="FPDTSWSSoap12" type="tns:FPDTSWSSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Transfer">
+      <soap12:operation soapAction="http://tempuri.org/Transfer" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GZipTransfer">
+      <soap12:operation soapAction="http://tempuri.org/GZipTransfer" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Transfer2FA">
+      <soap12:operation soapAction="http://tempuri.org/Transfer2FA" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GZipTransfer2FA">
+      <soap12:operation soapAction="http://tempuri.org/GZipTransfer2FA" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConnectDelegate">
+      <soap12:operation soapAction="http://tempuri.org/ConnectDelegate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Connect">
+      <soap12:operation soapAction="http://tempuri.org/Connect" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConnectUsingLDAPorFieldpointID">
+      <soap12:operation soapAction="http://tempuri.org/ConnectUsingLDAPorFieldpointID" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Disconnect">
+      <soap12:operation soapAction="http://tempuri.org/Disconnect" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsSessionActive">
+      <soap12:operation soapAction="http://tempuri.org/IsSessionActive" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetUser">
+      <soap12:operation soapAction="http://tempuri.org/SetUser" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="VerifySessionIsActive">
+      <soap12:operation soapAction="http://tempuri.org/VerifySessionIsActive" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="FPDTSWSHttpGet" type="tns:FPDTSWSHttpGet">
+    <http:binding verb="GET" />
+    <wsdl:operation name="Transfer">
+      <http:operation location="/Transfer" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GZipTransfer">
+      <http:operation location="/GZipTransfer" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Transfer2FA">
+      <http:operation location="/Transfer2FA" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GZipTransfer2FA">
+      <http:operation location="/GZipTransfer2FA" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConnectDelegate">
+      <http:operation location="/ConnectDelegate" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+    <wsdl:operation name="Connect">
+      <http:operation location="/Connect" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+    <wsdl:operation name="Disconnect">
+      <http:operation location="/Disconnect" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+    <wsdl:operation name="IsSessionActive">
+      <http:operation location="/IsSessionActive" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetUser">
+      <http:operation location="/SetUser" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+    <wsdl:operation name="VerifySessionIsActive">
+      <http:operation location="/VerifySessionIsActive" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="FPDTSWSHttpPost" type="tns:FPDTSWSHttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="Transfer">
+      <http:operation location="/Transfer" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GZipTransfer">
+      <http:operation location="/GZipTransfer" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Transfer2FA">
+      <http:operation location="/Transfer2FA" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GZipTransfer2FA">
+      <http:operation location="/GZipTransfer2FA" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConnectDelegate">
+      <http:operation location="/ConnectDelegate" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+    <wsdl:operation name="Connect">
+      <http:operation location="/Connect" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+    <wsdl:operation name="Disconnect">
+      <http:operation location="/Disconnect" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+    <wsdl:operation name="IsSessionActive">
+      <http:operation location="/IsSessionActive" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetUser">
+      <http:operation location="/SetUser" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+    <wsdl:operation name="VerifySessionIsActive">
+      <http:operation location="/VerifySessionIsActive" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="FPDTSWS">
+    <wsdl:port name="FPDTSWSSoap" binding="tns:FPDTSWSSoap">
+      <soap:address location="https://wilsonfiredev.fieldpointonline.com/Services/FPDTSWS.asmx" />
+    </wsdl:port>
+    <wsdl:port name="FPDTSWSSoap12" binding="tns:FPDTSWSSoap12">
+      <soap12:address location="https://wilsonfiredev.fieldpointonline.com/Services/FPDTSWS.asmx" />
+    </wsdl:port>
+    <wsdl:port name="FPDTSWSHttpGet" binding="tns:FPDTSWSHttpGet">
+      <http:address location="https://wilsonfiredev.fieldpointonline.com/Services/FPDTSWS.asmx" />
+    </wsdl:port>
+    <wsdl:port name="FPDTSWSHttpPost" binding="tns:FPDTSWSHttpPost">
+      <http:address location="https://wilsonfiredev.fieldpointonline.com/Services/FPDTSWS.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

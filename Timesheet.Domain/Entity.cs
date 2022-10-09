@@ -12,13 +12,13 @@
             Id = id;
         }
 
-        public string Id { get; set; }
+        public string Id { get; protected set; }
 
         public static string GenerateId() => Guid.NewGuid().ToString();
 
-        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedDate { get; protected set; }
 
-        public DateTime ModifiedDate { get; set; }
+        public DateTime ModifiedDate { get; protected set; }
 
         public override bool Equals(object? obj)
         {

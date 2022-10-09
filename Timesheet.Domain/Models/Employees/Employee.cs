@@ -13,20 +13,34 @@ namespace Timesheet.Domain.Models.Employees
         {
         }
 
+        public Employee(string id, string fullName, 
+            string managerId, string primaryApproverId, string secondaryApproverId,
+            EmployeeEmploymentData employmentData, EmployeeContactData contacts, bool isActive) : base(id)
+        {
+            FullName = fullName;
+            Manager = managerId is not null ? new Employee(managerId) : null;
+            PrimaryApprover = primaryApproverId is not null ? new Employee(primaryApproverId) : null;
+            SecondaryApprover = secondaryApproverId is not null ? new Employee(secondaryApproverId) : null;
+            EmploymentData = employmentData;
+            Contacts = contacts;
+            IsActive = isActive;
+        }
+
         #region Properties
-        public string Firstname { get; private set; }
-        public string Middlename { get; private set; }
-        public string Lastname { get; private set; }
+        //public string Firstname { get; private set; }
+        //public string Middlename { get; private set; }
+        //public string Lastname { get; private set; }
         public string FullName { get; private set; }
-        public string Initials { get; private set; }
-        public Image Picture { get; private set; }
-        public Employee? PrimaryApprover { get; set; }
-        public Employee? SecondaryApprover { get; set; }
+        public string? Initials { get; private set; }
+        public Image? Picture { get; private set; }
+        public Employee? Manager { get; private set; }
+        public Employee? PrimaryApprover { get; private set; }
+        public Employee? SecondaryApprover { get; private set; }
         public EmployeeEmploymentData EmploymentData { get; private set; }
-        public EmployeePersonalData PersonalData { get; private set; }
-        public EmployeeBenefits Benefits { get; private set; }
+        public EmployeeContactData Contacts { get; private set; }
+        //public EmployeeBenefits Benefits { get; private set; }
         public IReadOnlyCollection<TimeoffHeader> Timeoffs { get; set; }
-        public EmployeeStatus Status { get; private set; }
+        public bool IsActive { get; private set; }
         #endregion
 
         public TimeoffStatus? LastTimeoffStatus() {

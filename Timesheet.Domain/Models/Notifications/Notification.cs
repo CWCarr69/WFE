@@ -1,4 +1,4 @@
-﻿namespace Timesheet.Domain.Models
+﻿namespace Timesheet.Domain.Models.Notifications
 {
     public class Notification : Entity
     {
@@ -7,7 +7,7 @@
         }
 
         public int Population { get; private set; }
-        public SubDomainType Group { get; private set; }
+        public NotificationType Group { get; private set; }
         public string Action { get; private set; }
     }
 }

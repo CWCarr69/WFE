@@ -1,5 +1,4 @@
-﻿using Timesheet.Domain.Models;
-using NotificationType = Timesheet.Domain.Models.SubDomainType;
+﻿using Timesheet.Domain.Models.Notifications;
 
 namespace Timesheet.Domain.Repositories
 {

@@ -1,4 +1,5 @@
-﻿using Timesheet.Domain.Models;
+﻿using Timesheet.Domain.Models.Employees;
+using Timesheet.Domain.Models.Notifications;
 using Timesheet.Domain.Repositories;
 using Timesheet.DomainEvents.Employee;
 
@@ -32,7 +33,7 @@ namespace Timesheet.Application.Notifications
 
         public async Task Handle(TimeoffWorkflowChanged @event)
         {
-            var notification = _readRepository.GetByGroupAndAction(SubDomainType.TIMEOFF, @event.Action);
+            var notification = _readRepository.GetByGroupAndAction(NotificationType.TIMEOFF, @event.Action);
             var notificationItems = GenerateNotificationItems(notification, @event,
                 new Dictionary<NotificationPopulationType, string>() {
                     {NotificationPopulationType.EMPLOYEE, @event.EmployeeId},
@@ -51,19 +52,64 @@ namespace Timesheet.Application.Notifications
 
         private IEnumerable<NotificationItem> GenerateNotificationItems(Notification notification, TimeoffWorkflowChanged @event, IDictionary<NotificationPopulationType, string> employees)
         {
+            List<NotificationPopulationType> populationsConcerned = ExtractEmployeesFromPopulation(notification);
+
+            var employeeIds = populationsConcerned.Select(p => employees[p]).ToList();
+            if(populationsConcerned.Any(p => p == NotificationPopulationType.ADMINISTRATOR))
+            {
+                employeeIds.AddRange(GetAdministrators());
+            }
+
+            var employeesConcerned = populationsConcerned.Select(p => 
+                NotificationItem.Create(employees[p], notification.Action, ActionToSubject(notification.Action), false, @event.ObjectId));
+
+            return employeesConcerned;
+        }
+
+        private string ActionToSubject(string action)
+        {
+            if (action == TimeoffStatus.REJECTED.ToString())
+            {
+                return "Timeoff request is rejected";
+            }
+
+            if (action == TimeoffStatus.SUBMITTED.ToString())
+            {
+                return "Timeoff request is submitted";
+            }
+
+            if (action == TimeoffStatus.IN_PROGRESS.ToString())
+            {
+                return "Timeoff request is created";
+            }
+
+            if (action == TimeoffStatus.APPROVED.ToString())
+            {
+                return "Timeoff request is approved";
+            }
+
+            throw new InvalidOperationException($"Not an adequate action for the timeoff workflow Handler action {action}");
+        }
+
+        private List<NotificationPopulationType> ExtractEmployeesFromPopulation(Notification notification)
+        {
             var populationsConcerned = new List<NotificationPopulationType>();
-            foreach(var population in AllPopulation)
+            foreach (var population in AllPopulation)
             {
                 var populationConcerned = notification.Population | population;
-                if(populationConcerned == 0)
+                if (populationConcerned == 0)
                 {
                     populationsConcerned.Add((NotificationPopulationType)populationConcerned);
                 }
             }
 
-            var employeesConcerned = populationsConcerned.Select(p => NotificationItem.Create(employees[p], notification.Action, false, @event.ObjectId));
+            return populationsConcerned;
+        }
 
-            return employeesConcerned;
+        //TODO
+        private IEnumerable<string> GetAdministrators()
+        {
+            throw new NotImplementedException();
         }
     }
 }

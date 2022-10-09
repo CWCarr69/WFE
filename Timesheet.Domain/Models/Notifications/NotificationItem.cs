@@ -1,9 +1,10 @@
-﻿namespace Timesheet.Domain.Models
+﻿namespace Timesheet.Domain.Models.Notifications
 {
     public class NotificationItem : Entity
     {
         public string EmployeeId { get; private set; }
         public string Action { get; private set; }
+        public string Subject { get; private set; }
         public bool Sent { get; private set; }
         public string ObjectId { get; private set; }
 
@@ -11,11 +12,12 @@
         {
         }
 
-        public static NotificationItem Create(string employeeId, string action, bool sent, string objectId)
+        public static NotificationItem Create(string employeeId, string action, string subject, bool sent, string objectId)
         {
             var notification = new NotificationItem(Entity.GenerateId()) {
                 EmployeeId = employeeId,
                 Action = action,
+                Subject = subject,
                 Sent = sent,
                 ObjectId = objectId
             };

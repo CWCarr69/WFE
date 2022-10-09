@@ -3,12 +3,27 @@ namespace Timesheet.Domain.Models.Timesheets
 {
     public class TimesheetEntry : Entity
     {
+        private string profitCenter;
+
         public TimesheetEntry(string id) : base(id)
         {
         }
 
+        public TimesheetEntry(string id, string employeeId, DateTime WorkDate, string payrollCode, double hours,
+            string description, string serviceOrderNumber, string jobNumber, string profitCenter): base(id)
+        {
+            EmployeeId = employeeId;
+            this.WorkDate = WorkDate;
+            PayrollCode = payrollCode;
+            Hours = hours;
+            Description = description;
+            ServiceOrderNumber = serviceOrderNumber;
+            JobNumber = jobNumber;
+            this.profitCenter = profitCenter;
+        }
+
         public string EmployeeId { get; private set; }
-        public string EmployeeFullName { get; private set; }
+        //public string EmployeeFullName { get; private set; }
         public DateTime WorkDate { get; private set; }
         public string PayrollCode { get; private set; }
         public double Hours { get; private set; }
@@ -23,7 +38,7 @@ namespace Timesheet.Domain.Models.Timesheets
         public string LaborCode { get; private set; }
         public string CustomerNumber { get; private set; }
         public string ProfitCenterNumber { get; private set; }
-        public string Department { get; private set; }
+        //public string Department { get; private set; }
         public bool OutOffCountry { get; private set; }
         public string WorkArea => OutOffCountry ? "Out of country" : "In state";
     }

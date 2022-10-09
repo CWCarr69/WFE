@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Timesheet.Domain.Models;
 using Timesheet.Domain.Models.Employees;
 using Timesheet.Domain.Models.Holidays;
+using Timesheet.Domain.Models.Notifications;
 using Timesheet.Domain.Repositories;
 using Timesheet.Infrastructure.Persistence.Writes;
 
