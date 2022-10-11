@@ -1,10 +1,11 @@
 ﻿using Timesheet.Domain.Models.Employees;
+using Timesheet.FDPDataIntegrator.Services;
 
-namespace Timesheet.EmployeesIntegrator.Employees
+namespace Timesheet.FDPDataIntegrator.Employees
 {
-    internal class EmployeeAdapter
+    internal class EmployeeAdapter : IAdapter<EmployeeRecord, Employee> 
     {
-        Employee AdaptEmployeeRecord(EmployeeRecord record)
+        public Employee Adapt(EmployeeRecord record)
         {
             if(record == null || string.IsNullOrEmpty(record.EmployeeCode))
             {
@@ -30,7 +31,7 @@ namespace Timesheet.EmployeesIntegrator.Employees
                 record.SecondaryApproverId,
                 employmentData,
                 employeeContactData,
-                record.Active
+                record.Active != "False"
             );
 
             return employee;

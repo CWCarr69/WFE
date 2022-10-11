@@ -1,9 +1,16 @@
 ﻿using System.Xml.Serialization;
 
-namespace Timesheet.EmployeesIntegrator.Employees
+namespace Timesheet.FDPDataIntegrator.Employees
 {
-    [XmlRoot("users")]
-    internal class EmployeeRecord
+    [XmlRoot("OutboundData")]
+    public class EmployeeRecords
+    {
+        [XmlArray("Records")]
+        [XmlArrayItem("Record")]
+        public EmployeeRecord[] Records { get; set; }
+    }
+
+    public class EmployeeRecord
     {
         public string EmployeeCode { get; set; }
         [XmlElement("Name")]
@@ -19,7 +26,7 @@ namespace Timesheet.EmployeesIntegrator.Employees
         public string Email { get; set; }
         [XmlElement("Phone1")]
         public string Phone { get; set; }
-        public bool Active { get; set; }
+        public string Active { get; set; }
         [XmlElement("TImesheetPeriod")]
         public string TimesheetPeriod { get; set; }
         public DateTime CreateDate { get; set; }

@@ -1,35 +1,52 @@
-﻿using System.ServiceModel.Description;
-using static ServiceReference1.FPDTSWSSoapClient;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Timesheet.FDPDataIntegrator.Employees;
+using Timesheet.FDPDataIntegrator.Payrolls;
+using Timesheet.FDPDataIntegrator.Services;
 
-namespace Timesheet.EmployeesIntegrator
+namespace Timesheet.FDPDataIntegrator
 {
     internal class Program
     {
         static async Task Main(string[] args)
         {
-            var userId = "YAllabi";
-            var username = "FPIntegration@wilsonfire.com";
-            var password = "0iRP0qilgyYM7SCipFmp";
+            var serviceProvider = new ServiceCollection().AddServices().BuildServiceProvider();
 
-            var fieldPointClient = new ServiceReference1.FPDTSWSSoapClient(EndpointConfiguration.FPDTSWSSoap12);
-            //await fieldPointClient.ConnectAsync(userId, password);
+            (var employeeProcessor, var payrollProcessor) = GetRecordsProcessors(serviceProvider);
+            var nodeReader = GetNodeReader(serviceProvider);
 
-            var fieldpointTransfertName = "WilsonFire-Resource-InExport";
-            //var fieldpointTransfertName = "WilsonFire-TimesheetDetails-InExport";
-            var fieldpointInboundData = $@"
-                <FPDTS>
-                    <InboundData>
-                        <Records>
-                            <Record>
-                                <ModifiedAfter>15 Nov 2019 14:00</ModifiedAfter>
-                            </Record>
-                        </Records>
-                    </InboundData>
-                </FPDTS>
-            ";
-            var responses = await fieldPointClient.TransferAsync(fieldpointTransfertName, fieldpointInboundData, username, password);
+            var settings = new FDPSettings();
+            var fdpClient = new FieldPointClient(settings);
+            await ProcessEmployees(employeeProcessor, nodeReader, fdpClient);
+            //await ProcessPayrolls(payrollProcessor, nodeReader, fdpClient);
+        }
 
-            Console.Write(responses);
+        private static async Task ProcessPayrolls(IPayrollRecordProcessor payrollProcessor, INodeReader nodeReader, FieldPointClient client)
+        {
+            await client.LoadDataAsync(IntegrationType.PAYROLL);
+            var payrollRecords = nodeReader.Read<PayrollRecords>(client.Response)?.Records;
+            await payrollProcessor.Process(payrollRecords);
+        }
+
+        private static async Task ProcessEmployees(IEmployeeRecordProcessor employeeProcessor, INodeReader nodeReader, FieldPointClient client)
+        {
+            await client.LoadDataAsync(IntegrationType.EMPLOYEE);
+            var employeeRecords = nodeReader.Read<EmployeeRecords>(client.Response).Records;
+            await employeeProcessor.Process(employeeRecords);
+        }
+
+        private static (IEmployeeRecordProcessor employeeProcessor, IPayrollRecordProcessor payrollProcessor) 
+            GetRecordsProcessors(ServiceProvider serviceProvider)
+        {
+            var employeeRecordProcessor = serviceProvider.GetRequiredService<IEmployeeRecordProcessor>();
+            //var payrollRecordProcessor = serviceProvider.GetRequiredService<IPayrollRecordProcessor>();
+            IPayrollRecordProcessor payrollRecordProcessor = null;
+
+            return (employeeRecordProcessor, payrollRecordProcessor);
+        }
+
+        private static INodeReader GetNodeReader(ServiceProvider serviceProvider)
+        {
+            return serviceProvider.GetRequiredService<INodeReader>();
         }
     }
 }

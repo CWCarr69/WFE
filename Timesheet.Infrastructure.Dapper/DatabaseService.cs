@@ -1,21 +1,23 @@
 ﻿using Dapper;
 using System.Data;
+using System.Data.SqlClient;
+using System.Transactions;
 
 namespace Timesheet.Infrastructure.Dapper
 {
     public class DatabaseService : IDatabaseService
     {
-        private IDbConnection _dbConnection;
+        private string _dbConnectionString;
 
-        public DatabaseService(ISqlConnection dbConnection)
+        public DatabaseService(ISqlConnectionString connectionString)
         {
-            _dbConnection = dbConnection.Connection;
+            _dbConnectionString = connectionString.Value;
         }
 
         public async Task<List<T>> QueryAsync<T>(string query, object? @params = null)
         {
             var data = new List<T>();
-            _dbConnection.Open();
+            using var _dbConnection = new SqlConnection(_dbConnectionString);
             try
             {
                 if(@params is null)
@@ -31,17 +33,14 @@ namespace Timesheet.Infrastructure.Dapper
             {
                 throw new Exception(query + System.Environment.NewLine + ex.Message);
             }
-            finally
-            {
-                _dbConnection.Close();
-            }
+            
             return data;
         }
 
         public List<T> Query<T>(string query, object? @params = null)
         {
             var data = new List<T>();
-            _dbConnection.Open();
+            using var _dbConnection = new SqlConnection(_dbConnectionString);
             try
             {
                 if (@params is null)
@@ -57,21 +56,13 @@ namespace Timesheet.Infrastructure.Dapper
             {
                 throw new Exception(query + System.Environment.NewLine + ex.Message);
             }
-            finally
-            {
-                _dbConnection.Close();
-            }
+           
             return data;
-        }
-
-        public void Execute(string query, object? @params = null)
-        {
-            _dbConnection.Execute(query, @params);
         }
 
         public async Task<T> ExecuteScalarAsync<T>(string query, object? @params = null)
         {
-            _dbConnection.Open();
+            using var _dbConnection = new SqlConnection(_dbConnectionString);
             try
             {
                 if (@params is null)
@@ -87,9 +78,54 @@ namespace Timesheet.Infrastructure.Dapper
             {
                 throw new Exception(query + System.Environment.NewLine + ex.Message);
             }
-            finally
+        }
+
+        public async Task ExecuteAsync(string query, object? @params = null)
+        {
+            var _dbConnection = new SqlConnection(_dbConnectionString);
+            try
             {
-                _dbConnection.Close();
+                if (@params is null)
+                {
+                    await _dbConnection.ExecuteAsync(query);
+                }
+                else
+                {
+                    await _dbConnection.ExecuteAsync(query, @params);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(query + System.Environment.NewLine + ex.Message);
+            }
+        }
+
+        public void Execute(string query, object? @params = null)
+        {
+            using var _dbConnection = new SqlConnection(_dbConnectionString);
+            try
+            {
+                if (@params is null)
+                {
+                    _dbConnection.Execute(query);
+                }
+                else
+                {
+                    _dbConnection.Execute(query, @params);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(query + System.Environment.NewLine + ex.Message);
+            }
+        }
+
+        public async Task ExecuteTransactionAsync(Action doTransaction)
+        {
+            using (var transactionScope = new TransactionScope())
+            {
+                doTransaction();
+                transactionScope.Complete();
             }
         }
     }

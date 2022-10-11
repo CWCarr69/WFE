@@ -2,8 +2,8 @@
 
 namespace Timesheet.Infrastructure.Dapper
 {
-    public interface ISqlConnection
+    public interface ISqlConnectionString
     {
-        public DbConnection Connection { get; }
+        public string Value { get; }
     }
 }

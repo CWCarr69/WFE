@@ -2,9 +2,11 @@
 {
     public interface IDatabaseService
     {
-        public Task<List<T>> QueryAsync<T>(string query, object? @params=null);
-        public List<T> Query<T>(string query, object? @params=null);
-        public void Execute(string query, object? @params=null);
-        public Task<T> ExecuteScalarAsync<T>(string query, object? @params=null);
+        Task<List<T>> QueryAsync<T>(string query, object? @params=null);
+        List<T> Query<T>(string query, object? @params=null);
+        Task ExecuteAsync(string query, object? @params=null);
+        void Execute(string query, object? @params=null);
+        Task<T> ExecuteScalarAsync<T>(string query, object? @params=null);
+        Task ExecuteTransactionAsync(Action transaction);
     }
 }

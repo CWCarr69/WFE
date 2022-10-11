@@ -1,9 +1,10 @@
 ﻿using Timesheet.Domain;
 using Timesheet.Domain.Models.Timesheets;
+using Timesheet.FDPDataIntegrator.Services;
 
-namespace Timesheet.EmployeesIntegrator.Payrolls
+namespace Timesheet.FDPDataIntegrator.Payrolls
 {
-    internal class PayrollAdapter
+    internal class PayrollAdapter : IAdapter<PayrollRecord, TimesheetHeader>
     {
         private IDictionary<string, bool> _employeePayrollIsWeekly;
 
@@ -12,7 +13,7 @@ namespace Timesheet.EmployeesIntegrator.Payrolls
             _employeePayrollIsWeekly = employeePayrollIsHourly;
         }
 
-        public (TimesheetHeader, TimesheetEntry) Adapt (PayrollRecord record)
+        public TimesheetHeader Adapt (PayrollRecord record)
         {
             if(record == null || string.IsNullOrEmpty(record.RecordId) || string.IsNullOrEmpty(record.EmployeeCode))
             {
@@ -23,6 +24,11 @@ namespace Timesheet.EmployeesIntegrator.Payrolls
             {
                 throw new ArgumentNullException($"Cannot find employee with code : {record.EmployeeCode}");
             }
+
+            //Include EmployeeTimesheet if possible otherwise fill the dictionary above first, and how about status
+            (string payrollPeriod, DateTime start, DateTime end) timesheetInfos = isWeekly
+                ? PayrollPeriodGenerator.GetTimesheetWeeklyInfos(record.WorkDate)
+                : PayrollPeriodGenerator.GetTimesheetMonthlyInfos(record.WorkDate);
 
             var timesheetEntry = new TimesheetEntry(
                 record.RecordId,
@@ -36,11 +42,6 @@ namespace Timesheet.EmployeesIntegrator.Payrolls
                 profitCenter: record.ProfitCenter
             );
 
-            //Include EmployeeTimesheet if possible, and how about status
-            (string payrollPeriod, DateTime start, DateTime end) timesheetInfos = isWeekly
-                ? GetTimesheetWeeklyInfos(record.WorkDate)
-                : GetTimesheetMonthlyInfos(record.WorkDate);
-
             var timesheetHeader = new TimesheetHeader(Entity.GenerateId(),
                 payrollPeriod: timesheetInfos.payrollPeriod,
                 startDate: timesheetInfos.start,
@@ -48,17 +49,9 @@ namespace Timesheet.EmployeesIntegrator.Payrolls
                 status: TimesheetStatus.IN_PROGRESS //TODO update this to get the right status from FDP
             );
 
-            return (timesheetHeader, timesheetEntry);
+            return timesheetHeader;
         }
 
-        private (string payrollPeriod, DateTime start, DateTime end) GetTimesheetMonthlyInfos(DateTime workDate)
-        {
-            throw new NotImplementedException();
-        }
 
-        private (string payrollPeriod, DateTime start, DateTime end) GetTimesheetWeeklyInfos(DateTime workDate)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

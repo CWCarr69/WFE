@@ -1,9 +1,17 @@
 ﻿using System.Xml.Serialization;
 
-namespace Timesheet.EmployeesIntegrator.Payrolls
+namespace Timesheet.FDPDataIntegrator.Payrolls
 {
-    [XmlRoot("Record")]
-    internal class PayrollRecord
+    [XmlRoot("OutboundData")]
+    public class PayrollRecords
+    {
+        [XmlArray("Records")]
+        [XmlArrayItem("Record")]
+
+        public PayrollRecord[] Records { get; set; }
+    }
+
+    public class PayrollRecord
     {
         public string EmployeeCode { get; set; }
         [XmlElement("PayCode")]
@@ -13,6 +21,7 @@ namespace Timesheet.EmployeesIntegrator.Payrolls
         public double Quantity { get; set; }
         [XmlElement("ProjectNo")]
         public string ServiceOrderNumber { get; set; }
+        [XmlElement("WorkOrderNo")]
         public string JobNumber { get; set; }
         [XmlElement("record")]
         public string RecordId { get; set; }

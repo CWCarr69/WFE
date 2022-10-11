@@ -11,7 +11,7 @@ namespace Timesheet.EmailSender
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             return services.AddLogging()
-                .AddSingleton(typeof(ISqlConnection), sp => new NotificationSqlConnection(ConfigurationManager.ConnectionStrings["Notification"].ToString()))
+                .AddSingleton(typeof(ISqlConnectionString), sp => new NotificationSqlConnection(ConfigurationManager.ConnectionStrings["Notification"].ToString()))
                 .AddSingleton<ISettingRepository, SettingRepository>()
                 .AddSingleton<INotificationRepository, NotificationRepository>()
                 .AddSingleton<INotificationService, NotificationService>();

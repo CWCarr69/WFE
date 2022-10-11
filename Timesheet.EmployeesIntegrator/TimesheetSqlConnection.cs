@@ -2,12 +2,13 @@
 using System.Data.SqlClient;
 using Timesheet.Infrastructure.Dapper;
 
-namespace Timesheet.EmailSender
+namespace Timesheet.FDPDataIntegrator
 {
-    internal class NotificationSqlConnection : ISqlConnectionString
+    internal class TimesheetSqlConnection : ISqlConnectionString
     {
         public string Value { get; private set; }
-        public NotificationSqlConnection(string connectionString= "")
+
+        public TimesheetSqlConnection(string connectionString)
         {
             this.Value = connectionString;
         }
