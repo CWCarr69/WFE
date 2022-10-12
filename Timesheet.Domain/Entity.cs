@@ -16,9 +16,11 @@
 
         public static string GenerateId() => Guid.NewGuid().ToString();
 
-        public DateTime CreatedDate { get; protected set; }
+        public DateTime CreatedDate { get; protected set; } = DateTime.Now;
 
-        public DateTime ModifiedDate { get; protected set; }
+        public DateTime ModifiedDate { get; protected set; } = DateTime.Now;
+
+        public string UpdatedBy { get; protected set; } = "-1";
 
         public override bool Equals(object? obj)
         {
@@ -55,6 +57,13 @@
             return other.Id == Id;
         }
 
-        public override int GetHashCode() =>  Id.GetHashCode();
+        public override int GetHashCode() => Id.GetHashCode();
+
+        public void UpdateMetadata(DateTime? created, DateTime? modified, string? by = null)
+        {
+            CreatedDate = created ?? CreatedDate;
+            ModifiedDate = modified ?? ModifiedDate;
+            UpdatedBy = by ?? UpdatedBy;
+        }
     }
 }

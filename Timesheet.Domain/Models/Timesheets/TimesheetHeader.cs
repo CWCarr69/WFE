@@ -19,5 +19,14 @@
         public DateTime EndDate { get; private set; }
         public TimesheetStatus Status { get; private set; }
         public virtual ICollection<TimesheetEntry> TimesheetEntries { get; private set; } = new List<TimesheetEntry>();
+
+        public void AddTimesheetEntry(TimesheetEntry timesheetEntry)
+        {
+            if(timesheetEntry?.Id is null)
+            {
+                throw new ArgumentNullException(nameof(timesheetEntry));
+            }
+            this.TimesheetEntries.Add(timesheetEntry);
+        }
     }
 }

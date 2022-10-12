@@ -33,6 +33,8 @@ namespace Timesheet.FDPDataIntegrator.Employees
                 employeeContactData,
                 record.Active != "False"
             );
+			
+			employee.UpdateMetadata(record.CreateDate, record.ModifyDate);
 
             return employee;
         }

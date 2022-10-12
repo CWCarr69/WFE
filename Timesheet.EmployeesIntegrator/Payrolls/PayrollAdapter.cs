@@ -49,6 +49,8 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
                 status: TimesheetStatus.IN_PROGRESS //TODO update this to get the right status from FDP
             );
 
+            timesheetHeader.UpdateMetadata(record.ModifyDate, record.ModifyDate);
+            timesheetHeader.AddTimesheetEntry(timesheetEntry);
             return timesheetHeader;
         }
 
