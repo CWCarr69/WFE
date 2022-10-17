@@ -6,7 +6,7 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
     {
         internal static (string payrollPeriod, DateTime start, DateTime end) GetTimesheetMonthlyInfos(DateTime workDate)
         {
-            var now = DateTime.Now;
+            var now = workDate;
             var isInSecondHalf = now.IsInSecondHalfOfMonth();
             var periodNumber = now.Month * 2 + (isInSecondHalf ? 2 : 1);
 
@@ -19,7 +19,7 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
 
         internal static (string payrollPeriod, DateTime start, DateTime end) GetTimesheetWeeklyInfos(DateTime workDate)
         {
-            var now = DateTime.Now;
+            var now = workDate;
             var oneYearBefore = DateTime.Now.AddYears(-1);
             var oneYearAfter = DateTime.Now.AddYears(1);
 
@@ -37,7 +37,7 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
                 ? WeeklyPayrollPeriod(oneYearAfter, numberOfWeeks)
                 : WeeklyPayrollPeriod(now, numberOfWeeks);
 
-            var start = now.Last(DayOfWeek.Friday);
+            var start = now.Previous(DayOfWeek.Friday);
             var end = nextThursday;
 
             return (payrollPeriod, start, end);

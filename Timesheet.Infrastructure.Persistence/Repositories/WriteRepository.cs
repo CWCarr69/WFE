@@ -2,7 +2,7 @@
 using Timesheet.Domain;
 using Timesheet.Domain.Repositories;
 
-namespace Timesheet.Infrastructure.Persistence.Writes
+namespace Timesheet.Infrastructure.Persistence.Repositories
 {
     internal class WriteRepository<TEntity> : IWriteRepository<TEntity> where TEntity : Entity
     {

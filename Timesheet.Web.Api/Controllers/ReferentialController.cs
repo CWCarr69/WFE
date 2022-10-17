@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Timesheet.Application.Referential.Queries;
+using Timesheet.Domain.Models.Employees;
 using Timesheet.Domain.Models.Timesheets;
+using Timesheet.Domain.ReadModels;
 using Timesheet.Domain.ReadModels.Employees;
 
 namespace Timesheet.Web.Api.Controllers
@@ -17,17 +19,10 @@ namespace Timesheet.Web.Api.Controllers
         }
 
         [HttpGet("TimeoffTypes")]
-        public async Task<ActionResult<IEnumerable<TimeoffType>>> GetTimeoffTypes()
+        public async Task<ActionResult<IEnumerable<EnumReadModel<TimeoffType>>>> GetTimeoffTypes()
         {
-            var timeoffs = await _referentialQuery.GetTimeoffTypes();
+            var timeoffs = _referentialQuery.GetTimeoffTypes();
             return Ok(timeoffs);
-        }
-
-        [HttpGet("Employees")]
-        public async Task<ActionResult<IEnumerable<EmployeeLight>>> GetEmployees()
-        {
-            var employees = await _referentialQuery.GetEmployees();
-            return Ok(employees);
         }
 
         [HttpGet("Departments")]
@@ -45,9 +40,23 @@ namespace Timesheet.Web.Api.Controllers
         }
 
         [HttpGet("TimesheetStatuses")]
-        public async Task<ActionResult<IEnumerable<TimesheetStatus>>> GetTimesheetStatuses()
+        public async Task<ActionResult<IEnumerable<EnumReadModel<TimesheetStatus>>>> GetTimesheetStatuses()
         {
-            var statuses = await _referentialQuery.GetTimesheetStatuses();
+            var statuses = _referentialQuery.GetTimesheetStatuses();
+            return Ok(statuses);
+        }
+
+        [HttpGet("TimesheetEntryStatuses")]
+        public async Task<ActionResult<IEnumerable<EnumReadModel<TimesheetEntryStatus>>>> GetTimesheetEntryStatuses()
+        {
+            var statuses = _referentialQuery.GetTimesheetEntryStatuses();
+            return Ok(statuses);
+        }
+
+        [HttpGet("TimeoffStatuses")]
+        public async Task<ActionResult<IEnumerable<EnumReadModel<TimeoffStatus>>>> GetTimeoffStatuses()
+        {
+            var statuses = _referentialQuery.GetTimeoffStatuses();
             return Ok(statuses);
         }
     }

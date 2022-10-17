@@ -1,4 +1,6 @@
-﻿namespace Timesheet.Domain.ReadModels.Employees
+﻿using Timesheet.Domain.Models.Employees;
+
+namespace Timesheet.Domain.ReadModels.Employees
 {
     public class EmployeeTimeoff
     {
@@ -7,8 +9,11 @@
         public string TimeoffId { get; set; }
         public double TotalHours { get; set; }
         public DateTime CreatedDate { get; set; }
+        public DateTime ModifiedDate { get; set; }
         public DateTime RequestStartDate { get; set; }
-        public DateTime RequestEnddDate { get; set; }
-        public string Status { get; set; }
+        public DateTime RequestEndDate { get; set; }
+        public TimeoffStatus Status { get; set; }
+        public String StatusName => Status.ToString();
+        public IEnumerable<EmployeeTimeoffEntry> Entries { get; set; }
     }
 }

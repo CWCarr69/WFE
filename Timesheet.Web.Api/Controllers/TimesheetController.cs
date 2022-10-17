@@ -5,7 +5,7 @@ using Timesheet.Domain.ReadModels.Timesheets;
 
 namespace Timesheet.Web.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[Controller]")]
     [ApiController]
     public class TimesheetController : ControllerBase
     {
@@ -16,22 +16,21 @@ namespace Timesheet.Web.Api.Controllers
             this._timesheetQuery = timesheetQuery;
         }
 
-        [HttpGet("{employeeId}")]
-        public async Task<ActionResult<IEnumerable<EmployeeTimesheet>>> GetTimesheetHistory(string? requestedEmployeeId)
+        [HttpGet("History/Employee/{employeeId}")]
+        public async Task<ActionResult<IEnumerable<EmployeeTimesheet>>> GetTimesheetHistory(string employeeId)
         {
-            var employeeId = requestedEmployeeId ?? "TO_CHANGE";
             var timesheets = await _timesheetQuery.GetEmployeeTimesheets(employeeId);
             return Ok(timesheets);
         }
 
-        [HttpGet("{timesheetId}")]
-        public async Task<ActionResult<IEnumerable<EmployeeTimesheetDetail>>> GetTimesheetDetails(string timesheetId)
+        [HttpGet("{timesheetId}/Employee/{employeeId}")]
+        public async Task<ActionResult<IEnumerable<EmployeeTimesheetEntry>>> GetTimesheetDetails(string timesheetId)
         {
             var timesheet = await _timesheetQuery.GetEmployeeTimesheetDetails(timesheetId);
             return Ok(timesheet);
         }
 
-        [HttpGet("{timesheetId}/Summary")]
+        [HttpGet("{timesheetId}/Summary/Employee/{employeeId}")]
         public async Task<ActionResult<EmployeeTimesheetDetailSummary>> GetTimesheetSummary(string timesheetId)
         {
             var timeoffs = await _timesheetQuery.GetEmployeeTimeoffSummary(timesheetId);

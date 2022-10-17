@@ -8,9 +8,9 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
     {
         private IDictionary<string, bool> _employeePayrollIsWeekly;
 
-        public PayrollAdapter(IDictionary<string, bool> employeePayrollIsHourly)
+        public PayrollAdapter(/*IDictionary<string, bool> employeePayrollIsHourly*/)
         {
-            _employeePayrollIsWeekly = employeePayrollIsHourly;
+            //_employeePayrollIsWeekly = employeePayrollIsHourly;
         }
 
         public TimesheetHeader Adapt (PayrollRecord record)
@@ -20,10 +20,12 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
                 throw new ArgumentNullException(nameof(record));
             }
 
-            if(_employeePayrollIsWeekly.TryGetValue(record.EmployeeCode, out var isWeekly))
-            {
-                throw new ArgumentNullException($"Cannot find employee with code : {record.EmployeeCode}");
-            }
+            //TODO ACTIVATE 
+            //if(_employeePayrollIsWeekly.TryGetValue(record.EmployeeCode, out var isWeekly))
+            //{
+            //    throw new ArgumentNullException($"Cannot find employee with code : {record.EmployeeCode}");
+            //}
+            var isWeekly = false;//TODO REMOVE
 
             //Include EmployeeTimesheet if possible otherwise fill the dictionary above first, and how about status
             (string payrollPeriod, DateTime start, DateTime end) timesheetInfos = isWeekly
@@ -42,7 +44,7 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
                 profitCenter: record.ProfitCenter
             );
 
-            var timesheetHeader = new TimesheetHeader(Entity.GenerateId(),
+            var timesheetHeader = new TimesheetHeader(timesheetInfos.payrollPeriod,
                 payrollPeriod: timesheetInfos.payrollPeriod,
                 startDate: timesheetInfos.start,
                 endDate: timesheetInfos.end,

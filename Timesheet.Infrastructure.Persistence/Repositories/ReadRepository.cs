@@ -2,7 +2,7 @@
 using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Repositories;
 
-namespace Timesheet.Infrastructure.Persistence.Writes
+namespace Timesheet.Infrastructure.Persistence.Repositories
 {
     internal class ReadRepository<TEntity> : IReadRepository<TEntity> where TEntity : Entity
     {

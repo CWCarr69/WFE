@@ -6,7 +6,22 @@ namespace Timesheet.FDPDataIntegrator.Utils
     {
         private const int numberOfDaysPerWeek = 7;
 
-        public static DateTime Last(this DateTime referenceDate, DayOfWeek searchedDayOfWeek)
+        public static DateTime Previous(this DateTime referenceDate, DayOfWeek searchedDayOfWeek)
+        {
+            int diff;
+            var referenceDayOfWeek = referenceDate.DayOfWeek;
+            if (referenceDayOfWeek >= searchedDayOfWeek)
+            {
+                diff = referenceDayOfWeek - searchedDayOfWeek;
+            }
+            else
+            {
+                diff = numberOfDaysPerWeek - (searchedDayOfWeek - referenceDayOfWeek);
+            }
+            return referenceDate.AddDays(-diff);
+        }
+
+        private static DateTime Last(this DateTime referenceDate, DayOfWeek searchedDayOfWeek)
         {
             var diff = searchedDayOfWeek - referenceDate.DayOfWeek;
             return referenceDate.AddDays(diff);

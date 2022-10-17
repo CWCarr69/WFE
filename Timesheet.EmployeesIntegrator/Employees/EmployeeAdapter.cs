@@ -25,6 +25,7 @@ namespace Timesheet.FDPDataIntegrator.Employees
 
             var employee = new Employee(
                 record.EmployeeCode,
+                "UNKNOWN",
                 record.FullName,
                 record.ManagerId,
                 record.ManagerId,

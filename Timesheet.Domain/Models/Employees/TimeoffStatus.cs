@@ -2,6 +2,6 @@
 {
     public enum TimeoffStatus
     {
-        IN_PROGRESS, SUBMITTED, REJECTED, APPROVED
+        NONE=0, IN_PROGRESS, SUBMITTED, REJECTED, APPROVED
     }
 }

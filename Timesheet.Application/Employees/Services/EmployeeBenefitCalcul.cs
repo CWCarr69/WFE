@@ -1,10 +1,10 @@
 ﻿
 using Timesheet.Application.Employees.Queries;
-using Timesheet.Domain.Models.Employees;
+using Timesheet.Domain.ReadModels.Employees;
 
-namespace Timesheet.Domain.Services
+namespace Timesheet.Domain.Employees.Services
 {
-    internal class EmployeeBenefitCalculator
+    public class EmployeeBenefitCalculator : IEmployeeBenefitCalculator
     {
         private const double WORK_DAY_HOURS = 8;
         IDictionary<(DateTime start, DateTime end), int> ScheduleFirstYears =
@@ -46,27 +46,64 @@ namespace Timesheet.Domain.Services
             this._queryEmployee = queryEmployee;
         }
 
-        public Task<double> GetUsedPersonalTimes(string employeeId)
-            => _queryEmployee
-                .CalculateUsedBenefits(employeeId, TimeoffType.PERSONAL, new DateTime(DateTime.Now.Year, 1, 1), new DateTime(DateTime.Now.Year, 12, 31));
-        public Task<double> GetUsedVacationTimes(string employeeId)
-            => _queryEmployee
-                .CalculateUsedBenefits(employeeId, TimeoffType.VACATION, new DateTime(DateTime.Now.Year, 1, 1), new DateTime(DateTime.Now.Year, 12, 31));
+        public async Task<EmployeeBenefits> GetBenefits(string employeeId, DateTime value)
+        {
+            var scheduledVacations = await GetScheduledVacationTimes(employeeId);
+            var usedVacations = await GetUsedVacationTimes(employeeId);
+            var totalVacations = GetTotalCurrentVacations(value);
 
-        public Task<double> GetScheduledPersonalTimes(string employeeId)
-            => _queryEmployee
-                .CalculateScheduledBenefits(employeeId, TimeoffType.PERSONAL, new DateTime(DateTime.Now.Year, 1, 1), new DateTime(DateTime.Now.Year, 12, 31));
-        public Task<double> GetScheduledVacationTimes(string employeeId)
-            => _queryEmployee
-                .CalculateScheduledBenefits(employeeId, TimeoffType.VACATION, new DateTime(DateTime.Now.Year, 1, 1), new DateTime(DateTime.Now.Year, 12, 31));
+            var scheduledPersonals = await GetScheduledPersonalTimes(employeeId);
+            var usedPersonals = await GetUsedPersonalTimes(employeeId);
+            var totalPersonals = GetTotalCurrentPersonalTimes();
 
-        public double GetTotalCurrentPersonalTimes()
+            var personalHours = new HourInformation
+            {
+                Type = "Personal",
+                Balance = totalPersonals - scheduledPersonals - usedPersonals,
+                Used = usedPersonals,
+                Scheduled = scheduledPersonals
+            };
+
+            var vacationHours = new HourInformation
+            {
+                Type = "Vacation",
+                Balance = totalVacations - scheduledVacations - usedVacations,
+                Used = usedVacations,
+                Scheduled = scheduledVacations
+            };
+
+            var employeeBenefits = new EmployeeBenefits
+            {
+                EligibleVacationHours = totalVacations,
+                EligiblePersonalHours = totalPersonals,
+                RolloverHours = 0,
+                Details = new List<HourInformation> { personalHours, vacationHours }
+            };
+
+            return employeeBenefits;
+        }
+
+        private Task<double> GetUsedPersonalTimes(string employeeId)
+            => _queryEmployee
+                .CalculateUsedBenefits(employeeId, Models.Employees.TimeoffType.PERSONAL, new DateTime(DateTime.Now.Year, 1, 1), new DateTime(DateTime.Now.Year, 12, 31));
+        private Task<double> GetUsedVacationTimes(string employeeId)
+            => _queryEmployee
+                .CalculateUsedBenefits(employeeId, Models.Employees.TimeoffType.VACATION, new DateTime(DateTime.Now.Year, 1, 1), new DateTime(DateTime.Now.Year, 12, 31));
+
+        private Task<double> GetScheduledPersonalTimes(string employeeId)
+            => _queryEmployee
+                .CalculateScheduledBenefits(employeeId, Models.Employees.TimeoffType.PERSONAL, new DateTime(DateTime.Now.Year, 1, 1), new DateTime(DateTime.Now.Year, 12, 31));
+        private Task<double> GetScheduledVacationTimes(string employeeId)
+            => _queryEmployee
+                .CalculateScheduledBenefits(employeeId, Models.Employees.TimeoffType.VACATION, new DateTime(DateTime.Now.Year, 1, 1), new DateTime(DateTime.Now.Year, 12, 31));
+
+        private double GetTotalCurrentPersonalTimes()
         {
             var months = DateTime.Now.Month;
             return months * WORK_DAY_HOURS;
         }
 
-        public double GetTotalCurrentVacations(DateTime employmentDate)
+        private double GetTotalCurrentVacations(DateTime employmentDate)
         {
             var oneYearAfterEmploymentDate = employmentDate.Date.AddYears(1);
             if (DateTime.Now < oneYearAfterEmploymentDate)
@@ -84,17 +121,17 @@ namespace Timesheet.Domain.Services
 
             if (isAnniversaryBenefitDate)
             {
-                vacations += ScheduledVacations(employmentDate, yearsDifferencesSinceEmploymenDate);
+                vacations += AtAnniversaryVacation(employmentDate, yearsDifferencesSinceEmploymenDate);
             }
 
-            vacations += ScheduledAdditionalVacations(yearsDifferencesSinceEmploymenDate);
+            vacations += AdditionalVacations(yearsDifferencesSinceEmploymenDate);
 
             return vacations * WORK_DAY_HOURS;
         }
 
-        private int ScheduledVacations(DateTime employmentDate, int yearsConsidered)
+        private int AtAnniversaryVacation(DateTime employmentDate, int yearsSinceEmployment)
         {
-            var schedule = yearsConsidered == 1 ? ScheduleFirstYears : ScheduleOtherYears;
+            var schedule = yearsSinceEmployment == 1 ? ScheduleFirstYears : ScheduleOtherYears;
 
             foreach(var kvp in schedule)
             {
@@ -107,7 +144,7 @@ namespace Timesheet.Domain.Services
             return 0;
         }
 
-        private int ScheduledAdditionalVacations(int yearsConsidered)
+        private int AdditionalVacations(int yearsConsidered)
         {
             if(yearsConsidered > 1) { return 10; }
             if(yearsConsidered > 5) { return 15; }

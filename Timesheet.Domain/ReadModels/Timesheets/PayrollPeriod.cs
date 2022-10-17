@@ -2,5 +2,6 @@
 {
     public class PayrollPeriod
     {
+        public string Code { get; set; }
     }
 }

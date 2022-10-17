@@ -41,7 +41,6 @@ namespace Timesheet.Application
         public async Task RunCommand<TCommand>(TCommand command, CancellationToken token)
             where TCommand : ICommand
         {
-            using var scopedService = _service.CreateScope();
             if (command is null)
             {
                 throw new ArgumentNullException(nameof(command));
@@ -59,7 +58,6 @@ namespace Timesheet.Application
         public async Task RunSubCommand<TCommand>(TCommand command, IDictionary<string, object> context, CancellationToken token)
             where TCommand : ICommand
         {
-            using var scopedService = _service.CreateScope();
             if (command is null)
             {
                 throw new ArgumentNullException(nameof(command));
@@ -72,7 +70,7 @@ namespace Timesheet.Application
                 $"Command handler for {nameof(command)} is not registered.");
 
             handler.SetParentCommandContext(context);
-            await handler.HandleAsync(command, token);
+            await handler.HandleCoreAsync(command, token);
         }
 
         private dynamic GetHandler(Type handledType,

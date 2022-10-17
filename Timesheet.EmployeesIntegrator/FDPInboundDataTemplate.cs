@@ -1,6 +1,6 @@
 ﻿namespace Timesheet.FDPDataIntegrator
 {
-    enum IntegrationType
+    public enum IntegrationType
     {
         EMPLOYEE, PAYROLL
     }
@@ -31,7 +31,7 @@
             //var fromDate = from ?? DateTime.Now.AddMinutes(-5);
             var fromDate = from ?? DateTime.Now.AddYears(-5);
 
-            var inboundData = _defaultInboudDataTemplate.Replace(ModificationDateParam, fromDate.ToString());
+            var inboundData = _defaultInboudDataTemplate.Replace(ModificationDateParam, fromDate.ToString("dd MMM yyy HH':'mm':'ss"));
             inboundData = inboundData.Replace(PageNumberParam, "1");
 
             var transfertName = type == IntegrationType.EMPLOYEE ? _employeeTransfertName : _payrollTransfertName;

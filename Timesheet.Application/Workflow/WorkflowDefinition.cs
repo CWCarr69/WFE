@@ -28,7 +28,9 @@ namespace Timesheet.Application.Workflow
                 return false;
             }
 
-            return authorizedStatuses.Any(status => status == currentStatus);
+            return authorizedStatuses.Any(
+                status => status.Equals(currentStatus)
+            );
         }
 
         public void AddTransiton(Enum transition, params Enum[] permissionStates)

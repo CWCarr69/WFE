@@ -12,7 +12,7 @@ namespace Timesheet.Application.Employees.CommandHandlers
 
         public ApproveTimeoffCommandHandler(
             IAuditHandler auditHandler,
-            IReadRepository<Employee> readRepository, 
+            IEmployeeReadRepository readRepository, 
             IWorkflowService workflowService,
             IDispatcher dispatcher,
             IUnitOfWork unitOfWork) : base(auditHandler, readRepository, dispatcher, unitOfWork)
@@ -20,7 +20,7 @@ namespace Timesheet.Application.Employees.CommandHandlers
             this._workflowService = workflowService;
         }
 
-        public async override Task<IEnumerable<IDomainEvent>> HandleCore(ApproveTimeoff command, CancellationToken token)
+        public async override Task<IEnumerable<IDomainEvent>> HandleCoreAsync(ApproveTimeoff command, CancellationToken token)
         {
             var employee = await GetEmployee(command.EmployeeId);
 

@@ -8,21 +8,17 @@ namespace Timesheet.Application.Employees.CommandHandlers
 {
     internal class ModifyApproverCommandHandler : BaseEmployeeCommandHandler<Employee, ModifyApprover>
     {
-        private readonly IReadRepository<Employee> _readRepository;
-        private readonly IWorkflowService _workflowService;
 
         public ModifyApproverCommandHandler(
             IAuditHandler auditHandler,
-            IReadRepository<Employee> readRepository,
+            IEmployeeReadRepository readRepository,
             IWorkflowService workflowService,
             IDispatcher dispatcher,
             IUnitOfWork unitOfWork) : base(auditHandler, readRepository, dispatcher, unitOfWork)
         {
-            this._readRepository = readRepository;
-            this._workflowService = workflowService;
         }
 
-        public override async Task<IEnumerable<IDomainEvent>> HandleCore(ModifyApprover command, CancellationToken token)
+        public override async Task<IEnumerable<IDomainEvent>> HandleCoreAsync(ModifyApprover command, CancellationToken token)
         {
             var employee = await GetEmployee(command.EmployeeId);
 

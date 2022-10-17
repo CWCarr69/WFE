@@ -1,9 +1,7 @@
-﻿using Timesheet.Domain.Exceptions;
-using Timesheet.Domain.Models;
-using Timesheet.Domain.Models.Holidays;
+﻿using Timesheet.Domain.Models.Holidays;
 using Timesheet.Domain.Repositories;
 
-namespace Timesheet.Infrastructure.Persistence.Writes
+namespace Timesheet.Infrastructure.Persistence.Repositories
 {
     internal class HolidayReadRepository : ReadRepository<Holiday>, IHolidayReadRepository
     {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Timesheet.Application;
 using Timesheet.Application.Employees.Queries;
+using Timesheet.Domain.Employees.Services;
 using Timesheet.Domain.ReadModels.Employees;
 
 namespace Timesheet.Web.Api.Controllers
@@ -10,12 +11,23 @@ namespace Timesheet.Web.Api.Controllers
     public class EmployeeController : ControllerBase
     {
         private readonly IQueryEmployee _employeeQuery;
+        private readonly IEmployeeBenefitCalculator _benefitsServcies;
         private readonly IDispatcher _dispatcher;
 
-        public EmployeeController(IQueryEmployee employeeQuery, IDispatcher dispatcher)
+        public EmployeeController(IQueryEmployee employeeQuery,
+            IEmployeeBenefitCalculator benefitsServcies,
+            IDispatcher dispatcher)
         {
             _employeeQuery = employeeQuery;
+            this._benefitsServcies = benefitsServcies;
             _dispatcher = dispatcher;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<EmployeeProfile>>> Get()
+        {
+            var employee = await _employeeQuery.GetEmployees();
+            return Ok(employee);
         }
 
         [HttpGet("{employeeId}")]
@@ -34,32 +46,37 @@ namespace Timesheet.Web.Api.Controllers
         }
 
         [HttpGet("{employeeId}/Benefits")]
-        public async Task<ActionResult<EmployeeApprovers>> GetBenefits(string employeeId)
+        public async Task<ActionResult<EmployeeBenefits>> GetBenefits(string employeeId)
         {
-            var employee = await _employeeQuery.GetEmployeeBenefits(employeeId);
-            return Ok(employee);
+            var employee = await _employeeQuery.GetEmployeeProfile(employeeId);
+            if(employee?.Id is null || employee?.EmploymentDate is null)
+            {
+                return BadRequest("Employee not found");
+            }
+            var employeeBenefits = await _benefitsServcies.GetBenefits(employeeId, employee.EmploymentDate.Value);
+            return Ok(employeeBenefits);
         }
 
         [HttpGet("Team")]
         public async Task<ActionResult<IEnumerable<EmployeeWithTimeStatus>>> GetTeamTimeRecordStatus(bool directReport)
         {
-            string managerId = "";
+            string managerId = null;
             var employees = await _employeeQuery.GetEmployeesTimeRecordStatus(managerId, directReport);
             return Ok(employees);
         }
 
         [HttpGet("Timeoff/Pending")]
-        public ActionResult<IEnumerable<EmployeeTimeoff>> GetTeamPendingTimeoffs(bool directReport)
+        public async Task<ActionResult<IEnumerable<EmployeeTimeoff>>> GetTeamPendingTimeoffs(bool directReport)
         {
-            string managerId = "";
-            var employees = _employeeQuery.GetEmployeesPendingTimeoffs(managerId, directReport);
+            string managerId = null;
+            var employees = await _employeeQuery.GetEmployeesPendingTimeoffs(managerId, directReport);
             return Ok(employees);
         }
 
         [HttpGet("Timesheet/Pending")]
         public async Task<ActionResult<IEnumerable<EmployeeTimeoff>>> GetTeamPendingTimesheets(bool directReport)
         {
-            string managerId = "";
+            string managerId = null;
             var employees = await _employeeQuery.GetEmployeesPendingTimeoffs(managerId, directReport);
             return Ok(employees);
         }

@@ -18,9 +18,9 @@ namespace Timesheet.Application
         {
         }
 
-        public override abstract Task<IEnumerable<IDomainEvent>> HandleCore(TCommand command, CancellationToken token);
+        public override abstract Task<IEnumerable<IDomainEvent>> HandleCoreAsync(TCommand command, CancellationToken token);
 
-        public void setParentCommandContext(IDictionary<string, object> context)
+        public void SetParentCommandContext(IDictionary<string, object> context)
         {
             _parentCommandContext = context;
         }

@@ -22,7 +22,7 @@ namespace Timesheet.Application.Holidays.CommandHandlers
             _readRepository = readRepository;
         }
 
-        public override async Task<IEnumerable<IDomainEvent>> HandleCore(DeleteHoliday deleteHoliday, CancellationToken token)
+        public override async Task<IEnumerable<IDomainEvent>> HandleCoreAsync(DeleteHoliday deleteHoliday, CancellationToken token)
         {
             if (deleteHoliday.Id is null)
             {

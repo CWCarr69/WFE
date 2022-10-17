@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Timesheet.Domain.Repositories;
 
-namespace Timesheet.Infrastructure.Persistence.Writes
+namespace Timesheet.Infrastructure.Persistence.Repositories
 {
     internal class UnitOfWork : IUnitOfWork
     {

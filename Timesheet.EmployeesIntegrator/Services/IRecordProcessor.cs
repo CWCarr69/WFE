@@ -2,7 +2,7 @@
 
 namespace Timesheet.FDPDataIntegrator.Services
 {
-    internal interface IRecordProcessor<TAdapter, TRepository, TRecord, TEntity>
+    public interface IRecordProcessor<TAdapter, TRepository, TRecord, TEntity>
         where TEntity : Entity
         where TRepository : IRepository<TEntity>
         where TAdapter : IAdapter<TRecord, TEntity>

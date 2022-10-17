@@ -9,12 +9,12 @@ namespace Timesheet.Application.Employees.CommandHandlers
 {
     internal class UpdateTimeoffEntryCommandHandler : BaseEmployeeCommandHandler<TimeoffHeader, UpdateTimeoffEntry>
     {
-        private readonly IReadRepository<Employee> _readRepository;
+        private readonly IEmployeeReadRepository _readRepository;
         private readonly IWorkflowService _workflowService;
 
         public UpdateTimeoffEntryCommandHandler(
             IAuditHandler auditHandler,
-            IReadRepository<Employee> readRepository,
+            IEmployeeReadRepository readRepository,
             IWorkflowService workflowService,
             IDispatcher dispatcher,
             IUnitOfWork unitOfWork) : base(auditHandler, readRepository, dispatcher, unitOfWork)
@@ -23,7 +23,7 @@ namespace Timesheet.Application.Employees.CommandHandlers
             this._workflowService = workflowService;
         }
 
-        public override async Task<IEnumerable<IDomainEvent>> HandleCore(UpdateTimeoffEntry command, CancellationToken token)
+        public override async Task<IEnumerable<IDomainEvent>> HandleCoreAsync(UpdateTimeoffEntry command, CancellationToken token)
         {
             var employee = await GetEmployee(command.EmployeeId);
             var timeoff = GetTimeoffOrThrowException(employee, command.TimeoffId);

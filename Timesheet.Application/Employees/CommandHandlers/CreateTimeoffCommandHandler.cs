@@ -6,23 +6,21 @@ using Timesheet.Domain.Repositories;
 
 namespace Timesheet.Application.Employees.CommandHandlers
 {
-    internal class CreateTimeoffCommandHandler : BaseSubCommandHandler<TimeoffHeader, CreateTimeoff>
+    internal class CreateTimeoffCommandHandler : BaseEmployeeCommandHandler<TimeoffHeader, CreateTimeoff>
     {
-        private readonly IReadRepository<Employee> _readRepository;
         private readonly IDispatcher _dispatcher;
 
         public CreateTimeoffCommandHandler(
             IAuditHandler auditHandler,
-            IReadRepository<Employee> readRepository,
+            IEmployeeReadRepository readRepository,
             IDispatcher dispatcher,
             IUnitOfWork unitOfWork
-            ) : base(auditHandler, dispatcher, unitOfWork)
+            ) : base(auditHandler, readRepository, dispatcher, unitOfWork)
         {
-            _readRepository = readRepository;
             _dispatcher = dispatcher;
         }
 
-        public override async Task<IEnumerable<IDomainEvent>> HandleCore(CreateTimeoff command, CancellationToken token)
+        public override async Task<IEnumerable<IDomainEvent>> HandleCoreAsync(CreateTimeoff command, CancellationToken token)
         {
             if (command.RequestEndDate > command.RequestStartDate)
             {
@@ -34,22 +32,13 @@ namespace Timesheet.Application.Employees.CommandHandlers
             var timeoff = employee.CreateTimeoff(command.RequestStartDate, command.RequestEndDate, command.EmployeeComment, command.ApproverComment);
             this.RelatedAuditableEntity = timeoff;
 
-            var commandContext = new Dictionary<string, object>() { { "Employee", employee } };
+            var commandContext = new Dictionary<string, object>() { 
+                { "Employee", employee },
+                { "Timeoff", timeoff }
+            };
             command.Entries?.ToList().ForEach(async entryCommand => await _dispatcher.RunSubCommand(entryCommand, commandContext, token));
 
             return employee.GetDomainEvents();
-        }
-
-        private async Task<Employee> GetEmployee(string employeeId)
-        {
-            var employee = await _readRepository.Get(employeeId);
-
-            if (employee is null)
-            {
-                throw new EntityNotFoundException<Employee>(employee?.Id);
-            }
-
-            return employee;
         }
     }
 }

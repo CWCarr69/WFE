@@ -11,7 +11,7 @@
 
         public static TimeoffEntry Create(DateTime requestDate, TimeoffType type, double hours)
         {
-            var entry = new TimeoffEntry(Guid.NewGuid().ToString(), requestDate, type, hours);
+            var entry = new TimeoffEntry(Guid.NewGuid().ToString(), requestDate.Date, type, hours);
             entry.Status = TimeoffEntryStatus.NOT_PROCESSED;
 
             return entry;
@@ -29,7 +29,7 @@
 
         internal void Update(TimeoffType type, double hours)
         {
-            this.Type = this.Type;
+            this.Type = type;
             this.Hours = hours != 0 ? hours : this.Hours;
         }
     }

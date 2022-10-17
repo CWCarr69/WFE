@@ -6,91 +6,99 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
 {
     internal partial class PayrollRepository : IRepository<TimesheetHeader>
     {
-        private const string TimesheetTableName = "TimesheetHeader";
-        private IDatabaseService _databaseService;
+        private const string TimesheetEntryTable = "TimesheetEntry";
 
-        public PayrollRepository(IDatabaseService databaseService)
+        public async Task UpSertEntry(TimesheetHeader timesheet)
         {
-            this._databaseService = databaseService;
-        }
-
-        public async Task BeginTransaction(Action transaction)
-        {
-            await _databaseService.ExecuteTransactionAsync(transaction);
-        }
-
-        public async Task UpSert(TimesheetHeader timesheet)
-        {
-            var timesheetTable = "@tableName";
             var timesheetId = "@timesheetId";
-            var timesheetPayrollPeriod = "@timesheetPayrollPeriod";
-            var timesheetStartDate = "@timesheetStartDate";
-            var timesheetEndDate = "@timesheetEndDate";
-            var timesheetStatus = "@timesheetStatus";
+            var timesheetHeaderId = "@timesheetHeaderId";
+            var timesheetEmployeeId = "@timesheetEmployeeId";
+            var timesheetWorkDate = "@timesheetWorkDate";
+            var timesheetPayrollCode = "@timesheetPayrollCode";
+            var timesheetHours = "@timesheetHours";
+            var timesheetDescription = "@timesheetDescription";
+            var timesheetServiceOrderNumber = "@timesheetServiceOrderNumber";
+            var timesheetJobNumber = "@timesheetJobNumber";
+            var timesheetProfitCenter = "@timesheetProfitCenter";
             var timesheetCreatedDate = "@timesheetCreatedDate";
             var timesheetModifiedDate = "@timesheetModifiedDate";
+            var timesheetUpdatedBy = "@timesheetUpdatedBy";
 
             var updates = $@"
-            {nameof(TimesheetHeader.PayrollPeriod)} = {timesheetPayrollPeriod},
-            {nameof(TimesheetHeader.StartDate)} = {timesheetStartDate},
-            {nameof(TimesheetHeader.EndDate)} = {timesheetEndDate},
-            {nameof(TimesheetHeader.ModifiedDate)} = {timesheetModifiedDate},
+            {nameof(TimesheetEntry.EmployeeId)} = {timesheetEmployeeId},
+            {nameof(TimesheetEntry.WorkDate)} = {timesheetWorkDate},
+            {nameof(TimesheetEntry.PayrollCode)} = {timesheetPayrollCode},
+            {nameof(TimesheetEntry.Hours)} = {timesheetHours},
+            {nameof(TimesheetEntry.Description)} = {timesheetDescription},
+            {nameof(TimesheetEntry.ServiceOrderNumber)} = {timesheetServiceOrderNumber},
+            {nameof(TimesheetEntry.JobNumber)} = {timesheetJobNumber},
+            {nameof(TimesheetEntry.ProfitCenterNumber)} = {timesheetProfitCenter},
+            {nameof(TimesheetEntry.ModifiedDate)} = {timesheetModifiedDate},
+            {nameof(TimesheetEntry.UpdatedBy)} = {timesheetUpdatedBy}
             ";
 
             var insertColums = $@"
-            {nameof(TimesheetHeader.Id)},
-            {nameof(TimesheetHeader.PayrollPeriod)},
-            {nameof(TimesheetHeader.StartDate)},
-            {nameof(TimesheetHeader.EndDate)},
-            {nameof(TimesheetHeader.Status)},
-            {nameof(TimesheetHeader.CreatedDate)},
-            {nameof(TimesheetHeader.ModifiedDate)}
+            {nameof(TimesheetEntry.Id)},
+            {nameof(TimesheetHeader)}{nameof(TimesheetHeader.Id)},
+            { nameof(TimesheetEntry.EmployeeId)},
+            {nameof(TimesheetEntry.WorkDate)},
+            {nameof(TimesheetEntry.PayrollCode)},
+            {nameof(TimesheetEntry.Hours)},
+            {nameof(TimesheetEntry.Description)},
+            {nameof(TimesheetEntry.ServiceOrderNumber)},
+            {nameof(TimesheetEntry.JobNumber)},
+            {nameof(TimesheetEntry.ProfitCenterNumber)},
+            {nameof(TimesheetEntry.CreatedDate)},
+            {nameof(TimesheetEntry.ModifiedDate)},
+            {nameof(TimesheetEntry.UpdatedBy)}
             ";
 
             var insertValues = $@"
-            {timesheetId}
-            {timesheetPayrollPeriod},
-            {timesheetStartDate},
-            {timesheetEndDate},
-            {timesheetStatus},
+            {timesheetId},
+            {timesheetHeaderId},
+            {timesheetEmployeeId},
+            {timesheetWorkDate},
+            {timesheetPayrollCode},
+            {timesheetHours},
+            {timesheetDescription},
+            {timesheetServiceOrderNumber},
+            {timesheetJobNumber},
+            {timesheetProfitCenter},
             {timesheetCreatedDate},
-            {timesheetModifiedDate}
+            {timesheetModifiedDate},
+            {timesheetUpdatedBy}
             ";
 
-            var query = $@"IF EXISTS (SELECT * FROM {timesheetTable} WHERE {nameof(TimesheetHeader.Id)} = {timesheetId})
+            var query = $@"IF EXISTS (SELECT * FROM {TimesheetEntryTable} WHERE {nameof(TimesheetEntry.Id)} = {timesheetId})
                          BEGIN
-                             UPDATE {timesheetTable}
+                             UPDATE {TimesheetEntryTable}
                              SET {updates}
-                             WHERE {nameof(TimesheetHeader.Id)} = {timesheetId};
+                             WHERE {nameof(TimesheetEntry.Id)} = {timesheetId};
                                     END
                                     ELSE
                          BEGIN
-                             INSERT INTO {timesheetTable} ({insertColums})
+                             INSERT INTO {TimesheetEntryTable} ({insertColums})
                              SELECT {insertValues}
                          END";
 
-            await _databaseService.ExecuteAsync(query, new
+            var entry = timesheet.TimesheetEntries.FirstOrDefault();
+            //TODO if null
+            _databaseService.ExecuteAsync(query, new
             {
-                timesheetTable = TimesheetTableName,
-                timesheetId = timesheet.Id,
-                timesheetPayrollPeriod = timesheet.PayrollPeriod,
-                timesheetStartDate = timesheet.StartDate,
-                timesheetEndDate = timesheet.EndDate,
-                timesheetStatus = timesheet.Status,
-                timesheetCreatedDate = timesheet.CreatedDate,
-                timesheetModifiedDate = timesheet.ModifiedDate,
-            });
-        }
-
-        
-        public Task DisableConstraints()
-        {
-            return Task.CompletedTask;
-        }
-
-        public Task EnableConstraints()
-        {
-            return Task.CompletedTask;
+                    timesheetId = entry.Id,
+                    timesheetHeaderId = timesheet.Id,
+                    timesheetEmployeeId = entry.EmployeeId,
+                    timesheetWorkDate = entry.WorkDate,
+                    timesheetPayrollCode = entry.PayrollCode,
+                    timesheetHours = entry.Hours,
+                    timesheetDescription = entry.Description,
+                    timesheetServiceOrderNumber = entry.ServiceOrderNumber,
+                    timesheetJobNumber = entry.JobNumber,
+                    timesheetProfitCenter = entry.ProfitCenterNumber,
+                    timesheetCreatedDate = entry.CreatedDate,
+                    timesheetModifiedDate = entry.ModifiedDate,
+                    timesheetUpdatedBy = entry.UpdatedBy
+            }).Wait();
         }
     }
 }

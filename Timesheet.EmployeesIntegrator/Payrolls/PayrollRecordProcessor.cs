@@ -4,7 +4,7 @@ using Timesheet.FDPDataIntegrator.Services;
 
 namespace Timesheet.FDPDataIntegrator.Payrolls
 {
-    internal interface IPayrollRecordProcessor 
+    public interface IPayrollRecordProcessor 
     : IRecordProcessor<
         IAdapter<PayrollRecord, TimesheetHeader>, 
         IRepository<TimesheetHeader>, 

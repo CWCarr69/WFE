@@ -34,6 +34,11 @@ namespace Timesheet.Application.Notifications
         public async Task Handle(TimeoffWorkflowChanged @event)
         {
             var notification = _readRepository.GetByGroupAndAction(NotificationType.TIMEOFF, @event.Action);
+            if(notification is null)
+            {
+                return;
+            }
+
             var notificationItems = GenerateNotificationItems(notification, @event,
                 new Dictionary<NotificationPopulationType, string>() {
                     {NotificationPopulationType.EMPLOYEE, @event.EmployeeId},

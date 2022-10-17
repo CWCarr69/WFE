@@ -23,7 +23,12 @@
 
         internal static TimeoffHeader Create(DateTime requestStartDate, DateTime requestEndDate, string employeeComment, string supervisorComment)
         {
-            var timeoff = new TimeoffHeader(Guid.NewGuid().ToString(), requestStartDate, requestEndDate, employeeComment, supervisorComment);
+            var timeoff = new TimeoffHeader(Guid.NewGuid().ToString(), 
+                requestStartDate.Date,
+                requestEndDate.Date,
+                employeeComment,
+                supervisorComment);
+
             timeoff.Status = TimeoffStatus.IN_PROGRESS;
 
             return timeoff;

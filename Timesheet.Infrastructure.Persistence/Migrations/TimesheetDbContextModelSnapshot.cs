@@ -22,7 +22,7 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Timesheet.Domain.Models.Audit", b =>
+            modelBuilder.Entity("Timesheet.Domain.Models.Audits.Audit", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -60,6 +60,10 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Audits");
@@ -73,25 +77,18 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Firstname")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Initials")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Lastname")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
-                    b.Property<string>("Middlename")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("ManagerId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -105,14 +102,17 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
                     b.Property<string>("SecondaryApproverId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ManagerId");
 
                     b.HasIndex("PictureId");
 
@@ -163,6 +163,10 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("TimeoffHeaderId");
@@ -201,6 +205,10 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("EmployeeId");
@@ -233,12 +241,16 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Holidays");
                 });
 
-            modelBuilder.Entity("Timesheet.Domain.Models.Notification", b =>
+            modelBuilder.Entity("Timesheet.Domain.Models.Notifications.Notification", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -259,12 +271,16 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
                     b.Property<int>("Population")
                         .HasColumnType("int");
 
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Notifications");
                 });
 
-            modelBuilder.Entity("Timesheet.Domain.Models.NotificationItem", b =>
+            modelBuilder.Entity("Timesheet.Domain.Models.Notifications.NotificationItem", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -290,9 +306,45 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
                     b.Property<bool>("Sent")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("NotificationItems");
+                });
+
+            modelBuilder.Entity("Timesheet.Domain.Models.Settings.Setting", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Settings");
                 });
 
             modelBuilder.Entity("Timesheet.Domain.Models.Timesheets.TimesheetEntry", b =>
@@ -304,18 +356,9 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CustomerNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Department")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EmployeeFullName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -327,7 +370,6 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("JobDescription")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("JobNumber")
@@ -335,21 +377,18 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("JobTaskDescription")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("JobTaskNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LaborCode")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ModifiedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("OutOffCountry")
+                    b.Property<bool?>("OutOffCountry")
                         .HasColumnType("bit");
 
                     b.Property<string>("PayrollCode")
@@ -361,15 +400,21 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ServiceOrderDescription")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ServiceOrderNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.Property<string>("TimesheetHeaderId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("WorkDate")
                         .HasColumnType("datetime2");
@@ -405,6 +450,10 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Timesheets");
@@ -412,6 +461,10 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Timesheet.Domain.Models.Employees.Employee", b =>
                 {
+                    b.HasOne("Timesheet.Domain.Models.Employees.Employee", "Manager")
+                        .WithMany()
+                        .HasForeignKey("ManagerId");
+
                     b.HasOne("Timesheet.Domain.Models.Employees.Image", "Picture")
                         .WithMany()
                         .HasForeignKey("PictureId");
@@ -424,37 +477,18 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
                         .WithMany()
                         .HasForeignKey("SecondaryApproverId");
 
-                    b.OwnsOne("Timesheet.Domain.Models.Employees.EmployeeBenefits", "Benefits", b1 =>
+                    b.OwnsOne("Timesheet.Domain.Models.Employees.EmployeeContactData", "Contacts", b1 =>
                         {
                             b1.Property<string>("EmployeeId")
                                 .HasColumnType("nvarchar(450)");
 
-                            b1.Property<decimal>("AvailablePersonal")
-                                .HasColumnType("decimal(18,2)");
+                            b1.Property<string>("CompanyEmail")
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("CompanyEmail");
 
-                            b1.Property<decimal>("AvailableRolloverHours")
-                                .HasColumnType("decimal(18,2)");
-
-                            b1.Property<decimal>("AvailableVacation")
-                                .HasColumnType("decimal(18,2)");
-
-                            b1.Property<decimal>("ScheduledPersonal")
-                                .HasColumnType("decimal(18,2)");
-
-                            b1.Property<decimal>("ScheduledRolloverHours")
-                                .HasColumnType("decimal(18,2)");
-
-                            b1.Property<decimal>("ScheduledVacation")
-                                .HasColumnType("decimal(18,2)");
-
-                            b1.Property<decimal>("UsedPersonnal")
-                                .HasColumnType("decimal(18,2)");
-
-                            b1.Property<decimal>("UsedRolloverHours")
-                                .HasColumnType("decimal(18,2)");
-
-                            b1.Property<decimal>("UsedVacation")
-                                .HasColumnType("decimal(18,2)");
+                            b1.Property<string>("CompanyPhone")
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("CompanyPhone");
 
                             b1.HasKey("EmployeeId");
 
@@ -471,26 +505,28 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
 
                             b1.Property<string>("Department")
                                 .IsRequired()
-                                .HasColumnType("nvarchar(max)");
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("Department");
 
                             b1.Property<DateTime>("EmploymentDate")
-                                .HasColumnType("datetime2");
+                                .HasColumnType("datetime2")
+                                .HasColumnName("EmploymentDate");
+
+                            b1.Property<bool>("IsAdministrator")
+                                .HasColumnType("bit");
 
                             b1.Property<bool>("IsSalaried")
-                                .HasColumnType("bit");
+                                .HasColumnType("bit")
+                                .HasColumnName("IsSalaried");
 
                             b1.Property<string>("JobTitle")
                                 .IsRequired()
-                                .HasColumnType("nvarchar(max)");
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("JobTitle");
 
-                            b1.Property<DateTime>("TerminationDate")
-                                .HasColumnType("datetime2");
-
-                            b1.Property<decimal>("UnitCost")
-                                .HasColumnType("decimal(18,2)");
-
-                            b1.Property<int>("YearsInService")
-                                .HasColumnType("int");
+                            b1.Property<DateTime?>("TerminationDate")
+                                .HasColumnType("datetime2")
+                                .HasColumnName("TerminationDate");
 
                             b1.HasKey("EmployeeId");
 
@@ -500,31 +536,13 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
                                 .HasForeignKey("EmployeeId");
                         });
 
-                    b.OwnsOne("Timesheet.Domain.Models.Employees.EmployeePersonalData", "PersonalData", b1 =>
-                        {
-                            b1.Property<string>("EmployeeId")
-                                .HasColumnType("nvarchar(450)");
-
-                            b1.Property<string>("CompanyEmail")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.HasKey("EmployeeId");
-
-                            b1.ToTable("Employees");
-
-                            b1.WithOwner()
-                                .HasForeignKey("EmployeeId");
-                        });
-
-                    b.Navigation("Benefits")
+                    b.Navigation("Contacts")
                         .IsRequired();
 
                     b.Navigation("EmploymentData")
                         .IsRequired();
 
-                    b.Navigation("PersonalData")
-                        .IsRequired();
+                    b.Navigation("Manager");
 
                     b.Navigation("Picture");
 

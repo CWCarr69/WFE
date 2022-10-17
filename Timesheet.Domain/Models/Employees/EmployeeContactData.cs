@@ -8,8 +8,8 @@
             CompanyPhone = companyPhone;
         }
 
-        public string CompanyEmail { get; private set; }
-        public string CompanyPhone { get; private set; }
+        public string? CompanyEmail { get; private set; }
+        public string? CompanyPhone { get; private set; }
 
         public override IEnumerable<object> GetAtomicValues()
         {

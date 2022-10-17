@@ -5,6 +5,7 @@ using Timesheet.Application.Notifications;
 using Timesheet.Application.Shared;
 using Timesheet.Application.Timesheets.EventHandlers;
 using Timesheet.Application.Workflow;
+using Timesheet.Domain.Employees.Services;
 
 namespace Timesheet.Application
 {
@@ -50,5 +51,11 @@ namespace Timesheet.Application
             services.AddScoped<UpdateTimeoffEntryCommandHandler, UpdateTimeoffEntryCommandHandler>();
             services.AddScoped<DeleteTimeoffEntryCommandHandler, DeleteTimeoffEntryCommandHandler>();
         }
+
+        public static void AddOtherServices(this IServiceCollection services)
+        {
+            services.AddScoped<IEmployeeBenefitCalculator, EmployeeBenefitCalculator>();
+        }
+
     }
 }

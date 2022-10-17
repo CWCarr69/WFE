@@ -33,3 +33,6 @@
 /Timesheet.Infrastructure.Dapper/obj
 /Timesheet.Infrastructure.Dapper/bin/Debug/net6.0
 /Timesheet.Shared.Dapper/obj/Debug/net6.0
+/Timesheet.FDPIntegratorService/bin/Debug/net6.0/runtimes
+/Timesheet.FDPIntegratorService/bin/Debug/net6.0
+/Timesheet.FDPIntegratorService/obj

@@ -8,12 +8,12 @@ namespace Timesheet.Application.Employees.CommandHandlers
 {
     internal class AddEntryToTimeoffCommandHandler : BaseEmployeeCommandHandler<TimeoffHeader, AddEntryToTimeoff>
     {
-        private readonly IReadRepository<Employee> _readRepository;
+        private readonly IEmployeeReadRepository _readRepository;
         private readonly IWorkflowService _workflowService;
 
         public AddEntryToTimeoffCommandHandler(
             IAuditHandler auditHandler,
-            IReadRepository<Employee> readRepository,
+            IEmployeeReadRepository readRepository,
             IWorkflowService workflowService,
             IDispatcher dispatcher,
             IUnitOfWork unitOfWork) : base(auditHandler, readRepository, dispatcher, unitOfWork)
@@ -22,17 +22,17 @@ namespace Timesheet.Application.Employees.CommandHandlers
             this._workflowService = workflowService;
         }
 
-        public override async Task<IEnumerable<IDomainEvent>> HandleCore(AddEntryToTimeoff command, CancellationToken token)
+        public override async Task<IEnumerable<IDomainEvent>> HandleCoreAsync(AddEntryToTimeoff command, CancellationToken token)
         {
             var employee = await GetEmployee(command);
-            var timeoffId = GetTimeoffId(command);
+            var timeoff = GetTimeoff(employee, command);
 
-            var timeoff = GetTimeoffOrThrowException(employee, timeoffId);
-            this.RelatedAuditableEntity = timeoff;
+
+            this.RelatedAuditableEntity = LaunchedAsSubCommand ? null : timeoff;
 
             _workflowService.AuthorizeTransition(timeoff, TimeoffTransitions.ADD_ENTRY, timeoff.Status);
 
-            employee.AddTimeoffEntry(command.RequestDate, command.Type, command.Hours, timeoffId);
+            employee.AddTimeoffEntry(command.RequestDate, command.Type, command.Hours, timeoff);
 
             return LaunchedAsSubCommand ? Enumerable.Empty<IDomainEvent>() : employee.GetDomainEvents();
         }
@@ -54,21 +54,21 @@ namespace Timesheet.Application.Employees.CommandHandlers
             }
         }
 
-        private string GetTimeoffId(AddEntryToTimeoff command)
+        private TimeoffHeader GetTimeoff(Employee employee, AddEntryToTimeoff command)
         {
             if (LaunchedAsSubCommand)
             {
-                var timeoffId = _parentCommandContext["TimeoffId"] as string;
-                if (timeoffId is null)
+                var timeoff = _parentCommandContext["Timeoff"] as TimeoffHeader;
+                if (timeoff is null)
                 {
-                    throw new InvalidOperationException($"Cannot call subcommand {nameof(AddEntryToTimeoff)} without providing TimesheetId data");
+                    throw new InvalidOperationException($"Cannot call subcommand {nameof(AddEntryToTimeoff)} without providing Timeoff data");
                 }
 
-                return timeoffId;
+                return timeoff;
             }
             else
             {
-                return command.TimeoffId;
+                return GetTimeoffOrThrowException(employee, command.TimeoffId);
             }
         }
     }

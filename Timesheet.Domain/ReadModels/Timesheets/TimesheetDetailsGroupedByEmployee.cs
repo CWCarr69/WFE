@@ -8,6 +8,6 @@
         public string PayrollPeriod { get; set; }
         public double Total { get; set; }
         public double Overtime { get; set; }
-        IEnumerable<EmployeeTimesheetDetail> Details { get; set; }
+        IEnumerable<EmployeeTimesheetEntry> Details { get; set; }
     }
 }

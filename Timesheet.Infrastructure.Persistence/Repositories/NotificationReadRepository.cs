@@ -4,7 +4,7 @@ using Timesheet.Domain.Models.Holidays;
 using Timesheet.Domain.Models.Notifications;
 using Timesheet.Domain.Repositories;
 
-namespace Timesheet.Infrastructure.Persistence.Writes
+namespace Timesheet.Infrastructure.Persistence.Repositories
 {
     internal class NotificationReadRepository : ReadRepository<Notification>, INotificationReadRepository
     {

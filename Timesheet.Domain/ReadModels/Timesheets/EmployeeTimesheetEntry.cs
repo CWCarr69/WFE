@@ -1,9 +1,8 @@
 ﻿namespace Timesheet.Domain.ReadModels.Timesheets;
 
-public class EmployeeTimesheetDetail
+public class EmployeeTimesheetEntry
 {
-    public string TimesheetId { get; set; }
-    public double PayrollPeriod { get; set; }
+    public string Id { get; set; }
     public DateTime CreatedDate { get; set; }
     public DateTime WorkDate { get; set; }
     public string PayrollCode { get; set; }

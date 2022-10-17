@@ -5,6 +5,7 @@ namespace Timesheet.Application.Employees.Queries
 {
     public interface IQueryEmployee
     {
+        Task<IEnumerable<EmployeeProfile?>> GetEmployees();
         Task<EmployeeProfile?> GetEmployeeProfile(string id);
         Task<EmployeeApprovers?> GetEmployeeApprovers(string id);
         Task<EmployeeBenefits?> GetEmployeeBenefits(string id);

@@ -9,11 +9,11 @@ namespace Timesheet.Application.Employees.CommandHandlers
         where TEntity : Entity
         where TCommand : ICommand
     {
-        private readonly IReadRepository<Employee> _readRepository;
+        private readonly IEmployeeReadRepository _readRepository;
 
         protected BaseEmployeeCommandHandler(
             IAuditHandler auditHandler,
-            IReadRepository<Employee> readRepository,
+            IEmployeeReadRepository readRepository,
             IDispatcher dispatcher,
             IUnitOfWork unitOfWork) : base(auditHandler, dispatcher, unitOfWork)
         {
@@ -22,7 +22,7 @@ namespace Timesheet.Application.Employees.CommandHandlers
 
         protected async Task<Employee> GetEmployee(string employeeId)
         {
-            var employee = await _readRepository.Get(employeeId);
+            var employee = await _readRepository.GetEmployee(employeeId);
 
             if (employee is null)
             {

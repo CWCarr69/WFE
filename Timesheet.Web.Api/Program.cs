@@ -18,6 +18,7 @@ namespace Timesheet.Web.Api
             builder.Services.RegisterEventDispatcher();
             builder.Services.RegisterEventHandlers();
             builder.Services.RegisterCommandHandlers();
+            builder.Services.AddOtherServices();
 
 
             builder.Services.AddControllers();

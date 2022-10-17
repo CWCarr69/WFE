@@ -8,22 +8,20 @@ namespace Timesheet.Application.Employees.CommandHandlers
 {
     internal class DeleteTimeoffCommandHandler : BaseEmployeeCommandHandler<TimeoffHeader, DeleteTimeoff>
     {
-        private readonly IReadRepository<Employee> _readRepository;
         private readonly IWorkflowService _workflowService;
 
         public DeleteTimeoffCommandHandler(
             IAuditHandler auditHandler,
-            IReadRepository<Employee> readRepository,
+            IEmployeeReadRepository readRepository,
             IWorkflowService workflowService,
             IDispatcher dispatcher,
             IUnitOfWork unitOfWork
             ) : base(auditHandler, readRepository, dispatcher, unitOfWork)
         {
-            _readRepository = readRepository;
             _workflowService = workflowService;
         }
 
-        public override async Task<IEnumerable<IDomainEvent>> HandleCore(DeleteTimeoff command, CancellationToken token)
+        public override async Task<IEnumerable<IDomainEvent>> HandleCoreAsync(DeleteTimeoff command, CancellationToken token)
         {
             var employee = await GetEmployee(command.EmployeeId);
 

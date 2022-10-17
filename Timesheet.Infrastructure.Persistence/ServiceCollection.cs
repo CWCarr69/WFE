@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Timesheet.Domain.Models;
+using Timesheet.Domain.Models.Audits;
 using Timesheet.Domain.Models.Employees;
 using Timesheet.Domain.Models.Holidays;
 using Timesheet.Domain.Models.Notifications;
 using Timesheet.Domain.Repositories;
-using Timesheet.Infrastructure.Persistence.Writes;
+using Timesheet.Infrastructure.Persistence.Repositories;
 
 namespace Timesheet.Infrastructure.Persistence
 {
@@ -18,7 +18,7 @@ namespace Timesheet.Infrastructure.Persistence
                 options.UseSqlServer(connectionString);
             });
 
-            services.AddScoped<IReadRepository<Employee>, ReadRepository<Employee>>();
+            services.AddScoped<IEmployeeReadRepository, EmployeeReadRepository>();
             services.AddScoped<IHolidayReadRepository, HolidayReadRepository>();
             services.AddScoped<INotificationReadRepository, NotificationReadRepository>();
             services.AddScoped<IReadRepository<NotificationItem>, ReadRepository<NotificationItem>>();

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System.Configuration;
 using Timesheet.Domain.Models.Employees;
 using Timesheet.Domain.Models.Timesheets;
 using Timesheet.FDPDataIntegrator.Employees;
@@ -9,17 +8,18 @@ using Timesheet.Infrastructure.Dapper;
 
 namespace Timesheet.FDPDataIntegrator
 {
-    internal static class ServiceCollections
+    public static class ServiceCollections
     {
-        public static IServiceCollection AddServices(this IServiceCollection services)
+        public static IServiceCollection AddServices(this IServiceCollection services, string connectionString)
         {
             return services.AddLogging()
                 .AddSingleton<IDatabaseService, DatabaseService>()
 
-                .AddSingleton(typeof(ISqlConnectionString), sp => new TimesheetSqlConnection(ConfigurationManager.ConnectionStrings["Timesheet"].ToString()))
+                .AddSingleton(typeof(ISqlConnectionString), sp => new TimesheetSqlConnection(connectionString))
 
                 .AddSingleton<IRepository<Employee>, EmployeeRepository>()
                 .AddSingleton<IRepository<TimesheetHeader>, PayrollRepository>()
+                .AddSingleton<ISettingRepository, SettingRepository>()
 
                 .AddSingleton<IAdapter<PayrollRecord, TimesheetHeader>, PayrollAdapter>()
                 .AddSingleton<IAdapter<EmployeeRecord, Employee>, EmployeeAdapter>()
@@ -27,8 +27,9 @@ namespace Timesheet.FDPDataIntegrator
                 .AddSingleton<IEmployeeRecordProcessor, EmployeeRecordProcessor>()
                 .AddSingleton<IPayrollRecordProcessor, PayrollRecordProcessor>()
 
-                .AddSingleton<INodeReader, NodeReader>();
+                .AddSingleton<INodeReader, NodeReader>()
 
+                .AddSingleton<IFieldPointClient, FieldPointClient>();
         }
     }
 }

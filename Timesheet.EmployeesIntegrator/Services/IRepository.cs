@@ -1,6 +1,6 @@
 ﻿namespace Timesheet.FDPDataIntegrator.Services
 {
-    internal interface IRepository<TEntity>
+    public interface IRepository<TEntity>
     {
         Task UpSert(TEntity entity);
         Task DisableConstraints();

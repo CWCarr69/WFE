@@ -1,4 +1,4 @@
-﻿namespace Timesheet.Domain.Models
+﻿namespace Timesheet.Domain.Models.Audits
 {
     public class Audit : Entity
     {

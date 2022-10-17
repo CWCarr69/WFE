@@ -3,7 +3,7 @@ using Timesheet.FDPDataIntegrator.Services;
 
 namespace Timesheet.FDPDataIntegrator.Employees
 {
-    internal interface IEmployeeRecordProcessor : IRecordProcessor<IAdapter<EmployeeRecord, Employee>, IRepository<Employee>, EmployeeRecord, Employee>
+    public interface IEmployeeRecordProcessor : IRecordProcessor<IAdapter<EmployeeRecord, Employee>, IRepository<Employee>, EmployeeRecord, Employee>
     { }
 
     internal class EmployeeRecordProcessor
@@ -19,12 +19,10 @@ namespace Timesheet.FDPDataIntegrator.Employees
 
         public override async Task Process(EmployeeRecord[] records)
         {
-            await _repository.BeginTransaction(async () =>
-            {
-                _repository.DisableConstraints().Wait();
-                base.Process(records).Wait();
-                _repository.EnableConstraints().Wait();
-            });
+            var _records = records.OrderBy(r => r.ManagerId).ToArray();
+            //_repository.DisableConstraints().Wait();
+            base.Process(_records).Wait();
+            //_repository.EnableConstraints().Wait();
         }
     }
 }

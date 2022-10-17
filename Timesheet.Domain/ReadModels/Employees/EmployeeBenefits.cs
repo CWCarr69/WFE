@@ -2,16 +2,17 @@
 {
     public class HourInformation
     {
-        public int Balance { get; set; }
-        public int Used { get; set; }
-        public int Scheduled { get; set; }
+        public string Type { get; set; }
+        public double Balance { get; set; }
+        public double Used { get; set; }
+        public double Scheduled { get; set; }
     }
 
     public class EmployeeBenefits
     {
-        public int EligibleVacationHours { get; set; }
-        public int EligiblePersonalHours { get; set; }
-        public int RolloverHours { get; set; }
+        public double EligibleVacationHours { get; set; }
+        public double EligiblePersonalHours { get; set; }
+        public double RolloverHours { get; set; }
 
         public IEnumerable<HourInformation> Details { get; set; }
     }

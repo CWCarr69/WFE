@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Timesheet.Domain;
-using Timesheet.Domain.Models;
+using Timesheet.Domain.Models.Audits;
 using Timesheet.Domain.Repositories;
 
 namespace Timesheet.Application.Shared

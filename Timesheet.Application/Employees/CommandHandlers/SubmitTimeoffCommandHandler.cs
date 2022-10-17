@@ -1,7 +1,6 @@
 ﻿using Timesheet.Application.Employees.Commands;
 using Timesheet.Application.Workflow;
 using Timesheet.Domain;
-using Timesheet.Domain.Models;
 using Timesheet.Domain.Models.Employees;
 using Timesheet.Domain.Repositories;
 
@@ -13,7 +12,7 @@ namespace Timesheet.Application.Employees.CommandHandlers
 
         public SubmitTimeoffCommandHandler(
             IAuditHandler auditHandler,
-            IReadRepository<Employee> readRepository, 
+            IEmployeeReadRepository readRepository, 
             IWorkflowService workflowService,
             IDispatcher dispatcher,
             IUnitOfWork unitOfWork) : base(auditHandler, readRepository, dispatcher, unitOfWork)
@@ -21,7 +20,7 @@ namespace Timesheet.Application.Employees.CommandHandlers
             this._workflowService = workflowService;
         }
 
-        public async override Task<IEnumerable<IDomainEvent>> HandleCore(SubmitTimeoff command, CancellationToken token)
+        public async override Task<IEnumerable<IDomainEvent>> HandleCoreAsync(SubmitTimeoff command, CancellationToken token)
         {
             var employee = await GetEmployee(command.EmployeeId);
             var timeoff = GetTimeoffOrThrowException(employee, command.TimeoffId);

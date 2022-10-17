@@ -6,7 +6,7 @@ namespace Timesheet.FDPDataIntegrator.Employees
 {
     internal class EmployeeRepository : IRepository<Employee>
     {
-        private const string EmployeeTableName = "Employees";
+        private const string EmployeeTable = "Employees";
         private readonly IDatabaseService _databaseService;
 
         public EmployeeRepository(IDatabaseService databaseService)
@@ -22,20 +22,19 @@ namespace Timesheet.FDPDataIntegrator.Employees
         public async Task DisableConstraints()
         {
             var employeeTableParam = "@tableName";
-            var query = $"ALTER TABLE Employees NOCHECK CONSTRAINT ALL";
-            await _databaseService.ExecuteAsync(query, new { tableName = EmployeeTableName });
+            var query = $"ALTER TABLE {EmployeeTable} NOCHECK CONSTRAINT ALL";
+            await _databaseService.ExecuteAsync(query, new { tableName = EmployeeTable });
         }
 
         public async Task EnableConstraints()
         {
             var employeeTableParam = "@tableName";
-            var query = $"ALTER TABLE {employeeTableParam} WITH CHECK CHECK CONSTRAINT ALL";
-            await _databaseService.ExecuteAsync(query, new { tableName = EmployeeTableName });
+            var query = $"ALTER TABLE {EmployeeTable} WITH CHECK CHECK CONSTRAINT ALL";
+            await _databaseService.ExecuteAsync(query, new { tableName = EmployeeTable });
         }
 
         public async Task UpSert(Employee employee)
         {
-            var employeeTable = "@tableName";
             var employeeId = "@employeeId";
             var employeeFullName = "@employeeFullName";
             var employeeManagerId = "@employeeManagerId";
@@ -50,6 +49,8 @@ namespace Timesheet.FDPDataIntegrator.Employees
             var employeeCompanyPhone = "@employeeCompanyPhone";
             var employeeCreatedDate = "@employeeCreatedDate";
             var employeeModifiedDate = "@employeeModifiedDate";
+            var employeeUpdatedBy = "@employeeUpdatedBy";
+            var employeeUserId = "@employeeUserId";
 
             var updates = $@"
             {nameof(Employee.FullName)} = {employeeFullName},
@@ -63,7 +64,9 @@ namespace Timesheet.FDPDataIntegrator.Employees
             {nameof(Employee.EmploymentData)}_{nameof(EmployeeEmploymentData.IsAdministrator)} = {employeeIsAdministrator},
             {nameof(Employee.Contacts)}_{nameof(EmployeeContactData.CompanyEmail)} = {employeeCompanyEmail},
             {nameof(Employee.Contacts)}_{nameof(EmployeeContactData.CompanyPhone)} = {employeeCompanyPhone},
-            {nameof(Employee.ModifiedDate)} = {employeeModifiedDate}
+            {nameof(Employee.ModifiedDate)} = {employeeModifiedDate},
+            {nameof(Employee.UpdatedBy)} = {employeeUpdatedBy},
+            {nameof(Employee.UserId)} = {employeeUserId}
             ";
 
             var insertColums = $@"
@@ -80,7 +83,9 @@ namespace Timesheet.FDPDataIntegrator.Employees
             {nameof(Employee.Contacts)}_{nameof(EmployeeContactData.CompanyEmail)},
             {nameof(Employee.Contacts)}_{nameof(EmployeeContactData.CompanyPhone)},
             {nameof(Employee.CreatedDate)},
-            {nameof(Employee.ModifiedDate)}
+            {nameof(Employee.ModifiedDate)},
+            {nameof(Employee.UpdatedBy)},
+            {nameof(Employee.UserId)}
             ";
 
             var insertValues = $@"
@@ -97,23 +102,24 @@ namespace Timesheet.FDPDataIntegrator.Employees
                 {employeeCompanyEmail},
                 {employeeCompanyPhone},
                 {employeeCreatedDate},
-                {employeeModifiedDate}
+                {employeeModifiedDate},
+                {employeeUpdatedBy},
+                {employeeUserId}
             ";
 
-            var query = $@"IF EXISTS (SELECT * FROM {employeeTable} WHERE {nameof(Employee.Id)} = {employeeId})
+            var query = $@"IF EXISTS (SELECT * FROM {EmployeeTable} WHERE {nameof(Employee.Id)} = {employeeId})
                          BEGIN
-                             UPDATE {employeeTable}
+                             UPDATE {EmployeeTable}
                              SET {updates}
                              WHERE {nameof(Employee.Id)} = {employeeId};
                                     END
                                     ELSE
                          BEGIN
-                             INSERT INTO {employeeTable} ({insertColums})
+                             INSERT INTO {EmployeeTable} ({insertColums})
                              SELECT {insertValues}
                          END";
 
             await _databaseService.ExecuteAsync(query, new { 
-                tableName = EmployeeTableName,
                 employeeId = employee.Id,
                 employeeFullName = employee.FullName,
                 employeeManagerId = employee.PrimaryApprover?.Id,
@@ -126,6 +132,10 @@ namespace Timesheet.FDPDataIntegrator.Employees
                 employeeIsAdministrator = employee.EmploymentData.IsAdministrator,
                 employeeCompanyEmail = employee.Contacts.CompanyEmail,
                 employeeCompanyPhone = employee.Contacts.CompanyPhone,
+                employeeCreatedDate = employee.CreatedDate,
+                employeeModifiedDate = employee.ModifiedDate,
+                employeeUpdatedBy = employee.UpdatedBy,
+                employeeUserId = employee.UserId
             });
         }
     }

@@ -33,7 +33,7 @@ namespace Timesheet.Application
             _transaction = unitOfWork;
         }
 
-        public abstract Task<IEnumerable<IDomainEvent>> HandleCore(TCommand command, CancellationToken token);
+        public abstract Task<IEnumerable<IDomainEvent>> HandleCoreAsync(TCommand command, CancellationToken token);
 
         public async Task HandleAsync(TCommand command, CancellationToken token)
         {
@@ -44,7 +44,7 @@ namespace Timesheet.Application
                 throw new Exception("Should set command before calling command Handler");
             }
 
-            Events = await HandleCore(command, token);
+            Events = await HandleCoreAsync(command, token);
 
             if (RelatedAuditableEntity is not null)
             {
