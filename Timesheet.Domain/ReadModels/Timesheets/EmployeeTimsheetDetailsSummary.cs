@@ -2,7 +2,8 @@
 {
     public class EmployeeTimesheetDetailSummary
     {
-        public string PayrollCode { get; set; }
+        public DateTime? WorkDate { get; set; }
+        public string? PayrollCode { get; set; }
         public double Hours { get; set; }
     }
 }

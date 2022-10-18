@@ -6,9 +6,10 @@ namespace Timesheet.Application.Timesheets.Queries
     public interface IQueryTimesheet
     {
 
-        Task<EmployeeTimesheetEntry?> GetEmployeeTimesheetDetails(string timesheetId);
-        Task<EmployeeTimesheetDetailSummary?> GetEmployeeTimeoffSummary(string timesheetId);
+        Task<EmployeeTimesheet?> GetEmployeeTimesheetDetails(string employeeId, string timesheetId);
+        Task<IEnumerable<EmployeeTimesheetDetailSummary?>> GetEmployeeTimesheetSummaryByPayroll(string employeeId, string timesheetId);
+        Task<IEnumerable<EmployeeTimesheetDetailSummary?>> GetEmployeeTimesheetSummaryByDate(string employeeId, string timesheetId);
         Task<IEnumerable<EmployeeTimesheet>> GetEmployeeTimesheets(string employeeId);
-        Task<IEnumerable<EmployeeTimesheet>> GetEmployeeTimesheetReview(string? payrollPeriod, string? employeeId, string? department, IEnumerable<TimesheetStatus> statuses);
+        Task<TimesheetReview> GetEmployeeTimesheetReview(string? payrollPeriod, string? employeeId, string? department, int page, int itemsPerPage);
     }
 }

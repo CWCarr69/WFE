@@ -34,6 +34,9 @@ namespace Timesheet.Web.Api
             //Register Handlers
             ConfigureHandlers(app);
 
+            //Initialize DB
+            InitializeDatabase(app);
+
             // Define global exception handling
             app.ConfigureExceptionHandler();
 
@@ -64,6 +67,20 @@ namespace Timesheet.Web.Api
                 }
                 handlersConfiguration.RegisterHandlers();
             }
+        }
+
+        private static void InitializeDatabase(WebApplication app)
+        {
+            using (var scope = app.Services.CreateScope())
+            {
+                try
+                {
+                    var context = scope.ServiceProvider.GetRequiredService<TimesheetDbContext>();
+                    DbInitializer.Initialize(context);
+                }catch(Exception ex){
+                    throw new Exception("Cannot initialize Database. Program cannot start.");
+                }
+            };
         }
     }
 }

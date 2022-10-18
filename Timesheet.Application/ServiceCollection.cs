@@ -2,6 +2,7 @@
 using Timesheet.Application.Employees.CommandHandlers;
 using Timesheet.Application.Holidays.CommandHandlers;
 using Timesheet.Application.Notifications;
+using Timesheet.Application.Settings.CommandHandlers;
 using Timesheet.Application.Shared;
 using Timesheet.Application.Timesheets.EventHandlers;
 using Timesheet.Application.Workflow;
@@ -50,6 +51,8 @@ namespace Timesheet.Application
             services.AddScoped<AddEntryToTimeoffCommandHandler, AddEntryToTimeoffCommandHandler>();
             services.AddScoped<UpdateTimeoffEntryCommandHandler, UpdateTimeoffEntryCommandHandler>();
             services.AddScoped<DeleteTimeoffEntryCommandHandler, DeleteTimeoffEntryCommandHandler>();
+            
+            services.AddScoped<UpdateSettingCommandHandler, UpdateSettingCommandHandler>();
         }
 
         public static void AddOtherServices(this IServiceCollection services)

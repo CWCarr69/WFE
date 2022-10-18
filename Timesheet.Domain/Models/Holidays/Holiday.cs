@@ -21,7 +21,7 @@ namespace Timesheet.Domain.Models.Holidays
 
         public static Holiday Create(DateTime date, string description, string Notes, bool isRecurrent)
         {
-            var holiday = new Holiday(Guid.NewGuid().ToString(), date, description, Notes, isRecurrent);
+            var holiday = new Holiday(GenerateId(), date, description, Notes, isRecurrent);
             holiday.RaiseDomainEvent(new HolidayAdded(holiday.Date, holiday.Description));
             return holiday;
         }

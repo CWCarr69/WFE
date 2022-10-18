@@ -1,9 +1,8 @@
 ﻿namespace Timesheet.Domain.ReadModels.Timesheets
 {
-    public class TimeSheetReview
+    public class TimesheetReview
     {
-        public string DepartmentId { get; set; }
-        public string Department { get; set; }
+        public long TotalItems { get; set; }
         public double TotalQuantity { get; set; }
         public IEnumerable<TimesheetDetailsGroupedByEmployee> DetailsByEmployee { get; set; }
     }

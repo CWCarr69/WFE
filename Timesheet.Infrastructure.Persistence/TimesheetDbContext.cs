@@ -8,7 +8,7 @@ using Timesheet.Domain.Models.Timesheets;
 
 namespace Timesheet.Infrastructure.Persistence
 {
-    internal class TimesheetDbContext : DbContext
+    public class TimesheetDbContext : DbContext
     {
         public TimesheetDbContext(DbContextOptions<TimesheetDbContext> options) : base(options)
         {
@@ -36,6 +36,7 @@ namespace Timesheet.Infrastructure.Persistence
             employmentData.Property(d => d.EmploymentDate).HasColumnName(nameof(EmployeeEmploymentData.EmploymentDate));
             employmentData.Property(d => d.TerminationDate).HasColumnName(nameof(EmployeeEmploymentData.TerminationDate));
             employmentData.Property(d => d.IsSalaried).HasColumnName(nameof(EmployeeEmploymentData.IsSalaried));
+            employmentData.Property(d => d.IsAdministrator).HasColumnName(nameof(EmployeeEmploymentData.IsAdministrator));
 
             var contacts = employee.OwnsOne(e => e.Contacts);
             contacts.Property(d => d.CompanyEmail).HasColumnName(nameof(EmployeeContactData.CompanyEmail));

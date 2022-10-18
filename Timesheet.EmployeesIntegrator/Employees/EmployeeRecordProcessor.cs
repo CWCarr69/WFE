@@ -19,8 +19,8 @@ namespace Timesheet.FDPDataIntegrator.Employees
 
         public override async Task Process(EmployeeRecord[] records)
         {
+            _repository.DisableConstraints().Wait();
             var _records = records.OrderBy(r => r.ManagerId).ToArray();
-            //_repository.DisableConstraints().Wait();
             base.Process(_records).Wait();
             //_repository.EnableConstraints().Wait();
         }

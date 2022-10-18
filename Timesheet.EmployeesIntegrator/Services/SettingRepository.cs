@@ -19,7 +19,7 @@ internal class SettingRepository: ISettingRepository
 
         if (settings is null)
         {
-            throw new Exception("Mail Notifications settings are not complete");
+            throw new Exception("FDP settings are not complete");
         }
         else {
             return FDPSettings.CreateFromConfigurationList(settings);
