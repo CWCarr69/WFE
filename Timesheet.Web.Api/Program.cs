@@ -1,6 +1,12 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Timesheet.Application;
 using Timesheet.Infrastructure.Persistence;
 using Timesheet.ReadModel;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Timesheet.Infrastructure.Authentication;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace Timesheet.Web.Api
 {
@@ -18,16 +24,41 @@ namespace Timesheet.Web.Api
             builder.Services.RegisterEventDispatcher();
             builder.Services.RegisterEventHandlers();
             builder.Services.RegisterCommandHandlers();
+            builder.Services.AddAuthenticationServices();
             builder.Services.AddOtherServices();
 
-
+            //Controllers
             builder.Services.AddControllers();
+            builder.Services.AddCors();
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(options =>
             {
-                options.CustomSchemaIds(type => type.ToString());
+                options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                {
+                    Description = "Authentication using Bearer scheme",
+                    In = ParameterLocation.Header,
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey
+                });
+
+                options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
+
+            //Authentication
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                            builder.Configuration.GetSection("AppSettings:Token").Value)),
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                    };
+                });
 
             var app = builder.Build();
 
@@ -49,6 +80,7 @@ namespace Timesheet.Web.Api
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();

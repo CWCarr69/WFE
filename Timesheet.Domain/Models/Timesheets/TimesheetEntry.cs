@@ -1,5 +1,4 @@
-﻿using Timesheet.Domain;
-namespace Timesheet.Domain.Models.Timesheets
+﻿namespace Timesheet.Domain.Models.Timesheets
 {
     public class TimesheetEntry : Entity
     {
@@ -21,7 +20,6 @@ namespace Timesheet.Domain.Models.Timesheets
         }
 
         public string EmployeeId { get; private set; }
-        //public string EmployeeFullName { get; private set; }
         public DateTime WorkDate { get; private set; }
         public string PayrollCode { get; private set; }
         public double Hours { get; private set; }
@@ -36,9 +34,23 @@ namespace Timesheet.Domain.Models.Timesheets
         public string? LaborCode { get; private set; }
         public string? CustomerNumber { get; private set; }
         public string ProfitCenterNumber { get; private set; }
-        //public string Department { get; private set; }
         public bool? OutOffCountry { get; private set; } //TODO HERE
         public string? WorkArea => (OutOffCountry ?? false) ? "Out of country" : "In state";
         public TimesheetEntryStatus Status { get; set; }
+
+        internal void Submit()
+        {
+            this.Status = TimesheetEntryStatus.SUBMITTED;
+        }
+
+        internal void Approve()
+        {
+            this.Status = TimesheetEntryStatus.APPROVED;
+        }
+
+        internal void Reject()
+        {
+            this.Status = TimesheetEntryStatus.REJECTED;
+        }
     }
 }

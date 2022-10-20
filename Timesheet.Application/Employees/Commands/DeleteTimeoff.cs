@@ -2,11 +2,11 @@
 
 namespace Timesheet.Application.Employees.Commands
 {
-    public class DeleteTimeoff : ICommand
+    public class DeleteTimeoff : BaseCommand
     {
-       public string EmployeeId { get; set; }
-       public string TimeoffId { get; set; }
-        public CommandActionType ActionType() => CommandActionType.DELETION;
+        public string EmployeeId { get; set; }
+        public string TimeoffId { get; set; }
+        public override CommandActionType ActionType() => CommandActionType.DELETION;
 
     }
 }

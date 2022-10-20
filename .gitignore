@@ -36,3 +36,5 @@
 /Timesheet.FDPIntegratorService/bin/Debug/net6.0/runtimes
 /Timesheet.FDPIntegratorService/bin/Debug/net6.0
 /Timesheet.FDPIntegratorService/obj
+/Timesheet.Infrastructure.Authentication/obj
+/Timesheet.Infrastructure.Authentication/bin/Debug/net6.0

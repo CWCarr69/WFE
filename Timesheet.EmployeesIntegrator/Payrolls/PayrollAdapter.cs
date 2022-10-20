@@ -36,7 +36,7 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
                 record.RecordId,
                 employeeId: record.EmployeeCode,
                 WorkDate: record.WorkDate,
-                payrollCode: record.PayrollCode,
+                payrollCode: record.PayrollCode?.ToUpper() ?? TimesheetPayrollCode.OVERTIME.ToString(),
                 hours: record.Quantity,
                 description: record.CustomerName,
                 serviceOrderNumber: record.ServiceOrderNumber,

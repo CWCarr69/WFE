@@ -20,6 +20,7 @@ namespace Timesheet.Infrastructure.Persistence
             });
 
             services.AddScoped<IEmployeeReadRepository, EmployeeReadRepository>();
+            services.AddScoped<ITimesheetReadRepository, TimesheetReadRepository>();
             services.AddScoped<IHolidayReadRepository, HolidayReadRepository>();
             services.AddScoped<INotificationReadRepository, NotificationReadRepository>();
             services.AddScoped<IReadRepository<NotificationItem>, ReadRepository<NotificationItem>>();

@@ -31,7 +31,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sharedlibs", "sharedlibs", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timesheet.Infrastructure.Dapper", "Timesheet.Infrastructure.Dapper\Timesheet.Infrastructure.Dapper.csproj", "{29B1596B-CCDC-431B-B37B-586DECFFE6D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timesheet.FDPIntegratorService", "Timesheet.FDPIntegratorService\Timesheet.FDPIntegratorService.csproj", "{30A9FA1F-7E14-44FF-800D-6BFBFF60F7F2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timesheet.FDPIntegratorService", "Timesheet.FDPIntegratorService\Timesheet.FDPIntegratorService.csproj", "{30A9FA1F-7E14-44FF-800D-6BFBFF60F7F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timesheet.Infrastructure.Authentication", "Timesheet.Infrastructure.Authentication\Timesheet.Infrastructure.Authentication.csproj", "{E5157CAE-CD3E-4E85-8A93-67C1D0B3FF63}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,6 +85,10 @@ Global
 		{30A9FA1F-7E14-44FF-800D-6BFBFF60F7F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30A9FA1F-7E14-44FF-800D-6BFBFF60F7F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30A9FA1F-7E14-44FF-800D-6BFBFF60F7F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5157CAE-CD3E-4E85-8A93-67C1D0B3FF63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5157CAE-CD3E-4E85-8A93-67C1D0B3FF63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5157CAE-CD3E-4E85-8A93-67C1D0B3FF63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5157CAE-CD3E-4E85-8A93-67C1D0B3FF63}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -99,6 +105,7 @@ Global
 		{BF82C9A9-A729-4417-907F-32FB9A58A07F} = {1BBC0F75-F28F-4C1C-8AFE-B336066515E6}
 		{29B1596B-CCDC-431B-B37B-586DECFFE6D3} = {8738F187-6FBE-40FE-AFBF-D12AF548EF55}
 		{30A9FA1F-7E14-44FF-800D-6BFBFF60F7F2} = {1BBC0F75-F28F-4C1C-8AFE-B336066515E6}
+		{E5157CAE-CD3E-4E85-8A93-67C1D0B3FF63} = {0F49CFD8-0D3C-4D80-9F2E-06C66D564FAF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50FBDF77-109D-4686-A2D9-F50A5139020D}

@@ -2,7 +2,7 @@
 
 namespace Timesheet.Application.Employees.Commands
 {
-    public class CreateTimeoff : ICommand
+    public class CreateTimeoff : BaseCommand
     {
         public DateTime RequestStartDate { get; set; }
         public DateTime RequestEndDate { get; set; }
@@ -11,7 +11,7 @@ namespace Timesheet.Application.Employees.Commands
         public string ApproverComment { get; set; }
 
         public IEnumerable<AddEntryToTimeoff> Entries { get; set; }
-        public CommandActionType ActionType() => CommandActionType.CREATION;
+        public override CommandActionType ActionType() => CommandActionType.CREATION;
 
     }
 }

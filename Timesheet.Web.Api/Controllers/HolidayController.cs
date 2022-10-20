@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Timesheet.Application;
 using Timesheet.Application.Holidays.Commands;
 using Timesheet.Application.Holidays.Queries;
@@ -6,9 +7,10 @@ using Timesheet.Domain.ReadModels.Holidays;
 
 namespace Timesheet.Web.Api.Controllers
 {
+    [Authorize(Roles = "ADMINISTRATOR")]
     [Route("api/[controller]")]
     [ApiController]
-    public class HolidayController : ControllerBase
+    public class HolidayController : BaseController
     {
         private readonly IQueryHoliday _holidayQuery;
         private readonly IDispatcher _dispatcher;
@@ -36,28 +38,28 @@ namespace Timesheet.Web.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] AddHoliday addHoliday, CancellationToken token)
         {
-            await _dispatcher.RunCommand(addHoliday, token);
+            await _dispatcher.RunCommand(addHoliday, CurrentUserId, token);
             return Ok();
         }
 
         [HttpPut]
         public async Task<IActionResult> UpdateGeneralInformations([FromBody] UpdateHolidayGeneralInformations updateHoliday, CancellationToken token)
         {
-            await _dispatcher.RunCommand(updateHoliday, token);
+            await _dispatcher.RunCommand(updateHoliday, CurrentUserId, token);
             return Ok();
         }
 
         [HttpPut("/setAsRecurrent")]
         public async Task<IActionResult> SetAsRecurrent([FromBody] SetHolidayAsRecurrent setHolidayAsRecurrent, CancellationToken token)
         {
-            await _dispatcher.RunCommand(setHolidayAsRecurrent,token);
+            await _dispatcher.RunCommand(setHolidayAsRecurrent, CurrentUserId, token);
             return Ok();
         }
 
-        [HttpDelete()]
+        [HttpDelete]
         public async Task<IActionResult> Delete([FromBody] DeleteHoliday deleteHoliday, CancellationToken token)
         {
-            await _dispatcher.RunCommand(deleteHoliday, token);
+            await _dispatcher.RunCommand(deleteHoliday, CurrentUserId, token);
             return Ok();
         }
     }

@@ -50,11 +50,22 @@
             TimeoffEntries.Remove(timeoffEntry);
         }
 
-        internal void Approve(string comment) => DoTransition(TimeoffStatus.APPROVED, comment);
+        internal void Approve(string comment)
+        {
+            Transition(TimeoffStatus.APPROVED, () => this.ApproverComment = comment ?? this.ApproverComment);
+            ValidateAllEntries();
+        }
 
-        internal void Submit(string comment) => DoTransition(TimeoffStatus.SUBMITTED, comment);
+        internal void Submit(string comment)
+        {
+            Transition(TimeoffStatus.SUBMITTED, () => this.EmployeeComment = comment ?? this.EmployeeComment);
+        }
 
-        internal void Reject(string comment) => DoTransition(TimeoffStatus.REJECTED, comment);
+        internal void Reject(string comment)
+        {
+            Transition(TimeoffStatus.REJECTED, () => this.ApproverComment = comment ?? this.ApproverComment);
+            ValidateAllEntries();
+        }
 
         internal void Update()
         {
@@ -64,12 +75,10 @@
             RequestEndDate = timeoffEndDate;
         }
 
-        private void DoTransition(TimeoffStatus status, string comment)
+        private void Transition(TimeoffStatus status, Action updateData)
         {
             this.Status = status;
-            this.EmployeeComment = comment ?? this.ApproverComment;
-
-            ValidateAllEntries();
+            updateData();
         }
 
         private void ValidateAllEntries()

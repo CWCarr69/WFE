@@ -1,6 +1,5 @@
 ﻿using Timesheet.Domain.Models.Timesheets;
 using Timesheet.FDPDataIntegrator.Services;
-using Timesheet.Infrastructure.Dapper;
 
 namespace Timesheet.FDPDataIntegrator.Payrolls
 {

@@ -31,8 +31,10 @@ namespace Timesheet.Application.Employees.CommandHandlers
 
             this.RelatedAuditableEntity = timeoff;
 
-            _workflowService.AuthorizeTransition(timeoff, TimeoffTransitions.UPDATE_ENTRY, timeoff.Status);
-            _workflowService.AuthorizeTransition(timeoffEntry, TimeoffEntryTransitions.UPDATE, timeoffEntry.Status);
+            EmployeeRoleOnData currentEmployeeRoleOnData = await GetCurrentEmployeeRoleOnData(command, employee);
+
+            _workflowService.AuthorizeTransition(timeoff, TimeoffTransitions.UPDATE_ENTRY, timeoff.Status, currentEmployeeRoleOnData);
+            _workflowService.AuthorizeTransition(timeoffEntry, TimeoffEntryTransitions.UPDATE, timeoffEntry.Status, currentEmployeeRoleOnData);
 
             employee.UpdateTimeoffEntry(timeoff, timeoffEntry, command.Type, command.Hours);
 

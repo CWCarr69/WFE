@@ -2,7 +2,7 @@
 
 namespace Timesheet.Application.Timesheets.EventHandlers
 {
-    internal sealed class HolidayGeneralInformationsUpdatedHandler : IEventHandler<HolidayGeneralInformationsUpdated>
+    internal sealed class TimehsheetHandleHolidayGeneralInformationsUpdated : IEventHandler<HolidayGeneralInformationsUpdated>
     {
         public Task Handle(HolidayGeneralInformationsUpdated @event)
         {

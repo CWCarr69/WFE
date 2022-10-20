@@ -2,6 +2,6 @@
 {
     public enum TimesheetEntryStatus
     {
-        IN_PROGRESS, APPROVED, REJECTED
+        IN_PROGRESS, SUBMITTED, APPROVED, REJECTED
     }
 }

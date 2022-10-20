@@ -19,9 +19,8 @@
             return setting;
         }
 
-        public void Update(string name, string value)
+        public void UpdateValue(string value)
         {
-            this.Name = name ??  this.Name;
             this.Value = value ??  this.Value;
         }
     }

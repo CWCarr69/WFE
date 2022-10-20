@@ -12,12 +12,13 @@ namespace Timesheet.Application.Settings.CommandHandlers
         public readonly IReadRepository<Setting> _readRepository;
 
         public UpdateSettingCommandHandler(
+            IEmployeeReadRepository employeeReadRepository,
             IAuditHandler auditHandler,
             IWriteRepository<Setting> writeRepository,
             IReadRepository<Setting> readRepository,
             IDispatcher dispatcher,
             IUnitOfWork unitOfWork
-            ) : base(auditHandler, dispatcher, unitOfWork)
+            ) : base(employeeReadRepository, auditHandler, dispatcher, unitOfWork)
         {
             _writeRepository = writeRepository;
             _readRepository = readRepository;
@@ -36,11 +37,11 @@ namespace Timesheet.Application.Settings.CommandHandlers
                 throw new EntityNotFoundException<Setting>(updateSetting.Id);
             }
 
-            existingSetting.Update(updateSetting.Name, updateSetting.Value);
+            existingSetting.UpdateValue(updateSetting.Value);
 
             this.RelatedAuditableEntity = existingSetting;
 
-            return Enumerable.Empty<IDomainEvent>() ;
+            return Enumerable.Empty<IDomainEvent>();
         }
     }
 }

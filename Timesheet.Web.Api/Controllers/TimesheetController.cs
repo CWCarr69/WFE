@@ -1,20 +1,25 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Timesheet.Application;
+using Timesheet.Application.Timesheets.Commands;
 using Timesheet.Application.Timesheets.Queries;
-using Timesheet.Domain.Models.Timesheets;
 using Timesheet.Domain.ReadModels.Timesheets;
 using Timesheet.Web.Api.ViewModels;
 
 namespace Timesheet.Web.Api.Controllers
 {
+    [Authorize]
     [Route("api/[Controller]")]
     [ApiController]
-    public class TimesheetController : ControllerBase
+    public class TimesheetController : BaseController
     {
         private readonly IQueryTimesheet _timesheetQuery;
+        private readonly IDispatcher _dispatcher;
 
-        public TimesheetController(IQueryTimesheet timesheetQuery)
+        public TimesheetController(IQueryTimesheet timesheetQuery, IDispatcher dispatcher)
         {
             this._timesheetQuery = timesheetQuery;
+            this._dispatcher = dispatcher;
         }
 
         [HttpGet("History/Employee/{employeeId}")]
@@ -45,10 +50,10 @@ namespace Timesheet.Web.Api.Controllers
             return Ok(timeoffs);
         }
 
-        [HttpGet("timesheetReview")]
+        [HttpGet("Review")]
         public async Task<ActionResult<PaginatedResult<TimesheetReview>>> GetTimesheetReview(string? payrollPeriod, string? employeeId, string? department, int page=1, int itemsPerpage=50)
         {
-            var timesheetReview = await _timesheetQuery.GetEmployeeTimesheetReview(payrollPeriod, employeeId, department, page, itemsPerpage);
+            var timesheetReview = await _timesheetQuery.GetTimesheetReview(payrollPeriod, employeeId, department, page, itemsPerpage);
             var result = new PaginatedResult<TimesheetDetailsGroupedByEmployee>
             {
                 Page = page,
@@ -58,6 +63,38 @@ namespace Timesheet.Web.Api.Controllers
             };
             result.OtherData.Add(nameof(TimesheetReview.TotalQuantity), timesheetReview.TotalQuantity);
             return Ok(result);
+        }
+
+        [HttpPut("Submit")]
+        public async Task<IActionResult> Submit([FromBody] SubmitTimesheet command, CancellationToken token)
+        {
+            await _dispatcher.RunCommand(command, CurrentUserId, token);
+            return Ok();
+        }
+
+        [Authorize(Roles = "SUPERVISOR, MANAGER, ADMINISTRATOR")]
+        [HttpPut("Approve")]
+        public async Task<IActionResult> Approve([FromBody] ApproveTimesheet command, CancellationToken token)
+        {
+            await _dispatcher.RunCommand(command, CurrentUserId, token);
+            return Ok();
+        }
+
+
+        [Authorize(Roles = "SUPERVISOR, MANAGER, ADMINISTRATOR")]
+        [HttpPut("Reject")]
+        public async Task<IActionResult> Reject([FromBody] RejectTimesheet command, CancellationToken token)
+        {
+            await _dispatcher.RunCommand(command, CurrentUserId, token);
+            return Ok();
+        }
+
+        [Authorize(Roles = "ADMINISTRATOR")]
+        [HttpPut("Finalize")]
+        public async Task<IActionResult> Finalize([FromBody] FinalizeTimesheet command, CancellationToken token)
+        {
+            await _dispatcher.RunCommand(command, CurrentUserId, token);
+            return Ok();
         }
     }
 }

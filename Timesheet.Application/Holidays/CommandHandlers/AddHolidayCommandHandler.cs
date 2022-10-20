@@ -12,12 +12,13 @@ namespace Timesheet.Application.Holidays.CommandHandlers
         public readonly IHolidayReadRepository _readRepository;
 
         public AddHolidayCommandHandler(
+            IEmployeeReadRepository employeeReadRepository,
             IAuditHandler auditHandler,
             IWriteRepository<Holiday> writeRepository,
             IHolidayReadRepository readRepository,
             IDispatcher dispatcher,
             IUnitOfWork unitOfWork
-            ) : base(auditHandler, dispatcher, unitOfWork)
+            ) : base(employeeReadRepository, auditHandler, dispatcher, unitOfWork)
         {
             _writeRepository = writeRepository;
             _readRepository = readRepository;

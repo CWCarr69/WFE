@@ -1,4 +1,16 @@
-﻿namespace Timesheet.Application.Workflow
+﻿using Timesheet.Domain.Models.Employees;
+
+namespace Timesheet.Application.Workflow
 {
-    public record Transition(Enum Name, params Enum[] PermissionStates);
+    public class Transition {
+        public Transition(Enum name, params Enum[] permissionStates)
+        {
+            Name = name;
+            PermissionStates = permissionStates;
+        }
+
+        public Enum Name { get; }
+        public EmployeeRoleOnData[] AuthorizedRoles { get; }
+        public Enum[] PermissionStates { get; }
+    }
 }

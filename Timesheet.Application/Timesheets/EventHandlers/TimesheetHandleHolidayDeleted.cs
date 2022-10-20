@@ -2,7 +2,7 @@
 
 namespace Timesheet.Application.Timesheets.EventHandlers
 {
-    internal sealed class HolidayDeletedHandler : IEventHandler<HolidayDeleted>
+    internal sealed class TimesheetHandleHolidayDeleted : IEventHandler<HolidayDeleted>
     {
         public Task Handle(HolidayDeleted @event)
         {

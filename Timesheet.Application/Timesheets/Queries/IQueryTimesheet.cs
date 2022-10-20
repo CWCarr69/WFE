@@ -10,6 +10,6 @@ namespace Timesheet.Application.Timesheets.Queries
         Task<IEnumerable<EmployeeTimesheetDetailSummary?>> GetEmployeeTimesheetSummaryByPayroll(string employeeId, string timesheetId);
         Task<IEnumerable<EmployeeTimesheetDetailSummary?>> GetEmployeeTimesheetSummaryByDate(string employeeId, string timesheetId);
         Task<IEnumerable<EmployeeTimesheet>> GetEmployeeTimesheets(string employeeId);
-        Task<TimesheetReview> GetEmployeeTimesheetReview(string? payrollPeriod, string? employeeId, string? department, int page, int itemsPerPage);
+        Task<TimesheetReview> GetTimesheetReview(string? payrollPeriod, string? employeeId, string? department, int page, int itemsPerPage);
     }
 }

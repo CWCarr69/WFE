@@ -1,5 +1,5 @@
 ﻿using Timesheet.Domain.Exceptions;
-using Timesheet.DomainEvents.Employee;
+using Timesheet.DomainEvents.Employees;
 
 namespace Timesheet.Domain.Models.Employees
 {
@@ -113,7 +113,7 @@ namespace Timesheet.Domain.Models.Employees
 
         private void RaiseTimeoffWorkflowChangedEvent(TimeoffHeader timeoff, string status)
         {
-            RaiseDomainEvent(new TimeoffWorkflowChanged(Id, PrimaryApprover?.Id, SecondaryApprover?.Id, status, timeoff.Id));
+            RaiseDomainEvent(new TimeoffStateChanged(Id, PrimaryApprover?.Id, SecondaryApprover?.Id, status, timeoff.Id)); ;
         }
 
         public void AddTimeoffEntry(DateTime requestDate, TimeoffType type, double hours, TimeoffHeader timeoff)

@@ -36,7 +36,7 @@ namespace Timesheet.Application.Employees.CommandHandlers
                 { "Employee", employee },
                 { "Timeoff", timeoff }
             };
-            command.Entries?.ToList().ForEach(async entryCommand => await _dispatcher.RunSubCommand(entryCommand, commandContext, token));
+            command.Entries?.ToList().ForEach(async entryCommand => await _dispatcher.RunSubCommand(entryCommand, commandContext, command.AuthorId, token));
 
             return employee.GetDomainEvents();
         }

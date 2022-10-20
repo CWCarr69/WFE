@@ -23,8 +23,10 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
             var oneYearBefore = DateTime.Now.AddYears(-1);
             var oneYearAfter = DateTime.Now.AddYears(1);
 
-            var currentPayrollPeriodStartDate = oneYearBefore.LastDayOfYear(DayOfWeek.Thursday).SevenDaysBefore();
-            var nextPayrollPeriodStartDate = now.LastDayOfYear(DayOfWeek.Thursday).SevenDaysBefore();
+            //var currentPayrollPeriodStartDate = oneYearBefore.LastDayOfYear(DayOfWeek.Thursday).SevenDaysBefore();
+            var currentPayrollPeriodStartDate = oneYearBefore.LastDayOfYear(DayOfWeek.Friday);
+            //var nextPayrollPeriodStartDate = now.LastDayOfYear(DayOfWeek.Thursday).SevenDaysBefore();
+            var nextPayrollPeriodStartDate = now.LastDayOfYear(DayOfWeek.Friday);
 
             var firstPayrollStartDate = now >= nextPayrollPeriodStartDate
                 ? nextPayrollPeriodStartDate

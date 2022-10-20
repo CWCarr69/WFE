@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Timesheet.Domain.Models.Employees;
+using Timesheet.Domain.Models.Notifications;
 using Timesheet.Domain.Models.Settings;
+using Timesheet.Domain.Models.Timesheets;
 
 namespace Timesheet.Infrastructure.Persistence
 {
@@ -13,16 +11,24 @@ namespace Timesheet.Infrastructure.Persistence
         {
             context.Database.EnsureCreated();
 
-            if (context.Settings.Any())
+            if (!context.Settings.Any())
             {
-                return;
+                Setting[] settings = GetSettings();
+
+                foreach (var setting in settings)
+                {
+                    context.Settings.Add(setting);
+                }
             }
 
-            Setting[] settings = GetSettings();
-
-            foreach (var setting in settings)
+            if (!context.Notifications.Any())
             {
-                context.Add(setting);
+                Notification[] notifications = GetNotifications();
+
+                foreach (var notification in notifications)
+                {
+                    context.Notifications.Add(notification);
+                }
             }
 
             context.SaveChanges();
@@ -50,6 +56,23 @@ namespace Timesheet.Infrastructure.Persistence
                 Setting.Create("FDP_Domain", "WilsonFire", "Service Domain"),
 
                 Setting.Create("VALIDATION_NOTES_LENGTH", "1024", "Notes Length (bytes)"),
+            };
+        }
+
+        private static Notification[] GetNotifications()
+        {
+            return new Notification[]
+            {
+                Notification.Create(0, NotificationType.TIMESHEET, TimesheetEntryStatus.IN_PROGRESS.ToString()),
+                Notification.Create(0, NotificationType.TIMESHEET, TimesheetEntryStatus.APPROVED.ToString()),
+                Notification.Create(0, NotificationType.TIMESHEET, TimesheetEntryStatus.REJECTED.ToString()),
+                Notification.Create(0, NotificationType.TIMESHEET, TimesheetEntryStatus.SUBMITTED.ToString()),
+                Notification.Create(0, NotificationType.TIMESHEET, TimesheetStatus.FINALIZED.ToString()),
+                
+                Notification.Create(0, NotificationType.TIMEOFF, TimeoffStatus.IN_PROGRESS.ToString()),
+                Notification.Create(0, NotificationType.TIMESHEET, TimeoffStatus.SUBMITTED.ToString()),
+                Notification.Create(0, NotificationType.TIMESHEET, TimeoffStatus.APPROVED.ToString()),
+                Notification.Create(0, NotificationType.TIMESHEET, TimeoffStatus.REJECTED.ToString())
             };
         }
     }

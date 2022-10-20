@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Timesheet.Application;
 using Timesheet.Application.Employees.Queries;
 using Timesheet.Domain.Employees.Services;
@@ -6,13 +7,13 @@ using Timesheet.Domain.ReadModels.Employees;
 
 namespace Timesheet.Web.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class EmployeeController : ControllerBase
     {
         private readonly IQueryEmployee _employeeQuery;
         private readonly IEmployeeBenefitCalculator _benefitsServcies;
-        private readonly IDispatcher _dispatcher;
 
         public EmployeeController(IQueryEmployee employeeQuery,
             IEmployeeBenefitCalculator benefitsServcies,
@@ -20,7 +21,6 @@ namespace Timesheet.Web.Api.Controllers
         {
             _employeeQuery = employeeQuery;
             this._benefitsServcies = benefitsServcies;
-            _dispatcher = dispatcher;
         }
 
         [HttpGet]

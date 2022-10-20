@@ -1,16 +1,16 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Timesheet.Application;
-using Timesheet.Application.Holidays.Queries;
 using Timesheet.Application.Settings.Commands;
-using Timesheet.Domain.Models.Settings;
+using Timesheet.Application.Settings.Queries;
 using Timesheet.Domain.ReadModels.Settings;
 
 namespace Timesheet.Web.Api.Controllers
 {
+    [Authorize(Roles = "ADMINISTRATOR")]
     [Route("api/[controller]")]
     [ApiController]
-    public class SettingsController : ControllerBase
+    public class SettingsController : BaseController
     {
         private readonly IQuerySetting _query;
         private readonly IDispatcher _dispatcher;
@@ -31,7 +31,7 @@ namespace Timesheet.Web.Api.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateSetting(UpdateSetting updateSetting, CancellationToken token)
         {
-            await _dispatcher.RunCommand(updateSetting, token);
+            await _dispatcher.RunCommand(updateSetting, CurrentUserId, token);
             return Ok();
         }
     }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Timesheet.Application.Referential.Queries;
 using Timesheet.Domain.Models.Employees;
 using Timesheet.Domain.Models.Timesheets;
@@ -7,6 +8,7 @@ using Timesheet.Domain.ReadModels.Employees;
 
 namespace Timesheet.Web.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ReferentialController : ControllerBase

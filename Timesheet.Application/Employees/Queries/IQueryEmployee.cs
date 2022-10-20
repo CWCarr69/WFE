@@ -7,6 +7,8 @@ namespace Timesheet.Application.Employees.Queries
     {
         Task<IEnumerable<EmployeeProfile?>> GetEmployees();
         Task<EmployeeProfile?> GetEmployeeProfile(string id);
+        Task<EmployeeProfile?> GetEmployeeProfileByEmail(string email);
+        Task<EmployeeProfile?> GetEmployeeProfileByLogin(string login);
         Task<EmployeeApprovers?> GetEmployeeApprovers(string id);
         Task<EmployeeBenefits?> GetEmployeeBenefits(string id);
         Task<IEnumerable<EmployeeWithTimeStatus>> GetEmployeesTimeRecordStatus(string? approverId = null, bool directReports = false);

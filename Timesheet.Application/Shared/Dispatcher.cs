@@ -38,13 +38,15 @@ namespace Timesheet.Application
             }
         }
 
-        public async Task RunCommand<TCommand>(TCommand command, CancellationToken token)
+        public async Task RunCommand<TCommand>(TCommand command, string authorId, CancellationToken token)
             where TCommand : ICommand
         {
             if (command is null)
             {
                 throw new ArgumentNullException(nameof(command));
             }
+
+            command.AuthorId = authorId;
 
             dynamic handler = GetHandler(
                 command.GetType(),
@@ -55,13 +57,15 @@ namespace Timesheet.Application
             await handler.HandleAsync(command, token);
         }
 
-        public async Task RunSubCommand<TCommand>(TCommand command, IDictionary<string, object> context, CancellationToken token)
+        public async Task RunSubCommand<TCommand>(TCommand command, IDictionary<string, object> context, string authorId, CancellationToken token)
             where TCommand : ICommand
         {
             if (command is null)
             {
                 throw new ArgumentNullException(nameof(command));
             }
+
+            command.AuthorId = authorId;
 
             dynamic handler = GetHandler(
                 command.GetType(),

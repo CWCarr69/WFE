@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Timesheet.Application;
 using Timesheet.Application.Employees.Commands;
 using Timesheet.Application.Employees.Queries;
@@ -6,9 +7,10 @@ using Timesheet.Domain.ReadModels.Employees;
 
 namespace Timesheet.Web.Api.Controllers
 {
+    [Authorize]
     [Route("api/Employee")]
     [ApiController]
-    public class TimeoffController : ControllerBase
+    public class TimeoffController : BaseController
     {
         private readonly IQueryTimeoff _timeoffQuery;
         private readonly IDispatcher _dispatcher;
@@ -51,21 +53,21 @@ namespace Timesheet.Web.Api.Controllers
         [HttpPost("timeoff")]
         public async Task<IActionResult> Create([FromBody] CreateTimeoff addTimeoff, CancellationToken token)
         {
-            await _dispatcher.RunCommand(addTimeoff, token);
+            await _dispatcher.RunCommand(addTimeoff, CurrentUserId, token);
             return Ok();
         }
 
         [HttpPost("timeoff/Entry")]
         public async Task<IActionResult> AddEntry([FromBody] AddEntryToTimeoff addEntryTimeoff, CancellationToken token)
         {
-            await _dispatcher.RunCommand(addEntryTimeoff, token);
+            await _dispatcher.RunCommand(addEntryTimeoff, CurrentUserId, token);
             return Ok();
         }
 
         [HttpPut("timeoff/Entry")]
         public async Task<IActionResult> UpdateEntry([FromBody] UpdateTimeoffEntry updateTimeoffEntry, CancellationToken token)
         {
-            await _dispatcher.RunCommand(updateTimeoffEntry, token);
+            await _dispatcher.RunCommand(updateTimeoffEntry, CurrentUserId, token);
             return Ok();
         }
 
@@ -73,7 +75,7 @@ namespace Timesheet.Web.Api.Controllers
         public async Task<IActionResult> Delete(string employeeId, string timeoffId, CancellationToken token)
         {
             var command = new DeleteTimeoff() { EmployeeId = employeeId, TimeoffId = timeoffId };
-            await _dispatcher.RunCommand(command, token);
+            await _dispatcher.RunCommand(command, CurrentUserId, token);
             return Ok();
         }
 
@@ -81,28 +83,30 @@ namespace Timesheet.Web.Api.Controllers
         public async Task<IActionResult> DeleteEntry(string employeeId, string timeoffId, string entryId, CancellationToken token)
         {
             var command = new DeleteTimeoffEntry() { EmployeeId = employeeId, TimeoffId = timeoffId, TimeoffEntryId = entryId };
-            await _dispatcher.RunCommand(command, token);
+            await _dispatcher.RunCommand(command, CurrentUserId, token);
             return Ok();
         }
 
         [HttpPut("timeoff/Submit")]
         public async Task<IActionResult> Submit([FromBody] SubmitTimeoff submitTimeoff, CancellationToken token)
         {
-            await _dispatcher.RunCommand(submitTimeoff, token);
+            await _dispatcher.RunCommand(submitTimeoff, CurrentUserId, token);
             return Ok();
         }
 
+        [Authorize(Roles = "SUPERVISOR, MANAGER, ADMINISTRATOR")]
         [HttpPut("timeoff/Approve")]
         public async Task<IActionResult> Approve([FromBody] ApproveTimeoff approveTimeoff, CancellationToken token)
         {
-            await _dispatcher.RunCommand(approveTimeoff, token);
+            await _dispatcher.RunCommand(approveTimeoff, CurrentUserId, token);
             return Ok();
         }
 
+        [Authorize(Roles = "SUPERVISOR, MANAGER, ADMINISTRATOR")]
         [HttpPut("timeoff/Reject")]
         public async Task<IActionResult> Reject([FromBody] RejectTimeoff rejectTimeoff, CancellationToken token)
         {
-            await _dispatcher.RunCommand(rejectTimeoff, token);
+            await _dispatcher.RunCommand(rejectTimeoff, CurrentUserId, token);
             return Ok();
         }
     }

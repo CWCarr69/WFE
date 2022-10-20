@@ -1,4 +1,7 @@
-﻿using Timesheet.Domain;
+﻿using Timesheet.Application.Shared;
+using Timesheet.Domain;
+using Timesheet.Domain.Exceptions;
+using Timesheet.Domain.Models.Employees;
 using Timesheet.Domain.Repositories;
 
 namespace Timesheet.Application
@@ -7,6 +10,7 @@ namespace Timesheet.Application
         where TEntity : Entity
         where TCommand : ICommand
     {
+        private readonly IEmployeeReadRepository _employeeReadRepository;
         private readonly IAuditHandler _auditHandler;
         private readonly IDispatcher _eventDispatcher;
         private readonly IUnitOfWork _transaction;
@@ -26,8 +30,13 @@ namespace Timesheet.Application
             }
         }
 
-        public BaseCommandHandler(IAuditHandler auditHandler, IDispatcher dispatcher, IUnitOfWork unitOfWork)
+        public BaseCommandHandler(
+            IEmployeeReadRepository employeeReadRepository,
+            IAuditHandler auditHandler, 
+            IDispatcher dispatcher,
+            IUnitOfWork unitOfWork)
         {
+            this._employeeReadRepository = employeeReadRepository;
             _auditHandler = auditHandler;
             _eventDispatcher = dispatcher;
             _transaction = unitOfWork;
@@ -37,7 +46,10 @@ namespace Timesheet.Application
 
         public async Task HandleAsync(TCommand command, CancellationToken token)
         {
-            string userId = "1";
+            if(command.AuthorId is null || !CanExecute(command))
+            {
+                throw new CannotExecuteCommandException(command.GetType().Name, command.AuthorId);
+            }
 
             if(command is null)
             {
@@ -48,7 +60,7 @@ namespace Timesheet.Application
 
             if (RelatedAuditableEntity is not null)
             {
-                _auditHandler.LogCommand(RelatedAuditableEntity, command, command.ActionType(), userId);
+                _auditHandler.LogCommand(RelatedAuditableEntity, command, command.ActionType(), command.AuthorId);
             }
 
             var completed = await _transaction.CompleteAsync(token);
@@ -61,5 +73,32 @@ namespace Timesheet.Application
         private void PublishEvents() => this._eventDispatcher.Publish(Events);
 
         public virtual bool CanExecute(TCommand command) => true;
+
+        protected async Task<EmployeeRoleOnData> GetCurrentEmployeeRoleOnData(BaseCommand command, Employee? employee)
+        {
+            var author = command.AuthorId;
+            var administrators = (await _employeeReadRepository.GetAdministrators())
+                .Select(e => e.Id);
+
+            var currentEmployeeRoleOnData = EmployeeRoleOnData.NONE;
+            if (administrators.Contains(author))
+            {
+                currentEmployeeRoleOnData = EmployeeRoleOnData.ADMINISTRATOR;
+            }
+            else if (author is not null && author == employee?.Id)
+            {
+                currentEmployeeRoleOnData = EmployeeRoleOnData.CREATOR;
+            }
+            else if (author is not null && author == employee?.PrimaryApprover?.Id)
+            {
+                currentEmployeeRoleOnData = EmployeeRoleOnData.APPROVER;
+            }
+            else if (author is not null && author == employee?.SecondaryApprover?.Id)
+            {
+                currentEmployeeRoleOnData = EmployeeRoleOnData.APPROVER;
+            }
+
+            return currentEmployeeRoleOnData;
+        }
     }
 }

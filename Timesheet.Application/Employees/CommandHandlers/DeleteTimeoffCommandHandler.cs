@@ -28,7 +28,8 @@ namespace Timesheet.Application.Employees.CommandHandlers
             var timeoff = GetTimeoffOrThrowException(employee, command.TimeoffId);
             this.RelatedAuditableEntity = timeoff;
 
-            _workflowService.AuthorizeTransition(timeoff, TimeoffTransitions.APPROVE, timeoff.Status);
+            EmployeeRoleOnData currentEmployeeRoleOnData = await GetCurrentEmployeeRoleOnData(command, employee);
+            _workflowService.AuthorizeTransition(timeoff, TimeoffTransitions.APPROVE, timeoff.Status, currentEmployeeRoleOnData);
 
             employee.DeleteTimeoff(timeoff);
 

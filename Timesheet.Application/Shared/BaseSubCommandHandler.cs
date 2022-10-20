@@ -11,10 +11,11 @@ namespace Timesheet.Application
 
         protected bool LaunchedAsSubCommand => _parentCommandContext != null;
 
-        public BaseSubCommandHandler(IAuditHandler auditHandler,
+        public BaseSubCommandHandler(IEmployeeReadRepository employeeReadRepository,
+            IAuditHandler auditHandler,
             IDispatcher dispatcher,
             IUnitOfWork unitOfWork)
-            : base(auditHandler, dispatcher, unitOfWork)
+            : base(employeeReadRepository, auditHandler, dispatcher, unitOfWork)
         {
         }
 
