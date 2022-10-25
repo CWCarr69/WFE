@@ -28,9 +28,9 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
             var isWeekly = false;//TODO REMOVE
 
             //Include EmployeeTimesheet if possible otherwise fill the dictionary above first, and how about status
-            (string payrollPeriod, DateTime start, DateTime end) timesheetInfos = isWeekly
-                ? PayrollPeriodGenerator.GetTimesheetWeeklyInfos(record.WorkDate)
-                : PayrollPeriodGenerator.GetTimesheetMonthlyInfos(record.WorkDate);
+            TimesheetHeader timesheetHeader = isWeekly
+                ? TimesheetHeader.CreateWeeklyTimesheet(record.WorkDate)
+                : TimesheetHeader.CreateMonthlyTimesheet(record.WorkDate);
 
             var timesheetEntry = new TimesheetEntry(
                 record.RecordId,
@@ -44,18 +44,9 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
                 profitCenter: record.ProfitCenter
             );
 
-            var timesheetHeader = new TimesheetHeader(timesheetInfos.payrollPeriod,
-                payrollPeriod: timesheetInfos.payrollPeriod,
-                startDate: timesheetInfos.start,
-                endDate: timesheetInfos.end,
-                status: TimesheetStatus.IN_PROGRESS //TODO update this to get the right status from FDP
-            );
-
             timesheetHeader.UpdateMetadata(record.ModifyDate, record.ModifyDate);
             timesheetHeader.AddTimesheetEntry(timesheetEntry);
             return timesheetHeader;
         }
-
-
     }
 }

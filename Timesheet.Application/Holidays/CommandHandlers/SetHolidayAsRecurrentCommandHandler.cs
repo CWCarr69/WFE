@@ -16,8 +16,9 @@ namespace Timesheet.Application.Holidays.CommandHandlers
             IAuditHandler auditHandler,
             IDispatcher dispatcher,
             IUnitOfWork unitOfWork,
+            IEmployeeReadRepository employeeReadRepository,
             IWriteRepository<Holiday> writeRepository,
-            IHolidayReadRepository readRepository) : base(auditHandler, dispatcher, unitOfWork)
+            IHolidayReadRepository readRepository) : base(employeeReadRepository, auditHandler, dispatcher, unitOfWork)
         {
             _writeRepository = writeRepository;
             _readRepository = readRepository;

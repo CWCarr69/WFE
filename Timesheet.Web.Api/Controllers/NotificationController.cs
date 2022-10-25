@@ -4,7 +4,6 @@ using Timesheet.Application;
 using Timesheet.Application.Notifications.Commands;
 using Timesheet.Application.Notifications.Queries;
 using Timesheet.Application.Notifications.Services;
-using Timesheet.Domain.ReadModels.Notifications;
 using Timesheet.Web.Api.ViewModels;
 
 namespace Timesheet.Web.Api.Controllers

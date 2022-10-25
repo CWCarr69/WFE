@@ -5,12 +5,12 @@ using Timesheet.Domain.Repositories;
 
 namespace Timesheet.Application.Holidays.Commands
 {
-    public class UpdateHolidayGeneralInformations : ICommand
+    public class UpdateHolidayGeneralInformations : BaseCommand
     {
         public string Id { get; set; }
         public string Description { get; set; }
         public string Notes { get; set; }
-        public CommandActionType ActionType() => CommandActionType.MODIFICATION;
+        public override CommandActionType ActionType() => CommandActionType.MODIFICATION;
 
     }
 }

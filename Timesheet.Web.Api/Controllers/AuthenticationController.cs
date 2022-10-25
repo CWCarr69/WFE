@@ -5,7 +5,7 @@ using Timesheet.Infrastructure.Authentication.Models;
 
 namespace Timesheet.Web.Api.Controllers
 {
-    [AllowAnonymous]
+    //[AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class AuthenticationController : ControllerBase
@@ -24,8 +24,8 @@ namespace Timesheet.Web.Api.Controllers
         {
             try
             {
-                var token = _authenticationService.LogIn(credentials, _JwtSigningKey);
-                return Ok(token);
+                var response = _authenticationService.LogIn(credentials, _JwtSigningKey);
+                return Ok(response);
             }catch (Exception ex)
             {
                 return Unauthorized(ex.Message);

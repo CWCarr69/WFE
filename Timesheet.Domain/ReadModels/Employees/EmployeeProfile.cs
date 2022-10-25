@@ -8,5 +8,6 @@
         public string Department { get; set; }
         public DateTime? EmploymentDate { get; set; }
         public byte[]? Picture { get; set; }
+        public bool IsAdministrator { get; set; }
     }
 }

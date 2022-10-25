@@ -11,6 +11,11 @@ namespace Timesheet.Infrastructure.Persistence.Repositories
         {
         }
 
+        public Task<IEnumerable<Employee>> GetAdministrators()
+        {
+            throw new NotImplementedException();
+        }
+
         public Holiday? GetByDate(DateTime date)
         {
             return _context.Holidays.ToList().FirstOrDefault(e => e.Date.ToShortDateString == date.ToShortDateString);

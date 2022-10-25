@@ -1,4 +1,5 @@
-﻿using Timesheet.Domain;
+﻿using Timesheet.Application.Shared;
+using Timesheet.Domain;
 using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Models.Employees;
 using Timesheet.Domain.Repositories;
@@ -15,7 +16,7 @@ namespace Timesheet.Application.Employees.CommandHandlers
             IAuditHandler auditHandler,
             IEmployeeReadRepository readRepository,
             IDispatcher dispatcher,
-            IUnitOfWork unitOfWork) : base(auditHandler, dispatcher, unitOfWork)
+            IUnitOfWork unitOfWork) : base(readRepository, auditHandler, dispatcher, unitOfWork)
         {
             this._readRepository = readRepository;
         }

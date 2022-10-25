@@ -6,7 +6,7 @@ using Timesheet.Infrastructure.Authentication.Models;
 
 namespace Timesheet.Infrastructure.Authentication.Providers
 {
-    internal class JwtAuthenticationService : IAuthenticationService<string>
+    internal class JwtAuthenticationService : IAuthenticationService<AuthenticationResponse>
     {
         private readonly IAuthenticator _authenticator;
         private readonly double SESSION_LIFE_HOURS = 3;
@@ -16,7 +16,7 @@ namespace Timesheet.Infrastructure.Authentication.Providers
             this._authenticator = authenticator;
         }
 
-        public string LogIn(Credentials credentials, string signingKey)
+        public AuthenticationResponse LogIn(Credentials credentials, string signingKey)
         {
             var user = _authenticator.Authenticate(credentials);
             if (user == null)
@@ -27,7 +27,7 @@ namespace Timesheet.Infrastructure.Authentication.Providers
             return GenerateToken(user, signingKey);
         }
 
-        private string GenerateToken(User user, string signingKey)
+        private AuthenticationResponse GenerateToken(User user, string signingKey)
         {
             var claims = new List<Claim>
             {
@@ -45,7 +45,11 @@ namespace Timesheet.Infrastructure.Authentication.Providers
 
             var token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
 
-            return token;
+            return new AuthenticationResponse
+            {
+                Token = token,
+                User = user
+            };
         }
     }
 }

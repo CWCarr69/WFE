@@ -33,7 +33,8 @@ namespace Timesheet.Web.Api
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen(options =>
+            builder.Services.AddSwaggerGen(
+            options =>
             {
                 options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
                 {
@@ -44,7 +45,8 @@ namespace Timesheet.Web.Api
                 });
 
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
-            });
+            }
+            );
 
             //Authentication
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -110,7 +112,7 @@ namespace Timesheet.Web.Api
                     var context = scope.ServiceProvider.GetRequiredService<TimesheetDbContext>();
                     DbInitializer.Initialize(context);
                 }catch(Exception ex){
-                    throw new Exception("Cannot initialize Database. Program cannot start.");
+                    throw new Exception($"Cannot initialize Database. Program cannot start. {ex.Message}");
                 }
             };
         }

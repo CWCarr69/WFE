@@ -42,6 +42,8 @@ namespace Timesheet.Domain.Models.Employees
         //public EmployeeBenefits Benefits { get; private set; }
         public IReadOnlyCollection<TimeoffHeader> Timeoffs => _timeoffs;
         public bool IsActive { get; private set; }
+        public string UserId { get; private set; }
+
         #endregion
 
         public TimeoffStatus? LastTimeoffStatus() {
@@ -76,7 +78,6 @@ namespace Timesheet.Domain.Models.Employees
             }
         }
 
-        public string UserId { get; private set; }
 
         #region Time Workflow
         public TimeoffHeader CreateTimeoff(DateTime requestStartDate, DateTime requestEndDate, string employeeComment, string supervisorComment)
@@ -103,17 +104,13 @@ namespace Timesheet.Domain.Models.Employees
         {
             timeoff.Approve(comment);
             RaiseTimeoffWorkflowChangedEvent(timeoff, nameof(TimeoffStatus.APPROVED));
+            RaiseTimeoffWorkflowChangedEvent(timeoff, nameof(TimeoffStatus.APPROVED));
         }
 
         public void RejectTimeoff(TimeoffHeader timeoff, string comment)
         {
             timeoff.Reject(comment);
             RaiseTimeoffWorkflowChangedEvent(timeoff, nameof(TimeoffStatus.REJECTED));
-        }
-
-        private void RaiseTimeoffWorkflowChangedEvent(TimeoffHeader timeoff, string status)
-        {
-            RaiseDomainEvent(new TimeoffStateChanged(Id, PrimaryApprover?.Id, SecondaryApprover?.Id, status, timeoff.Id)); ;
         }
 
         public void AddTimeoffEntry(DateTime requestDate, TimeoffType type, double hours, TimeoffHeader timeoff)
@@ -171,10 +168,30 @@ namespace Timesheet.Domain.Models.Employees
         //        string? directApproverId = Supervisor?.Id ?? Manager?.Id;
         //        return teamApproverId != null && teamApproverId == directApproverId;
         //    }
-            
+
         //    return teamApproverId != null
         //    && (Manager?.Id == teamApproverId || Supervisor?.Id == teamApproverId);
         //}
+
+        private void RaiseTimeoffWorkflowChangedEvent(TimeoffHeader timeoff, string status)
+        {
+            RaiseDomainEvent(new TimeoffStateChanged(Id, PrimaryApprover?.Id, SecondaryApprover?.Id, status, timeoff.Id)); ;
+        }
+
+        private void RaiseTimeoffApprovedEvent(TimeoffHeader timeoff, string status)
+        {
+            foreach(var entry in timeoff.TimeoffEntries)
+            {
+                RaiseDomainEvent(new TimeoffApproved(
+                    entry.Id,
+                    Id,
+                    entry.RequestDate,
+                    entry.Type.ToString(),
+                    entry.Hours,
+                    entry.Type.ToString(),
+                    this.EmploymentData.IsSalaried));
+            }
+        }
 
         public TimeoffHeader? GetTimeoff(string timeoffId) => _timeoffs.SingleOrDefault(t => t.Id == timeoffId);
 

@@ -30,11 +30,12 @@ namespace Timesheet.Application.Employees.CommandHandlers
 
             this.RelatedAuditableEntity = LaunchedAsSubCommand ? null : timeoff;
 
-            _workflowService.AuthorizeTransition(timeoff, TimeoffTransitions.ADD_ENTRY, timeoff.Status);
+            EmployeeRoleOnData currentEmployeeRoleOnData = await GetCurrentEmployeeRoleOnData(command, employee);
+            _workflowService.AuthorizeTransition(timeoff, TimeoffTransitions.ADD_ENTRY, timeoff.Status, currentEmployeeRoleOnData);
 
             employee.AddTimeoffEntry(command.RequestDate, command.Type, command.Hours, timeoff);
 
-            return LaunchedAsSubCommand ? Enumerable.Empty<IDomainEvent>() : employee.GetDomainEvents();
+            return Enumerable.Empty<IDomainEvent>();
         }
 
         private async Task<Employee> GetEmployee(AddEntryToTimeoff command)

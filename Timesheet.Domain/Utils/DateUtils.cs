@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Timesheet.FDPDataIntegrator.Utils
+﻿namespace Timesheet.Domain
 {
     internal static class DateUtils
     {

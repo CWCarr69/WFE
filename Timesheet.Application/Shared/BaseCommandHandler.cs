@@ -63,14 +63,16 @@ namespace Timesheet.Application
                 _auditHandler.LogCommand(RelatedAuditableEntity, command, command.ActionType(), command.AuthorId);
             }
 
-            var completed = await _transaction.CompleteAsync(token);
-
-            if (completed && this.Events.Any() && _eventDispatcher is not null)
+            if (this.Events.Any() && _eventDispatcher is not null)
             {
-                this.PublishEvents();
+                //This call eventHandler. the eventHandlers are not supposed to complete the transaction
+                await this.PublishEvents();
             }
+
+            await _transaction.CompleteAsync(token);
         }
-        private void PublishEvents() => this._eventDispatcher.Publish(Events);
+
+        private async Task PublishEvents() => await this._eventDispatcher.Publish(Events);
 
         public virtual bool CanExecute(TCommand command) => true;
 

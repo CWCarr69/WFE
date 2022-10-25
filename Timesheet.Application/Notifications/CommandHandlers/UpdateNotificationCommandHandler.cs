@@ -4,12 +4,12 @@ using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Models.Notifications;
 using Timesheet.Domain.Repositories;
 
-namespace Timesheet.Application.Holidays.CommandHandlers
+namespace Timesheet.Application.Notifications.CommandHandlers
 {
     internal class UpdateNotificationCommandHandler : BaseCommandHandler<Notification, UpdateNotification>
     {
         public readonly IWriteRepository<Notification> _writeRepository;
-        public readonly IReadRepository<Notification> _readRepository;
+        public readonly INotificationReadRepository _readRepository;
 
         public UpdateNotificationCommandHandler(
             IEmployeeReadRepository employeeReadRepository,
@@ -17,7 +17,7 @@ namespace Timesheet.Application.Holidays.CommandHandlers
             IDispatcher dispatcher,
             IUnitOfWork unitOfWork,
             IWriteRepository<Notification> writeRepository,
-            IReadRepository<Notification> readRepository) 
+            INotificationReadRepository readRepository) 
             : base(employeeReadRepository, auditHandler, dispatcher, unitOfWork)
         {
             _writeRepository = writeRepository;

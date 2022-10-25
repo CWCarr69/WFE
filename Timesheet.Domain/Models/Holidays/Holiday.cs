@@ -22,7 +22,7 @@ namespace Timesheet.Domain.Models.Holidays
         public static Holiday Create(DateTime date, string description, string Notes, bool isRecurrent)
         {
             var holiday = new Holiday(GenerateId(), date, description, Notes, isRecurrent);
-            holiday.RaiseDomainEvent(new HolidayAdded(holiday.Date, holiday.Description));
+            holiday.RaiseDomainEvent(new HolidayAdded(holiday.Id, holiday.Date, holiday.Description));
             return holiday;
         }
 
@@ -31,7 +31,7 @@ namespace Timesheet.Domain.Models.Holidays
             Description = description ?? Description;
             Notes = notes ?? Notes;
 
-            RaiseDomainEvent(new HolidayGeneralInformationsUpdated(Description, Notes));
+            RaiseDomainEvent(new HolidayGeneralInformationsUpdated(this.Id, Description, Notes));
         }
         
         public void SetAsRecurrent()

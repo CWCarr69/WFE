@@ -12,7 +12,7 @@ namespace Timesheet.Infrastructure.Persistence.Repositories
             _context = context;
         }
 
-        public Task<TimesheetHeader?> GetFullTimesheet(string timesheetId, string? employeeId = null)
+        public Task<TimesheetHeader?> GetTimesheet(string timesheetId, string? employeeId = null)
         {
             IQueryable timesheet = _context.Timesheets.Where(t => t.Id == timesheetId)
                 .Include(t => t.TimesheetEntries);
@@ -29,6 +29,31 @@ namespace Timesheet.Infrastructure.Persistence.Repositories
                      .Include(t => t.TimesheetEntries)
                      .FirstOrDefaultAsync();
             }
+        }
+
+        public async Task<IEnumerable<TimesheetHeader?>> GetTimesheetByDate(DateTime date)
+        {
+            return await _context.Timesheets.Where(t => t.StartDate >= date && t.EndDate <= date)
+                .Include(t => t.TimesheetEntries)
+                .Include(t => t.TimesheetHolidays)
+                .ToListAsync();
+        }
+
+        public async Task<TimesheetHeader?> GetTimesheetByDate(DateTime date, TimesheetType type)
+        {
+            return await _context.Timesheets
+                .Where(t => t.StartDate >= date && t.EndDate <= date && t.Type == type)
+                .Include(t => t.TimesheetEntries)
+                .Include(t => t.TimesheetHolidays)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<TimesheetHeader?>> GetTimesheetByHoliday(string holidayId)
+        {
+            return await _context.Timesheets
+                .Where(t => t.TimesheetHolidays.Any(h => h.Id == holidayId))
+                .Include(t => t.TimesheetHolidays)
+                .ToListAsync();
         }
     }
 }

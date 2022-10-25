@@ -4,6 +4,9 @@ namespace Timesheet.Domain.Repositories
 {
     public interface ITimesheetReadRepository : IReadRepository<TimesheetHeader>
     {
-        Task<TimesheetHeader?> GetFullTimesheet(string timesheetId, string? employeeId=null);
+        Task<TimesheetHeader?> GetTimesheet(string timesheetId, string? employeeId=null);
+        Task<IEnumerable<TimesheetHeader?>> GetTimesheetByDate(DateTime date);
+        Task<TimesheetHeader> GetTimesheetByDate(DateTime date, TimesheetType type);
+        Task<IEnumerable<TimesheetHeader?>> GetTimesheetByHoliday(string holidayId);
     }
 }

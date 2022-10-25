@@ -40,7 +40,6 @@ namespace Timesheet.Application.Timesheets.CommandHandlers
             timesheet.Approve(employee);
 
             return Enumerable.Empty<IDomainEvent>();
-
         }
     }
 }

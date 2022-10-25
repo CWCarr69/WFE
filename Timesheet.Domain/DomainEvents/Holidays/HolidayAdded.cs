@@ -1,4 +1,4 @@
 ﻿namespace Timesheet.Domain.DomainEvents
 {
-    public record HolidayAdded(DateTime date, string description) : IDomainEvent;
+    public record HolidayAdded(string Id, DateTime Date, string Description) : IDomainEvent;
 }

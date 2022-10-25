@@ -2,10 +2,10 @@
 
 namespace Timesheet.Application.Holidays.Commands
 {
-    public class DeleteHoliday : ICommand
+    public class DeleteHoliday : BaseCommand
     {
         public string Id { get; set; }
-        public CommandActionType ActionType() => CommandActionType.DELETION;
+        public override CommandActionType ActionType() => CommandActionType.DELETION;
 
     }
 }

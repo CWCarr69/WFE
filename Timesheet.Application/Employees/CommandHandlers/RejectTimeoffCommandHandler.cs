@@ -25,7 +25,8 @@ namespace Timesheet.Application.Employees.CommandHandlers
             var employee = await GetEmployee(command.EmployeeId);
             var timeoff = GetTimeoffOrThrowException(employee, command.TimeoffId);
 
-            _workflowService.AuthorizeTransition(timeoff, TimeoffTransitions.REJECT, timeoff.Status);
+            EmployeeRoleOnData currentEmployeeRoleOnData = await GetCurrentEmployeeRoleOnData(command, employee);
+            _workflowService.AuthorizeTransition(timeoff, TimeoffTransitions.REJECT, timeoff.Status, currentEmployeeRoleOnData);
 
             employee.RejectTimeoff(timeoff, command.Comment);
 

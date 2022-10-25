@@ -27,7 +27,8 @@ namespace Timesheet.Application.Employees.CommandHandlers
 
             this.RelatedAuditableEntity = timeoff;
 
-            _workflowService.AuthorizeTransition(timeoff, TimeoffTransitions.SUBMIT, timeoff.Status);
+            EmployeeRoleOnData currentEmployeeRoleOnData = await GetCurrentEmployeeRoleOnData(command, employee);
+            _workflowService.AuthorizeTransition(timeoff, TimeoffTransitions.SUBMIT, timeoff.Status, currentEmployeeRoleOnData);
 
             employee.SubmitTimeoff(timeoff, command.Comment);
 

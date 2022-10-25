@@ -50,7 +50,7 @@ namespace Timesheet.Application.TImesheets.CommandHandlers
 
         protected async Task<TimesheetHeader> GetTimesheetOrThrowException(string timesheetId, string? employeeId=null)
         {
-            var timesheet = await _readRepository.GetFullTimesheet(timesheetId, employeeId);
+            var timesheet = await _readRepository.GetTimesheet(timesheetId, employeeId);
             if (timesheet is null)
             {
                 throw new EntityNotFoundException<TimesheetHeader>(timesheetId);

@@ -26,8 +26,8 @@ namespace Timesheet.FDPDataIntegrator.Services
 
                     (var transfertName, var inboundData) = FDPInboundDataTemplate.GetIntegrationParams(type);
                     Response = await fieldPointClient.TransferAsync(transfertName, inboundData, _settings.FDP_Username, _settings.FDP_Password);
-
-                    Console.WriteLine(Response);
+                    //File.WriteAllText($@"C:\Users\Hp\Documents\WFE-Timesheet Track\source\Timesheet\Timesheet.EmployeesIntegrator\Services\{type}Sample.xml", Response);
+                    //Console.WriteLine(Response);
                     return;
                 }
                 catch (Exception ex)

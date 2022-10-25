@@ -30,8 +30,9 @@ namespace Timesheet.Application.Employees.CommandHandlers
 
             this.RelatedAuditableEntity = timeoff;
 
-            _workflowService.AuthorizeTransition(timeoff, TimeoffTransitions.DELETE_ENTRY, timeoff.Status);
-            _workflowService.AuthorizeTransition(timeoffEntry, TimeoffEntryTransitions.DELETE, timeoffEntry.Status);
+            EmployeeRoleOnData currentEmployeeRoleOnData = await GetCurrentEmployeeRoleOnData(command, employee);
+            _workflowService.AuthorizeTransition(timeoff, TimeoffTransitions.DELETE_ENTRY, timeoff.Status, currentEmployeeRoleOnData);
+            _workflowService.AuthorizeTransition(timeoffEntry, TimeoffEntryTransitions.DELETE, timeoffEntry.Status, currentEmployeeRoleOnData);
 
             employee.DeleteTimeoffEntry(timeoff, timeoffEntry);
 

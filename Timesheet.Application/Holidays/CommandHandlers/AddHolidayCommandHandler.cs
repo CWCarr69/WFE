@@ -36,7 +36,10 @@ namespace Timesheet.Application.Holidays.CommandHandlers
 
             this.RelatedAuditableEntity = holiday;
 
-            return holiday.GetDomainEvents();
+            var events = holiday.GetDomainEvents();
+            holiday.ClearDomainEvents();
+
+            return events;
         }
     }
 }

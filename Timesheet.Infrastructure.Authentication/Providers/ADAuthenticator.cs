@@ -45,7 +45,9 @@ namespace Timesheet.Infrastructure.Authentication.Providers
             var user = new User
             {
                 Id = employee.Id,
-                Fullname = employee.FullName
+                Fullname = employee.FullName,
+                Login = employee.Login,
+                IsAdministrator = employee.IsAdministrator
             };
             return user;
         }
