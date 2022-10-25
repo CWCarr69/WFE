@@ -10,10 +10,10 @@ namespace Timesheet.Web.Api.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        private readonly IAuthenticationService<string> _authenticationService;
+        private readonly IAuthenticationService<AuthenticationResponse> _authenticationService;
         private readonly string _JwtSigningKey ;
 
-        public AuthenticationController(IAuthenticationService<string> authenticationService, IConfiguration configuration)
+        public AuthenticationController(IAuthenticationService<AuthenticationResponse> authenticationService, IConfiguration configuration)
         {
             this._authenticationService = authenticationService;
             this._JwtSigningKey = configuration.GetSection("AppSettings:Token").Value;

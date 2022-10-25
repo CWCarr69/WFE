@@ -5,6 +5,7 @@ using Timesheet.Domain.Models.Employees;
 using Timesheet.Domain.Models.Holidays;
 using Timesheet.Domain.Models.Notifications;
 using Timesheet.Domain.Models.Settings;
+using Timesheet.Domain.Models.Timesheets;
 using Timesheet.Domain.Repositories;
 using Timesheet.Infrastructure.Persistence.Repositories;
 
@@ -30,6 +31,7 @@ namespace Timesheet.Infrastructure.Persistence
 
             services.AddScoped<IWriteRepository<Holiday>, WriteRepository<Holiday>>();
             services.AddScoped<IWriteRepository<Employee>, WriteRepository<Employee>>();
+            services.AddScoped<IWriteRepository<TimesheetHeader>, WriteRepository<TimesheetHeader>>();
             services.AddScoped<IWriteRepository<Notification>, WriteRepository<Notification>>();
             services.AddScoped<IWriteRepository<NotificationItem>, WriteRepository<NotificationItem>>();
             services.AddScoped<IWriteRepository<Setting>, WriteRepository<Setting>>();
