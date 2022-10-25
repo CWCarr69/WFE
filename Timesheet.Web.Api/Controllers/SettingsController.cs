@@ -7,7 +7,7 @@ using Timesheet.Domain.ReadModels.Settings;
 
 namespace Timesheet.Web.Api.Controllers
 {
-    [Authorize(Roles = "ADMINISTRATOR")]
+    [Authorize/*(Roles = "ADMINISTRATOR")*/]
     [Route("api/[controller]")]
     [ApiController]
     public class SettingsController : BaseController
@@ -22,7 +22,7 @@ namespace Timesheet.Web.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<SettingDetails>>> GetSettings()
+        public async Task<ActionResult<IEnumerable<SettingDetailsGrouped>>> GetSettings()
         {
             var settings = await _query.GetSettings();
             return Ok(settings);

@@ -26,7 +26,7 @@ namespace Timesheet.Application.Shared
                 Type = auditType.ToString(),
                 Data = JsonConvert.SerializeObject(command),
                 Date = DateTime.Now,
-                CreatorId = userId,
+                AuthorId = userId,
             };
 
             _auditRepository.Add(audit);

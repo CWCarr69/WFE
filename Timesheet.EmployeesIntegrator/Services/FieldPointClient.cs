@@ -22,7 +22,7 @@ namespace Timesheet.FDPDataIntegrator.Services
 
                 try
                 {
-                    var fieldPointClient = new ServiceReference1.FPDTSWSSoapClient(EndpointConfiguration.FPDTSWSSoap12);
+                    var fieldPointClient = new ServiceReference1.FPDTSWSSoapClient(EndpointConfiguration.FPDTSWSSoap12, _settings.FDP_Url);
 
                     (var transfertName, var inboundData) = FDPInboundDataTemplate.GetIntegrationParams(type);
                     Response = await fieldPointClient.TransferAsync(transfertName, inboundData, _settings.FDP_Username, _settings.FDP_Password);

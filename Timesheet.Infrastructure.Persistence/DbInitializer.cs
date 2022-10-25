@@ -50,9 +50,9 @@ namespace Timesheet.Infrastructure.Persistence
                 Setting.Create("NOTIFICATION_HR", "HR Support Email", "HR Support Email"),
                 Setting.Create("NOTIFICATION_WFE", "HR@WilsonFire.com", "Wilson Fire Equip. and Services"),
 
-                Setting.Create("FDP_USERNAME", "", "UserName"),
-                Setting.Create("FDP_PASSWORD", "", "Password"),
-                Setting.Create("FDP_URL", "", "Service Url"),
+                Setting.Create("FDP_USERNAME", "FPIntegration@wilsonfire.com", "UserName"),
+                Setting.Create("FDP_PASSWORD", "0iRP0qilgyYM7SCipFmp", "Password"),
+                Setting.Create("FDP_URL", "https://wilsonfiredev.fieldpointonline.com/Services/FPDTSWS.asmx", "Service Url"),
                 Setting.Create("FDP_Domain", "WilsonFire", "Service Domain"),
 
                 Setting.Create("VALIDATION_NOTES_LENGTH", "1024", "Notes Length (bytes)"),

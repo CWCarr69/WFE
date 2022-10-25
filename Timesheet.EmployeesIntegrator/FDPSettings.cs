@@ -2,8 +2,10 @@
 {
     internal class FDPSettings
     {
-        public string FDP_Username { get; private set; } = "FPIntegration@wilsonfire.com";
-        public string FDP_Password { get; private set; } = "0iRP0qilgyYM7SCipFmp";
+        public string FDP_Username { get; private set; }
+        public string FDP_Password { get; private set; }
+        public string FDP_Url { get; private set; }
+        public string FDP_Domain { get; private set; }
 
         public static FDPSettings CreateFromConfigurationList(IEnumerable<(string Name, string Value)> configurations)
         {
@@ -19,9 +21,19 @@
                 {
                     fdpSettings.FDP_Password = setting.Value;
                 }
+
+                if (nameof(FDP_Url) == setting.Name)
+                {
+                    fdpSettings.FDP_Url = setting.Value;
+                }
+
+                if (nameof(FDP_Domain) == setting.Name)
+                {
+                    fdpSettings.FDP_Domain = setting.Value;
+                }
             }
 
-            if(string.IsNullOrEmpty(fdpSettings.FDP_Username)
+            if (string.IsNullOrEmpty(fdpSettings.FDP_Username)
                 || string.IsNullOrEmpty(fdpSettings.FDP_Password))
             {
                 throw new Exception("FDP Configurations are not available");

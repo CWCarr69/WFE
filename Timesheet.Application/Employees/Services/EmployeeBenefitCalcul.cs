@@ -1,5 +1,6 @@
 ﻿
 using Timesheet.Application.Employees.Queries;
+using Timesheet.Domain.Models.Employees;
 using Timesheet.Domain.ReadModels.Employees;
 
 namespace Timesheet.Domain.Employees.Services
@@ -46,11 +47,12 @@ namespace Timesheet.Domain.Employees.Services
             this._queryEmployee = queryEmployee;
         }
 
-        public async Task<EmployeeBenefits> GetBenefits(string employeeId, DateTime value)
+        public async Task<EmployeeBenefits> GetBenefits(string employeeId, DateTime employmentDate)
         {
             var scheduledVacations = await GetScheduledVacationTimes(employeeId);
-            var usedVacations = await GetUsedVacationTimes(employeeId);
-            var totalVacations = GetTotalCurrentVacations(value);
+            var usedVacations = await GetUsedVacationTimes(employeeId, DateTime.Now);
+            var rollover = await GetTotalRollOverTimes(employeeId, employmentDate);
+            var totalVacations = GetTotalCurrentVacationsTime(employmentDate, DateTime.Now);
 
             var scheduledPersonals = await GetScheduledPersonalTimes(employeeId);
             var usedPersonals = await GetUsedPersonalTimes(employeeId);
@@ -67,35 +69,45 @@ namespace Timesheet.Domain.Employees.Services
             var vacationHours = new HourInformation
             {
                 Type = "Vacation",
-                Balance = totalVacations - scheduledVacations - usedVacations,
+                Balance = totalVacations - scheduledVacations - usedVacations - rollover,
                 Used = usedVacations,
                 Scheduled = scheduledVacations
             };
 
             var employeeBenefits = new EmployeeBenefits
             {
-                EligibleVacationHours = totalVacations,
+                EligibleVacationHours = totalVacations + rollover,
                 EligiblePersonalHours = totalPersonals,
-                RolloverHours = 0,
+                RolloverHours = rollover,
                 Details = new List<HourInformation> { personalHours, vacationHours }
             };
 
             return employeeBenefits;
         }
 
-        private Task<double> GetUsedPersonalTimes(string employeeId)
-            => _queryEmployee
+        private async Task<double> GetUsedPersonalTimes(string employeeId)
+            => await _queryEmployee
                 .CalculateUsedBenefits(employeeId, Models.Employees.TimeoffType.PERSONAL, new DateTime(DateTime.Now.Year, 1, 1), new DateTime(DateTime.Now.Year, 12, 31));
-        private Task<double> GetUsedVacationTimes(string employeeId)
-            => _queryEmployee
-                .CalculateUsedBenefits(employeeId, Models.Employees.TimeoffType.VACATION, new DateTime(DateTime.Now.Year, 1, 1), new DateTime(DateTime.Now.Year, 12, 31));
 
-        private Task<double> GetScheduledPersonalTimes(string employeeId)
-            => _queryEmployee
-                .CalculateScheduledBenefits(employeeId, Models.Employees.TimeoffType.PERSONAL, new DateTime(DateTime.Now.Year, 1, 1), new DateTime(DateTime.Now.Year, 12, 31));
-        private Task<double> GetScheduledVacationTimes(string employeeId)
-            => _queryEmployee
-                .CalculateScheduledBenefits(employeeId, Models.Employees.TimeoffType.VACATION, new DateTime(DateTime.Now.Year, 1, 1), new DateTime(DateTime.Now.Year, 12, 31));
+        private async Task<double> GetScheduledPersonalTimes(string employeeId)
+            => await _queryEmployee.CalculateScheduledBenefits(employeeId, TimeoffType.PERSONAL);
+
+        private async Task<double> GetTotalRollOverTimes(string employeeId, DateTime employmentDate)
+        {
+            var now = DateTime.Now;
+            var lastDayToTakeRollOverTimes = DateTime.Now.Date;
+            if (now > lastDayToTakeRollOverTimes)
+            {
+                return 0;
+            }
+
+            var decembre31LastYear = new DateTime(now.Year - 1, 12, 31);
+            var totalEligibleVaccationsLastYear = GetTotalCurrentVacationsTime(employmentDate, decembre31LastYear);
+            var totalUsedVaccationsLastYear = await GetUsedVacationTimes(employeeId, decembre31LastYear);
+
+            var rollover = totalEligibleVaccationsLastYear - totalUsedVaccationsLastYear;
+            return rollover > 0 ? rollover : 0;
+        }
 
         private double GetTotalCurrentPersonalTimes()
         {
@@ -103,21 +115,21 @@ namespace Timesheet.Domain.Employees.Services
             return months * WORK_DAY_HOURS;
         }
 
-        private double GetTotalCurrentVacations(DateTime employmentDate)
+        private double GetTotalCurrentVacationsTime(DateTime employmentDate, DateTime now)
         {
             var oneYearAfterEmploymentDate = employmentDate.Date.AddYears(1);
-            if (DateTime.Now < oneYearAfterEmploymentDate)
+            if (now < oneYearAfterEmploymentDate)
             {
                 return 0;
             }
 
             var vacations = 0;
 
-            var anniversaryDate = new DateTime(DateTime.Now.Year, employmentDate.Month, employmentDate.Day);
-            var yearsDifferencesSinceEmploymenDate = DateTime.Now.Year - employmentDate.Year;
+            var anniversaryDate = new DateTime(now.Year, employmentDate.Month, employmentDate.Day);
+            var yearsDifferencesSinceEmploymenDate = now.Year - employmentDate.Year;
             
             var isAnniversaryBenefitDate = PeriodIsSufficentForScheduledVacations(yearsDifferencesSinceEmploymenDate)
-                && anniversaryDate <= DateTime.Now;
+                && anniversaryDate <= now;
 
             if (isAnniversaryBenefitDate)
             {
@@ -128,6 +140,16 @@ namespace Timesheet.Domain.Employees.Services
 
             return vacations * WORK_DAY_HOURS;
         }
+
+        private async Task<double> GetUsedVacationTimes(string employeeId, DateTime now)
+            => await _queryEmployee
+                .CalculateUsedBenefits(employeeId, 
+                TimeoffType.VACCATION, 
+                new DateTime(now.Year, 1, 1), 
+                new DateTime(now.Year, 12, 31));
+
+        private async Task<double> GetScheduledVacationTimes(string employeeId)
+            => await _queryEmployee.CalculateScheduledBenefits(employeeId, TimeoffType.VACCATION);
 
         private int AtAnniversaryVacation(DateTime employmentDate, int yearsSinceEmployment)
         {
