@@ -15,8 +15,8 @@
 
         public string EmployeeId { get; set; }
         public string TimesheetId { get; set; }
-        public string EmployeeComment { get; set; }
-        public string ApproverComment { get; set; }
+        public string? EmployeeComment { get; set; }
+        public string? ApproverComment { get; set; }
 
         public void UpdateApproverComment(string? comment)
         {
