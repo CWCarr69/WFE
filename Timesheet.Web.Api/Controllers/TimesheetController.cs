@@ -1,8 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Timesheet.Application;
+using Timesheet.Application.Employees.Queries;
+using Timesheet.Application.Employees.Services;
 using Timesheet.Application.Timesheets.Commands;
 using Timesheet.Application.Timesheets.Queries;
+using Timesheet.Application.Workflow;
+using Timesheet.Domain.Models.Employees;
+using Timesheet.Domain.Models.Timesheets;
 using Timesheet.Domain.ReadModels.Timesheets;
 using Timesheet.Web.Api.ViewModels;
 
@@ -11,12 +16,18 @@ namespace Timesheet.Web.Api.Controllers
     [Authorize]
     [Route("api/[Controller]")]
     [ApiController]
-    public class TimesheetController : BaseController
+    public class TimesheetController : WorkflowBaseController
     {
         private readonly IQueryTimesheet _timesheetQuery;
         private readonly IDispatcher _dispatcher;
 
-        public TimesheetController(IQueryTimesheet timesheetQuery, IDispatcher dispatcher)
+        public TimesheetController(
+            IQueryTimesheet timesheetQuery,
+            IDispatcher dispatcher,
+            IQueryEmployee employeeQuery,
+            IWorkflowService workflowService,
+            IEmployeeHabilitation habilitations)
+            : base(employeeQuery, workflowService, habilitations)
         {
             this._timesheetQuery = timesheetQuery;
             this._dispatcher = dispatcher;
@@ -30,10 +41,14 @@ namespace Timesheet.Web.Api.Controllers
         }
 
         [HttpGet("{timesheetId}/Employee/{employeeId}")]
-        public async Task<ActionResult<IEnumerable<EmployeeTimesheetEntry>>> GetTimesheetDetails(string employeeId, string timesheetId)
+        public async Task<ActionResult<WithHabilitations<EmployeeTimesheet>>> GetTimesheetDetails(string employeeId, string timesheetId)
         {
             var timesheet = await _timesheetQuery.GetEmployeeTimesheetDetails(employeeId, timesheetId);
-            return Ok(timesheet);
+            var timesheetEntry = timesheet?.Entries?.FirstOrDefault();
+            
+            var response = await SetAuthorizedTransitions(timesheet, typeof(TimesheetHeader), timesheet?.Status, CurrentUser, employeeId);
+            response = await CombineAuthorizedTransitions(response, timesheetEntry, typeof(TimesheetEntry), timesheetEntry?.Status, CurrentUser, employeeId);
+            return Ok(response);
         }
 
         [HttpGet("{timesheetId}/SummaryByDate/Employee/{employeeId}")]
@@ -68,7 +83,7 @@ namespace Timesheet.Web.Api.Controllers
         [HttpPut("Submit")]
         public async Task<IActionResult> Submit([FromBody] SubmitTimesheet command, CancellationToken token)
         {
-            await _dispatcher.RunCommand(command, CurrentUserId, token);
+            await _dispatcher.RunCommand(command, CurrentUser, token);
             return Ok();
         }
 
@@ -76,7 +91,7 @@ namespace Timesheet.Web.Api.Controllers
         [HttpPut("Approve")]
         public async Task<IActionResult> Approve([FromBody] ApproveTimesheet command, CancellationToken token)
         {
-            await _dispatcher.RunCommand(command, CurrentUserId, token);
+            await _dispatcher.RunCommand(command, CurrentUser, token);
             return Ok();
         }
 
@@ -85,7 +100,7 @@ namespace Timesheet.Web.Api.Controllers
         [HttpPut("Reject")]
         public async Task<IActionResult> Reject([FromBody] RejectTimesheet command, CancellationToken token)
         {
-            await _dispatcher.RunCommand(command, CurrentUserId, token);
+            await _dispatcher.RunCommand(command, CurrentUser, token);
             return Ok();
         }
 
@@ -93,7 +108,7 @@ namespace Timesheet.Web.Api.Controllers
         [HttpPut("Finalize")]
         public async Task<IActionResult> Finalize([FromBody] FinalizeTimesheet command, CancellationToken token)
         {
-            await _dispatcher.RunCommand(command, CurrentUserId, token);
+            await _dispatcher.RunCommand(command, CurrentUser, token);
             return Ok();
         }
     }

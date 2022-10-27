@@ -1,4 +1,5 @@
-﻿using Timesheet.Domain;
+﻿using Timesheet.Application.Employees.Services;
+using Timesheet.Domain;
 using Timesheet.Domain.Repositories;
 
 namespace Timesheet.Application
@@ -11,11 +12,14 @@ namespace Timesheet.Application
 
         protected bool LaunchedAsSubCommand => _parentCommandContext != null;
 
-        public BaseSubCommandHandler(IEmployeeReadRepository employeeReadRepository,
+        public BaseSubCommandHandler(
+            IEmployeeReadRepository employeeReadRepository,
             IAuditHandler auditHandler,
             IDispatcher dispatcher,
-            IUnitOfWork unitOfWork)
-            : base(employeeReadRepository, auditHandler, dispatcher, unitOfWork)
+            IUnitOfWork unitOfWork,
+            IEmployeeHabilitation employeeHabilitations
+            )
+            : base(employeeReadRepository, auditHandler, dispatcher, unitOfWork, employeeHabilitations)
         {
         }
 

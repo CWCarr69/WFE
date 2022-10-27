@@ -12,16 +12,22 @@ namespace Timesheet.Application.Workflow
             this._workflowRegistry = workflowRegistry;
         }
 
-        public bool CanProcessTransition<TEntity>(TEntity entity, Enum transition, Enum currentStatus, EmployeeRoleOnData authorRole) where TEntity : Entity
+        public bool CanProcessTransition(Type entityType, Enum transition, Enum currentStatus, EmployeeRoleOnData authorRole)
         {
-            var workflow = _workflowRegistry.GetWorkflow(entity);
-            return workflow.CanProcessTransition(entity, transition, currentStatus, authorRole);
+            var workflow = _workflowRegistry.GetWorkflow(entityType);
+            return workflow.CanProcessTransition(transition, currentStatus, authorRole);
         }
 
         public void AuthorizeTransition<TEntity>(TEntity entity, Enum transition, Enum currentStatus, EmployeeRoleOnData authorRole) where TEntity : Entity
         {
-            var workflow = _workflowRegistry.GetWorkflow(entity);
+            var workflow = _workflowRegistry.GetWorkflow(entity.GetType());
             workflow.AuthorizeTransition(entity, transition, currentStatus, authorRole);
+        }
+
+        public IEnumerable<Enum> NextTranstitions(Type entityType, Enum currentStatus, EmployeeRoleOnData authorRole)
+        {
+            var workflow = _workflowRegistry.GetWorkflow(entityType);
+            return workflow.NextTranstitions(currentStatus, authorRole);
         }
     }
 }

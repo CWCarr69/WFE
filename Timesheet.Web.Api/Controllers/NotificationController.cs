@@ -54,7 +54,7 @@ namespace Timesheet.Web.Api.Controllers
                 Population = _populationServices.Construct(request.Populations)
             };
 
-            await _dispatcher.RunCommand(command, CurrentUserId, token);
+            await _dispatcher.RunCommand(command, CurrentUser, token);
             return Ok();
         }
     }

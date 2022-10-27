@@ -1,5 +1,5 @@
 ﻿using Timesheet.Application.Employees.Commands;
-using Timesheet.Application.Workflow;
+using Timesheet.Application.Employees.Services;
 using Timesheet.Domain;
 using Timesheet.Domain.Models.Employees;
 using Timesheet.Domain.Repositories;
@@ -12,9 +12,10 @@ namespace Timesheet.Application.Employees.CommandHandlers
         public ModifyApproverCommandHandler(
             IAuditHandler auditHandler,
             IEmployeeReadRepository readRepository,
-            IWorkflowService workflowService,
             IDispatcher dispatcher,
-            IUnitOfWork unitOfWork) : base(auditHandler, readRepository, dispatcher, unitOfWork)
+            IUnitOfWork unitOfWork,
+            IEmployeeHabilitation employeeHabilitations) 
+            : base(auditHandler, readRepository, dispatcher, unitOfWork, employeeHabilitations)
         {
         }
 
@@ -36,6 +37,8 @@ namespace Timesheet.Application.Employees.CommandHandlers
 
                 employee.SetSecondaryOfficer(secondaryApprover);
             }
+
+            employee.UpdateMetadataOnModification(command.Author?.Id);
 
             return Enumerable.Empty<IDomainEvent>();
         }

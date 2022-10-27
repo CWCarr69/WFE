@@ -25,4 +25,8 @@
     <ProjectReference Include="..\Timesheet.ReadModel\Timesheet.Infrastruture.ReadModel.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
 </Project>

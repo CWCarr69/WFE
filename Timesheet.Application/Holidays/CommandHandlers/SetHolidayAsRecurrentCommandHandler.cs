@@ -1,4 +1,5 @@
-﻿using Timesheet.Application.Holidays.Commands;
+﻿using Timesheet.Application.Employees.Services;
+using Timesheet.Application.Holidays.Commands;
 using Timesheet.Domain;
 using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Models;
@@ -18,7 +19,9 @@ namespace Timesheet.Application.Holidays.CommandHandlers
             IUnitOfWork unitOfWork,
             IEmployeeReadRepository employeeReadRepository,
             IWriteRepository<Holiday> writeRepository,
-            IHolidayReadRepository readRepository) : base(employeeReadRepository, auditHandler, dispatcher, unitOfWork)
+            IHolidayReadRepository readRepository,
+            IEmployeeHabilitation employeeHabilitation
+            ) : base(employeeReadRepository, auditHandler, dispatcher, unitOfWork, employeeHabilitation)
         {
             _writeRepository = writeRepository;
             _readRepository = readRepository;
@@ -38,6 +41,7 @@ namespace Timesheet.Application.Holidays.CommandHandlers
             }
 
             existingHoliday.SetAsRecurrent();
+            existingHoliday.UpdateMetadataOnModification(setHolidayAsRecurrent.Author?.Id);
             await _writeRepository.Add(existingHoliday);
 
             this.RelatedAuditableEntity = existingHoliday;

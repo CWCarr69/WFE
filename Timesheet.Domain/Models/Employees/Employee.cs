@@ -80,9 +80,9 @@ namespace Timesheet.Domain.Models.Employees
 
 
         #region Time Workflow
-        public TimeoffHeader CreateTimeoff(DateTime requestStartDate, DateTime requestEndDate, string employeeComment, string supervisorComment)
+        public TimeoffHeader CreateTimeoff(DateTime requestStartDate, DateTime requestEndDate, string employeeComment)
         {
-            var timeoff = TimeoffHeader.Create(requestStartDate, requestEndDate, employeeComment, supervisorComment);
+            var timeoff = TimeoffHeader.Create(requestStartDate, requestEndDate, employeeComment);
             _timeoffs.Add(timeoff);
             RaiseTimeoffWorkflowChangedEvent(timeoff, nameof(TimeoffStatus.IN_PROGRESS));
             return timeoff;
@@ -104,7 +104,7 @@ namespace Timesheet.Domain.Models.Employees
         {
             timeoff.Approve(comment);
             RaiseTimeoffWorkflowChangedEvent(timeoff, nameof(TimeoffStatus.APPROVED));
-            RaiseTimeoffWorkflowChangedEvent(timeoff, nameof(TimeoffStatus.APPROVED));
+            RaiseTimeoffApprovedEvent(timeoff);
         }
 
         public void RejectTimeoff(TimeoffHeader timeoff, string comment)
@@ -178,7 +178,7 @@ namespace Timesheet.Domain.Models.Employees
             RaiseDomainEvent(new TimeoffStateChanged(Id, PrimaryApprover?.Id, SecondaryApprover?.Id, status, timeoff.Id)); ;
         }
 
-        private void RaiseTimeoffApprovedEvent(TimeoffHeader timeoff, string status)
+        private void RaiseTimeoffApprovedEvent(TimeoffHeader timeoff)
         {
             foreach(var entry in timeoff.TimeoffEntries)
             {

@@ -1,4 +1,4 @@
-﻿using Timesheet.Application.Shared;
+﻿using Timesheet.Application.Employees.Services;
 using Timesheet.Domain;
 using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Models.Employees;
@@ -16,7 +16,9 @@ namespace Timesheet.Application.Employees.CommandHandlers
             IAuditHandler auditHandler,
             IEmployeeReadRepository readRepository,
             IDispatcher dispatcher,
-            IUnitOfWork unitOfWork) : base(readRepository, auditHandler, dispatcher, unitOfWork)
+            IUnitOfWork unitOfWork,
+            IEmployeeHabilitation employeeHabilitations) 
+            : base(readRepository, auditHandler, dispatcher, unitOfWork, employeeHabilitations)
         {
             this._readRepository = readRepository;
         }
@@ -45,12 +47,12 @@ namespace Timesheet.Application.Employees.CommandHandlers
 
         protected TimeoffHeader GetTimeoffOrThrowException(Employee employee, string timeoffId)
         {
-            var timeoffEntry = employee.GetTimeoff(timeoffId);
-            if (timeoffEntry is null)
+            var timeoff = employee.GetTimeoff(timeoffId);
+            if (timeoff is null)
             {
                 throw new EntityNotFoundException<TimeoffHeader>(timeoffId);
             }
-            return timeoffEntry;
+            return timeoff;
         }
     }
 }

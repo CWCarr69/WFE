@@ -1,4 +1,5 @@
-﻿using Timesheet.Application.Settings.Commands;
+﻿using Timesheet.Application.Employees.Services;
+using Timesheet.Application.Settings.Commands;
 using Timesheet.Domain;
 using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Models.Settings;
@@ -13,12 +14,13 @@ namespace Timesheet.Application.Settings.CommandHandlers
 
         public UpdateSettingCommandHandler(
             IEmployeeReadRepository employeeReadRepository,
+            IEmployeeHabilitation employeeHabilitations,
             IAuditHandler auditHandler,
             IWriteRepository<Setting> writeRepository,
             IReadRepository<Setting> readRepository,
             IDispatcher dispatcher,
             IUnitOfWork unitOfWork
-            ) : base(employeeReadRepository, auditHandler, dispatcher, unitOfWork)
+            ) : base(employeeReadRepository, auditHandler, dispatcher, unitOfWork, employeeHabilitations)
         {
             _writeRepository = writeRepository;
             _readRepository = readRepository;
@@ -38,6 +40,7 @@ namespace Timesheet.Application.Settings.CommandHandlers
             }
 
             existingSetting.UpdateValue(updateSetting.Value);
+            existingSetting.UpdateMetadataOnModification(updateSetting.Author?.Id);
 
             this.RelatedAuditableEntity = existingSetting;
 

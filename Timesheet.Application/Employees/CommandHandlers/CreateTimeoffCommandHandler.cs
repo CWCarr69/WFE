@@ -1,4 +1,5 @@
 ﻿using Timesheet.Application.Employees.Commands;
+using Timesheet.Application.Employees.Services;
 using Timesheet.Domain;
 using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Models.Employees;
@@ -14,8 +15,9 @@ namespace Timesheet.Application.Employees.CommandHandlers
             IAuditHandler auditHandler,
             IEmployeeReadRepository readRepository,
             IDispatcher dispatcher,
-            IUnitOfWork unitOfWork
-            ) : base(auditHandler, readRepository, dispatcher, unitOfWork)
+            IUnitOfWork unitOfWork,
+            IEmployeeHabilitation employeeHabilitations
+            ) : base(auditHandler, readRepository, dispatcher, unitOfWork, employeeHabilitations)
         {
             _dispatcher = dispatcher;
         }
@@ -27,18 +29,28 @@ namespace Timesheet.Application.Employees.CommandHandlers
                 throw new TimeoffInvalidDateIntervalException(command.RequestStartDate, command.RequestEndDate);
             }
 
+            if(command.Author is null || (!command.Author.IsAdministrator))
+            {
+                command.EmployeeId = command.Author.Id;
+            }
+
             Employee employee = await GetEmployee(command.EmployeeId);
 
-            var timeoff = employee.CreateTimeoff(command.RequestStartDate, command.RequestEndDate, command.EmployeeComment, command.ApproverComment);
+            var timeoff = employee.CreateTimeoff(command.RequestStartDate, command.RequestEndDate, command.EmployeeComment);
+            timeoff.UpdateMetadataOnModification(command.Author?.Id);
+            
             this.RelatedAuditableEntity = timeoff;
 
             var commandContext = new Dictionary<string, object>() { 
                 { "Employee", employee },
                 { "Timeoff", timeoff }
             };
-            command.Entries?.ToList().ForEach(async entryCommand => await _dispatcher.RunSubCommand(entryCommand, commandContext, command.AuthorId, token));
+            command.Entries?.ToList().ForEach(async entryCommand => await _dispatcher.RunSubCommand(entryCommand, commandContext, command.Author, token));
 
-            return employee.GetDomainEvents();
+            var events = employee.GetDomainEvents();
+            employee.ClearDomainEvents();
+
+            return events;
         }
     }
 }

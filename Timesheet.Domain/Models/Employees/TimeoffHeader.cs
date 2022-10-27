@@ -4,30 +4,27 @@
     {
         public TimeoffHeader(string id, DateTime requestStartDate,
             DateTime requestEndDate,
-            string employeeComment,
-            string approverComment
+            string employeeComment
             ) : base(id)
         {
             this.RequestStartDate = requestStartDate;
             this.RequestEndDate = requestEndDate;
             this.EmployeeComment = employeeComment;
-            this.ApproverComment = approverComment;
         }
 
         public DateTime RequestStartDate { get; private set; }
         public DateTime RequestEndDate { get; private set; }
         public string EmployeeComment { get; private set; }
-        public string ApproverComment { get; private set; }
+        public string? ApproverComment { get; private set; }
         public TimeoffStatus Status { get; private set; }
         public virtual ICollection<TimeoffEntry> TimeoffEntries { get; private set; } = new List<TimeoffEntry>();
 
-        internal static TimeoffHeader Create(DateTime requestStartDate, DateTime requestEndDate, string employeeComment, string supervisorComment)
+        internal static TimeoffHeader Create(DateTime requestStartDate, DateTime requestEndDate, string employeeComment)
         {
             var timeoff = new TimeoffHeader(Guid.NewGuid().ToString(), 
                 requestStartDate.Date,
                 requestEndDate.Date,
-                employeeComment,
-                supervisorComment);
+                employeeComment);
 
             timeoff.Status = TimeoffStatus.IN_PROGRESS;
 

@@ -1,5 +1,5 @@
-﻿using Timesheet.Application.Employees.Commands;
-using Timesheet.Domain;
+﻿using Timesheet.Domain;
+using Timesheet.Domain.Models.Employees;
 
 namespace Timesheet.Application
 {
@@ -7,7 +7,7 @@ namespace Timesheet.Application
     {
         Task Publish<TDomainEvent>(TDomainEvent @event) where TDomainEvent : IDomainEvent;
         Task Publish<TDomainEvent>(IEnumerable<TDomainEvent> events) where TDomainEvent : IDomainEvent;
-        Task RunCommand<TCommand>(TCommand command, string authorId, CancellationToken token) where TCommand : ICommand;
-        Task RunSubCommand<TCommand>(TCommand command, IDictionary<string, object> commandContext, string authorId, CancellationToken token) where TCommand : ICommand;
+        Task RunCommand<TCommand>(TCommand command, User author, CancellationToken token) where TCommand : ICommand;
+        Task RunSubCommand<TCommand>(TCommand command, IDictionary<string, object> commandContext, User author, CancellationToken token) where TCommand : ICommand;
     }
 }

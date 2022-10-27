@@ -13,7 +13,7 @@ namespace Timesheet.Domain.Models.Holidays
         private Holiday(string id, DateTime date, string description, string Notes, bool isRecurrent)
             : base(id)
         {
-            Date = date;
+            Date = date.Date;
             Description = description;
             this.Notes = Notes;
             IsRecurrent = isRecurrent;

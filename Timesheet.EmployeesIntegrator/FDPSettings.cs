@@ -12,24 +12,27 @@
             var fdpSettings = new FDPSettings();
             foreach (var setting in configurations)
             {
-                if (nameof(FDP_Username) == setting.Name)
+                var name = setting.Name;
+                var value = setting.Value;
+
+                if (nameof(FDP_Username).ToUpper() == name.ToUpper())
                 {
-                    fdpSettings.FDP_Username = setting.Value;
+                    fdpSettings.FDP_Username = value;
                 }
 
-                if (nameof(FDP_Password) == setting.Name)
+                if (nameof(FDP_Password).ToUpper() == name.ToUpper())
                 {
-                    fdpSettings.FDP_Password = setting.Value;
+                    fdpSettings.FDP_Password = value;
                 }
 
-                if (nameof(FDP_Url) == setting.Name)
+                if (nameof(FDP_Url).ToUpper() == name.ToUpper())
                 {
-                    fdpSettings.FDP_Url = setting.Value;
+                    fdpSettings.FDP_Url = value;
                 }
 
-                if (nameof(FDP_Domain) == setting.Name)
+                if (nameof(FDP_Domain).ToUpper() == name.ToUpper())
                 {
-                    fdpSettings.FDP_Domain = setting.Value;
+                    fdpSettings.FDP_Domain = value;
                 }
             }
 

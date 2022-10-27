@@ -10,7 +10,6 @@ namespace Timesheet.Application.Employees.Commands
         public DateTime RequestDate { get; set; }
         public TimeoffType Type { get; set; }
         public double Hours { get; set; }
-        public string? AuthorId { get; set; }
 
         public override CommandActionType ActionType() => CommandActionType.CREATION; 
     }

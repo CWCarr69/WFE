@@ -9,8 +9,14 @@ namespace Timesheet.Application.Workflow
             PermissionStates = permissionStates;
         }
 
+        public Transition AuthorizeRoles(params EmployeeRoleOnData[] authorizedRoles)
+        {
+            AuthorizedRoles = authorizedRoles;
+            return this;
+        }
+
         public Enum Name { get; }
-        public EmployeeRoleOnData[] AuthorizedRoles { get; }
+        public EmployeeRoleOnData[] AuthorizedRoles { get; private set; }
         public Enum[] PermissionStates { get; }
     }
 }

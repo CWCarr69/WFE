@@ -2,7 +2,9 @@
 using System.Net;
 using Timesheet.Application.Employees.Queries;
 using Timesheet.Application.Settings.Queries;
+using Timesheet.Domain.Models.Employees;
 using Timesheet.Infrastructure.Authentication.Models;
+using User = Timesheet.Infrastructure.Authentication.Models.User;
 
 namespace Timesheet.Infrastructure.Authentication.Providers
 {
@@ -40,14 +42,29 @@ namespace Timesheet.Infrastructure.Authentication.Providers
                 connection.Dispose();
             }
 
+            var employeeId = "0000";
+            if(credentials.Login == "UTest1")
+            {
+                employeeId = "0213";
+            }
+            else if(credentials.Login == "MTest")
+            {
+                employeeId = "0645";
+            }
+            else
+            {
+                employeeId = "0078";
+            }
             //var employee = _queryEmployee.GetEmployeeProfileByLogin(credentials.Login).Result;
-            var employee = (_queryEmployee.GetEmployees().Result).FirstOrDefault();
+
+            var employee = _queryEmployee.GetEmployeeProfile(employeeId).Result;
             var user = new User
             {
                 Id = employee.Id,
                 Fullname = employee.FullName,
                 Login = employee.Login,
-                IsAdministrator = employee.IsAdministrator
+                IsAdministrator = employee.IsAdministrator,
+                Role = employee.IsAdministrator ? EmployeeRole.ADMINISTRATOR : EmployeeRole.EMPLOYEE
             };
             return user;
         }

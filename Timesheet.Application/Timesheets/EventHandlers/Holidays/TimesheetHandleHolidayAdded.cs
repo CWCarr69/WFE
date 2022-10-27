@@ -21,21 +21,24 @@ namespace Timesheet.Application.Timesheets.EventHandlers.Holidays
         {
             var timesheetHoliday = new TimesheetHoliday(@event.Id, @event.Date, @event.Description);
 
-            var timesheets = await _readRepository.GetTimesheetByDate(@event.Date);
+            var timesheets = (await _readRepository.GetTimesheetByDate(@event.Date))
+                ?.ToList() ?? new List<TimesheetHeader>();
 
-            if (timesheets == null || !timesheets.Any(t => t.Type == TimesheetType.WEEKLY))
+            if (!timesheets.Any(t => t.Type == TimesheetType.WEEKLY))
             {
                 var timesheetWeekly = TimesheetHeader.CreateWeeklyTimesheet(@event.Date);
                 await _writeRepository.Add(timesheetWeekly);
+                timesheets.Add(timesheetWeekly);
             }
 
-            if (timesheets == null || !timesheets.Any(t => t.Type == TimesheetType.WEEKLY))
+            if (!timesheets.Any(t => t.Type == TimesheetType.SALARLY))
             {
                 var timesheetMonthly = TimesheetHeader.CreateMonthlyTimesheet(@event.Date);
                 await _writeRepository.Add(timesheetMonthly);
+                timesheets.Add(timesheetMonthly);
             }
 
-            foreach(var timesheet in timesheets)
+            foreach (var timesheet in timesheets)
             {
                 timesheet.AddHoliday(timesheetHoliday);
             }

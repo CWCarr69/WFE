@@ -14,13 +14,20 @@ namespace Timesheet.Application.Workflow
         public TimeoffWorkflow()
             : base(new List<Transition>()
             {
-                new Transition(TimeoffTransitions.SUBMIT, TimeoffStatus.IN_PROGRESS, TimeoffStatus.REJECTED),
-                new Transition(TimeoffTransitions.APPROVE, TimeoffStatus.SUBMITTED, TimeoffStatus.REJECTED),
-                new Transition(TimeoffTransitions.REJECT, TimeoffStatus.SUBMITTED),
-                new Transition(TimeoffTransitions.DELETE, TimeoffStatus.IN_PROGRESS, TimeoffStatus.SUBMITTED, TimeoffStatus.REJECTED),
-                new Transition(TimeoffTransitions.ADD_ENTRY, TimeoffStatus.IN_PROGRESS, TimeoffStatus.SUBMITTED, TimeoffStatus.REJECTED),
-                new Transition(TimeoffTransitions.DELETE_ENTRY, TimeoffStatus.IN_PROGRESS, TimeoffStatus.SUBMITTED, TimeoffStatus.REJECTED),
-                new Transition(TimeoffTransitions.UPDATE_ENTRY, TimeoffStatus.IN_PROGRESS, TimeoffStatus.SUBMITTED, TimeoffStatus.REJECTED),
+                new Transition(TimeoffTransitions.SUBMIT, TimeoffStatus.IN_PROGRESS, TimeoffStatus.REJECTED)
+                    .AuthorizeRoles(EmployeeRoleOnData.CREATOR),
+                new Transition(TimeoffTransitions.APPROVE, TimeoffStatus.SUBMITTED, TimeoffStatus.REJECTED)
+                    .AuthorizeRoles(EmployeeRoleOnData.APPROVER),
+                new Transition(TimeoffTransitions.REJECT, TimeoffStatus.SUBMITTED)
+                    .AuthorizeRoles(EmployeeRoleOnData.APPROVER),
+                new Transition(TimeoffTransitions.DELETE, TimeoffStatus.IN_PROGRESS, TimeoffStatus.SUBMITTED, TimeoffStatus.REJECTED)
+                    .AuthorizeRoles(EmployeeRoleOnData.CREATOR),
+                new Transition(TimeoffTransitions.ADD_ENTRY, TimeoffStatus.IN_PROGRESS, TimeoffStatus.SUBMITTED, TimeoffStatus.REJECTED)
+                    .AuthorizeRoles(EmployeeRoleOnData.CREATOR),
+                new Transition(TimeoffTransitions.DELETE_ENTRY, TimeoffStatus.IN_PROGRESS, TimeoffStatus.SUBMITTED, TimeoffStatus.REJECTED)
+                    .AuthorizeRoles(EmployeeRoleOnData.CREATOR),
+                new Transition(TimeoffTransitions.UPDATE_ENTRY, TimeoffStatus.IN_PROGRESS, TimeoffStatus.SUBMITTED, TimeoffStatus.REJECTED)
+                    .AuthorizeRoles(EmployeeRoleOnData.CREATOR),
             })
         {
         }

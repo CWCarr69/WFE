@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Timesheet.Domain;
+using Timesheet.Domain.Models.Employees;
 
 namespace Timesheet.Application
 {
@@ -21,13 +22,19 @@ namespace Timesheet.Application
                 throw new ArgumentNullException(nameof(@event));
             }
 
-            dynamic handler = GetHandler(
+            try
+            {
+                dynamic handler = GetHandler(
                 @event.GetType(),
                 _configuration.EventHandlerRegistry,
                 $"Event {nameof(@event)} is not registered.",
                 $"Event handler for {nameof(@event)} is not registered.");
 
-            await handler.Handle(@event as dynamic);
+                await handler.Handle(@event as dynamic);
+            }catch(Exception ex)
+            {
+
+            }
         }
 
         public async Task Publish<TDomainEvent>(IEnumerable<TDomainEvent> events) where TDomainEvent : IDomainEvent
@@ -38,7 +45,7 @@ namespace Timesheet.Application
             }
         }
 
-        public async Task RunCommand<TCommand>(TCommand command, string authorId, CancellationToken token)
+        public async Task RunCommand<TCommand>(TCommand command, User author, CancellationToken token)
             where TCommand : ICommand
         {
             if (command is null)
@@ -46,7 +53,7 @@ namespace Timesheet.Application
                 throw new ArgumentNullException(nameof(command));
             }
 
-            command.AuthorId = authorId;
+            command.Author = author;
 
             dynamic handler = GetHandler(
                 command.GetType(),
@@ -57,7 +64,7 @@ namespace Timesheet.Application
             await handler.HandleAsync(command, token);
         }
 
-        public async Task RunSubCommand<TCommand>(TCommand command, IDictionary<string, object> context, string authorId, CancellationToken token)
+        public async Task RunSubCommand<TCommand>(TCommand command, IDictionary<string, object> context, User author, CancellationToken token)
             where TCommand : ICommand
         {
             if (command is null)
@@ -65,7 +72,7 @@ namespace Timesheet.Application
                 throw new ArgumentNullException(nameof(command));
             }
 
-            command.AuthorId = authorId;
+            command.Author = author;
 
             dynamic handler = GetHandler(
                 command.GetType(),

@@ -59,11 +59,16 @@
 
         public override int GetHashCode() => Id.GetHashCode();
 
-        public void UpdateMetadata(DateTime? created, DateTime? modified, string? by = null)
+        public void UpdateMetadataOnModification(string by)
         {
-            CreatedDate = created ?? CreatedDate;
-            ModifiedDate = modified ?? ModifiedDate;
-            UpdatedBy = by ?? UpdatedBy;
+            ModifiedDate = DateTime.Now;
+            UpdatedBy = by ;
+        }
+
+        public void UpdateMetadata(DateTime createdDate, DateTime modifiedDate)
+        {
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
         }
     }
 }

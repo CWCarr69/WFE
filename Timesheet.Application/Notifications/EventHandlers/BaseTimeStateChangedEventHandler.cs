@@ -8,19 +8,17 @@ namespace Timesheet.Application.Notifications.EventHandlers
     {
         private readonly INotificationReadRepository _readRepository;
         private readonly IWriteRepository<NotificationItem> _writeRepository;
-        private readonly IUnitOfWork _unitOfWork;
+
         private readonly INotificationPopulationServices _populationServices;
 
 
         protected BaseTimeStateChangedEventHandler(
             INotificationPopulationServices populationServices,
             INotificationReadRepository readRepository,
-            IWriteRepository<NotificationItem> writeRepository,
-            IUnitOfWork unitOfWork)
+            IWriteRepository<NotificationItem> writeRepository)
         {
             this._readRepository = readRepository;
             this._writeRepository = writeRepository;
-            this._unitOfWork = unitOfWork;
             this._populationServices = populationServices;
         }
 
@@ -33,16 +31,16 @@ namespace Timesheet.Application.Notifications.EventHandlers
             }
 
             var employee = (employeeId, primaryApproverId, secondaryApproverId);
-            var notificationItems = GenerateNotificationItems(notification, employee, objectId);
+            var notificationItems = await GenerateNotificationItems(notification, employee, objectId);
 
             foreach (var item in notificationItems)
             {
                 await _writeRepository.Add(item);
             }
-            await _unitOfWork.CompleteAsync(CancellationToken.None);
+            //await _unitOfWork.CompleteAsync(CancellationToken.None);
         }
 
-        private IEnumerable<NotificationItem> GenerateNotificationItems(
+        private async Task<IEnumerable<NotificationItem>> GenerateNotificationItems(
             Notification notification,
             (string Id, string PrimaryApproverId, string SecondaryApproverId) employee,
             string objectId
@@ -52,13 +50,18 @@ namespace Timesheet.Application.Notifications.EventHandlers
             var employees = _populationServices
                 .MatchPopulations((employee.Id, employee.PrimaryApproverId, employee.SecondaryApproverId));
 
-            var employeeIds = populationsConcerned.Select(p => employees[p]).ToList();
-            _populationServices.AddAdministratorsToEmployeesIfConcerned(populationsConcerned, employeeIds);
+            var employeeIds = populationsConcerned
+                .Where(p => employees.ContainsKey(p))
+                .Select(p => employees[p])
+                .Where(e => e is not null)
+                .ToList();
 
-            var employeesConcerned = populationsConcerned.Select(p =>
-                NotificationItem.Create(employees[p], notification.Action, ActionToSubject(notification.Action), false, objectId));
+            await _populationServices.AddAdministratorsToEmployeesIfConcerned(populationsConcerned, employeeIds);
 
-            return employeesConcerned;
+            var notificationItems = employeeIds.Select(employeeId =>
+                NotificationItem.Create(employeeId, notification.Action, ActionToSubject(notification.Action), false, objectId));
+
+            return notificationItems;
         }
 
         public abstract string ActionToSubject(string action);

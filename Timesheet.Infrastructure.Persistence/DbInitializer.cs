@@ -70,9 +70,9 @@ namespace Timesheet.Infrastructure.Persistence
                 Notification.Create(0, NotificationType.TIMESHEET, TimesheetStatus.FINALIZED.ToString()),
                 
                 Notification.Create(0, NotificationType.TIMEOFF, TimeoffStatus.IN_PROGRESS.ToString()),
-                Notification.Create(0, NotificationType.TIMESHEET, TimeoffStatus.SUBMITTED.ToString()),
-                Notification.Create(0, NotificationType.TIMESHEET, TimeoffStatus.APPROVED.ToString()),
-                Notification.Create(0, NotificationType.TIMESHEET, TimeoffStatus.REJECTED.ToString())
+                Notification.Create(0, NotificationType.TIMEOFF, TimeoffStatus.SUBMITTED.ToString()),
+                Notification.Create(0, NotificationType.TIMEOFF, TimeoffStatus.APPROVED.ToString()),
+                Notification.Create(0, NotificationType.TIMEOFF, TimeoffStatus.REJECTED.ToString())
             };
         }
     }

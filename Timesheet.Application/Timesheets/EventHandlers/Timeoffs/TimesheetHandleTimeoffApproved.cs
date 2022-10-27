@@ -30,7 +30,7 @@ namespace Timesheet.Application.Timesheets.EventHandlers
             var timesheetType = @event.IsSalaried ? TimesheetType.SALARLY : TimesheetType.WEEKLY; 
             var timesheet = await _readRepository.GetTimesheetByDate(@event.RequestDate, timesheetType);
 
-            if(timesheet != null)
+            if(timesheet is null)
             {
                 timesheet = @event.IsSalaried
                     ? TimesheetHeader.CreateWeeklyTimesheet(@event.RequestDate)

@@ -10,7 +10,7 @@
 
         public TimesheetHoliday(string id, DateTime WorkDate, string description) : base(id)
         {
-            this.WorkDate = WorkDate;
+            this.WorkDate = WorkDate.Date;
             PayrollCode = "HOLIDAY";
             Hours = DefaultHolidayHours;
             Description = description ?? string.Empty;

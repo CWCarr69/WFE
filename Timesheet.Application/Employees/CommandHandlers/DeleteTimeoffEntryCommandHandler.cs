@@ -1,4 +1,5 @@
 ﻿using Timesheet.Application.Employees.Commands;
+using Timesheet.Application.Employees.Services;
 using Timesheet.Application.Workflow;
 using Timesheet.Domain;
 using Timesheet.Domain.Models;
@@ -16,8 +17,9 @@ namespace Timesheet.Application.Employees.CommandHandlers
             IEmployeeReadRepository readRepository,
             IWorkflowService workflowService,
             IDispatcher dispatcher,
-            IUnitOfWork unitOfWork
-            ) : base(auditHandler, readRepository, dispatcher, unitOfWork)
+            IUnitOfWork unitOfWork,
+            IEmployeeHabilitation employeeHabilitations
+            ) : base(auditHandler, readRepository, dispatcher, unitOfWork, employeeHabilitations)
         {
             _workflowService = workflowService;
         }
@@ -35,6 +37,7 @@ namespace Timesheet.Application.Employees.CommandHandlers
             _workflowService.AuthorizeTransition(timeoffEntry, TimeoffEntryTransitions.DELETE, timeoffEntry.Status, currentEmployeeRoleOnData);
 
             employee.DeleteTimeoffEntry(timeoff, timeoffEntry);
+            timeoff.UpdateMetadataOnModification(command.Author?.Id);
 
             return employee.GetDomainEvents();
         }

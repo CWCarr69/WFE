@@ -32,7 +32,8 @@ namespace Timesheet.Infrastructure.Authentication.Providers
             var claims = new List<Claim>
             {
               new Claim(ClaimTypes.NameIdentifier, user.Id, ClaimValueTypes.String),
-              new Claim(ClaimTypes.Name, user.Fullname, ClaimValueTypes.String)
+              new Claim(ClaimTypes.Name, user.Fullname, ClaimValueTypes.String),
+              new Claim(ClaimTypes.Role, user.Role.ToString(), ClaimValueTypes.String)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingKey));

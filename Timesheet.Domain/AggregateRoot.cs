@@ -15,7 +15,8 @@
             }
         }
 
-        public ICollection<IDomainEvent> GetDomainEvents() => _domainEvents;
+        public ICollection<IDomainEvent> GetDomainEvents()
+            => new List<IDomainEvent>(_domainEvents);
         public void ClearDomainEvents() => _domainEvents.Clear();
 
     }

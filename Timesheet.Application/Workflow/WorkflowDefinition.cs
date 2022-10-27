@@ -4,7 +4,7 @@ using Timesheet.Exceptions;
 
 namespace Timesheet.Application.Workflow
 {
-    public class WorkflowDefinition
+    public abstract class WorkflowDefinition
     {
         private readonly Dictionary<Enum, IList<Enum>> _permissionStatus = new();
         private readonly Dictionary<Enum, IList<EmployeeRoleOnData>> _authorizedRoles = new();
@@ -13,22 +13,55 @@ namespace Timesheet.Application.Workflow
         {
             transitions.ToList().ForEach(transition =>
             {
+                var superRoles = new EmployeeRoleOnData[] { EmployeeRoleOnData.ADMINISTRATOR };
+                var otherRoles = transition.AuthorizedRoles ?? new EmployeeRoleOnData[] {};
+
+                var transitionRoles = superRoles.Union(otherRoles).ToArray();
+
                 AddTransiton(transition.Name, transition.PermissionStates);
-                AddTransiton(transition.Name, transition.AuthorizedRoles);
+                AddTransiton(transition.Name, transitionRoles);
             });
         }
 
         public void AuthorizeTransition<TEntity>(TEntity entity, Enum transition, Enum currentStatus, EmployeeRoleOnData authorRole) where TEntity : Entity
         {
-            if (!CanProcessTransition(entity, transition, currentStatus, authorRole))
+            if (!CanProcessTransition(transition, currentStatus, authorRole))
             {
-                throw new InvalidWorkflowOperation<TEntity>(transition.ToString(), currentStatus.ToString(), entity.Id);
+                throw new InvalidWorkflowOperation<TEntity>(transition.ToString(), currentStatus.ToString(), entity.Id, authorRole.ToString());
             }
         }
 
-        public bool CanProcessTransition<TEntity>(TEntity entity, Enum transition, Enum currentStatus, EmployeeRoleOnData authorRole) where TEntity : Entity
+        public bool CanProcessTransition(Enum transition, Enum currentStatus, EmployeeRoleOnData authorRole)
         {
             return EmployeeCanExecute(transition, authorRole) && CurrentStateAllowTransition(transition, currentStatus);
+        }
+
+        public IEnumerable<Enum> NextTranstitions(Enum currentStatus, EmployeeRoleOnData authorRole)
+        {
+            var transitions = GetNextTransitions(currentStatus);
+            var authorizedTransitions = new List<Enum>();
+
+            foreach(var transition in transitions)
+            {
+                if (!_authorizedRoles.TryGetValue(transition, out var authorizedRoles))
+                {
+                    continue;
+                }
+
+                if(authorizedRoles.Any(role => role.Equals(authorRole)))
+                {
+                    authorizedTransitions.Add(transition);
+                }
+            }
+
+            return authorizedTransitions;
+        }
+
+        private IEnumerable<Enum> GetNextTransitions(Enum currentStatus)
+        {
+            return _permissionStatus.Where(e => e.Value.Contains(currentStatus))
+                .Select(e => e.Key)
+                .ToList();
         }
 
         private bool EmployeeCanExecute(Enum transition, EmployeeRoleOnData authorRole)
@@ -38,7 +71,7 @@ namespace Timesheet.Application.Workflow
                 return false;
             }
 
-            return _authorizedRoles.Any(role => role.Equals(authorRole));
+            return authorizedRoles.Any(role => role.Equals(authorRole));
         }
 
         private bool CurrentStateAllowTransition(Enum transition, Enum currentStatus)

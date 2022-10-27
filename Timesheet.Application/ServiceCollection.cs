@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Timesheet.Application.Employees.CommandHandlers;
+using Timesheet.Application.Employees.Services;
 using Timesheet.Application.Holidays.CommandHandlers;
 using Timesheet.Application.Notifications.CommandHandlers;
 using Timesheet.Application.Notifications.EventHandlers;
@@ -7,6 +8,7 @@ using Timesheet.Application.Notifications.Services;
 using Timesheet.Application.Settings.CommandHandlers;
 using Timesheet.Application.Shared;
 using Timesheet.Application.Timesheets.CommandHandlers;
+using Timesheet.Application.Timesheets.EventHandlers;
 using Timesheet.Application.Timesheets.EventHandlers.Holidays;
 using Timesheet.Application.Workflow;
 using Timesheet.Domain.Employees.Services;
@@ -34,6 +36,10 @@ namespace Timesheet.Application
             services.AddScoped<TimehsheetHandleHolidayGeneralInformationsUpdated, TimehsheetHandleHolidayGeneralInformationsUpdated>();
 
             services.AddScoped<TimeoffStateChangedEventHandler, TimeoffStateChangedEventHandler>();
+            services.AddScoped<TimesheetStateChangedEventHandler, TimesheetStateChangedEventHandler>();
+            
+            services.AddScoped<TimesheetHandleTimeoffApproved, TimesheetHandleTimeoffApproved>();
+
             services.AddScoped<IAuditHandler, AuditHandler>();
         }
 
@@ -69,6 +75,7 @@ namespace Timesheet.Application
         {
             services.AddScoped<IEmployeeBenefitCalculator, EmployeeBenefitCalculator>();
             services.AddScoped<INotificationPopulationServices, NotificationPopulationServices>();
+            services.AddScoped<IEmployeeHabilitation, EmployeeHabilitation>();
         }
     }
 }

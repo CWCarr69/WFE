@@ -12,12 +12,12 @@ namespace Timesheet.Application.Notifications.Services
             this._employeeReadRepository = employeeReadRepository;
         }
 
-        public readonly int[] AllPopulation = new int[]
+        public readonly NotificationPopulationType[] AllPopulation = new NotificationPopulationType[]
         {
-            (int) NotificationPopulationType.EMPLOYEE,
-            (int) NotificationPopulationType.PRIMARY_APPROVER,
-            (int) NotificationPopulationType.SECONDARY_APPROVER,
-            (int) NotificationPopulationType.ADMINISTRATOR,
+            NotificationPopulationType.EMPLOYEE,
+            NotificationPopulationType.PRIMARY_APPROVER,
+            NotificationPopulationType.SECONDARY_APPROVER,
+            NotificationPopulationType.ADMINISTRATOR,
         };
 
         public int Construct(IEnumerable<NotificationPopulationType> populations)
@@ -30,10 +30,10 @@ namespace Timesheet.Application.Notifications.Services
             var populationsConcerned = new List<NotificationPopulationType>();
             foreach (var referencePopulation in AllPopulation)
             {
-                var populationConcerned = referencePopulation | population;
+                var populationConcerned = (int)referencePopulation & population;
                 if (populationConcerned != 0)
                 {
-                    populationsConcerned.Add((NotificationPopulationType)populationConcerned);
+                    populationsConcerned.Add(referencePopulation);
                 }
             }
 

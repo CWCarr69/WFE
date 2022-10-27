@@ -2,7 +2,6 @@
 using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Models.Employees;
 using Timesheet.DomainEvents.Timesheets;
-using Timesheet.DomainEvents.Timesheets;
 
 namespace Timesheet.Domain.Models.Timesheets
 {
@@ -70,7 +69,7 @@ namespace Timesheet.Domain.Models.Timesheets
             var start = now.Previous(DayOfWeek.Friday);
             var end = nextThursday;
 
-            return new TimesheetHeader(payrollPeriod, payrollPeriod, start, end, TimesheetType.SALARLY, TimesheetStatus.IN_PROGRESS);
+            return new TimesheetHeader(payrollPeriod, payrollPeriod, start, end, TimesheetType.WEEKLY, TimesheetStatus.IN_PROGRESS);
         }
 
         public void AddTimesheetEntry(TimesheetEntry timesheetEntry)
@@ -118,7 +117,13 @@ namespace Timesheet.Domain.Models.Timesheets
             {
                 throw new ArgumentNullException(nameof(timesheetHoliday));
             }
-            this.TimesheetHolidays.Add(timesheetHoliday);
+            var existingHoliday = this.TimesheetHolidays
+                .FirstOrDefault(h => h.WorkDate == timesheetHoliday.WorkDate);
+
+            if(existingHoliday is null)
+            {
+                this.TimesheetHolidays.Add(timesheetHoliday);
+            }
         }
 
         public void UpdateHoliday(string id, string description)

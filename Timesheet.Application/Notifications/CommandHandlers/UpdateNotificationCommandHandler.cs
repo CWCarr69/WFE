@@ -1,4 +1,5 @@
-﻿using Timesheet.Application.Notifications.Commands;
+﻿using Timesheet.Application.Employees.Services;
+using Timesheet.Application.Notifications.Commands;
 using Timesheet.Domain;
 using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Models.Notifications;
@@ -17,8 +18,10 @@ namespace Timesheet.Application.Notifications.CommandHandlers
             IDispatcher dispatcher,
             IUnitOfWork unitOfWork,
             IWriteRepository<Notification> writeRepository,
-            INotificationReadRepository readRepository) 
-            : base(employeeReadRepository, auditHandler, dispatcher, unitOfWork)
+            INotificationReadRepository readRepository,
+            IEmployeeHabilitation employeeHabilitation
+            ) 
+            : base(employeeReadRepository, auditHandler, dispatcher, unitOfWork, employeeHabilitation)
         {
             _writeRepository = writeRepository;
             _readRepository = readRepository;
@@ -38,6 +41,7 @@ namespace Timesheet.Application.Notifications.CommandHandlers
             }
 
             existingNotification.UpdatePopulation(updateNotification.Population);
+            existingNotification.UpdateMetadataOnModification(updateNotification.Author?.Id);
 
             this.RelatedAuditableEntity = existingNotification;
 

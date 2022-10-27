@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Timesheet.Domain.Models.Employees;
-using Timesheet.Domain.Models.Holidays;
 using Timesheet.Domain.Repositories;
 
 namespace Timesheet.Infrastructure.Persistence.Repositories
@@ -11,14 +10,11 @@ namespace Timesheet.Infrastructure.Persistence.Repositories
         {
         }
 
-        public Task<IEnumerable<Employee>> GetAdministrators()
+        public async Task<IEnumerable<Employee>> GetAdministrators()
         {
-            throw new NotImplementedException();
-        }
-
-        public Holiday? GetByDate(DateTime date)
-        {
-            return _context.Holidays.ToList().FirstOrDefault(e => e.Date.ToShortDateString == date.ToShortDateString);
+            return await _context.Employees
+                .Where(e => e.EmploymentData.IsAdministrator)
+                .ToListAsync();
         }
 
         public Task<Employee?> GetEmployee(string id)

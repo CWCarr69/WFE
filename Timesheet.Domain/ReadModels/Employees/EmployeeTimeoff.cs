@@ -13,7 +13,7 @@ namespace Timesheet.Domain.ReadModels.Employees
         public DateTime RequestStartDate { get; set; }
         public DateTime RequestEndDate { get; set; }
         public TimeoffStatus Status { get; set; }
-        public String StatusName => Status.ToString();
+        public string StatusName => Status.ToString();
         public IEnumerable<EmployeeTimeoffEntry> Entries { get; set; }
     }
 }

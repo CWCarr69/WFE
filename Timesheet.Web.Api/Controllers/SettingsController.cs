@@ -31,7 +31,7 @@ namespace Timesheet.Web.Api.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateSetting(UpdateSetting updateSetting, CancellationToken token)
         {
-            await _dispatcher.RunCommand(updateSetting, CurrentUserId, token);
+            await _dispatcher.RunCommand(updateSetting, CurrentUser, token);
             return Ok();
         }
     }

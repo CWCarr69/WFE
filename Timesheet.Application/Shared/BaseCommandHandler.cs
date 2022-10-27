@@ -1,4 +1,5 @@
-﻿using Timesheet.Application.Shared;
+﻿using Timesheet.Application.Employees.Services;
+using Timesheet.Application.Shared;
 using Timesheet.Domain;
 using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Models.Employees;
@@ -14,6 +15,7 @@ namespace Timesheet.Application
         private readonly IAuditHandler _auditHandler;
         private readonly IDispatcher _eventDispatcher;
         private readonly IUnitOfWork _transaction;
+        private IEmployeeHabilitation _employeeHabilitation;
 
         protected TEntity RelatedAuditableEntity { get; set; }
 
@@ -34,21 +36,23 @@ namespace Timesheet.Application
             IEmployeeReadRepository employeeReadRepository,
             IAuditHandler auditHandler, 
             IDispatcher dispatcher,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            IEmployeeHabilitation employeeHabilitation)
         {
-            this._employeeReadRepository = employeeReadRepository;
+            _employeeReadRepository = employeeReadRepository;
             _auditHandler = auditHandler;
             _eventDispatcher = dispatcher;
             _transaction = unitOfWork;
+            _employeeHabilitation = employeeHabilitation;
         }
 
         public abstract Task<IEnumerable<IDomainEvent>> HandleCoreAsync(TCommand command, CancellationToken token);
 
         public async Task HandleAsync(TCommand command, CancellationToken token)
         {
-            if(command.AuthorId is null || !CanExecute(command))
+            if(command.Author?.Id is null)
             {
-                throw new CannotExecuteCommandException(command.GetType().Name, command.AuthorId);
+                throw new CannotExecuteCommandWithoutAuthorException(typeof(TCommand).Name);
             }
 
             if(command is null)
@@ -60,7 +64,7 @@ namespace Timesheet.Application
 
             if (RelatedAuditableEntity is not null)
             {
-                _auditHandler.LogCommand(RelatedAuditableEntity, command, command.ActionType(), command.AuthorId);
+                _auditHandler.LogCommand(RelatedAuditableEntity, command, command.ActionType(), command.Author?.Id);
             }
 
             if (this.Events.Any() && _eventDispatcher is not null)
@@ -74,33 +78,17 @@ namespace Timesheet.Application
 
         private async Task PublishEvents() => await this._eventDispatcher.Publish(Events);
 
-        public virtual bool CanExecute(TCommand command) => true;
-
         protected async Task<EmployeeRoleOnData> GetCurrentEmployeeRoleOnData(BaseCommand command, Employee? employee)
         {
-            var author = command.AuthorId;
-            var administrators = (await _employeeReadRepository.GetAdministrators())
-                .Select(e => e.Id);
-
-            var currentEmployeeRoleOnData = EmployeeRoleOnData.NONE;
-            if (administrators.Contains(author))
-            {
-                currentEmployeeRoleOnData = EmployeeRoleOnData.ADMINISTRATOR;
-            }
-            else if (author is not null && author == employee?.Id)
-            {
-                currentEmployeeRoleOnData = EmployeeRoleOnData.CREATOR;
-            }
-            else if (author is not null && author == employee?.PrimaryApprover?.Id)
-            {
-                currentEmployeeRoleOnData = EmployeeRoleOnData.APPROVER;
-            }
-            else if (author is not null && author == employee?.SecondaryApprover?.Id)
-            {
-                currentEmployeeRoleOnData = EmployeeRoleOnData.APPROVER;
-            }
-
-            return currentEmployeeRoleOnData;
+            //var author = command.AuthorId;
+            //var administrators = (await _employeeReadRepository.GetAdministrators())
+            //    .Select(e => e.Id);
+            return _employeeHabilitation.GetEmployeeRoleOnData(
+                command.Author?.Id,
+                command.Author?.IsAdministrator ?? false,
+                employee.Id,
+                employee.PrimaryApprover?.Id,
+                employee.SecondaryApprover?.Id);
         }
     }
 }

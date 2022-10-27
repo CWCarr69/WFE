@@ -1,5 +1,4 @@
-﻿using Timesheet.Domain.Models;
-using Timesheet.Domain.Models.Employees;
+﻿using Timesheet.Domain.Models.Employees;
 
 namespace Timesheet.Application.Workflow
 {
@@ -14,8 +13,10 @@ namespace Timesheet.Application.Workflow
         public TimeoffEntryWorkflow()
             : base(new List<Transition>()
             {
-                new Transition(TimeoffEntryTransitions.DELETE, TimeoffEntryStatus.NOT_PROCESSED, TimeoffEntryStatus.PROCESSED),
+                new Transition(TimeoffEntryTransitions.DELETE, TimeoffEntryStatus.NOT_PROCESSED, TimeoffEntryStatus.PROCESSED)
+                    .AuthorizeRoles(EmployeeRoleOnData.CREATOR),
                 new Transition(TimeoffEntryTransitions.UPDATE, TimeoffEntryStatus.NOT_PROCESSED, TimeoffEntryStatus.PROCESSED)
+                    .AuthorizeRoles(EmployeeRoleOnData.CREATOR)
             })
         {
         }

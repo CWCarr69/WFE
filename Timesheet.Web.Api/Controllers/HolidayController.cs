@@ -38,28 +38,28 @@ namespace Timesheet.Web.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] AddHoliday addHoliday, CancellationToken token)
         {
-            await _dispatcher.RunCommand(addHoliday, CurrentUserId, token);
+            await _dispatcher.RunCommand(addHoliday, CurrentUser, token);
             return Ok();
         }
 
         [HttpPut]
         public async Task<IActionResult> UpdateGeneralInformations([FromBody] UpdateHolidayGeneralInformations updateHoliday, CancellationToken token)
         {
-            await _dispatcher.RunCommand(updateHoliday, CurrentUserId, token);
+            await _dispatcher.RunCommand(updateHoliday, CurrentUser, token);
             return Ok();
         }
 
         [HttpPut("/setAsRecurrent")]
         public async Task<IActionResult> SetAsRecurrent([FromBody] SetHolidayAsRecurrent setHolidayAsRecurrent, CancellationToken token)
         {
-            await _dispatcher.RunCommand(setHolidayAsRecurrent, CurrentUserId, token);
+            await _dispatcher.RunCommand(setHolidayAsRecurrent, CurrentUser, token);
             return Ok();
         }
 
         [HttpDelete]
         public async Task<IActionResult> Delete([FromBody] DeleteHoliday deleteHoliday, CancellationToken token)
         {
-            await _dispatcher.RunCommand(deleteHoliday, CurrentUserId, token);
+            await _dispatcher.RunCommand(deleteHoliday, CurrentUser, token);
             return Ok();
         }
     }

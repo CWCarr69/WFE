@@ -1,4 +1,5 @@
-﻿using Timesheet.Domain.Models.Timesheets;
+﻿using Timesheet.Domain.Models.Employees;
+using Timesheet.Domain.Models.Timesheets;
 
 namespace Timesheet.Application.Workflow
 {
@@ -13,9 +14,12 @@ namespace Timesheet.Application.Workflow
         public TimesheetEntryWorkflow()
             : base(new List<Transition>()
             {
-                new Transition(TimesheetEntryTransitions.SUBMIT, TimesheetEntryStatus.IN_PROGRESS),
-                new Transition(TimesheetEntryTransitions.APPROVE, TimesheetEntryStatus.SUBMITTED, TimesheetEntryStatus.REJECTED),
-                new Transition(TimesheetEntryTransitions.REJECT, TimesheetEntryStatus.IN_PROGRESS, TimesheetEntryStatus.APPROVED)
+                new Transition(TimesheetEntryTransitions.SUBMIT, TimesheetEntryStatus.IN_PROGRESS)
+                    .AuthorizeRoles(EmployeeRoleOnData.CREATOR),
+                new Transition(TimesheetEntryTransitions.APPROVE, TimesheetEntryStatus.SUBMITTED, TimesheetEntryStatus.REJECTED)
+                    .AuthorizeRoles(EmployeeRoleOnData.APPROVER),
+                new Transition(TimesheetEntryTransitions.REJECT, TimesheetEntryStatus.SUBMITTED)
+                    .AuthorizeRoles(EmployeeRoleOnData.APPROVER),
             })
         {
         }

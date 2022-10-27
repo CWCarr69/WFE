@@ -6,9 +6,8 @@ namespace Timesheet.Application.Employees.Commands
     {
         public DateTime RequestStartDate { get; set; }
         public DateTime RequestEndDate { get; set; }
-        public string EmployeeId { get; set; }
+        public string? EmployeeId { get; set; }
         public string EmployeeComment { get; set; }
-        public string ApproverComment { get; set; }
 
         public IEnumerable<AddEntryToTimeoff> Entries { get; set; }
         public override CommandActionType ActionType() => CommandActionType.CREATION;

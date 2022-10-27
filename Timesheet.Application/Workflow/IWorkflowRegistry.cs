@@ -4,6 +4,6 @@ namespace Timesheet.Application.Workflow
 {
     public interface IWorkflowRegistry
     {
-        WorkflowDefinition GetWorkflow<TEntity>(TEntity entity) where TEntity : Entity;
+        WorkflowDefinition GetWorkflow(Type entityType);
     }
 }

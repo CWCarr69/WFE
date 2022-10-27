@@ -1,5 +1,5 @@
-﻿using Timesheet.Domain;
-using Timesheet.Domain.Models.Employees;
+﻿using Timesheet.Domain.Models.Employees;
+using Timesheet.Domain.Models.Timesheets;
 
 namespace Timesheet.Application.Workflow
 {
@@ -7,28 +7,34 @@ namespace Timesheet.Application.Workflow
     {
         private TimeoffWorkflow _timeoffWorkflow;
         private TimeoffEntryWorkflow _timeoffEntryWorkflow;
+        private TimesheetWorkflow _timesheetWorkflow;
+        private TimesheetEntryWorkflow _timesheetEntryWorkflow;
 
         public WorkflowRegistry()
         {
             _timeoffWorkflow = new TimeoffWorkflow();
             _timeoffEntryWorkflow = new TimeoffEntryWorkflow();
+            _timesheetWorkflow = new TimesheetWorkflow();
+            _timesheetEntryWorkflow = new TimesheetEntryWorkflow();
+
         }
 
-        public WorkflowDefinition GetWorkflow<TEntity>(TEntity entity) where TEntity : Entity
+        public WorkflowDefinition GetWorkflow(Type entityType)
         {
-            if(entity == null)
+            if(entityType == null)
             {
-                throw new NullReferenceException($"Null passed for entity {typeof(TEntity)}");
+                throw new NullReferenceException($"Null passed for entity {entityType}");
             }
 
-            WorkflowDefinition workflow = entity switch
-            {
-                TimeoffHeader => _timeoffWorkflow,
-                TimeoffEntry => _timeoffEntryWorkflow,
-                _ => throw new InvalidOperationException($"No workflow is available for {typeof(TEntity)}")
-            };
+            if (entityType == typeof(TimeoffHeader)) return _timeoffWorkflow;
 
-            return workflow!;
+            if (entityType == typeof(TimeoffEntry)) return _timeoffEntryWorkflow;
+
+            if (entityType == typeof(TimesheetHeader)) return _timesheetWorkflow;
+
+            if (entityType == typeof(TimesheetEntry)) return _timesheetEntryWorkflow;
+
+            throw new InvalidOperationException($"No workflow is available for {entityType}");
         }
     }
 }

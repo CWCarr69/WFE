@@ -12,8 +12,8 @@ namespace Timesheet.Application.Notifications.EventHandlers
         public TimesheetStateChangedEventHandler(
             INotificationPopulationServices populationServices,
             INotificationReadRepository readRepository,
-            IWriteRepository<NotificationItem> writeRepository,
-            IUnitOfWork unitOfWork) : base(populationServices, readRepository, writeRepository, unitOfWork)
+            IWriteRepository<NotificationItem> writeRepository) 
+            : base(populationServices, readRepository, writeRepository)
         {
         }
 

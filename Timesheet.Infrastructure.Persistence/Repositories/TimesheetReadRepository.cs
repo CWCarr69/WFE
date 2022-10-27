@@ -33,7 +33,7 @@ namespace Timesheet.Infrastructure.Persistence.Repositories
 
         public async Task<IEnumerable<TimesheetHeader?>> GetTimesheetByDate(DateTime date)
         {
-            return await _context.Timesheets.Where(t => t.StartDate >= date && t.EndDate <= date)
+            return await _context.Timesheets.Where(t => t.StartDate <= date && date <= t.EndDate)
                 .Include(t => t.TimesheetEntries)
                 .Include(t => t.TimesheetHolidays)
                 .ToListAsync();
@@ -42,7 +42,7 @@ namespace Timesheet.Infrastructure.Persistence.Repositories
         public async Task<TimesheetHeader?> GetTimesheetByDate(DateTime date, TimesheetType type)
         {
             return await _context.Timesheets
-                .Where(t => t.StartDate >= date && t.EndDate <= date && t.Type == type)
+                .Where(t => t.StartDate <= date && date <= t.EndDate && t.Type == type)
                 .Include(t => t.TimesheetEntries)
                 .Include(t => t.TimesheetHolidays)
                 .FirstOrDefaultAsync();

@@ -6,7 +6,5 @@ namespace Timesheet.Application
     {
         Task<IEnumerable<IDomainEvent>> HandleCoreAsync(TCommand command, CancellationToken token);
         Task HandleAsync(TCommand command, CancellationToken token);
-
-        bool CanExecute(TCommand command);
     }
 }

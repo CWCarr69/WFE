@@ -14,7 +14,7 @@ internal class SettingRepository: ISettingRepository
 
     FDPSettings ISettingRepository.GetFDPParameters()
     {
-        var query = "SELECT * FROM Settings WHERE name LIKE 'FDP_%'";
+        var query = "SELECT Name, Value FROM Settings WHERE name LIKE 'FDP_%'";
         var settings = _dbServices.Query<(string Name, string Value)>(query);
 
         if (settings is null)
