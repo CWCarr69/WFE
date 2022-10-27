@@ -39,7 +39,7 @@ namespace Timesheet.Application.Timesheets.CommandHandlers
             _workflowService.AuthorizeTransition(timesheet, TimesheetTransitions.REJECT, timesheet.Status, currentEmployeeRoleOnData);
             _workflowService.AuthorizeTransition(timesheetEntryRef, TimesheetEntryTransitions.REJECT, timesheetEntryRef.Status, currentEmployeeRoleOnData);
 
-            timesheet.Reject(employee);
+            timesheet.Reject(employee, command.Comment);
             timesheet.UpdateMetadataOnModification(command.Author?.Id);
 
             return Enumerable.Empty<IDomainEvent>();

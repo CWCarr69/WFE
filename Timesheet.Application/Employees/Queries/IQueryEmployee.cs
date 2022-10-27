@@ -12,7 +12,7 @@ namespace Timesheet.Application.Employees.Queries
         Task<EmployeeProfile?> GetEmployeeProfileByLogin(string login);
         Task<EmployeeApprovers?> GetEmployeeApprovers(string id);
         Task<EmployeeBenefits?> GetEmployeeBenefits(string id);
-        Task<IEnumerable<EmployeeWithTimeStatus>> GetEmployeesTimeRecordStatus(string? approverId = null, bool directReports = false);
+        Task<EmployeeTeam> GetEmployeeTeam(int page, int itemsPerPage, string? approverId = null, bool directReports = false);
         Task<IEnumerable<EmployeeTimeoff>> GetEmployeesPendingTimeoffs(string? approverId = null, bool directReports = false);
         Task<IEnumerable<EmployeeTimesheet>> GetEmployeesPendingTimesheets(string? approverId = null, bool directReports = false);
         Task<double> CalculateUsedBenefits(string employeeId, TimeoffType type, DateTime start, DateTime end);

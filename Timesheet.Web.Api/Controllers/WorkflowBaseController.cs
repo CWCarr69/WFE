@@ -55,12 +55,10 @@ namespace Timesheet.Web.Api.Controllers
             T data, Type entityType, Enum status, User currentUser, string employeeId)
         {
             var dataWithHabilitation = await SetAuthorizedTransitions(data, entityType, status, currentUser, employeeId);
-            if(dataWithHabilitation is not null)
-            {
-                currentDataWithHabilitations.AuthorizedActions = currentDataWithHabilitations.AuthorizedActions
+                
+            currentDataWithHabilitations.AuthorizedActions = currentDataWithHabilitations.AuthorizedActions
                 .Union(dataWithHabilitation.AuthorizedActions)
                 .ToList();
-            }
 
             return currentDataWithHabilitations;
         }

@@ -42,7 +42,9 @@ namespace Timesheet.Application.TImesheets.CommandHandlers
         protected TimesheetEntry GetTimesheetFirstData(TimesheetHeader timesheet)
         {
             var timesheetEntry = timesheet.TimesheetEntries
-                .FirstOrDefault(t => t.PayrollCode != TimesheetPayrollCode.HOLIDAY.ToString());
+                .FirstOrDefault(t => 
+                    t.PayrollCode != TimesheetPayrollCode.HOLIDAY.ToString()
+                    && t.PayrollCode != TimesheetPayrollCode.TIMEOFF.ToString());
             
             if (timesheetEntry is null)
             {

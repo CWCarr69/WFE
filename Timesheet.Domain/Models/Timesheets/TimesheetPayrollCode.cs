@@ -2,6 +2,6 @@
 {
     public enum TimesheetPayrollCode
     {
-        REGULAR, OVERTIME, HOLIDAY
+        REGULAR, OVERTIME, HOLIDAY, TIMEOFF
     }
 }

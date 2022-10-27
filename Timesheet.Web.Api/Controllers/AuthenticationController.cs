@@ -5,7 +5,7 @@ using Timesheet.Infrastructure.Authentication.Models;
 
 namespace Timesheet.Web.Api.Controllers
 {
-    //[AllowAnonymous]
+    [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class AuthenticationController : ControllerBase

@@ -2,22 +2,30 @@
 using Microsoft.AspNetCore.Mvc;
 using Timesheet.Application;
 using Timesheet.Application.Employees.Queries;
+using Timesheet.Application.Employees.Services;
+using Timesheet.Application.Workflow;
 using Timesheet.Domain.Employees.Services;
+using Timesheet.Domain.Models.Employees;
+using Timesheet.Domain.Models.Timesheets;
 using Timesheet.Domain.ReadModels.Employees;
+using Timesheet.Domain.ReadModels.Timesheets;
+using Timesheet.Web.Api.ViewModels;
 
 namespace Timesheet.Web.Api.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class EmployeeController : ControllerBase
+    public class EmployeeController : WorkflowBaseController
     {
         private readonly IQueryEmployee _employeeQuery;
         private readonly IEmployeeBenefitCalculator _benefitsServcies;
 
         public EmployeeController(IQueryEmployee employeeQuery,
-            IEmployeeBenefitCalculator benefitsServcies,
-            IDispatcher dispatcher)
+            IWorkflowService workflowService,
+            IEmployeeHabilitation employeeHabilitation,
+            IEmployeeBenefitCalculator benefitsServcies)
+            :base(employeeQuery, workflowService, employeeHabilitation)
         {
             _employeeQuery = employeeQuery;
             this._benefitsServcies = benefitsServcies;
@@ -36,7 +44,6 @@ namespace Timesheet.Web.Api.Controllers
             var employee = await _employeeQuery.GetEmployeeProfile(employeeId);
             return Ok(employee);
         }
-
 
         [HttpGet("{employeeId}/Approvers")]
         public async Task<ActionResult<EmployeeApprovers>> GetApprovers(string employeeId)
@@ -58,29 +65,56 @@ namespace Timesheet.Web.Api.Controllers
         }
 
         [HttpGet("Team")]
-        public async Task<ActionResult<IEnumerable<EmployeeWithTimeStatus>>> GetTeamTimeRecordStatus(bool directReport)
+        public async Task<ActionResult<PaginatedResult<EmployeeWithTimeStatus>>> GetTeamTimeRecordStatus(bool directReport, int page = 1, int itemsPerpage = 50)
         {
-            string managerId = null;
-            var employees = await _employeeQuery.GetEmployeesTimeRecordStatus(managerId, directReport);
-            return Ok(employees);
+            string managerId = Manager();
+            var employeeTeam = await _employeeQuery.GetEmployeeTeam(page, itemsPerpage, managerId, directReport);
+
+            var result = new PaginatedResult<EmployeeWithTimeStatus>
+            {
+                Page = page,
+                ItemsPerPage = itemsPerpage,
+                TotalItems = employeeTeam.TotalItems,
+                Items = employeeTeam.Employees
+            };
+
+            return Ok(result);
         }
 
         [HttpGet("Timeoff/Pending")]
-        public async Task<ActionResult<IEnumerable<EmployeeTimeoff>>> GetTeamPendingTimeoffs(bool directReport)
+        public async Task<ActionResult<IEnumerable<WithHabilitations<EmployeeTimeoff>>>> GetTeamPendingTimeoffs(bool directReport)
         {
-            string managerId = null;
-            var employees = await _employeeQuery.GetEmployeesPendingTimeoffs(managerId, directReport);
-            return Ok(employees);
+            string managerId = Manager();
+            var timeoffs = await _employeeQuery.GetEmployeesPendingTimeoffs(managerId, directReport);
+            
+            var timeoffWithHabilitations = new List<WithHabilitations<EmployeeTimeoff>>();
+            foreach (var timeoff in timeoffs)
+            {
+                var timeoffWithHabilitation = await SetAuthorizedTransitions(timeoff, typeof(TimeoffHeader), timeoff.Status, CurrentUser, timeoff.EmployeeId);
+                timeoffWithHabilitations.Add(timeoffWithHabilitation);
+            }
+            return Ok(timeoffWithHabilitations);
         }
 
         [HttpGet("Timesheet/Pending")]
-        public async Task<ActionResult<IEnumerable<EmployeeTimeoff>>> GetTeamPendingTimesheets(bool directReport)
+        public async Task<ActionResult<IEnumerable<WithHabilitations<EmployeeTimesheet>>>> GetTeamPendingTimesheets(bool directReport)
         {
-            string managerId = null;
-            var employees = await _employeeQuery.GetEmployeesPendingTimeoffs(managerId, directReport);
-            return Ok(employees);
+            string managerId = Manager();
+            var timesheets = await _employeeQuery.GetEmployeesPendingTimesheets(managerId, directReport);
+
+            var timesheetWithHabilitations = new List<WithHabilitations<EmployeeTimesheet>>();
+            foreach (var timesheet in timesheets)
+            {
+                var timesheetWithHabilitation = await SetAuthorizedTransitions(timesheet, typeof(TimesheetHeader), timesheet.Status, CurrentUser, timesheet.EmployeeId);
+                timesheetWithHabilitations.Add(timesheetWithHabilitation);
+            }
+            return Ok(timesheetWithHabilitations);
         }
 
+        private string Manager()
+        {
+            return CurrentUser.IsAdministrator ? null : CurrentUser.Id;
+        }
 
     }
 }

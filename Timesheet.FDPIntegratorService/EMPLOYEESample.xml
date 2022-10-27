@@ -1,4 +1,4 @@
-<FPDTS ExternalIpAddress="172.28.12.20" UTCTimeStamp="2022-10-26T20:35:03.019Z" FieldpointUserId="FPIntegration@wilsonfire.com" TransferName="WilsonFire-Resource-InExport" IsLastPageToProcess="True">
+<FPDTS ExternalIpAddress="172.28.12.20" UTCTimeStamp="2022-10-27T22:46:53.593Z" FieldpointUserId="FPIntegration@wilsonfire.com" TransferName="WilsonFire-Resource-InExport" IsLastPageToProcess="True">
 	<OutboundData>
 		<Records>
 			<Record>
@@ -125,6 +125,7 @@
 				</VendorContactEmail>
 				<ManagerName xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -252,6 +253,7 @@
 				</VendorContactEmail>
 				<ManagerName xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -377,6 +379,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Luzmarina I. Rodriguez</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -498,6 +501,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Donald Schatte</ManagerName>
+				<AzureUserID>CWCARR@WILSONFIRE.COM</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -622,6 +626,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Shannon Sampson</ManagerName>
+				<AzureUserID>SChavez@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -747,6 +752,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Luzmarina I. Rodriguez</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -872,6 +878,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Luzmarina I. Rodriguez</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -996,6 +1003,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Bob Wilson</ManagerName>
+				<AzureUserID>WGandy@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -1119,6 +1127,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
+				<AzureUserID>FieldPoint@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -1244,6 +1253,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Bob Wilson</ManagerName>
+				<AzureUserID>PGallier@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -1367,6 +1377,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Juan Vela</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -1490,6 +1501,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
+				<AzureUserID>TPHEBERT@WILSONFIRE.COM</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -1615,6 +1627,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Bob Wilson</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -1740,6 +1753,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Bob Wilson</ManagerName>
+				<AzureUserID>CWHenderson@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -1865,6 +1879,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Shannon Sampson</ManagerName>
+				<AzureUserID>SHolmes@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -1988,6 +2003,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Christopher Carr</ManagerName>
+				<AzureUserID>JAHowd@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -2023,7 +2039,7 @@
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
 				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
-				<TimeSheetStart>2022-10-24T00:00:00.000</TimeSheetStart>
+				<TimeSheetStart>2022-10-31T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>65.1000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:16.390</CreateDate>
@@ -2111,6 +2127,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Jeffery Morris</ManagerName>
+				<AzureUserID>CLuera@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -2234,6 +2251,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Salvador Chavez</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -2359,6 +2377,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Donald Schatte</ManagerName>
+				<AzureUserID>KEMartinez@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -2482,6 +2501,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Jerry Wittorp</ManagerName>
+				<AzureUserID>JMORRIS@WILSONFIRE.COM</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -2605,6 +2625,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
+				<AzureUserID>MOSMER@WILSONFIRE.COM</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -2728,6 +2749,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
+				<AzureUserID>MPACHUCA@WILSONFIRE.COM</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -2851,6 +2873,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
+				<AzureUserID>BHPARKER@WILSONFIRE.COM</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -2976,6 +2999,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Luzmarina I. Rodriguez</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -3101,6 +3125,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Bob Wilson</ManagerName>
+				<AzureUserID>SLSampson@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -3226,6 +3251,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Donald Schatte</ManagerName>
+				<AzureUserID>SSanchez@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -3351,6 +3377,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Bob Wilson</ManagerName>
+				<AzureUserID>DKSchatte@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -3476,6 +3503,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Bob Wilson</ManagerName>
+				<AzureUserID>KAShafer@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -3599,6 +3627,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
+				<AzureUserID>swsimmons@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -3722,6 +3751,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
+				<AzureUserID>RROMERO@WILSONFIRE.COM</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -3845,6 +3875,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Jeffery Morris</ManagerName>
+				<AzureUserID>TLTRUITT@WILSONFIRE.COM</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -3970,6 +4001,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Bob Wilson</ManagerName>
+				<AzureUserID>JVela@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -4095,6 +4127,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Luzmarina I. Rodriguez</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -4220,6 +4253,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Bob Wilson</ManagerName>
+				<AzureUserID>LWeaver@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -4345,6 +4379,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Bob Wilson</ManagerName>
+				<AzureUserID>LWilhite@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -4470,6 +4505,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Donald Schatte</ManagerName>
+				<AzureUserID>BWILSON@WILSONFIRE.COM</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -4597,6 +4633,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Bob Wilson</ManagerName>
+				<AzureUserID>JWittorp@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -4722,6 +4759,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Bob Wilson</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -4845,6 +4883,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Jeffery Morris</ManagerName>
+				<AzureUserID>DYOUNG@WILSONFIRE.COM</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -4971,6 +5010,7 @@
 				</VendorContactEmail>
 				<ManagerName xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -5096,6 +5136,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Shannon Sampson</ManagerName>
+				<AzureUserID>CHouse@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -5219,6 +5260,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
+				<AzureUserID>IVCOLUMBUS@WILSONFIRE.COM</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -5342,6 +5384,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Christopher House</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -5467,6 +5510,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Donald Schatte</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -5592,6 +5636,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Bob Wilson</ManagerName>
+				<AzureUserID>WHPeters@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -5717,6 +5762,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Juan Vela</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -5842,6 +5888,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Shannon Sampson</ManagerName>
+				<AzureUserID>EPerez@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -5967,6 +6014,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Shannon Sampson</ManagerName>
+				<AzureUserID>JChimene@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -6090,6 +6138,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Jeffery Morris</ManagerName>
+				<AzureUserID>TLMALVEAUX@WILSONFIRE.COM</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -6215,6 +6264,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Juan Vela</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -6340,6 +6390,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Shannon Sampson</ManagerName>
+				<AzureUserID>JSoto@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -6463,6 +6514,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
+				<AzureUserID>CLMITCHELL@WILSONFIRE.COM</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -6586,6 +6638,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Juan Vela</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -6709,6 +6762,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Salvador Chavez</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -6832,6 +6886,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Anthony A. Lind</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -6955,6 +7010,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Paul W. Hohlbaugh</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -7078,6 +7134,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
+				<AzureUserID>DRDURR@WILSONFIRE.COM</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -7201,6 +7258,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Jeffery Morris</ManagerName>
+				<AzureUserID>CLELLIS@WILSONFIRE.COM</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -7324,6 +7382,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Jeffery Morris</ManagerName>
+				<AzureUserID>SWTOLBERT@WILSONFIRE.COM</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -7449,6 +7508,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Shannon Sampson</ManagerName>
+				<AzureUserID>PWHohlbaugh@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -7572,6 +7632,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Christopher House</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -7695,6 +7756,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Esdras Perez</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -7820,6 +7882,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Shannon Sampson</ManagerName>
+				<AzureUserID>LIRodriguez@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -7945,6 +8008,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Sheri R. Duggan</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -8068,6 +8132,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Jeffery Morris</ManagerName>
+				<AzureUserID>ASDavis@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -8191,6 +8256,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
+				<AzureUserID>AARODRIGUEZ@WILSONFIRE.COM</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -8316,6 +8382,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Shannon Sampson</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -8439,6 +8506,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Paul W. Hohlbaugh</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -8564,6 +8632,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Donald Schatte</ManagerName>
+				<AzureUserID>RSCabrera@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -8689,6 +8758,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Shannon Sampson</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -8814,6 +8884,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Donald Schatte</ManagerName>
+				<AzureUserID>LLHinojosa@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -8937,6 +9008,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Jeffery Morris</ManagerName>
+				<AzureUserID>GRodriguez@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -9060,6 +9132,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Anthony Parson</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -9187,6 +9260,7 @@
 				</VendorContactEmail>
 				<ManagerName xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -9310,6 +9384,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Jeremiah G. Thompson</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -9433,6 +9508,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Jeremiah G. Thompson</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -9556,6 +9632,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Anthony A. Lind</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -9679,6 +9756,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -9804,6 +9882,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Shannon Sampson</ManagerName>
+				<AzureUserID>AALind@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -9927,6 +10006,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Anthony A. Lind</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -10050,6 +10130,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Steven Holmes</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -10176,6 +10257,7 @@
 				</VendorContactEmail>
 				<ManagerName xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -10299,6 +10381,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
+				<AzureUserID>DKWASHINGTON@WILSONFIRE.COM</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -10422,6 +10505,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
+				<AzureUserID>JGWOODBURY@WILSONFIRE.COM</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -10545,6 +10629,7 @@
 				</VendorContactEmail>
 				<ManagerName xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -10670,6 +10755,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Shannon Sampson</ManagerName>
+				<AzureUserID>JGThompson@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -10793,6 +10879,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Esdras Perez</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -10918,6 +11005,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Bob Wilson</ManagerName>
+				<AzureUserID>SWShelby@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -11041,6 +11129,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
+				<AzureUserID>JCTALIAFERRO@WILSONFIRE.COM</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -11166,6 +11255,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
+				<AzureUserID>GRGUERRERO@WILSONFIRE.COM</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -11202,7 +11292,7 @@
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
 				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
-				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
+				<TimeSheetStart>2022-10-24T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-08-24T15:31:30.737</CreateDate>
@@ -11291,6 +11381,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Paul W. Hohlbaugh</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -11414,6 +11505,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
+				<AzureUserID>AJBRIGHT@WILSONFIRE.COM</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -11537,6 +11629,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Anthony Parson</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -11660,6 +11753,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
+				<AzureUserID>BBCROWELL@WILSONFIRE.COM</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -11783,6 +11877,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Paul W. Hohlbaugh</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -11906,6 +12001,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Salvador Chavez</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -12031,6 +12127,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Bob Wilson</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -12156,6 +12253,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Salvador Chavez</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -12281,6 +12379,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Jesse Soto Jr.</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -12406,6 +12505,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Donald Schatte</ManagerName>
+				<AzureUserID>VMTapscott@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -12531,6 +12631,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Shannon Sampson</ManagerName>
+				<AzureUserID>AEParson@wilsonfire.com</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -12656,6 +12757,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
+				<AzureUserID>JAGUZMAN@WILSONFIRE.COM</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -12781,6 +12883,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Esdras Perez</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -12906,6 +13009,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Esdras Perez</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -13031,6 +13135,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Salvador Chavez</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -13156,6 +13261,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Jeffery Morris</ManagerName>
+				<AzureUserID>SLPOSTELL@WILSONFIRE.COM</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -13281,6 +13387,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Jeffery Morris</ManagerName>
+				<AzureUserID>DLFRANKLIN@WILSONFIRE.COM</AzureUserID>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -13406,6 +13513,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Jesse Soto Jr.</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -13531,6 +13639,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Jesse Soto Jr.</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -13658,6 +13767,7 @@
 				</VendorContactEmail>
 				<ManagerName xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -13783,6 +13893,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Test Manager</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -13908,6 +14019,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Test Manager</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -14033,6 +14145,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Christopher Carr</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -14160,6 +14273,7 @@
 				</VendorContactEmail>
 				<ManagerName xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -14289,6 +14403,7 @@
 				</VendorContactEmail>
 				<ManagerName xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</ManagerName>
+				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>

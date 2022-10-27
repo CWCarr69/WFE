@@ -6,7 +6,6 @@ using Timesheet.Application.Employees.Services;
 using Timesheet.Application.Timesheets.Commands;
 using Timesheet.Application.Timesheets.Queries;
 using Timesheet.Application.Workflow;
-using Timesheet.Domain.Models.Employees;
 using Timesheet.Domain.Models.Timesheets;
 using Timesheet.Domain.ReadModels.Timesheets;
 using Timesheet.Web.Api.ViewModels;
@@ -44,10 +43,7 @@ namespace Timesheet.Web.Api.Controllers
         public async Task<ActionResult<WithHabilitations<EmployeeTimesheet>>> GetTimesheetDetails(string employeeId, string timesheetId)
         {
             var timesheet = await _timesheetQuery.GetEmployeeTimesheetDetails(employeeId, timesheetId);
-            var timesheetEntry = timesheet?.Entries?.FirstOrDefault();
-            
-            var response = await SetAuthorizedTransitions(timesheet, typeof(TimesheetHeader), timesheet?.Status, CurrentUser, employeeId);
-            response = await CombineAuthorizedTransitions(response, timesheetEntry, typeof(TimesheetEntry), timesheetEntry?.Status, CurrentUser, employeeId);
+            var response = await SetAuthorizedTransitions(employeeId, timesheet);
             return Ok(response);
         }
 
@@ -66,17 +62,27 @@ namespace Timesheet.Web.Api.Controllers
         }
 
         [HttpGet("Review")]
-        public async Task<ActionResult<PaginatedResult<TimesheetReview>>> GetTimesheetReview(string? payrollPeriod, string? employeeId, string? department, int page=1, int itemsPerpage=50)
+        public async Task<ActionResult<PaginatedResult<TimesheetReview>>> GetTimesheetReview(string payrollPeriod, string? employeeId, string? department, int page=1, int itemsPerpage=50)
         {
             var timesheetReview = await _timesheetQuery.GetTimesheetReview(payrollPeriod, employeeId, department, page, itemsPerpage);
-            var result = new PaginatedResult<TimesheetDetailsGroupedByEmployee>
+
+            var reviewWithHabilitations = new List<WithHabilitations<EmployeeTimesheetWithTotals>>();
+            foreach(var review in timesheetReview.DetailsByEmployee)
+            {
+                var reviewWithHabilitation = await SetAuthorizedTransitions(review.EmployeeId, review);
+                reviewWithHabilitations.Add(reviewWithHabilitation);
+            }
+
+            var result = new PaginatedResult<WithHabilitations<EmployeeTimesheetWithTotals>>
             {
                 Page = page,
                 ItemsPerPage = itemsPerpage,
                 TotalItems = timesheetReview.TotalItems,
-                Items = timesheetReview.DetailsByEmployee,
+                Items = reviewWithHabilitations
             };
+
             result.OtherData.Add(nameof(TimesheetReview.TotalQuantity), timesheetReview.TotalQuantity);
+
             return Ok(result);
         }
 
@@ -110,6 +116,35 @@ namespace Timesheet.Web.Api.Controllers
         {
             await _dispatcher.RunCommand(command, CurrentUser, token);
             return Ok();
+        }
+
+        private async Task<WithHabilitations<EmployeeTimesheet>> SetAuthorizedTransitions(string employeeId, EmployeeTimesheet? timesheet)
+        {
+            var timesheetEntry = timesheet?.Entries?.FirstOrDefault(e =>
+            e.PayrollCode != TimesheetPayrollCode.HOLIDAY.ToString()
+            && e.PayrollCode != TimesheetPayrollCode.TIMEOFF.ToString()
+            );
+            return await SetAuthorizedTransitions(employeeId, timesheet, timesheetEntry);
+        }
+
+        private async Task<WithHabilitations<EmployeeTimesheetWithTotals>> SetAuthorizedTransitions(string employeeId, EmployeeTimesheetWithTotals? timesheet)
+        {
+            var timesheetEntry = timesheet?.Entries?.FirstOrDefault(e => 
+            e.PayrollCode != TimesheetPayrollCode.HOLIDAY.ToString()
+            && e.PayrollCode != TimesheetPayrollCode.TIMEOFF.ToString()
+            );
+            return await SetAuthorizedTransitions(employeeId, timesheet, timesheetEntry);
+        }
+
+        private async Task<WithHabilitations<T>> SetAuthorizedTransitions<T>(string employeeId, T timesheet, dynamic timesheetEntry)
+        {
+            dynamic dynamicTimesheet = timesheet;
+            var response = await SetAuthorizedTransitions(timesheet, typeof(TimesheetHeader), dynamicTimesheet?.Status, CurrentUser, employeeId);
+            if (timesheetEntry is not null)
+            {
+                response = await CombineAuthorizedTransitions(response, timesheetEntry, typeof(TimesheetEntry), timesheetEntry?.Status, CurrentUser, employeeId);
+            }
+            return response;
         }
     }
 }

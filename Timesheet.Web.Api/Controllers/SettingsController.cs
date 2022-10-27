@@ -7,7 +7,7 @@ using Timesheet.Domain.ReadModels.Settings;
 
 namespace Timesheet.Web.Api.Controllers
 {
-    [Authorize/*(Roles = "ADMINISTRATOR")*/]
+    [Authorize(Roles = "ADMINISTRATOR")]
     [Route("api/[controller]")]
     [ApiController]
     public class SettingsController : BaseController

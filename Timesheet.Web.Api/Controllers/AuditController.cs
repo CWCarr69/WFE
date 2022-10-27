@@ -5,7 +5,7 @@ using Timesheet.Domain.ReadModels.Settings;
 
 namespace Timesheet.Web.Api.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "ADMINISTRATOR")]
     [Route("api/[controller]")]
     [ApiController]
     public class AuditController : ControllerBase

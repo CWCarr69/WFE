@@ -28,8 +28,8 @@ namespace Timesheet.Domain.Models.Timesheets
         public TimesheetStatus Status { get; private set; }
 
         public virtual ICollection<TimesheetEntry> TimesheetEntries { get; private set; } = new List<TimesheetEntry>();
-
         public virtual ICollection<TimesheetHoliday> TimesheetHolidays { get; private set; } = new List<TimesheetHoliday>();
+        public virtual ICollection<TimesheetComment> TimesheetComments { get; private set; } = new List<TimesheetComment>();
 
         public static TimesheetHeader CreateMonthlyTimesheet(DateTime workDate, string id = null)
         {
@@ -81,20 +81,32 @@ namespace Timesheet.Domain.Models.Timesheets
             this.TimesheetEntries.Add(timesheetEntry);
         }
 
-        public void Submit(Employee employee)
+        public void Submit(Employee employee, string? comment)
         {
+            ThrowNullArgumentExceptionIfNull(employee);
+
+            UpdateComment(employee, timesheetComment => timesheetComment.UpdateEmployeeComment(comment));
+
             TransitionEntries(employee, entry => entry.Submit());
             RaiseTimesheetWorkflowChangedEvent(employee, TimesheetEntryStatus.SUBMITTED.ToString());
         }
 
-        public void Approve(Employee employee)
+        public void Approve(Employee employee, string comment)
         {
+            ThrowNullArgumentExceptionIfNull(employee);
+
+            UpdateComment(employee, timesheetComment => timesheetComment.UpdateApproverComment(comment));
+
             TransitionEntries(employee, entry => entry.Approve());
             RaiseTimesheetWorkflowChangedEvent(employee, TimesheetEntryStatus.APPROVED.ToString());
         }
 
-        public void Reject(Employee employee)
+        public void Reject(Employee employee, string comment)
         {
+            ThrowNullArgumentExceptionIfNull(employee);
+
+            UpdateComment(employee, timesheetComment => timesheetComment.UpdateApproverComment(comment));
+
             TransitionEntries(employee, entry => entry.Reject());
             RaiseTimesheetWorkflowChangedEvent(employee, TimesheetEntryStatus.REJECTED.ToString());
         }
@@ -154,6 +166,25 @@ namespace Timesheet.Domain.Models.Timesheets
             foreach (var entry in TimesheetEntries)
             {
                 doTransition(entry);
+            }
+        }
+
+        private void UpdateComment(Employee employee, Action<TimesheetComment> UpdateComment)
+        {
+            var timesheetComment = TimesheetComments
+                .Where(c => c.EmployeeId == employee.Id).FirstOrDefault();
+            if (timesheetComment is null)
+            {
+                timesheetComment = new TimesheetComment(employee.Id, Id);
+            }
+            UpdateComment(timesheetComment);
+        }
+
+        private static void ThrowNullArgumentExceptionIfNull(Employee employee)
+        {
+            if (employee is null || employee?.Id is null)
+            {
+                throw new ArgumentException(nameof(employee));
             }
         }
 

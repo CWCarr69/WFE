@@ -25,7 +25,7 @@ namespace Timesheet.Application.Timesheets.EventHandlers
                 @event.RequestDate,
                 @event.Type.ToString(),
                 @event.Hours,
-                @event.Description);
+                TimesheetPayrollCode.TIMEOFF.ToString());
 
             var timesheetType = @event.IsSalaried ? TimesheetType.SALARLY : TimesheetType.WEEKLY; 
             var timesheet = await _readRepository.GetTimesheetByDate(@event.RequestDate, timesheetType);

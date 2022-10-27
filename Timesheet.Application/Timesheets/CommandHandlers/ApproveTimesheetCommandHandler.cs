@@ -40,7 +40,7 @@ namespace Timesheet.Application.Timesheets.CommandHandlers
             _workflowService.AuthorizeTransition(timesheet, TimesheetTransitions.APPROVE, timesheet.Status, currentEmployeeRoleOnData);
             _workflowService.AuthorizeTransition(timesheetEntryRef, TimesheetEntryTransitions.APPROVE, timesheetEntryRef.Status, currentEmployeeRoleOnData);
 
-            timesheet.Approve(employee);
+            timesheet.Approve(employee, command.Comment);
             timesheet.UpdateMetadataOnModification(command.Author?.Id);
 
             return Enumerable.Empty<IDomainEvent>();

@@ -12,6 +12,8 @@ namespace Timesheet.Domain.ReadModels.Timesheets
         public DateTime ModifiedDate { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public string ApproverComment { get; set; }
+        public string EmployeeComment { get; set; }
         public TimesheetStatus Status { get; set; }
         public string StatusName => Status.ToString();
         public string PayrollCode { get; set; }

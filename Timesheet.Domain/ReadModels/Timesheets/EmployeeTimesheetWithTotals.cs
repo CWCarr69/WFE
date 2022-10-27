@@ -2,7 +2,7 @@
 
 namespace Timesheet.Domain.ReadModels.Timesheets
 {
-    public class TimesheetDetailsGroupedByEmployee
+    public class EmployeeTimesheetWithTotals
     {
         public string TimesheetId { get; set; }
         public string EmployeeId { get; set; }
@@ -14,6 +14,6 @@ namespace Timesheet.Domain.ReadModels.Timesheets
         public double Overtime { get; set; }
         public TimesheetStatus Status { get; set; }
         public string StatusName => Status.ToString();
-        public IEnumerable<EmployeeTimesheetEntry> Details { get; set; }
+        public IEnumerable<EmployeeTimesheetEntry> Entries { get; set; }
     }
 }

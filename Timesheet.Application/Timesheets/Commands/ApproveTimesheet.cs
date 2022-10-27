@@ -6,6 +6,7 @@ namespace Timesheet.Application.Timesheets.Commands
     {
         public string EmployeeId { get; set; }
         public string TimesheetId { get; set; }
+        public string? Comment { get; set; }
         public override CommandActionType ActionType() => CommandActionType.MODIFICATION;
     }
 }

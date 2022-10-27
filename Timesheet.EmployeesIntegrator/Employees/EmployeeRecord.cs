@@ -13,6 +13,8 @@ namespace Timesheet.FDPDataIntegrator.Employees
     public class EmployeeRecord
     {
         public string EmployeeCode { get; set; }
+        [XmlElement("AzureUserID")]
+        public string ADLogin { get; set; }
         [XmlElement("Name")]
         public string FullName { get; set; }
         public string Title { get; set; }
