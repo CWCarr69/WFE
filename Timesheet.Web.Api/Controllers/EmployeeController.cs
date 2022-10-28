@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Timesheet.Application;
 using Timesheet.Application.Employees.Queries;
 using Timesheet.Application.Employees.Services;
 using Timesheet.Application.Workflow;
@@ -65,50 +64,44 @@ namespace Timesheet.Web.Api.Controllers
         }
 
         [HttpGet("Team")]
-        public async Task<ActionResult<PaginatedResult<EmployeeWithTimeStatus>>> GetTeamTimeRecordStatus(bool directReport, int page = 1, int itemsPerpage = 50)
+        public async Task<ActionResult<PaginatedResult<EmployeeWithTimeStatus>>> GetTeamRecordStatus(bool directReport, int page = 1, int itemsPerPage = 50)
         {
             string managerId = Manager();
-            var employeeTeam = await _employeeQuery.GetEmployeeTeam(page, itemsPerpage, managerId, directReport);
+            var employeeTeam = await _employeeQuery.GetEmployeeTeam(page, itemsPerPage, managerId, directReport);
 
-            var result = new PaginatedResult<EmployeeWithTimeStatus>
-            {
-                Page = page,
-                ItemsPerPage = itemsPerpage,
-                TotalItems = employeeTeam.TotalItems,
-                Items = employeeTeam.Employees
-            };
-
-            return Ok(result);
+            return Ok(Paginate(page, itemsPerPage, employeeTeam));
         }
 
         [HttpGet("Timeoff/Pending")]
-        public async Task<ActionResult<IEnumerable<WithHabilitations<EmployeeTimeoff>>>> GetTeamPendingTimeoffs(bool directReport)
+        public async Task<ActionResult<PaginatedResult<WithHabilitations<EmployeeTimeoff>>>> GetTeamPendingTimeoffs(bool directReport, int page = 1, int itemsPerPage = 50)
         {
             string managerId = Manager();
-            var timeoffs = await _employeeQuery.GetEmployeesPendingTimeoffs(managerId, directReport);
+            var timeoffs = await _employeeQuery.GetEmployeesPendingTimeoffs(page, itemsPerPage, managerId, directReport);
             
             var timeoffWithHabilitations = new List<WithHabilitations<EmployeeTimeoff>>();
-            foreach (var timeoff in timeoffs)
+            foreach (var timeoff in timeoffs.Items)
             {
                 var timeoffWithHabilitation = await SetAuthorizedTransitions(timeoff, typeof(TimeoffHeader), timeoff.Status, CurrentUser, timeoff.EmployeeId);
                 timeoffWithHabilitations.Add(timeoffWithHabilitation);
             }
-            return Ok(timeoffWithHabilitations);
+
+            return Ok(Paginate(page, itemsPerPage, timeoffs.TotalItems, timeoffWithHabilitations));
         }
 
         [HttpGet("Timesheet/Pending")]
-        public async Task<ActionResult<IEnumerable<WithHabilitations<EmployeeTimesheet>>>> GetTeamPendingTimesheets(bool directReport)
+        public async Task<ActionResult<IEnumerable<WithHabilitations<EmployeeTimesheet>>>> GetTeamPendingTimesheets(bool directReport, int page = 1, int itemsPerPage = 50)
         {
             string managerId = Manager();
-            var timesheets = await _employeeQuery.GetEmployeesPendingTimesheets(managerId, directReport);
+            var timesheets = await _employeeQuery.GetEmployeesPendingTimesheets(page, itemsPerPage, managerId, directReport);
 
             var timesheetWithHabilitations = new List<WithHabilitations<EmployeeTimesheet>>();
-            foreach (var timesheet in timesheets)
+            foreach (var timeoff in timesheets.Items)
             {
-                var timesheetWithHabilitation = await SetAuthorizedTransitions(timesheet, typeof(TimesheetHeader), timesheet.Status, CurrentUser, timesheet.EmployeeId);
+                var timesheetWithHabilitation = await SetAuthorizedTransitions(timeoff, typeof(TimesheetHeader), timeoff.Status, CurrentUser, timeoff.EmployeeId);
                 timesheetWithHabilitations.Add(timesheetWithHabilitation);
             }
-            return Ok(timesheetWithHabilitations);
+
+            return Ok(Paginate(page, itemsPerPage, timesheets.TotalItems, timesheetWithHabilitations));
         }
 
         private string Manager()

@@ -57,7 +57,7 @@ namespace Timesheet.Web.Api.Controllers
         [HttpGet("{timesheetId}/SummaryByPayroll/Employee/{employeeId}")]
         public async Task<ActionResult<EmployeeTimesheetDetailSummary>> GetTimesheetSummaryByPayroll(string employeeId, string timesheetId)
         {
-            var timeoffs = await _timesheetQuery.GetEmployeeTimesheetSummaryByPayroll(employeeId, timesheetId);
+            var timeoffs = await _timesheetQuery.GetEmployeeTimesheetSummaryByPayrollCode(employeeId, timesheetId);
             return Ok(timeoffs);
         }
 

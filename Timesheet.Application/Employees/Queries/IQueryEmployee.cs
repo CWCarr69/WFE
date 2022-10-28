@@ -1,6 +1,5 @@
 ﻿using Timesheet.Domain.Models.Employees;
 using Timesheet.Domain.ReadModels.Employees;
-using Timesheet.Domain.ReadModels.Timesheets;
 
 namespace Timesheet.Application.Employees.Queries
 {
@@ -13,8 +12,8 @@ namespace Timesheet.Application.Employees.Queries
         Task<EmployeeApprovers?> GetEmployeeApprovers(string id);
         Task<EmployeeBenefits?> GetEmployeeBenefits(string id);
         Task<EmployeeTeam> GetEmployeeTeam(int page, int itemsPerPage, string? approverId = null, bool directReports = false);
-        Task<IEnumerable<EmployeeTimeoff>> GetEmployeesPendingTimeoffs(string? approverId = null, bool directReports = false);
-        Task<IEnumerable<EmployeeTimesheet>> GetEmployeesPendingTimesheets(string? approverId = null, bool directReports = false);
+        Task<EmployeePendingTimeoffs> GetEmployeesPendingTimeoffs(int page, int itemsPerPage, string? approverId = null, bool directReports = false);
+        Task<EmployeePendingTimesheets> GetEmployeesPendingTimesheets(int page, int itemsPerPage, string? approverId = null, bool directReports = false);
         Task<double> CalculateUsedBenefits(string employeeId, TimeoffType type, DateTime start, DateTime end);
         Task<double> CalculateScheduledBenefits(string employeeId, TimeoffType type);
     }

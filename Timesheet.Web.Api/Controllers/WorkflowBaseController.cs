@@ -24,7 +24,7 @@ namespace Timesheet.Web.Api.Controllers
             _habilitations = habilitations;
         }
 
-        public async Task<WithHabilitations<T>> SetAuthorizedTransitions<T>(T data, Type entityType, Enum status, User currentUser, string employeeId)
+        protected async Task<WithHabilitations<T>> SetAuthorizedTransitions<T>(T data, Type entityType, Enum status, User currentUser, string employeeId)
         {
             var dataWithHabilitations = new WithHabilitations<T>(data);
             if(data is null)
@@ -51,7 +51,7 @@ namespace Timesheet.Web.Api.Controllers
         }
 
 
-        public async Task<WithHabilitations<U>> CombineAuthorizedTransitions<U, T>(WithHabilitations<U> currentDataWithHabilitations, 
+        protected async Task<WithHabilitations<U>> CombineAuthorizedTransitions<U, T>(WithHabilitations<U> currentDataWithHabilitations, 
             T data, Type entityType, Enum status, User currentUser, string employeeId)
         {
             var dataWithHabilitation = await SetAuthorizedTransitions(data, entityType, status, currentUser, employeeId);

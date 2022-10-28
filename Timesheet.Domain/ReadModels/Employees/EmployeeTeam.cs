@@ -1,8 +1,6 @@
 ﻿namespace Timesheet.Domain.ReadModels.Employees
 {
-    public class EmployeeTeam
+    public class EmployeeTeam : WithTotal<EmployeeWithTimeStatus>
     {
-        public int TotalItems { get; set; }
-        public IEnumerable<EmployeeWithTimeStatus> Employees {get; set;}
     }
 }
