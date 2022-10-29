@@ -36,7 +36,7 @@ namespace Timesheet.Application.Workflow
             return EmployeeCanExecute(transition, authorRole) && CurrentStateAllowTransition(transition, currentStatus);
         }
 
-        public IEnumerable<Enum> NextTranstitions(Enum currentStatus, EmployeeRoleOnData authorRole)
+        public virtual IEnumerable<Enum> NextTranstitions(Enum currentStatus, EmployeeRoleOnData authorRole)
         {
             var transitions = GetNextTransitions(currentStatus);
             var authorizedTransitions = new List<Enum>();

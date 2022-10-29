@@ -1,9 +1,8 @@
 ﻿namespace Timesheet.Domain.ReadModels.Timesheets
 {
-    public class TimesheetReview
+    public class TimesheetReview : WithTotal<EmployeeTimesheetWithTotals>
     {
-        public long TotalItems { get; set; }
         public double TotalQuantity { get; set; }
-        public IEnumerable<EmployeeTimesheetWithTotals> DetailsByEmployee { get; set; }
+        public IEnumerable<EmployeeTimesheetWithTotals> Items { get; set; }
     }
 }

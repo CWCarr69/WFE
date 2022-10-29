@@ -117,7 +117,12 @@ namespace Timesheet.Domain.Models.Timesheets
             {
                 throw new CannotFinalizeTImesheetException(PayrollPeriod);
             }
-            //TODO WHATEVER SHOULD BE DONE FOR ENTRIES
+
+            TimesheetEntries
+                .Where(entry => entry.Status != TimesheetEntryStatus.REJECTED)
+                .ToList()
+                .ForEach(entry => entry.Status = TimesheetEntryStatus.APPROVED);
+
             this.Status = TimesheetStatus.FINALIZED;
 
             RaiseDomainEvent(new TimesheetFinalized(this.Id));

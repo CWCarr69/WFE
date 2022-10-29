@@ -32,10 +32,10 @@ namespace Timesheet.Web.Api.Controllers
         }
 
         [HttpGet("{employeeId}/Timeoff/History")]
-        public async Task<ActionResult<IEnumerable<EmployeeTimeoff>>> GetTimeoffHistory(string employeeId)
+        public async Task<ActionResult<IEnumerable<EmployeeTimeoff>>> GetTimeoffHistory(string employeeId, int page = 1, int itemsPerpage = 50)
         {
-            var timeoffs = await _timeoffQuery.GetEmployeeTimeoffs(employeeId);
-            return Ok(timeoffs);
+            var timeoffs = await _timeoffQuery.GetEmployeeTimeoffs(employeeId, page, itemsPerpage);
+            return Ok(Paginate(page, itemsPerpage, timeoffs));
         }
 
         [HttpGet("{employeeId}/Timeoff/MonthsStatistics")]

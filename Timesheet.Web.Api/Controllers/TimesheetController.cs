@@ -33,10 +33,10 @@ namespace Timesheet.Web.Api.Controllers
         }
 
         [HttpGet("History/Employee/{employeeId}")]
-        public async Task<ActionResult<IEnumerable<EmployeeTimesheet>>> GetTimesheetHistory(string employeeId)
+        public async Task<ActionResult<PaginatedResult<EmployeeTimesheet>>> GetTimesheetHistory(string employeeId, int page = 1, int itemsPerpage = 50)
         {
-            var timesheets = await _timesheetQuery.GetEmployeeTimesheets(employeeId);
-            return Ok(timesheets);
+            var timesheets = await _timesheetQuery.GetEmployeeTimesheets(employeeId, page, itemsPerpage);
+            return Ok(Paginate(page, itemsPerpage, timesheets));
         }
 
         [HttpGet("{timesheetId}/Employee/{employeeId}")]
@@ -67,20 +67,13 @@ namespace Timesheet.Web.Api.Controllers
             var timesheetReview = await _timesheetQuery.GetTimesheetReview(payrollPeriod, employeeId, department, page, itemsPerpage);
 
             var reviewWithHabilitations = new List<WithHabilitations<EmployeeTimesheetWithTotals>>();
-            foreach(var review in timesheetReview.DetailsByEmployee)
+            foreach(var review in timesheetReview.Items)
             {
                 var reviewWithHabilitation = await SetAuthorizedTransitions(review.EmployeeId, review);
                 reviewWithHabilitations.Add(reviewWithHabilitation);
             }
 
-            var result = new PaginatedResult<WithHabilitations<EmployeeTimesheetWithTotals>>
-            {
-                Page = page,
-                ItemsPerPage = itemsPerpage,
-                TotalItems = timesheetReview.TotalItems,
-                Items = reviewWithHabilitations
-            };
-
+            var result = Paginate(page, itemsPerpage, timesheetReview.TotalItems, reviewWithHabilitations);
             result.OtherData.Add(nameof(TimesheetReview.TotalQuantity), timesheetReview.TotalQuantity);
 
             return Ok(result);

@@ -16,12 +16,11 @@ namespace Timesheet.Application.Workflow
             {
                 new Transition(TimesheetTransitions.SUBMIT, TimesheetStatus.IN_PROGRESS)
                     .AuthorizeRoles(EmployeeRoleOnData.CREATOR),
-                new Transition(TimesheetTransitions.APPROVE, TimeoffStatus.IN_PROGRESS)
+                new Transition(TimesheetTransitions.APPROVE, TimesheetStatus.IN_PROGRESS)
                     .AuthorizeRoles(EmployeeRoleOnData.APPROVER),
-                new Transition(TimesheetTransitions.REJECT, TimeoffStatus.IN_PROGRESS)
+                new Transition(TimesheetTransitions.REJECT, TimesheetStatus.IN_PROGRESS)
                     .AuthorizeRoles(EmployeeRoleOnData.APPROVER),
-                new Transition(TimesheetTransitions.FINALIZE, TimeoffStatus.IN_PROGRESS)
-                    .AuthorizeRoles(EmployeeRoleOnData.ADMINISTRATOR),
+                new Transition(TimesheetTransitions.FINALIZE, TimesheetStatus.IN_PROGRESS)
             })
         {
         }
