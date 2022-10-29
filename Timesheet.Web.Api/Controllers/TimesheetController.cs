@@ -62,7 +62,7 @@ namespace Timesheet.Web.Api.Controllers
         }
 
         [HttpGet("Review")]
-        public async Task<ActionResult<PaginatedResult<TimesheetReview>>> GetTimesheetReview(string payrollPeriod, string? employeeId, string? department, int page=1, int itemsPerpage=50)
+        public async Task<ActionResult<WithHabilitations<PaginatedResult<WithHabilitations<EmployeeTimesheetWithTotals>>>>> GetTimesheetReview(string payrollPeriod, string? employeeId, string? department, int page=1, int itemsPerpage=50)
         {
             var timesheetReview = await _timesheetQuery.GetTimesheetReview(payrollPeriod, employeeId, department, page, itemsPerpage);
 
@@ -73,10 +73,22 @@ namespace Timesheet.Web.Api.Controllers
                 reviewWithHabilitations.Add(reviewWithHabilitation);
             }
 
+            var payrollPeriodEnd = reviewWithHabilitations.FirstOrDefault()?.Data?.EndDate;
+            var isFinalizable = DateTime.Now >= payrollPeriodEnd;
+            var globalTimesheetAuthorizedTranstions = isFinalizable 
+                ? reviewWithHabilitations
+                .FirstOrDefault()?
+                .AuthorizedActions?
+                .Where(a => a.Value.Equals((int)TimesheetTransitions.FINALIZE))
+                .ToList()
+                : null;
+
             var result = Paginate(page, itemsPerpage, timesheetReview.TotalItems, reviewWithHabilitations);
             result.OtherData.Add(nameof(TimesheetReview.TotalQuantity), timesheetReview.TotalQuantity);
 
-            return Ok(result);
+            var resultWithHabilitations = new WithHabilitations<PaginatedResult<WithHabilitations<EmployeeTimesheetWithTotals>>> (result, globalTimesheetAuthorizedTranstions);
+
+            return Ok(resultWithHabilitations);
         }
 
         [HttpPut("Submit")]

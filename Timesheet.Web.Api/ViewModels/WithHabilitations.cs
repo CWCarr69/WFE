@@ -4,10 +4,10 @@
 
     public class WithHabilitations<T>
     {
-        public WithHabilitations(T data, List<AuthorizedAction> authorizedActions = null)
+        public WithHabilitations(T data, List<AuthorizedAction>? authorizedActions = null)
         {
             Data = data;
-            AuthorizedActions = authorizedActions;
+            AuthorizedActions = authorizedActions ?? AuthorizedActions;
         }
 
         public T Data { get; set; }

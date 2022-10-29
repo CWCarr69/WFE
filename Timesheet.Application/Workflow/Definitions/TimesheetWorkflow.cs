@@ -3,7 +3,7 @@ using Timesheet.Domain.Models.Timesheets;
 
 namespace Timesheet.Application.Workflow
 {
-    internal enum TimesheetTransitions
+    public enum TimesheetTransitions
     {
         SUBMIT, APPROVE, REJECT,FINALIZE
     }

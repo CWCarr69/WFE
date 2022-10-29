@@ -31,6 +31,8 @@ namespace Timesheet.Domain.Models.Timesheets
         public virtual ICollection<TimesheetHoliday> TimesheetHolidays { get; private set; } = new List<TimesheetHoliday>();
         public virtual ICollection<TimesheetComment> TimesheetComments { get; private set; } = new List<TimesheetComment>();
 
+        public bool IsFinalizable => DateTime.Now >= EndDate;
+
         public static TimesheetHeader CreateMonthlyTimesheet(DateTime workDate, string id = null)
         {
             var now = workDate;
@@ -113,7 +115,7 @@ namespace Timesheet.Domain.Models.Timesheets
 
         public void Finalize()
         {
-            if(EndDate >= DateTime.Now)
+            if(!IsFinalizable)
             {
                 throw new CannotFinalizeTImesheetException(PayrollPeriod);
             }
