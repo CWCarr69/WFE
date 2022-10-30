@@ -2,6 +2,6 @@
 {
     public enum TimesheetStatus
     {
-        IN_PROGRESS, FINALIZED
+        NONE=0, IN_PROGRESS, FINALIZED
     }
 }

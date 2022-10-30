@@ -80,15 +80,12 @@ namespace Timesheet.Application
 
         protected async Task<EmployeeRoleOnData> GetCurrentEmployeeRoleOnData(BaseCommand command, Employee? employee)
         {
-            //var author = command.AuthorId;
-            //var administrators = (await _employeeReadRepository.GetAdministrators())
-            //    .Select(e => e.Id);
             return _employeeHabilitation.GetEmployeeRoleOnData(
                 command.Author?.Id,
                 command.Author?.IsAdministrator ?? false,
-                employee.Id,
-                employee.PrimaryApprover?.Id,
-                employee.SecondaryApprover?.Id);
+                employee?.Id,
+                employee?.PrimaryApprover?.Id,
+                employee?.SecondaryApprover?.Id);
         }
     }
 }

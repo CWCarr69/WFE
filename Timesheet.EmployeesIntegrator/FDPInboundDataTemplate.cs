@@ -28,8 +28,8 @@
 
         internal static (string transfertName, string inboundData) GetIntegrationParams(IntegrationType type, DateTime? from = null)
         {
-            var fromDate = from ?? DateTime.Now.AddDays(-360);
-            //var fromDate = from ?? DateTime.Now.AddYears(-5);
+            //var fromDate = from ?? DateTime.Now.AddDays(-360);
+            var fromDate = from ?? DateTime.Now.AddYears(-5);
 
             var inboundData = _defaultInboudDataTemplate.Replace(ModificationDateParam, fromDate.ToString("dd MMM yyy HH':'mm':'ss"));
             inboundData = inboundData.Replace(PageNumberParam, "1");

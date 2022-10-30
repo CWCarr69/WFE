@@ -11,11 +11,12 @@ namespace Timesheet.Web.Api.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class ReferentialController : ControllerBase
+    public class ReferentialController : BaseController<ReferentialController>
     {
         private readonly IQueryReferential _referentialQuery;
 
-        public ReferentialController(IQueryReferential referentialQuery)
+        public ReferentialController(IQueryReferential referentialQuery, ILogger<ReferentialController> logger)
+            :base(logger)
         {
             this._referentialQuery = referentialQuery;
         }
@@ -23,6 +24,8 @@ namespace Timesheet.Web.Api.Controllers
         [HttpGet("TimeoffTypes")]
         public async Task<ActionResult<IEnumerable<EnumReadModel<TimeoffType>>>> GetTimeoffTypes()
         {
+            LogInformation($"Listing Timeoff types");
+
             var timeoffs = _referentialQuery.GetTimeoffTypes();
             return Ok(timeoffs);
         }
@@ -30,6 +33,8 @@ namespace Timesheet.Web.Api.Controllers
         [HttpGet("Departments")]
         public async Task<ActionResult<IEnumerable<Department>>> GetDepartments()
         {
+            LogInformation($"Listing Departments");
+
             var departments = await _referentialQuery.GetDepartments();
             return Ok(departments);
         }
@@ -37,6 +42,8 @@ namespace Timesheet.Web.Api.Controllers
         [HttpGet("PayrollPeriods")]
         public async Task<ActionResult<IEnumerable<EmployeeLight>>> GetPayrollPeriods()
         {
+            LogInformation($"Listing Payroll periods");
+            
             var periods = await _referentialQuery.GetPayrollPeriods();
             return Ok(periods);
         }
@@ -44,6 +51,8 @@ namespace Timesheet.Web.Api.Controllers
         [HttpGet("TimesheetStatuses")]
         public async Task<ActionResult<IEnumerable<EnumReadModel<TimesheetStatus>>>> GetTimesheetStatuses()
         {
+            LogInformation($"Listing Timesheet statuses");
+            
             var statuses = _referentialQuery.GetTimesheetStatuses();
             return Ok(statuses);
         }
@@ -51,6 +60,8 @@ namespace Timesheet.Web.Api.Controllers
         [HttpGet("TimesheetEntryStatuses")]
         public async Task<ActionResult<IEnumerable<EnumReadModel<TimesheetEntryStatus>>>> GetTimesheetEntryStatuses()
         {
+            LogInformation($"Listing Timesheet entry statuses");
+            
             var statuses = _referentialQuery.GetTimesheetEntryStatuses();
             return Ok(statuses);
         }
@@ -58,6 +69,8 @@ namespace Timesheet.Web.Api.Controllers
         [HttpGet("TimeoffStatuses")]
         public async Task<ActionResult<IEnumerable<EnumReadModel<TimeoffStatus>>>> GetTimeoffStatuses()
         {
+            LogInformation($"Listing Timeoff statuses");
+
             var statuses = _referentialQuery.GetTimeoffStatuses();
             return Ok(statuses);
         }

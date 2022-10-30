@@ -6,5 +6,6 @@ namespace Timesheet.Domain.Repositories
     {
         Task<Employee?> GetEmployee(string id);
         Task<IEnumerable<Employee>> GetAdministrators();
+        Task<IDictionary<string, string>> GetEmployeesDictionary();
     }
 }

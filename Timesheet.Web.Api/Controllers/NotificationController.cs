@@ -11,7 +11,7 @@ namespace Timesheet.Web.Api.Controllers
     [Authorize(Roles = "ADMINISTRATOR")]
     [Route("api/[controller]")]
     [ApiController]
-    public class NotificationController : BaseController
+    public class NotificationController : BaseController<NotificationController>
     {
         private readonly IQueryNotification _query;
         private readonly IDispatcher _dispatcher;
@@ -20,7 +20,9 @@ namespace Timesheet.Web.Api.Controllers
         public NotificationController(
             IQueryNotification query,
             IDispatcher dispatcher,
-            INotificationPopulationServices populationServices)
+            INotificationPopulationServices populationServices,
+            ILogger<NotificationController> logger)
+            :base(logger)
         {
             _query = query;
             _dispatcher = dispatcher;
@@ -30,16 +32,25 @@ namespace Timesheet.Web.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<NotificationDto>>> GetNotifications()
         {
+            LogInformation($"Visiting notifications configuraton");
+
             var notifications = await _query.GetNotifications();
-            var data = notifications.Select(n => new NotificationDto
+            var data = notifications.Select(n =>
             {
-                Id = n.Id,
-                Populations = _populationServices.Deconstruct(n.Population)
-                .Select(p => new NotificationPopulationDto
+                var populations = _populationServices.Deconstruct(n.Population);
+                return new NotificationDto
                 {
-                    Name = p.ToString(),
-                    Value = (int)p
-                })
+                    Id = n.Id,
+                    Group = n.Group,
+                    Action = n.Action,
+                    Populations = NotificationPopulationServices.AllPopulation
+                        .Select(p => new NotificationPopulationDto
+                        {
+                            Name = p.ToString(),
+                            Value = (int)p,
+                            IsActive = populations.Contains(p)
+                        })
+                };
             });
 
             return Ok(data);
@@ -48,6 +59,8 @@ namespace Timesheet.Web.Api.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateNotification([FromBody] NotificationUpdateModel request, CancellationToken token)
         {
+            LogInformation($"Modifying notifications");
+
             var command = new UpdateNotification
             {
                 Id = request.Id,
@@ -55,6 +68,8 @@ namespace Timesheet.Web.Api.Controllers
             };
 
             await _dispatcher.RunCommand(command, CurrentUser, token);
+
+            LogInformation($"Notifications modified");
             return Ok();
         }
     }

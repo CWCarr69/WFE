@@ -9,7 +9,9 @@ using Timesheet.Application.Settings.CommandHandlers;
 using Timesheet.Application.Shared;
 using Timesheet.Application.Timesheets.CommandHandlers;
 using Timesheet.Application.Timesheets.EventHandlers;
+using Timesheet.Application.Timesheets.EventHandlers.Export;
 using Timesheet.Application.Timesheets.EventHandlers.Holidays;
+using Timesheet.Application.Timesheets.Services.Export;
 using Timesheet.Application.Workflow;
 using Timesheet.Domain.Employees.Services;
 
@@ -39,6 +41,7 @@ namespace Timesheet.Application
             services.AddScoped<TimesheetStateChangedEventHandler, TimesheetStateChangedEventHandler>();
             
             services.AddScoped<TimesheetHandleTimeoffApproved, TimesheetHandleTimeoffApproved>();
+            services.AddScoped<TimehsheetHandleTimesheetFinalized, TimehsheetHandleTimesheetFinalized>();
 
             services.AddScoped<IAuditHandler, AuditHandler>();
         }
@@ -69,6 +72,16 @@ namespace Timesheet.Application
             services.AddScoped<UpdateSettingCommandHandler, UpdateSettingCommandHandler>();
 
             services.AddScoped<UpdateNotificationCommandHandler, UpdateNotificationCommandHandler>();
+        }
+
+        public static void AddTimesheetExportServices(this IServiceCollection services, string destination)
+        {
+            services.AddScoped<IExportTimesheetService, ExportTimesheetService>();
+            services.AddScoped<ITimesheetToCSVModelAdapter, TimesheetToCSVModelAdapter>();
+            services.AddScoped<ITimesheetCSVWriter, TimesheetCSVWriter>();
+            services.AddScoped<ITimesheetCSVFormatter, TimesheetCSVFormatter>();
+
+            services.AddScoped<IExportTimesheetDestination>(sp => new ExportTimesheetDestination(destination));
         }
 
         public static void AddOtherServices(this IServiceCollection services)

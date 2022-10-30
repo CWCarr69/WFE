@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using Timesheet.Application.Employees.Queries;
 using Timesheet.Application.Employees.Services;
 using Timesheet.Application.Workflow;
@@ -8,7 +7,7 @@ using Timesheet.Web.Api.ViewModels;
 
 namespace Timesheet.Web.Api.Controllers
 {
-    public abstract class WorkflowBaseController: BaseController
+    public abstract class WorkflowBaseController<TController>: BaseController<TController>
     {
         private readonly IQueryEmployee _employeeQuery;
         private readonly IWorkflowService _workflowService;
@@ -17,7 +16,8 @@ namespace Timesheet.Web.Api.Controllers
         public WorkflowBaseController(
             IQueryEmployee employeeQuery,
             IWorkflowService workflowService,
-            IEmployeeHabilitation habilitations)
+            IEmployeeHabilitation habilitations,
+            ILogger<TController> logger): base(logger)
         {
             _employeeQuery = employeeQuery;
             _workflowService = workflowService;

@@ -1,4 +1,4 @@
 ﻿namespace Timesheet.Domain.DomainEvents
 {
-    public record TimesheetFinalized(string timesheetId) : IDomainEvent;
+    public record TimesheetFinalized(string payrollPeriod) : IDomainEvent;
 }

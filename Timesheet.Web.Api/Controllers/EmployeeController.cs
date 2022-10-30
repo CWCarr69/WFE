@@ -15,7 +15,7 @@ namespace Timesheet.Web.Api.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class EmployeeController : WorkflowBaseController
+    public class EmployeeController : WorkflowBaseController<EmployeeController>
     {
         private readonly IQueryEmployee _employeeQuery;
         private readonly IEmployeeBenefitCalculator _benefitsServcies;
@@ -23,8 +23,9 @@ namespace Timesheet.Web.Api.Controllers
         public EmployeeController(IQueryEmployee employeeQuery,
             IWorkflowService workflowService,
             IEmployeeHabilitation employeeHabilitation,
-            IEmployeeBenefitCalculator benefitsServcies)
-            :base(employeeQuery, workflowService, employeeHabilitation)
+            IEmployeeBenefitCalculator benefitsServcies,
+            ILogger<EmployeeController> logger)
+            :base(employeeQuery, workflowService, employeeHabilitation, logger)
         {
             _employeeQuery = employeeQuery;
             this._benefitsServcies = benefitsServcies;
@@ -33,6 +34,8 @@ namespace Timesheet.Web.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EmployeeProfile>>> Get()
         {
+            LogInformation("Getting Employees");
+
             var employee = await _employeeQuery.GetEmployees();
             return Ok(employee);
         }
@@ -40,6 +43,8 @@ namespace Timesheet.Web.Api.Controllers
         [HttpGet("{employeeId}")]
         public async Task<ActionResult<EmployeeProfile>> Get(string employeeId)
         {
+            LogInformation($"Getting Employee ({employeeId}) Details");
+
             var employee = await _employeeQuery.GetEmployeeProfile(employeeId);
             return Ok(employee);
         }
@@ -47,6 +52,8 @@ namespace Timesheet.Web.Api.Controllers
         [HttpGet("{employeeId}/Approvers")]
         public async Task<ActionResult<EmployeeApprovers>> GetApprovers(string employeeId)
         {
+            LogInformation($"Getting Employee ({employeeId}) Approvers");
+
             var employee = await _employeeQuery.GetEmployeeApprovers(employeeId);
             return Ok(employee);
         }
@@ -54,6 +61,8 @@ namespace Timesheet.Web.Api.Controllers
         [HttpGet("{employeeId}/Benefits")]
         public async Task<ActionResult<EmployeeBenefits>> GetBenefits(string employeeId)
         {
+            LogInformation($"Getting Employee ({employeeId}) Benefits");
+
             var employee = await _employeeQuery.GetEmployeeProfile(employeeId);
             if(employee?.Id is null || employee?.EmploymentDate is null)
             {
@@ -67,6 +76,9 @@ namespace Timesheet.Web.Api.Controllers
         public async Task<ActionResult<PaginatedResult<EmployeeWithTimeStatus>>> GetTeamRecordStatus(bool directReport, int page = 1, int itemsPerPage = 50)
         {
             string managerId = Manager();
+
+            LogInformation($"Getting Employee ({managerId}) Team");
+
             var employeeTeam = await _employeeQuery.GetEmployeeTeam(page, itemsPerPage, managerId, directReport);
 
             return Ok(Paginate(page, itemsPerPage, employeeTeam));
@@ -76,6 +88,8 @@ namespace Timesheet.Web.Api.Controllers
         public async Task<ActionResult<PaginatedResult<WithHabilitations<EmployeeTimeoff>>>> GetTeamPendingTimeoffs(bool directReport, int page = 1, int itemsPerPage = 50)
         {
             string managerId = Manager();
+            LogInformation($"Getting Employee ({managerId}) Pending timeoffs");
+
             var timeoffs = await _employeeQuery.GetEmployeesPendingTimeoffs(page, itemsPerPage, managerId, directReport);
             
             var timeoffWithHabilitations = new List<WithHabilitations<EmployeeTimeoff>>();
@@ -92,6 +106,8 @@ namespace Timesheet.Web.Api.Controllers
         public async Task<ActionResult<IEnumerable<WithHabilitations<EmployeeTimesheet>>>> GetTeamPendingTimesheets(bool directReport, int page = 1, int itemsPerPage = 50)
         {
             string managerId = Manager();
+            LogInformation($"Getting Employee ({managerId}) Pending timesheets");
+
             var timesheets = await _employeeQuery.GetEmployeesPendingTimesheets(page, itemsPerPage, managerId, directReport);
 
             var timesheetWithHabilitations = new List<WithHabilitations<EmployeeTimesheet>>();

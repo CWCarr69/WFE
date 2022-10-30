@@ -12,7 +12,7 @@ namespace Timesheet.Application.Notifications.Services
             this._employeeReadRepository = employeeReadRepository;
         }
 
-        public readonly NotificationPopulationType[] AllPopulation = new NotificationPopulationType[]
+        public readonly static NotificationPopulationType[] AllPopulation = new NotificationPopulationType[]
         {
             NotificationPopulationType.EMPLOYEE,
             NotificationPopulationType.PRIMARY_APPROVER,

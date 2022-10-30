@@ -27,5 +27,11 @@ namespace Timesheet.Infrastructure.Persistence.Repositories
                 .ThenInclude(t => t.TimeoffEntries)
                 .FirstOrDefaultAsync(e =>  e.Id == id);
         }
+
+        public async Task<IDictionary<string, string>> GetEmployeesDictionary()
+        {
+            return await _context.Employees
+                .ToDictionaryAsync(e => e.Id, e => e.FullName);
+        }
     }
 }

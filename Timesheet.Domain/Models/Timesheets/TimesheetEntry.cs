@@ -1,4 +1,6 @@
-﻿namespace Timesheet.Domain.Models.Timesheets
+﻿using Timesheet.Domain.Models.Employees;
+
+namespace Timesheet.Domain.Models.Timesheets
 {
     public class TimesheetEntry : Entity
     {
@@ -47,6 +49,7 @@
         public string? ProfitCenterNumber { get; private set; }
         public bool? OutOffCountry { get; private set; } //TODO HERE
         public string? WorkArea => (OutOffCountry ?? false) ? "Out of country" : "In state";
+
         public TimesheetEntryStatus Status { get; set; }
 
         internal void Submit()

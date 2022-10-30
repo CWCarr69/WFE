@@ -14,7 +14,7 @@ namespace Timesheet.Web.Api.Controllers
     [Authorize]
     [Route("api/Employee")]
     [ApiController]
-    public class TimeoffController : WorkflowBaseController
+    public class TimeoffController : WorkflowBaseController<TimeoffController>
     {
         private readonly IQueryTimeoff _timeoffQuery;
         private readonly IDispatcher _dispatcher;
@@ -24,8 +24,9 @@ namespace Timesheet.Web.Api.Controllers
             IQueryTimeoff timeoffQuery,
             IDispatcher dispatcher,
             IWorkflowService workflowService,
-            IEmployeeHabilitation habilitations)
-            :base(employeeQuery, workflowService, habilitations)
+            IEmployeeHabilitation habilitations, 
+            ILogger<TimeoffController> logger)
+            :base(employeeQuery, workflowService, habilitations, logger)
         {
             _timeoffQuery = timeoffQuery;
             _dispatcher = dispatcher;
@@ -34,6 +35,8 @@ namespace Timesheet.Web.Api.Controllers
         [HttpGet("{employeeId}/Timeoff/History")]
         public async Task<ActionResult<IEnumerable<EmployeeTimeoff>>> GetTimeoffHistory(string employeeId, int page = 1, int itemsPerpage = 50)
         {
+            LogInformation($"Getting Employee ({employeeId}) Timeoff history");
+            
             var timeoffs = await _timeoffQuery.GetEmployeeTimeoffs(employeeId, page, itemsPerpage);
             return Ok(Paginate(page, itemsPerpage, timeoffs));
         }
@@ -41,6 +44,8 @@ namespace Timesheet.Web.Api.Controllers
         [HttpGet("{employeeId}/Timeoff/MonthsStatistics")]
         public async Task<ActionResult<EmployeeTimeoffMonthStatistics>> GetTimeoffHistoryMonthsStatistics(string employeeId)
         {
+            LogInformation($"Getting Employee ({employeeId}) Timeoff history statistics");
+            
             var statistics = await _timeoffQuery.GetEmployeeTimeoffsMonthStatistics(employeeId);
             return Ok(statistics);
         }
@@ -49,6 +54,8 @@ namespace Timesheet.Web.Api.Controllers
         [HttpGet("{employeeId}/Timeoff/{timeoffId}")]
         public async Task<ActionResult<WithHabilitations<EmployeeTimeoff>>> GetTimeoff(string employeeId, string timeoffId)
         {
+            LogInformation($"Getting Employee ({employeeId}) Timeoff ({timeoffId}) Details");
+            
             var timeoff = await _timeoffQuery.GetEmployeeTimeoffDetails(employeeId, timeoffId);
             var response = await SetAuthorizedTransitions(timeoff, typeof(TimeoffHeader), timeoff?.Status, CurrentUser, employeeId);
             return Ok(response);
@@ -57,6 +64,8 @@ namespace Timesheet.Web.Api.Controllers
         [HttpGet("{employeeId}/Timeoff/{timeoffId}/Summary")]
         public async Task<ActionResult<EmployeeTimeoffDetailSummary>> GetTimeoffSummary(string employeeId, string timeoffId)
         {
+            LogInformation($"Getting Employee ({employeeId}) Timeoff ({timeoffId}) Summary");
+            
             var timeoffs = await _timeoffQuery.GetEmployeeTimeoffSummary(employeeId, timeoffId);
             return Ok(timeoffs);
         }
@@ -64,58 +73,90 @@ namespace Timesheet.Web.Api.Controllers
         [HttpPost("timeoff")]
         public async Task<IActionResult> Create([FromBody] CreateTimeoff addTimeoff, CancellationToken token)
         {
+            LogInformation($"Creating new Timeoff for Employee ({addTimeoff.EmployeeId})");
+            
             await _dispatcher.RunCommand(addTimeoff, CurrentUser, token);
+
+            LogInformation($"Timeoff ({addTimeoff.EmployeeId}) created");
             return Ok();
         }
 
         [HttpPost("timeoff/Entry")]
         public async Task<IActionResult> AddEntry([FromBody] AddEntryToTimeoff addEntryTimeoff, CancellationToken token)
         {
+            LogInformation($"Add new entry to Timeoff ({addEntryTimeoff.TimeoffId}) for Employee ({addEntryTimeoff.EmployeeId})");
+
             await _dispatcher.RunCommand(addEntryTimeoff, CurrentUser, token);
+
+            LogInformation($"Timeoff ({addEntryTimeoff.TimeoffId}) updated");
             return Ok();
         }
 
         [HttpPut("timeoff/Entry")]
         public async Task<IActionResult> UpdateEntry([FromBody] UpdateTimeoffEntry updateTimeoffEntry, CancellationToken token)
         {
+            LogInformation($"Update entry ({updateTimeoffEntry.TimeoffEntryId}) of Timeoff ({updateTimeoffEntry.TimeoffId}) for Employee ({updateTimeoffEntry.EmployeeId})");
+
             await _dispatcher.RunCommand(updateTimeoffEntry, CurrentUser, token);
+
+            LogInformation($"Timeoff ({updateTimeoffEntry.TimeoffId}) updated");
             return Ok();
         }
 
         [HttpDelete("timeoff/{timeoffId}")]
         public async Task<IActionResult> Delete(string employeeId, string timeoffId, CancellationToken token)
         {
+            LogInformation($"Delete Employee ({employeeId}) Timeoff ({timeoffId})");
+
             var command = new DeleteTimeoff() { EmployeeId = employeeId, TimeoffId = timeoffId };
             await _dispatcher.RunCommand(command, CurrentUser, token);
+
+            LogInformation($"Timeoff ({timeoffId}) Deleted");
             return Ok();
         }
 
         [HttpDelete("timeoff/{timeoffId}/Entry/{entryId}")]
         public async Task<IActionResult> DeleteEntry(string employeeId, string timeoffId, string entryId, CancellationToken token)
         {
+            LogInformation($"Delete entry ({entryId}) of Timeoff({timeoffId}) for Employee ({employeeId})");
+
             var command = new DeleteTimeoffEntry() { EmployeeId = employeeId, TimeoffId = timeoffId, TimeoffEntryId = entryId };
             await _dispatcher.RunCommand(command, CurrentUser, token);
+
+            LogInformation($"Timeoff ({timeoffId}) Updated");
             return Ok();
         }
 
         [HttpPut("timeoff/Submit")]
         public async Task<IActionResult> Submit([FromBody] SubmitTimeoff submitTimeoff, CancellationToken token)
         {
+            LogInformation($"Submiting timeoff ({submitTimeoff.TimeoffId})");
+
             await _dispatcher.RunCommand(submitTimeoff, CurrentUser, token);
+
+            LogInformation($"Timeoff ({submitTimeoff.TimeoffId}) Updated");
             return Ok();
         }
 
         [HttpPut("timeoff/Approve")]
         public async Task<IActionResult> Approve([FromBody] ApproveTimeoff approveTimeoff, CancellationToken token)
         {
+            LogInformation($"Approving timeoff ({approveTimeoff.TimeoffId})");
+
             await _dispatcher.RunCommand(approveTimeoff, CurrentUser, token);
+
+            LogInformation($"Timeoff ({approveTimeoff.TimeoffId}) Updated");
             return Ok();
         }
 
         [HttpPut("timeoff/Reject")]
         public async Task<IActionResult> Reject([FromBody] RejectTimeoff rejectTimeoff, CancellationToken token)
         {
+            LogInformation($"Rejecting timeoff ({rejectTimeoff.TimeoffId})");
+
             await _dispatcher.RunCommand(rejectTimeoff, CurrentUser, token);
+            
+            LogInformation($"Timeoff ({rejectTimeoff.TimeoffId}) Updated");
             return Ok();
         }
     }

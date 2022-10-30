@@ -7,6 +7,8 @@ using System.Text;
 using Timesheet.Infrastructure.Authentication;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using Serilog;
+using Timesheet.Web.Api.Middleware;
 
 namespace Timesheet.Web.Api
 {
@@ -25,7 +27,19 @@ namespace Timesheet.Web.Api
             builder.Services.RegisterEventHandlers();
             builder.Services.RegisterCommandHandlers();
             builder.Services.AddAuthenticationServices();
+            builder.Services.AddTimesheetExportServices(builder.Configuration.GetSection("TimesheetExport:Destination").Value);
             builder.Services.AddOtherServices();
+
+
+            //Logging
+            builder.Services.AddTransient<LogUserNameMiddleware>();
+
+            Log.Logger = new LoggerConfiguration().CreateBootstrapLogger();
+            builder.Host.UseSerilog(((ctx, lc) => lc
+                .ReadFrom.Configuration(ctx.Configuration)
+                .Enrich.FromLogContext()
+                .Enrich.WithThreadId()
+            ));
 
             //Controllers
             builder.Services.AddControllers();
@@ -70,6 +84,9 @@ namespace Timesheet.Web.Api
             //Initialize DB
             InitializeDatabase(app);
 
+            //Use serilog
+            app.UseSerilogRequestLogging();
+
             // Define global exception handling
             app.ConfigureExceptionHandler();
 
@@ -84,6 +101,8 @@ namespace Timesheet.Web.Api
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseMiddleware<LogUserNameMiddleware>();
 
             app.MapControllers();
 

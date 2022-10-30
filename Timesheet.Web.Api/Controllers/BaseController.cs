@@ -6,8 +6,15 @@ using Timesheet.Web.Api.ViewModels;
 
 namespace Timesheet.Web.Api.Controllers
 {
-    public abstract class BaseController: ControllerBase
+    public abstract class BaseController<TController>: ControllerBase
     {
+        private readonly ILogger<TController> _logger;
+
+        public BaseController(ILogger<TController> logger)
+        {
+            this._logger = logger;
+        }
+
         public User CurrentUser => new User
         {
             Id = User.FindFirstValue(ClaimTypes.NameIdentifier),
@@ -34,6 +41,11 @@ namespace Timesheet.Web.Api.Controllers
                 TotalItems = totalItems,
                 Items = timeoffWithHabilitations
             };
+        }
+    
+        protected void LogInformation(string message)
+        {
+            _logger.LogInformation(message);
         }
     }
 }

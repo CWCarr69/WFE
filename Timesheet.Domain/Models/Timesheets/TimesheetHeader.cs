@@ -127,7 +127,7 @@ namespace Timesheet.Domain.Models.Timesheets
 
             this.Status = TimesheetStatus.FINALIZED;
 
-            RaiseDomainEvent(new TimesheetFinalized(this.Id));
+            RaiseDomainEvent(new TimesheetFinalized(this.PayrollPeriod));
         }
 
         public void AddHoliday(TimesheetHoliday timesheetHoliday)

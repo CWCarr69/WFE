@@ -14,9 +14,6 @@ namespace Timesheet.Infrastructure.Persistence.Repositories
 
         public Task<TimesheetHeader?> GetTimesheet(string timesheetId, string? employeeId = null)
         {
-            IQueryable timesheet = _context.Timesheets.Where(t => t.Id == timesheetId)
-                .Include(t => t.TimesheetEntries);
-
             if (employeeId is not null)
             {
                 return _context.Timesheets.Where(t => t.Id == timesheetId)
@@ -29,6 +26,16 @@ namespace Timesheet.Infrastructure.Persistence.Repositories
                      .Include(t => t.TimesheetEntries)
                      .FirstOrDefaultAsync();
             }
+        }
+
+        public Task<TimesheetHeader?> GetTimesheetByPayrollPeriod(string payrollPeriod)
+        {
+            var timesheet = _context.Timesheets.Where(t => t.PayrollPeriod == payrollPeriod)
+                .Include(t => t.TimesheetEntries.OrderBy(t => t.Id))
+                .Include(t => t.TimesheetHolidays)
+                .FirstOrDefaultAsync();
+
+            return timesheet;
         }
 
         public async Task<IEnumerable<TimesheetHeader?>> GetTimesheetByDate(DateTime date)
