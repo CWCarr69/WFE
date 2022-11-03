@@ -5,7 +5,8 @@ namespace Timesheet.EmailSender.Repositories
 {
     internal interface INotificationRepository
     {
-        IEnumerable<NotificationItem> Get();
-        void CompleteTransaction();
+        void CompleteSend(IEnumerable<string> ids);
+        IEnumerable<TimeoffNotificationTemplate> GetTimeoffNotifications();
+        IEnumerable<TimesheetNotificationTemplate> GetTimesheetNotifications();
     }
 }

@@ -144,12 +144,12 @@ namespace Timesheet.Domain.Employees.Services
         private async Task<double> GetUsedVacationTimes(string employeeId, DateTime now)
             => await _queryEmployee
                 .CalculateUsedBenefits(employeeId, 
-                TimeoffType.VACCATION, 
+                TimeoffType.VACATION, 
                 new DateTime(now.Year, 1, 1), 
                 new DateTime(now.Year, 12, 31));
 
         private async Task<double> GetScheduledVacationTimes(string employeeId)
-            => await _queryEmployee.CalculateScheduledBenefits(employeeId, TimeoffType.VACCATION);
+            => await _queryEmployee.CalculateScheduledBenefits(employeeId, TimeoffType.VACATION);
 
         private int AtAnniversaryVacation(DateTime employmentDate, int yearsSinceEmployment)
         {

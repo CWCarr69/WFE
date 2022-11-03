@@ -19,7 +19,7 @@ namespace Timesheet.Infrastructure.Authentication.Providers
         public AuthenticationResponse LogIn(Credentials credentials, string signingKey)
         {
             var user = _authenticator.Authenticate(credentials);
-            if (user == null)
+            if (user is null)
             {
                 throw new Exception("Invalid credentials. No such user.");
             }

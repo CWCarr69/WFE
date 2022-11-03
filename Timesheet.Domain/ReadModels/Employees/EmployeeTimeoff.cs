@@ -14,6 +14,6 @@ namespace Timesheet.Domain.ReadModels.Employees
         public DateTime RequestEndDate { get; set; }
         public TimeoffStatus Status { get; set; }
         public string StatusName => Status.ToString();
-        public IEnumerable<EmployeeTimeoffEntry> Entries { get; set; }
+        public IEnumerable<EmployeeTimeoffEntry> Entries { get; set; } = Enumerable.Empty<EmployeeTimeoffEntry>();
     }
 }

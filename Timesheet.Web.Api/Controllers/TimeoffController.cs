@@ -42,7 +42,7 @@ namespace Timesheet.Web.Api.Controllers
         }
 
         [HttpGet("{employeeId}/Timeoff/MonthsStatistics")]
-        public async Task<ActionResult<EmployeeTimeoffMonthStatistics>> GetTimeoffHistoryMonthsStatistics(string employeeId)
+        public async Task<ActionResult<IEnumerable<EmployeeTimeoffMonthStatisticsGroupByMonth>>> GetTimeoffHistoryMonthsStatistics(string employeeId)
         {
             LogInformation($"Getting Employee ({employeeId}) Timeoff history statistics");
             

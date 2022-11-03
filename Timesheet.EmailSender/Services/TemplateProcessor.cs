@@ -1,38 +1,26 @@
-﻿using Timesheet.EmailSender.Models;
+﻿using Mustache;
 
 namespace Timesheet.EmailSender.Services
 {
     internal class TemplateProcessor : ITemplateProcessor
     {
-        private readonly string _defaultMailTemplate;
+        private string _currentTemplatePath;
+        private HtmlFormatCompiler _compiler;
 
-        private List<string> _properties;
-        public List<string> Properties
+        public void SetTemplate(string templatePath)
         {
-            get
-            {
-                if(_properties is null)
-                {
-                    _properties = typeof(NotificationItem)
-                        .GetType().GetProperties().Select(p => p.Name)
-                        .ToList();
-                }
-                return _properties;
-            }
+            _currentTemplatePath = templatePath;
+            _compiler = new HtmlFormatCompiler();
         }
 
-        public TemplateProcessor(string templatePath)
+        public string ProcessNotification<T>(T item)
         {
-            _defaultMailTemplate = File.ReadAllText(templatePath);
-        }
+            var format = File.ReadAllText(_currentTemplatePath);
+            var generator = _compiler.Compile(format);
 
-        public string ProcessNotification(NotificationItem item)
-        {
-            var message = _defaultMailTemplate;
-
-            Properties.ForEach(p =>
+            var message = generator.Render(new
             {
-                message = message.Replace($"@{p}", item[p]);
+                Model = item
             });
 
             return message;

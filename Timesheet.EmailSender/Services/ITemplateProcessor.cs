@@ -4,6 +4,7 @@ namespace Timesheet.EmailSender.Services
 {
     internal interface ITemplateProcessor
     {
-        string ProcessNotification(NotificationItem notificationItem);
+        string ProcessNotification<T>(T notificationItem);
+        void SetTemplate(string template);
     }
 }

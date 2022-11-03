@@ -8,47 +8,64 @@ namespace Timesheet.EmailSender.Services
     {
 
         private MailEngine _mailEngine;
-        private INotificationRepository _notificationRepository;
+        private readonly ISettingRepository _settingsRepository;
+        private readonly INotificationRepository _notificationRepository;
+        private readonly IEmployeeRepository _employeeRepository;
+        private readonly ITemplateProcessor _templateProcessor;
 
-        public NotificationService(ISettingRepository settingsRepository, INotificationRepository notificationRepository)
+        public NotificationService(ISettingRepository settingsRepository,
+            INotificationRepository notificationRepository,
+            IEmployeeRepository employeeRepository,
+            ITemplateProcessor templateProcessor)
         {
-            InitMailEngine(settingsRepository);
+            _settingsRepository = settingsRepository;
             _notificationRepository = notificationRepository;
+            _employeeRepository = employeeRepository;
+            _templateProcessor = templateProcessor;
+
+            InitMailEngine();
+
         }
 
-        private void InitMailEngine(ISettingRepository settingsRepository)
+        private void InitMailEngine()
         {
-            var templatePath = ConfigurationManager.AppSettings["TemplatePath"];
-
-            if(templatePath is null)
-            {
-                throw new Exception("Cannot find template path for mail notification");
-            }
-
-            var settings = settingsRepository.GetSMTPParameters();
+            var settings = _settingsRepository.GetSMTPParameters();
+            var employeeEmails = _employeeRepository.GetEmails();
 
             IMailSender mailSender = new MailSender(settings);
-            var templateProcessor = new TemplateProcessor(templatePath);
-
-            _mailEngine = new MailEngine(templateProcessor, mailSender);
+            _mailEngine = new MailEngine(_templateProcessor, mailSender, employeeEmails);
         }
 
         public void SendNotifications()
         {
-            IEnumerable<NotificationItem> notificationItems = _notificationRepository.Get();
+            IEnumerable<TimeoffNotificationTemplate> timeoffNotificationItems = _notificationRepository.GetTimeoffNotifications();
+            IEnumerable<TimesheetNotificationTemplate> timesheetNotificationItems = _notificationRepository.GetTimesheetNotifications();
+
+            SendNotifications(timeoffNotificationItems);
+            SendNotifications(timesheetNotificationItems);
+        }
+
+        public void SendNotifications<T>(IEnumerable<T> notificationItems)
+            where T : BaseNotificationTemplate
+        {
             foreach (var notificationItem in notificationItems)
             {
                 try
                 {
                     _mailEngine.SendEmail(notificationItem);
-                    notificationItem.SetCompleted();
-                    _notificationRepository.CompleteTransaction();
+                    notificationItem.Complete();
                 }
                 catch (Exception ex)
                 {
 
                 }
             }
+
+            _notificationRepository.CompleteSend(notificationItems
+                .Where(n => n.Sent)
+                .Select(n => n.NotificationId)
+                .ToList()
+            );
         }
     }
 }

@@ -1,0 +1,138 @@
+﻿<head>
+    <style>
+        body {
+            background-color: white;
+            font-family: Arial;
+        }
+
+        table {
+            border-spacing: 0;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td {
+            padding: 3px;
+        }
+
+        .bottom-border td {
+            border-bottom: 1px solid #666666;
+        }
+
+        .bottom-top td {
+            border-top: 1px solid #666666;
+        }
+
+        .grey {
+            background-color: #f2f2f2;
+        }
+
+        .entries-first-row {
+            background-color: #f2f2f2;
+        }
+
+            .entries-first-row td {
+                border-bottom: 1px solid #666666;
+                border-top: 1px solid #666666;
+            }
+
+        .margin-bottom-25 {
+            margin-bottom: 25px;
+        }
+
+        .table-striped > tbody > tr:nth-of-type(odd) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <table class="bottom-border margin-bottom-25">
+        <tr class="bottom-top">
+            <td class="grey">
+                <b>Employee Name</b>
+            </td>
+            <td>
+                {{Model.EmployeeName}}
+            </td>
+            <td class="grey">
+                <b>Payroll Period</b>
+            </td>
+            <td>
+                {{Model.PayrollPeriod}}
+            </td>
+        </tr>
+        <tr>
+            <td class=" grey">
+                <b>Payroll Start Date</b>
+            </td>
+            <td>
+                {{Model.PayrollStartDate}}
+            </td>
+            <td class="grey">
+                <b>Payroll End Date</b>
+            </td>
+            <td>
+                {{Model.PayrollEndDate}}
+            </td>
+        </tr>
+        <tr>
+            <td class="grey">
+                <b>Status</b>
+            </td>
+            <td>
+                {{Model.Status}}
+            </td>
+            <td class="grey">
+                <b>Manager</b>
+            </td>
+            <td>
+                {{Model.ManagerName}}
+            </td>
+        </tr>
+    </table>
+
+    <table class="table-striped margin-bottom-25">
+        <thead>
+            <tr class="entries-first-row">
+                <td><b>Payroll Code</b></td>
+                <td><b>Quantity</b></td>
+                <td><b>No</b></td>
+                <td><b>Customer Name</b></td>
+                <td><b>Work Date</b></td>
+                <td><b>Profit Center</b></td>
+                <td><b>Labor Code</b></td>
+                <td><b>Job Task No</b></td>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each Model.TimesheetEntries}}
+            <tr>
+                <td>{{PayrollCode}}</td>
+                <td>{{Quantity}}</td>
+                <td>{{ServiceOrderNo}}</td>
+                <td>{{CustomerName}}</td>
+                <td>{{WorkDate}}</td>
+                <td>{{ProfitCenter}}</td>
+                <td>{{LaborCode}}</td>
+                <td>{{JobTaskNo}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+    <table class="table-striped">
+        <tr class="entries-first-row">
+            <td><b>Employee Comments</b></td>
+            <td><b>Supervisor Comments</b></td>
+        </tr>
+        <tr>
+            <td>{{Model.EmployeeComment}}</td>
+            <td>{{Model.SupervisorComment}}</td>
+        </tr>
+    </table>
+    <b>Total Hours:</b> {{Model.Total}} <br>
+    {{#if Model.Link}}
+    <div>
+        <a href="{{Model.Link}}">Link to review</a>
+    </div>
+    {{/if}}
+</body>

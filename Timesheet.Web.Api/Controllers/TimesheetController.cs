@@ -168,19 +168,14 @@ namespace Timesheet.Web.Api.Controllers
 
         private async Task<WithHabilitations<EmployeeTimesheet>> SetAuthorizedTransitions(string employeeId, EmployeeTimesheet? timesheet)
         {
-            var timesheetEntry = timesheet?.Entries?.FirstOrDefault(e =>
-            e.PayrollCode != TimesheetPayrollCode.HOLIDAY.ToString()
-            && e.PayrollCode != TimesheetPayrollCode.TIMEOFF.ToString()
-            );
+            var timesheetEntry = timesheet?.EntriesWithoutTimeoffs?.FirstOrDefault();
+           
             return await SetAuthorizedTransitions(employeeId, timesheet, timesheetEntry);
         }
 
         private async Task<WithHabilitations<EmployeeTimesheetWithTotals>> SetAuthorizedTransitions(string employeeId, EmployeeTimesheetWithTotals? timesheet)
         {
-            var timesheetEntry = timesheet?.Entries?.FirstOrDefault(e => 
-            e.PayrollCode != TimesheetPayrollCode.HOLIDAY.ToString()
-            && e.PayrollCode != TimesheetPayrollCode.TIMEOFF.ToString()
-            );
+            var timesheetEntry = timesheet?.Entries?.FirstOrDefault();
             return await SetAuthorizedTransitions(employeeId, timesheet, timesheetEntry);
         }
 

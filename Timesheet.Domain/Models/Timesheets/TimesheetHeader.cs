@@ -28,6 +28,9 @@ namespace Timesheet.Domain.Models.Timesheets
         public TimesheetStatus Status { get; private set; }
 
         public virtual ICollection<TimesheetEntry> TimesheetEntries { get; private set; } = new List<TimesheetEntry>();
+        public IEnumerable<TimesheetEntry> TimesheetEntriesWithoutTimeoffs => TimesheetEntries
+                ?.Where(t => t.PayrollCode == TimesheetPayrollCode.BERV.ToString()
+                    || t.PayrollCode == TimesheetPayrollCode.JURY_DUTY.ToString()) ?? new List<TimesheetEntry>();
         public virtual ICollection<TimesheetHoliday> TimesheetHolidays { get; private set; } = new List<TimesheetHoliday>();
         public virtual ICollection<TimesheetComment> TimesheetComments { get; private set; } = new List<TimesheetComment>();
 

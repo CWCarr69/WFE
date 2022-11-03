@@ -1,4 +1,5 @@
-﻿using Timesheet.Domain.Models.Timesheets;
+﻿using Timesheet.Domain.Models.Employees;
+using Timesheet.Domain.Models.Timesheets;
 using Timesheet.Domain.Repositories;
 using Timesheet.DomainEvents.Employees;
 
@@ -19,13 +20,15 @@ namespace Timesheet.Application.Timesheets.EventHandlers
 
         public async Task Handle(TimeoffApproved @event)
         {
+            var @type = EventTypeToTimesheetPayrollCode(@event.Type);
+
             var timesheetEntry = new TimesheetEntry(
                 @event.Id,
                 @event.EmployeeId,
                 @event.RequestDate,
-                @event.Type.ToString(),
+                @type,
                 @event.Hours,
-                TimesheetPayrollCode.TIMEOFF.ToString());
+                @event.Description);
 
             var timesheetType = @event.IsSalaried ? TimesheetType.SALARLY : TimesheetType.WEEKLY; 
             var timesheet = await _readRepository.GetTimesheetByDate(@event.RequestDate, timesheetType);
@@ -40,6 +43,18 @@ namespace Timesheet.Application.Timesheets.EventHandlers
             }
 
             timesheet.AddTimesheetEntry(timesheetEntry);
+        }
+
+        private string EventTypeToTimesheetPayrollCode(string @type)
+        {
+            if(@type == TimeoffType.BERV.ToString()) return TimesheetPayrollCode.BERV.ToString();
+            if(@type == TimeoffType.UNPAID.ToString()) return TimesheetPayrollCode.UNPAID.ToString();
+            if(@type == TimeoffType.VACATION.ToString()) return TimesheetPayrollCode.VACATION.ToString();
+            if(@type == TimeoffType.SHOP.ToString()) return TimesheetPayrollCode.SHOP.ToString();
+            if(@type == TimeoffType.JURY_DUTY.ToString()) return TimesheetPayrollCode.JURY_DUTY.ToString();
+            if(@type == TimeoffType.PERSONAL.ToString()) return TimesheetPayrollCode.PERSONAL.ToString();
+
+            return TimesheetPayrollCode.REGULAR.ToString();
         }
     }
 }

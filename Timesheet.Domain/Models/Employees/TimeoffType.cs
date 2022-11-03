@@ -2,6 +2,6 @@
 {
     public enum TimeoffType
     {
-        BERV, HOLIDAY, JURY_DUTY, UNPAID, PERSONAL, VACCATION
+        BERV, HOLIDAY, JURY_DUTY, UNPAID, PERSONAL, VACATION, SHOP
     }
 }

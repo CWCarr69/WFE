@@ -12,14 +12,14 @@
         {
         }
 
-        public static NotificationItem Create(string employeeId, string action, string subject, bool sent, string objectId)
+        public static NotificationItem Create(string employeeId, string action, string subject, bool sent, string objectId, NotificationType group)
         {
             var notification = new NotificationItem(Entity.GenerateId()) {
                 EmployeeId = employeeId,
                 Action = action,
                 Subject = subject,
                 Sent = sent,
-                ObjectId = objectId
+                ObjectId = objectId,
             };
 
             return notification;

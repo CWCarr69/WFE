@@ -18,6 +18,9 @@ namespace Timesheet.Domain.ReadModels.Timesheets
         public string StatusName => Status.ToString();
         public string PayrollCode { get; set; }
         public double TotalHours { get; set; }
-        public IEnumerable<EmployeeTimesheetEntry> Entries { get; set; }
+        public IEnumerable<EmployeeTimesheetEntry> Entries { get; set; } = new List<EmployeeTimesheetEntry>();
+        public IEnumerable<EmployeeTimesheetEntry> EntriesWithoutTimeoffs => Entries
+        ?.Where(t => t.PayrollCode == TimesheetPayrollCode.REGULAR.ToString()
+            || t.PayrollCode == TimesheetPayrollCode.OVERTIME.ToString()) ?? new List<EmployeeTimesheetEntry>();
     }
 }
