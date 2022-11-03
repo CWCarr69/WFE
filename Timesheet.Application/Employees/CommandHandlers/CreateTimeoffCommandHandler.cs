@@ -24,7 +24,7 @@ namespace Timesheet.Application.Employees.CommandHandlers
 
         public override async Task<IEnumerable<IDomainEvent>> HandleCoreAsync(CreateTimeoff command, CancellationToken token)
         {
-            if (command.RequestEndDate > command.RequestStartDate)
+            if (command.RequestEndDate < command.RequestStartDate)
             {
                 throw new TimeoffInvalidDateIntervalException(command.RequestStartDate, command.RequestEndDate);
             }

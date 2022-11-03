@@ -1,6 +1,7 @@
 ﻿using Timesheet.Domain.DomainEvents;
 using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Models.Employees;
+using Timesheet.Domain.ReadModels.Timesheets;
 using Timesheet.DomainEvents.Timesheets;
 
 namespace Timesheet.Domain.Models.Timesheets
@@ -29,8 +30,8 @@ namespace Timesheet.Domain.Models.Timesheets
 
         public virtual ICollection<TimesheetEntry> TimesheetEntries { get; private set; } = new List<TimesheetEntry>();
         public IEnumerable<TimesheetEntry> TimesheetEntriesWithoutTimeoffs => TimesheetEntries
-                ?.Where(t => t.PayrollCode == TimesheetPayrollCode.BERV.ToString()
-                    || t.PayrollCode == TimesheetPayrollCode.JURY_DUTY.ToString()) ?? new List<TimesheetEntry>();
+        ?.Where(t => t.PayrollCode == TimesheetPayrollCode.REGULAR.ToString()
+            || t.PayrollCode == TimesheetPayrollCode.OVERTIME.ToString()) ?? new List<TimesheetEntry>();
         public virtual ICollection<TimesheetHoliday> TimesheetHolidays { get; private set; } = new List<TimesheetHoliday>();
         public virtual ICollection<TimesheetComment> TimesheetComments { get; private set; } = new List<TimesheetComment>();
 

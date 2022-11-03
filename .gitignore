@@ -17,7 +17,6 @@
 /Timesheet.Web.Api/bin/Debug/net6.0
 /Timesheet.Web.Api/obj
 /Timesheet.Presentation/bin/Debug/net6.0
-/Timesheet.ReadModel
 /TImesheet.BenefitsProcessor/obj
 /Timesheet.EmployeesIntegrator/obj
 /TImesheet.ReferentialIntegrator/obj
@@ -41,3 +40,5 @@
 /.vs
 /Timesheet.FDPDataIntegrator/bin/Debug/net6.0
 /Timesheet.FDPDataIntegrator/obj
+/Timesheet.ReadModel/bin
+/Timesheet.ReadModel/obj

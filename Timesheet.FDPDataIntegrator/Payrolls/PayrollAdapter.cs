@@ -32,11 +32,14 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
                 ? TimesheetHeader.CreateWeeklyTimesheet(record.WorkDate)
                 : TimesheetHeader.CreateMonthlyTimesheet(record.WorkDate);
 
+            string payrollCode = record.PayrollCode?.ToUpper();
+            payrollCode = string.IsNullOrEmpty(payrollCode) ? TimesheetPayrollCode.OVERTIME.ToString() : payrollCode;
+
             var timesheetEntry = new TimesheetEntry(
                 record.RecordId,
                 employeeId: record.EmployeeCode,
                 WorkDate: record.WorkDate,
-                payrollCode: record.PayrollCode?.ToUpper() ?? TimesheetPayrollCode.OVERTIME.ToString(),
+                payrollCode: payrollCode,
                 hours: record.Quantity,
                 description: record.CustomerName,
                 serviceOrderNumber: record.ServiceOrderNumber,

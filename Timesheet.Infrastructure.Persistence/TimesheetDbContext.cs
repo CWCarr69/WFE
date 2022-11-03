@@ -45,6 +45,8 @@ namespace Timesheet.Infrastructure.Persistence
             employee.HasOne(e => e.PrimaryApprover);
             employee.HasOne(e => e.SecondaryApprover);
             employee.HasOne(e => e.Manager);
+
+            builder.Entity<TimesheetHeader>().Ignore(e => e.TimesheetEntriesWithoutTimeoffs);
         }
     }
 }

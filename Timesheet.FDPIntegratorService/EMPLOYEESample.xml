@@ -1,4 +1,4 @@
-<FPDTS ExternalIpAddress="172.28.12.20" UTCTimeStamp="2022-11-01T20:37:22.416Z" FieldpointUserId="FPIntegration@wilsonfire.com" TransferName="WilsonFire-Resource-InExport" IsLastPageToProcess="True">
+<FPDTS ExternalIpAddress="172.28.12.20" UTCTimeStamp="2022-11-03T22:53:52.489Z" FieldpointUserId="FPIntegration@wilsonfire.com" TransferName="WilsonFire-Resource-InExport" IsLastPageToProcess="True">
 	<OutboundData>
 		<Records>
 			<Record>
@@ -13639,6 +13639,132 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Jesse Soto Jr.</ManagerName>
+				<AzureUserID />
+				<PageNumber>1</PageNumber>
+				<PageSize>1000</PageSize>
+			</Record>
+			<Record>
+				<EmployeeCode>1361</EmployeeCode>
+				<Name>Janell R. Lemm</Name>
+				<Title>Service Coordinator</Title>
+				<Address1 />
+				<Address2 />
+				<Address3 />
+				<Address4 />
+				<City />
+				<State />
+				<Zip />
+				<Country />
+				<ManagerEmployeeCode>0444</ManagerEmployeeCode>
+				<Office xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				</Office>
+				<Department xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				</Department>
+				<JobRole>ADMIN</JobRole>
+				<EmployeeCategory>Person</EmployeeCategory>
+				<email>JLemm@wilsonfire.com</email>
+				<PagerEmail />
+				<Phone1>8323102418</Phone1>
+				<Extension1 />
+				<Phone2 />
+				<Extension2 />
+				<Phone3 />
+				<Extension3 />
+				<Phone4 />
+				<Extension4 />
+				<Active>True</Active>
+				<UsesTimeSheets>False</UsesTimeSheets>
+				<TimeSheetReminders>False</TimeSheetReminders>
+				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
+				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
+				<IntegrationValue />
+				<HourlyCost>0.0000</HourlyCost>
+				<CreateDate>2022-11-02T16:10:10.780</CreateDate>
+				<ModifyDate>2022-11-02T15:12:19.157</ModifyDate>
+				<EnteredByUser>admin</EnteredByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
+				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				</Notes>
+				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				</StockLocation>
+				<VendorCode xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				</VendorCode>
+				<Fax />
+				<Rating1>0.00000</Rating1>
+				<Rating2>0.00000</Rating2>
+				<Rating3>0.00000</Rating3>
+				<Rating4>0.00000</Rating4>
+				<Rating5>0.00000</Rating5>
+				<WeightedRating>0.00000</WeightedRating>
+				<NumberofIncidents>0.00</NumberofIncidents>
+				<Division>MAIN</Division>
+				<IsCrew>False</IsCrew>
+				<ExchangeMailboxName />
+				<ExportAppointmentWithAttachment>False</ExportAppointmentWithAttachment>
+				<ExchangeSubscriptionID />
+				<ExchangeWatermark />
+				<GLSegment />
+				<AppointmentManagerDefault />
+				<DefaultServiceCode xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				</DefaultServiceCode>
+				<LaborRate>2.10</LaborRate>
+				<OT1Rate>0.00</OT1Rate>
+				<OT2Rate>0.00</OT2Rate>
+				<OT3Rate>0.00</OT3Rate>
+				<HolidayRate>0.00</HolidayRate>
+				<FlatCharge1Rate>0.00</FlatCharge1Rate>
+				<FlatCharge2Rate>0.00</FlatCharge2Rate>
+				<TripChargeRate>0.00</TripChargeRate>
+				<NormalFirstRate>0.00</NormalFirstRate>
+				<OT1FirstRate>0.00</OT1FirstRate>
+				<OT2FirstRate>0.00</OT2FirstRate>
+				<OT3FirstRate>0.00</OT3FirstRate>
+				<HolidayFirstRate>0.00</HolidayFirstRate>
+				<NonBillableRate>0.00</NonBillableRate>
+				<COGSGLSegment />
+				<AppointmentManagerNewRecords>0</AppointmentManagerNewRecords>
+				<ExternalDocumentNumber />
+				<AvailableHoursPerDay>0</AvailableHoursPerDay>
+				<TimeZone xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				</TimeZone>
+				<ShiftCode xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				</ShiftCode>
+				<TravelRate>0.00</TravelRate>
+				<TravelFlatRate>0.00</TravelFlatRate>
+				<EmployeeTeamCode xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				</EmployeeTeamCode>
+				<Territory xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				</Territory>
+				<Latitude xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				</Latitude>
+				<Longitude xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				</Longitude>
+				<ERPRecordID>1361</ERPRecordID>
+				<ParentEmployeeCode xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				</ParentEmployeeCode>
+				<EmployeeNumber />
+				<ExcludeFromMobile>False</ExcludeFromMobile>
+				<TravelOT1Rate>0.00</TravelOT1Rate>
+				<TravelOT2Rate>0.00</TravelOT2Rate>
+				<TravelOT3Rate>0.00</TravelOT3Rate>
+				<TravelHolidayRate>0.00</TravelHolidayRate>
+				<TravelNonBillableRate>0.00</TravelNonBillableRate>
+				<TradeUnion xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				</TradeUnion>
+				<Trade xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				</Trade>
+				<Status>Entered</Status>
+				<UDF_EmployeeGroup />
+				<UDF_SecondaryApprover>0645</UDF_SecondaryApprover>
+				<VendorName xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				</VendorName>
+				<VendorContactName xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				</VendorContactName>
+				<VendorContactPhone xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				</VendorContactPhone>
+				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				</VendorContactEmail>
+				<ManagerName>Jeffery Morris</ManagerName>
 				<AzureUserID />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>

@@ -13,6 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Timesheet.EmployeesIntegrator\Timesheet.FDPDataIntegrator.csproj" />
+    <ProjectReference Include="..\Timesheet.FDPDataIntegrator\Timesheet.FDPDataIntegrator.csproj" />
   </ItemGroup>
 </Project>
