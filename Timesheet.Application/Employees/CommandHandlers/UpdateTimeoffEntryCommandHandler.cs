@@ -38,7 +38,7 @@ namespace Timesheet.Application.Employees.CommandHandlers
             _workflowService.AuthorizeTransition(timeoff, TimeoffTransitions.UPDATE_ENTRY, timeoff.Status, currentEmployeeRoleOnData);
             _workflowService.AuthorizeTransition(timeoffEntry, TimeoffEntryTransitions.UPDATE, timeoffEntry.Status, currentEmployeeRoleOnData);
 
-            employee.UpdateTimeoffEntry(timeoff, timeoffEntry, command.Type, command.Hours);
+            employee.UpdateTimeoffEntry(timeoff, timeoffEntry, command.Type, command.Hours, command.Label);
             timeoff.UpdateMetadataOnModification(command.Author?.Id);
             timeoffEntry.UpdateMetadataOnModification(command.Author?.Id);
 

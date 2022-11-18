@@ -3,8 +3,8 @@ using Timesheet.Domain.ReadModels.Timesheets;
 
 namespace Timesheet.Application.Timesheets.Services.Export
 {
-    public interface ITimesheetToCSVModelAdapter
+    public interface ITimesheetToCSVModelAdapter<TEntry, TEntryCsv>
     {
-        TimesheetCSVModel Adapt(AllEmployeesTimesheet timesheet);
+        TimesheetCSVModel<TEntryCsv> Adapt(AllEmployeesTimesheet<TEntry> timesheet);
     }
 }

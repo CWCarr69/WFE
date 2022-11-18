@@ -12,7 +12,12 @@ namespace Timesheet.Infrastructure.Persistence.Repositories
             _context = context;
         }
 
-        public Task<TimesheetHeader?> GetTimesheet(string timesheetId, string? employeeId = null)
+        public async Task<TimesheetHeader?> GetTimesheet(string timesheetId)
+        {
+            return await _context.Timesheets.FindAsync(timesheetId);
+        }
+
+        public Task<TimesheetHeader?> GetTimesheetWithEntries(string timesheetId, string? employeeId = null)
         {
             if (employeeId is not null)
             {

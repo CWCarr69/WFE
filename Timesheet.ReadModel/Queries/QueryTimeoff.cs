@@ -20,13 +20,15 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             t.ModifiedDate  as {nameof(EmployeeTimeoff.ModifiedDate)},
             t.RequestStartDate  as {nameof(EmployeeTimeoff.RequestStartDate)},
             t.RequestEndDate  as {nameof(EmployeeTimeoff.RequestEndDate)},
+            t.EmployeeComment  as {nameof(EmployeeTimeoff.EmployeeComment)},
+            t.ApproverComment  as {nameof(EmployeeTimeoff.ApproverComment)},
             t.Status  as {nameof(EmployeeTimeoff.Status)},
             SUM(te.Hours) as {nameof(EmployeeTimeoff.TotalHours)}
             FROM employees e
             JOIN timeoffHeader t on e.Id = t.EmployeeId
             JOIN timeoffEntry te on t.id = te.TimeoffHeaderId
             Where e.Id = {TimeoffDetailsQueryEmployeeIdParam} AND t.Id = {TimeoffDetailsQueryTimeoffIdParam}
-            GROUP BY e.Id, e.Fullname, t.Id, t.CreatedDate, t.ModifiedDate, t.RequestStartDate, t.RequestEndDate, t.status
+            GROUP BY e.Id, e.Fullname, t.Id, t.CreatedDate, t.ModifiedDate, t.RequestStartDate, t.RequestEndDate, t.status, t.EmployeeComment, t.ApproverComment
         ";
 
         public const string TimeoffDetailsEntriesQuery = $@"SELECT
@@ -34,7 +36,8 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             CreatedDate AS {nameof(EmployeeTimeoffEntry.CreatedDate)},
             RequestDate AS {nameof(EmployeeTimeoffEntry.RequestDate)},
             Type AS {nameof(EmployeeTimeoffEntry.Type)},
-            Hours AS {nameof(EmployeeTimeoffEntry.Hours)}
+            Hours AS {nameof(EmployeeTimeoffEntry.Hours)},
+            Label AS {nameof(EmployeeTimeoffEntry.Label)}
             FROM timeoffEntry
             WHERE timeoffHeaderId = {TimeoffDetailsQueryTimeoffIdParam}
             ORDER BY RequestDate
@@ -103,6 +106,25 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             GROUP BY te.RequestDate, te.Type
         ";
         #endregion
+
+        #region TimeoffEntriesInPeriod
+        private const string TimeoffEntriesInPeriodEmployeeIdParam = "@employeeId";
+        private const string TimeoffEntriesInPeriodStartParam = "@start";
+        private const string TimeoffEntriesInPeriodEndParam = "@end";
+
+        public const string TimeoffEntriesInPeriod = $@"SELECT
+            th.Id as {nameof(EmployeeTimeoffEntry.TimeoffHeaderId)},
+            te.Id as {nameof(EmployeeTimeoffEntry.Id)},
+            te.RequestDate AS {nameof(EmployeeTimeoffEntry.RequestDate)},
+            te.Type AS {nameof(EmployeeTimeoffEntry.Type)},
+            te.Hours AS {nameof(EmployeeTimeoffEntry.Hours)}
+            FROM timeoffEntry te 
+            JOIN timeoffHeader th on th.Id = te.TimeoffHeaderId
+            WHERE th.EmployeeId = {TimeoffEntriesInPeriodEmployeeIdParam}
+            AND RequestDate BETWEEN {TimeoffEntriesInPeriodStartParam} AND {TimeoffEntriesInPeriodEndParam}
+            ORDER BY RequestDate
+        ";
+        #endregion
     }
 
     public class QueryTimeoff : BaseQuery, IQueryTimeoff
@@ -168,6 +190,14 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             var timeoffSummary = await _dbService.QueryAsync<EmployeeTimeoffDetailSummary>(query, new { employeeId, timeoffId });
 
             return timeoffSummary;
+        }
+
+        public async Task<IEnumerable<EmployeeTimeoffEntry>> GetEmployeeTimeoffEntriesInPeriod(string employeeId, DateTime start, DateTime end)
+        {
+            var query = QueryTimeoffConstants.TimeoffEntriesInPeriod;
+            var entries = await _dbService.QueryAsync<EmployeeTimeoffEntry>(query, new { employeeId, start, end });
+
+            return entries;
         }
     }
 }

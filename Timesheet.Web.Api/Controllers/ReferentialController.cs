@@ -74,5 +74,14 @@ namespace Timesheet.Web.Api.Controllers
             var statuses = _referentialQuery.GetTimeoffStatuses();
             return Ok(statuses);
         }
+
+        [HttpGet("TimeoffLabels")]
+        public async Task<ActionResult<IEnumerable<string>>> GetTimeoffLabels()
+        {
+            LogInformation($"Listing Timeoff labels");
+
+            var statuses = await _referentialQuery.GetTimeoffLabels();
+            return Ok(statuses);
+        }
     }
 }

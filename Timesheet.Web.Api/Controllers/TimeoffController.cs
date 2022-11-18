@@ -41,6 +41,18 @@ namespace Timesheet.Web.Api.Controllers
             return Ok(Paginate(page, itemsPerpage, timeoffs));
         }
 
+        [HttpGet("{employeeId}/Timeoff/History/Entries")]
+        public async Task<ActionResult<IEnumerable<EmployeeTimeoff>>> GetTimeoffHistoryEntries(string employeeId, DateTime start)
+        {
+            LogInformation($"Getting Employee ({employeeId}) Timeoff history entries");
+
+            var monthStart = new DateTime(start.Year, start.Month, 1);
+            var monthEnd = new DateTime(start.Year, start.Month, DateTime.DaysInMonth(start.Year, start.Month));
+
+            var timeoffs = await _timeoffQuery.GetEmployeeTimeoffEntriesInPeriod(employeeId, monthStart, monthEnd);
+            return Ok(timeoffs);
+        }
+
         [HttpGet("{employeeId}/Timeoff/MonthsStatistics")]
         public async Task<ActionResult<IEnumerable<EmployeeTimeoffMonthStatisticsGroupByMonth>>> GetTimeoffHistoryMonthsStatistics(string employeeId)
         {

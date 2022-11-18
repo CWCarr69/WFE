@@ -33,6 +33,14 @@ namespace Timesheet.Infrastruture.ReadModel.Queries
             return payrollPeriods;
         }
 
+        public async Task<IEnumerable<string>> GetTimeoffLabels()
+        {
+            var query = $"SELECT distinct label FROM timeoffentry order by label";
+            var labels = await _dbService.QueryAsync<string>(query);
+
+            return labels;
+        }
+
         public IEnumerable<EnumReadModel<TimeoffType>> GetTimeoffTypes()
         {
             return new List<EnumReadModel<TimeoffType>>

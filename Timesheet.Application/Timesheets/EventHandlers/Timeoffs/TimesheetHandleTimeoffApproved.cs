@@ -10,6 +10,7 @@ namespace Timesheet.Application.Timesheets.EventHandlers
         private readonly ITimesheetReadRepository _readRepository;
         private readonly IWriteRepository<TimesheetHeader> writeRepository;
 
+
         public TimesheetHandleTimeoffApproved(
             ITimesheetReadRepository readRepository,
             IWriteRepository<TimesheetHeader> writeRepository)
@@ -30,15 +31,14 @@ namespace Timesheet.Application.Timesheets.EventHandlers
                 @event.Hours,
                 @event.Description);
 
-            var timesheetType = @event.IsSalaried ? TimesheetType.SALARLY : TimesheetType.WEEKLY; 
-            var timesheet = await _readRepository.GetTimesheetByDate(@event.RequestDate, timesheetType);
-
-            if(timesheet is null)
-            {
-                timesheet = @event.IsSalaried
+            var timesheet = @event.IsSalaried
                     ? TimesheetHeader.CreateWeeklyTimesheet(@event.RequestDate)
                     : TimesheetHeader.CreateMonthlyTimesheet(@event.RequestDate);
 
+            var alreadyAddedtimesheet = await _readRepository.GetTimesheet(timesheet.Id);
+
+            if(alreadyAddedtimesheet is null)
+            {
                 await writeRepository.Add(timesheet);
             }
 

@@ -27,8 +27,8 @@ namespace Timesheet.Web.Api.Controllers
             {
                 Page = page,
                 ItemsPerPage = itemsPerPage,
-                TotalItems = itemsContainer.TotalItems,
-                Items = itemsContainer.Items
+                TotalItems = itemsContainer?.TotalItems ?? 0,
+                Items = itemsContainer?.Items ?? Enumerable.Empty<T>()
             };
         }
 

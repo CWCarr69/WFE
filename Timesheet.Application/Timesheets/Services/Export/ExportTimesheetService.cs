@@ -2,13 +2,15 @@
 using Timesheet.Application.Timesheets.Queries;
 using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Models.Timesheets;
+using Timesheet.Domain.ReadModels.Timesheets;
 
 namespace Timesheet.Application.Timesheets.Services.Export
 {
     internal class ExportTimesheetService : IExportTimesheetService
     {
         private readonly IQueryTimesheet _timesheets;
-        private readonly ITimesheetToCSVModelAdapter _adapter;
+        private readonly ITimesheetToCSVModelAdapter<ExternalTimesheetEntryDetails,ExternalTimesheetCSVEntryModel> _externalAdapter;
+        private readonly ITimesheetToCSVModelAdapter<TimesheetEntryDetails, TimesheetCSVEntryModel> _webAdapter;
         private readonly ITimesheetCSVFormatter _formatter;
         private readonly ITimesheetCSVWriter _csvWriter;
         private readonly string _externalDestinationBasePath;
@@ -16,7 +18,8 @@ namespace Timesheet.Application.Timesheets.Services.Export
         private readonly string _paylocityFileName = "Paylocity_Timesheet_";
 
         public ExportTimesheetService(IQueryTimesheet timesheets,
-            ITimesheetToCSVModelAdapter adapter,
+            ITimesheetToCSVModelAdapter<ExternalTimesheetEntryDetails,ExternalTimesheetCSVEntryModel> externalAdapter,
+            ITimesheetToCSVModelAdapter<TimesheetEntryDetails, TimesheetCSVEntryModel> adapter,
             ITimesheetCSVFormatter formatter,
             ITimesheetCSVWriter csvWriter,
             IExportTimesheetDestination exportDestination)
@@ -29,37 +32,39 @@ namespace Timesheet.Application.Timesheets.Services.Export
             }
 
             _timesheets = timesheets;
-            _adapter = adapter;
+            _webAdapter = adapter;
+            _externalAdapter = externalAdapter;
             _formatter = formatter;
             _csvWriter = csvWriter;
         }
 
         public async Task ExportToExternal(string payrollPeriod)
         {
-            string csv = await GetTimesheetAsCsv(payrollPeriod, true);
+            string csv = await GetTimesheetAsCsv<ExternalTimesheetEntryDetails, ExternalTimesheetCSVEntryModel>(payrollPeriod, true, _externalAdapter);
             string outpuPath = Path.Combine(_externalDestinationBasePath, $"{_paylocityFileName}{payrollPeriod}");
             _csvWriter.SetPath(outpuPath);
             await _csvWriter.Write(csv);
         }
 
         public async Task<string> ExportToWeb(string payrollPeriod) 
-            => await GetTimesheetAsCsv(payrollPeriod, false);
+            => await GetTimesheetAsCsv<TimesheetEntryDetails,TimesheetCSVEntryModel>(payrollPeriod, false, _webAdapter);
 
-        private async Task<string> GetTimesheetAsCsv(string payrollPeriod, bool checkFinalizedState)
+        private async Task<string> GetTimesheetAsCsv<TEntryDetail, TEntryCsvModel>(string payrollPeriod, bool checkFinalizedState, ITimesheetToCSVModelAdapter<TEntryDetail, TEntryCsvModel> adapter)
         {
             if (payrollPeriod is null)
             {
                 return string.Empty;
             }
 
-            var timesheetCSVModel = await PrepareExport(payrollPeriod, checkFinalizedState);
+            var timesheet = await GetDataToExport<TEntryDetail>(payrollPeriod, checkFinalizedState);
+            var timesheetCSVModel = adapter.Adapt(timesheet);
             var csv = _formatter.Format(timesheetCSVModel);
             return csv;
         }
 
-        private async Task<TimesheetCSVModel> PrepareExport(string payrollPeriod, bool checkFinalizedState)
+        private async Task<AllEmployeesTimesheet<TEntryDetail>> GetDataToExport<TEntryDetail>(string payrollPeriod, bool checkFinalizedState)
         {
-            var timesheet = await _timesheets.GetAllEmployeeTimesheetByPayrollPeriod(payrollPeriod);
+            var timesheet = await _timesheets.GetAllEmployeeTimesheetByPayrollPeriod<TEntryDetail>(payrollPeriod);
 
             if(timesheet is null)
             {
@@ -72,9 +77,7 @@ namespace Timesheet.Application.Timesheets.Services.Export
 
             }
 
-            var timesheetCSVModel = _adapter.Adapt(timesheet);
-
-            return timesheetCSVModel;
+            return timesheet;
         } 
     }
 }

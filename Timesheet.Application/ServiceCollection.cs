@@ -14,6 +14,7 @@ using Timesheet.Application.Timesheets.EventHandlers.Holidays;
 using Timesheet.Application.Timesheets.Services.Export;
 using Timesheet.Application.Workflow;
 using Timesheet.Domain.Employees.Services;
+using Timesheet.Domain.ReadModels.Timesheets;
 
 namespace Timesheet.Application
 {
@@ -77,7 +78,8 @@ namespace Timesheet.Application
         public static void AddTimesheetExportServices(this IServiceCollection services, string destination)
         {
             services.AddScoped<IExportTimesheetService, ExportTimesheetService>();
-            services.AddScoped<ITimesheetToCSVModelAdapter, TimesheetToCSVModelAdapter>();
+            services.AddScoped<ITimesheetToCSVModelAdapter<TimesheetEntryDetails, TimesheetCSVEntryModel>, TimesheetToCSVModelAdapter>();
+            services.AddScoped<ITimesheetToCSVModelAdapter<ExternalTimesheetEntryDetails, ExternalTimesheetCSVEntryModel>, ExternalTimesheetToCSVModelAdapter>();
             services.AddScoped<ITimesheetCSVWriter, TimesheetCSVWriter>();
             services.AddScoped<ITimesheetCSVFormatter, TimesheetCSVFormatter>();
 

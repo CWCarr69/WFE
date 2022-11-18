@@ -41,18 +41,12 @@ namespace Timesheet.Application.TImesheets.CommandHandlers
 
         protected TimesheetEntry GetTimesheetFirstData(TimesheetHeader timesheet)
         {
-            var timesheetEntry = timesheet.TimesheetEntriesWithoutTimeoffs.FirstOrDefault();
-            
-            if (timesheetEntry is null)
-            {
-                throw new EntityNotFoundException<TimesheetHeader>(timesheet?.Id);
-            }
-            return timesheetEntry;
+            return timesheet.TimesheetEntriesWithoutTimeoffs.FirstOrDefault(t => t.Status != TimesheetEntryStatus.APPROVED);
         }
 
         protected async Task<TimesheetHeader> GetTimesheetOrThrowException(string timesheetId, string? employeeId=null)
         {
-            var timesheet = await _readRepository.GetTimesheet(timesheetId, employeeId);
+            var timesheet = await _readRepository.GetTimesheetWithEntries(timesheetId, employeeId);
             if (timesheet is null)
             {
                 throw new EntityNotFoundException<TimesheetHeader>(timesheetId);

@@ -3,12 +3,12 @@ using Timesheet.Domain.ReadModels.Timesheets;
 
 namespace Timesheet.Application.Timesheets.Services.Export
 {
-    internal class TimesheetToCSVModelAdapter : ITimesheetToCSVModelAdapter
+    internal class TimesheetToCSVModelAdapter : ITimesheetToCSVModelAdapter<TimesheetEntryDetails, TimesheetCSVEntryModel>
     {
-        public TimesheetCSVModel Adapt(AllEmployeesTimesheet timesheet)
+        public TimesheetCSVModel<TimesheetCSVEntryModel> Adapt(AllEmployeesTimesheet<TimesheetEntryDetails> timesheet)
         {
 
-            var timesheetCSVModel = new TimesheetCSVModel();
+            var timesheetCSVModel = new TimesheetCSVModel<TimesheetCSVEntryModel>();
 
             foreach (var entry in timesheet.Entries)
             {
@@ -37,6 +37,35 @@ namespace Timesheet.Application.Timesheets.Services.Export
                 Customer = entry.CustomerNumber,
                 ProfitCenter = entry.ProfitCenterNumber,
                 WorkArea = entry.WorkArea
+            };
+        }
+    }
+
+    internal class ExternalTimesheetToCSVModelAdapter : ITimesheetToCSVModelAdapter<ExternalTimesheetEntryDetails, ExternalTimesheetCSVEntryModel>
+    {
+        public TimesheetCSVModel<ExternalTimesheetCSVEntryModel> Adapt(AllEmployeesTimesheet<ExternalTimesheetEntryDetails> timesheet)
+        {
+            var timesheetCSVModel = new TimesheetCSVModel<ExternalTimesheetCSVEntryModel>();
+
+            foreach (var entry in timesheet.Entries)
+            {
+                timesheetCSVModel.Entries.Add(Adapt(entry));
+            }
+
+            return timesheetCSVModel;
+        }
+
+        private ExternalTimesheetCSVEntryModel Adapt(ExternalTimesheetEntryDetails entry)
+        {
+            return new ExternalTimesheetCSVEntryModel
+            {
+                No = entry.No,
+                DetCode = entry.DetCode,
+                Hours = entry.Hours,
+                CC1 = entry.CC1,
+                Job_Code = entry.Job_Code,
+                Begin_Date = entry.Begin_Date,
+                End_Date = entry.End_Date
             };
         }
     }

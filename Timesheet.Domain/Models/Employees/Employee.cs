@@ -113,7 +113,7 @@ namespace Timesheet.Domain.Models.Employees
             RaiseTimeoffWorkflowChangedEvent(timeoff, nameof(TimeoffStatus.REJECTED));
         }
 
-        public void AddTimeoffEntry(DateTime requestDate, TimeoffType type, double hours, TimeoffHeader timeoff)
+        public void AddTimeoffEntry(DateTime requestDate, TimeoffType type, double hours, TimeoffHeader timeoff, string label)
         {
             var timeoffEntriesOnSameDate = _timeoffs.SelectMany(t => t.TimeoffEntries)
                 .Where(e => e.RequestDate.ToShortDateString() == requestDate.ToShortDateString())
@@ -132,7 +132,7 @@ namespace Timesheet.Domain.Models.Employees
                 throw new EntityNotFoundException<TimeoffHeader>(timeoff.Id);
             }
 
-            timeoff.AddEntry(requestDate, type, hours, relatedTimeoff);
+            timeoff.AddEntry(requestDate, type, hours, relatedTimeoff, label);
             timeoff.Update();
         }
 
@@ -142,7 +142,7 @@ namespace Timesheet.Domain.Models.Employees
             timeoff.Update();
         }
 
-        public void UpdateTimeoffEntry(TimeoffHeader timeoff, TimeoffEntry timeoffEntry, TimeoffType type, double hours)
+        public void UpdateTimeoffEntry(TimeoffHeader timeoff, TimeoffEntry timeoffEntry, TimeoffType type, double hours, string label)
         {
             var timeoffEntriesOnSameDate = _timeoffs.SelectMany(t => t.TimeoffEntries)
                 .Where(e => e != timeoffEntry && e.RequestDate.ToShortDateString() == timeoffEntry.RequestDate.ToShortDateString())
@@ -155,7 +155,7 @@ namespace Timesheet.Domain.Models.Employees
                 throw new TimeOffEntryHoursExceededException(timeoffEntry.RequestDate, EMPLOYEE_REGULAR_HOURS);
             }
 
-            timeoffEntry.Update(type, hours);
+            timeoffEntry.Update(type, hours, label);
 
             timeoff.Update();
         }

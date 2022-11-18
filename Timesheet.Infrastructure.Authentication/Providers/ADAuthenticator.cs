@@ -35,7 +35,7 @@ namespace Timesheet.Infrastructure.Authentication.Providers
             }
             catch (LdapException ex)
             {
-                return null;
+               return null;
             }
             finally
             {

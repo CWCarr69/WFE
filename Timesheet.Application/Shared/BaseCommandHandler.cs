@@ -60,20 +60,28 @@ namespace Timesheet.Application
                 throw new Exception("Should set command before calling command Handler");
             }
 
-            Events = await HandleCoreAsync(command, token);
-
-            if (RelatedAuditableEntity is not null)
+            try
             {
-                _auditHandler.LogCommand(RelatedAuditableEntity, command, command.ActionType(), command.Author?.Id);
+                Events = await HandleCoreAsync(command, token);
+
+                if (RelatedAuditableEntity is not null)
+                {
+                    await _auditHandler.LogCommand(RelatedAuditableEntity, command, command.ActionType(), command.Author?.Id);
+                }
+
+                if (this.Events.Any() && _eventDispatcher is not null)
+                {
+                    //This call eventHandler. the eventHandlers are not supposed to complete the transaction
+                    await this.PublishEvents();
+                }
+
+                await _transaction.CompleteAsync(token);
+            }catch(Exception ex)
+            {
+                throw ex;
             }
 
-            if (this.Events.Any() && _eventDispatcher is not null)
-            {
-                //This call eventHandler. the eventHandlers are not supposed to complete the transaction
-                await this.PublishEvents();
-            }
 
-            await _transaction.CompleteAsync(token);
         }
 
         private async Task PublishEvents() => await this._eventDispatcher.Publish(Events);

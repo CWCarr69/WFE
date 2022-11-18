@@ -18,4 +18,31 @@
         public string ProfitCenter { get; set; } = String.Empty;
         public string WorkArea { get; set; } = String.Empty;
     }
+
+    public class ExternalTimesheetCSVEntryModel
+    {
+        public string No { get; set; }
+        public string Det => "E";
+        public string DetCode { get; set; }
+        public double Hours { get; set; }
+        public string Amount { get; set; } = string.Empty;
+        public string Rate { get; set; } = string.Empty;
+        public string RateCode { get; set; } = string.Empty;
+        public string CC1 { get; set; }
+        public string CC2 { get; set; } = string.Empty;
+        public string CC3 { get; set; } = string.Empty;
+        public string CC4 { get; set; } = string.Empty;
+        public string CC5 { get; set; } = string.Empty;
+        public string Job_Code { get; set; }
+        public string Shift { get; set; } = string.Empty;
+        public string Begin_Date { get; set; }
+        public string End_Date { get; set; }
+        public string Wcc { get; set; } = string.Empty;
+        public string Tcode1 { get; set; } = string.Empty;
+        public string Tcode2 { get; set; } = string.Empty;
+        public string Tcode3 { get; set; } = string.Empty;
+        public string Tcode4 { get; set; } = string.Empty;
+        public int Sequence => 1;
+        public string CheckTyp { get; set; } = string.Empty;
+    }
 }

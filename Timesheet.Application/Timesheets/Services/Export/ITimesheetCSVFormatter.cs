@@ -2,6 +2,6 @@
 {
     public interface ITimesheetCSVFormatter
     {
-        string Format(TimesheetCSVModel timesheet);
+        string Format<T>(TimesheetCSVModel<T> timesheet);
     }
 }

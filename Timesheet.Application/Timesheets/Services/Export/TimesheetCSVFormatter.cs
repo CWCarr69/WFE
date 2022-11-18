@@ -7,22 +7,31 @@ namespace Timesheet.Application.Timesheets.Services.Export
     {
         private readonly string CSVSeparator = ";";
 
-        private readonly IEnumerable<PropertyInfo> _properties;
+        private IEnumerable<PropertyInfo> _properties;
 
-        public TimesheetCSVFormatter()
+        public IEnumerable<PropertyInfo> GetPropertyInfos<T>()
         {
-            _properties = typeof(TimesheetCSVEntryModel)
+            if(_properties is not null)
+            {
+                return _properties;
+            }
+            else
+            {
+                _properties = typeof(T)
                 .GetProperties(
-                    BindingFlags.Public 
+                    BindingFlags.Public
                     | BindingFlags.Instance
-                    | BindingFlags.GetProperty 
+                    | BindingFlags.GetProperty
                     | BindingFlags.SetProperty);
+            }
+
+            return _properties;
         }
 
-        public string Format(TimesheetCSVModel timesheet)
+        public string Format<T>(TimesheetCSVModel<T> timesheet)
         {
             StringBuilder csv = new StringBuilder();
-            csv.AppendLine(AddHeader());
+            csv.AppendLine(AddHeader<T>());
 
             foreach(var entry in timesheet.Entries)
             {
@@ -32,14 +41,14 @@ namespace Timesheet.Application.Timesheets.Services.Export
             return csv.ToString();
         }
 
-        private string AddHeader()
+        private string AddHeader<T>()
         {
-            var columns = _properties.Select(a => a.Name).ToArray();
+            var columns = GetPropertyInfos<T>().Select(a => a.Name).ToArray();
             var header = string.Join(CSVSeparator.ToString(), columns);
             return header;
         }
 
-        private string AddEntry(TimesheetCSVEntryModel entry)
+        private string AddEntry<T>(T entry)
         {
             var csvEntry = new StringBuilder();
             var values = new List<string>();

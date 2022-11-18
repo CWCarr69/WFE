@@ -38,7 +38,10 @@ namespace Timesheet.Application.Timesheets.CommandHandlers
 
             EmployeeRoleOnData currentEmployeeRoleOnData = await GetCurrentEmployeeRoleOnData(command, employee);
             _workflowService.AuthorizeTransition(timesheet, TimesheetTransitions.APPROVE, timesheet.Status, currentEmployeeRoleOnData);
-            _workflowService.AuthorizeTransition(timesheetEntryRef, TimesheetEntryTransitions.APPROVE, timesheetEntryRef.Status, currentEmployeeRoleOnData);
+            if (timesheetEntryRef is not null)
+            {
+                _workflowService.AuthorizeTransition(timesheetEntryRef, TimesheetEntryTransitions.APPROVE, timesheetEntryRef.Status, currentEmployeeRoleOnData);
+            }
 
             timesheet.Approve(employee, command.Comment);
             timesheet.UpdateMetadataOnModification(command.Author?.Id);

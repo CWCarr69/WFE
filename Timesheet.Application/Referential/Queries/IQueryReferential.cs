@@ -15,5 +15,6 @@ namespace Timesheet.Application.Referential.Queries
         IEnumerable<EnumReadModel<TimesheetEntryStatus>> GetTimesheetEntryStatuses();
         IEnumerable<EnumReadModel<TimeoffStatus>> GetTimeoffStatuses();
         IEnumerable<EnumReadModel<TimeoffType>> GetTimeoffTypes();
+        Task<IEnumerable<string>> GetTimeoffLabels();
     }
 }

@@ -9,6 +9,7 @@ using Timesheet.Application.Timesheets.Queries;
 using Timesheet.Application.Timesheets.Services.Export;
 using Timesheet.Application.Workflow;
 using Timesheet.Domain.Models.Timesheets;
+using Timesheet.Domain.ReadModels.Employees;
 using Timesheet.Domain.ReadModels.Timesheets;
 using Timesheet.Web.Api.ViewModels;
 
@@ -19,6 +20,7 @@ namespace Timesheet.Web.Api.Controllers
     [ApiController]
     public class TimesheetController : WorkflowBaseController<TimesheetController>
     {
+        private const TimesheetTransitions FINALIZE_TRANSITION = TimesheetTransitions.FINALIZE;
         private readonly IQueryTimesheet _timesheetQuery;
         private readonly IDispatcher _dispatcher;
         private readonly IExportTimesheetService _exportTimesheet;
@@ -46,6 +48,18 @@ namespace Timesheet.Web.Api.Controllers
             
             var timesheets = await _timesheetQuery.GetEmployeeTimesheets(employeeId, page, itemsPerpage);
             return Ok(Paginate(page, itemsPerpage, timesheets));
+        }
+
+        [HttpGet("History/Entries/Employee/{employeeId}")]
+        public async Task<ActionResult<IEnumerable<EmployeeTimesheet>>> GetTimesheetHistoryEntries(string employeeId, DateTime start)
+        {
+            LogInformation($"Getting Employee ({employeeId}) Timesheet history entries");
+
+            var monthStart = new DateTime(start.Year, start.Month, 1);
+            var monthEnd = new DateTime(start.Year, start.Month, DateTime.DaysInMonth(start.Year, start.Month));
+
+            var timesheets = await _timesheetQuery.GetEmployeeTimesheetEntriesInPeriod(employeeId, monthStart, monthEnd);
+            return Ok(timesheets);
         }
 
         [HttpGet("{timesheetId}/Employee/{employeeId}")]
@@ -168,7 +182,7 @@ namespace Timesheet.Web.Api.Controllers
 
         private async Task<WithHabilitations<EmployeeTimesheet>> SetAuthorizedTransitions(string employeeId, EmployeeTimesheet? timesheet)
         {
-            var timesheetEntry = timesheet?.EntriesWithoutTimeoffs?.FirstOrDefault();
+            var timesheetEntry = timesheet?.EntriesWithoutTimeoffs?.FirstOrDefault(t => t.Status != TimesheetEntryStatus.APPROVED);
            
             return await SetAuthorizedTransitions(employeeId, timesheet, timesheetEntry);
         }
@@ -181,12 +195,24 @@ namespace Timesheet.Web.Api.Controllers
 
         private async Task<WithHabilitations<T>> SetAuthorizedTransitions<T>(string employeeId, T timesheet, dynamic timesheetEntry)
         {
+            var hasFinalizeAction = false;
             dynamic dynamicTimesheet = timesheet;
-            var response = await SetAuthorizedTransitions(timesheet, typeof(TimesheetHeader), dynamicTimesheet?.Status, CurrentUser, employeeId);
-            if (timesheetEntry is not null)
-            {
-                response = await CombineAuthorizedTransitions(response, timesheetEntry, typeof(TimesheetEntry), timesheetEntry?.Status, CurrentUser, employeeId);
+            WithHabilitations<T> response = await SetAuthorizedTransitions(timesheet, typeof(TimesheetHeader), dynamicTimesheet?.Status, CurrentUser, employeeId);
+            if(response.AuthorizedActions.Any(a => a.Name == FINALIZE_TRANSITION.ToString())){
+                hasFinalizeAction = true;
             }
+
+            response = await CombineIntersectAuthorizedTransitions(response, timesheetEntry, typeof(TimesheetEntry), timesheetEntry?.Status, CurrentUser, employeeId);
+
+            if (hasFinalizeAction)
+            {
+                response.AuthorizedActions = response.AuthorizedActions.Union(
+                new List<AuthorizedAction>()
+                {
+                    new AuthorizedAction((int) FINALIZE_TRANSITION, FINALIZE_TRANSITION.ToString())
+                }).ToList();
+            }
+            
             return response;
         }
     }

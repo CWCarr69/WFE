@@ -8,5 +8,6 @@ namespace Timesheet.Application.Employees.Queries
         Task<IEnumerable<EmployeeTimeoffDetailSummary?>> GetEmployeeTimeoffSummary(string employeeId, string timeoffId);
         Task<EmployeeTimeoffHistory> GetEmployeeTimeoffs(string employeeId, int page, int itemsPerPage);
         Task<IEnumerable<EmployeeTimeoffMonthStatisticsGroupByMonth>> GetEmployeeTimeoffsMonthStatistics(string employeeId);
+        Task<IEnumerable<EmployeeTimeoffEntry>> GetEmployeeTimeoffEntriesInPeriod(string employeeId, DateTime start, DateTime end);
     }
 }

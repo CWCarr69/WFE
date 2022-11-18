@@ -14,7 +14,7 @@ namespace Timesheet.Application.Shared
             this._auditRepository = auditRepository;
         }
 
-        public void LogCommand<TEntity, TCommand>(TEntity entity, TCommand command, CommandActionType auditType, string userId)
+        public async Task LogCommand<TEntity, TCommand>(TEntity entity, TCommand command, CommandActionType auditType, string userId)
             where TEntity : Entity 
             where TCommand : ICommand
         {
@@ -29,7 +29,7 @@ namespace Timesheet.Application.Shared
                 AuthorId = userId,
             };
 
-            _auditRepository.Add(audit);
+            await _auditRepository.Add(audit);
         }
     }
 }

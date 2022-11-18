@@ -42,3 +42,7 @@
 /Timesheet.FDPDataIntegrator/obj
 /Timesheet.ReadModel/bin
 /Timesheet.ReadModel/obj
+*.log
+/logs/webapi-20221030.log
+/Timesheet.Web.Api/Properties/PublishProfiles
+/Timesheet.WebApi.Service/obj

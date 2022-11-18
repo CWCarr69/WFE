@@ -37,9 +37,9 @@
             TimeoffEntries = new List<TimeoffEntry>();
         }
 
-        internal void AddEntry(DateTime requestDate, TimeoffType type, double hours, TimeoffHeader timeoff)
+        internal void AddEntry(DateTime requestDate, TimeoffType type, double hours, TimeoffHeader timeoff, string label)
         {
-            TimeoffEntries.Add(TimeoffEntry.Create(requestDate, type, hours));
+            TimeoffEntries.Add(TimeoffEntry.Create(requestDate, type, hours, label));
         }
 
         internal void DeleteEntry(TimeoffEntry timeoffEntry)

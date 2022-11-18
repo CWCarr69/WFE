@@ -1,7 +1,7 @@
 ﻿namespace Timesheet.Application.Timesheets.Services.Export
 {
-    public class TimesheetCSVModel
+    public class TimesheetCSVModel<T>
     {
-        public List<TimesheetCSVEntryModel> Entries { get; set; } = new List<TimesheetCSVEntryModel> ();
+        public List<T> Entries { get; set; } = new List<T> ();
     }
 }

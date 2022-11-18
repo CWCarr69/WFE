@@ -10,6 +10,7 @@ namespace Timesheet.Application.Employees.Commands
         public string TimeoffEntryId { get; set; }
         public TimeoffType Type { get; set; }
         public double Hours { get; set; }
+        public string? Label { get; set; }
         public override CommandActionType ActionType() => CommandActionType.MODIFICATION;
 
     }

@@ -62,5 +62,22 @@ namespace Timesheet.Web.Api.Controllers
 
             return currentDataWithHabilitations;
         }
+
+        protected async Task<WithHabilitations<T>> CombineIntersectAuthorizedTransitions<T>(WithHabilitations<T> currentDataWithHabilitations,
+    dynamic data, Type entityType, Enum status, User currentUser, string employeeId)
+        {
+            var authorizedActions = new List<AuthorizedAction>();
+            if(data is not null)
+            {
+                var dataWithHabilitation = await SetAuthorizedTransitions(data, entityType, status, currentUser, employeeId);
+                authorizedActions = dataWithHabilitation.AuthorizedActions;
+            }
+
+            currentDataWithHabilitations.AuthorizedActions = currentDataWithHabilitations.AuthorizedActions
+                .Intersect(authorizedActions)
+                .ToList();
+
+            return currentDataWithHabilitations;
+        }
     }
 }

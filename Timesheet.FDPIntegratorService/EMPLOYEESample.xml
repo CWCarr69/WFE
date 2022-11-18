@@ -1,4 +1,4 @@
-<FPDTS ExternalIpAddress="172.28.12.20" UTCTimeStamp="2022-11-03T22:53:52.489Z" FieldpointUserId="FPIntegration@wilsonfire.com" TransferName="WilsonFire-Resource-InExport" IsLastPageToProcess="True">
+<FPDTS ExternalIpAddress="172.28.12.20" UTCTimeStamp="2022-11-10T16:43:05.255Z" FieldpointUserId="FPIntegration@wilsonfire.com" TransferName="WilsonFire-Resource-InExport" IsLastPageToProcess="True">
 	<OutboundData>
 		<Records>
 			<Record>
@@ -34,7 +34,6 @@
 				<Active>False</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -126,6 +125,7 @@
 				<ManagerName xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</ManagerName>
 				<AzureUserID />
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -162,18 +162,16 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>2.0000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:15.917</CreateDate>
-				<ModifyDate>2022-10-17T14:43:44.563</ModifyDate>
+				<ModifyDate>2022-11-07T12:34:24.527</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
 				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
-				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-				</StockLocation>
+				<StockLocation>0001</StockLocation>
 				<VendorCode xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorCode>
 				<Fax />
@@ -253,7 +251,8 @@
 				</VendorContactEmail>
 				<ManagerName xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</ManagerName>
-				<AzureUserID />
+				<AzureUserID>Placeholder@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -289,14 +288,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-09-21T15:18:42.270</CreateDate>
-				<ModifyDate>2022-09-27T15:45:33.140</ModifyDate>
+				<ModifyDate>2022-11-07T14:08:11.000</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -379,7 +377,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Luzmarina I. Rodriguez</ManagerName>
-				<AzureUserID />
+				<AzureUserID>SCampbell@wilsonfire.com</AzureUserID>
+				<PayrollType>Salary</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -414,7 +413,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-08-29T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>252.0000</HourlyCost>
@@ -502,6 +500,7 @@
 				</VendorContactEmail>
 				<ManagerName>Donald Schatte</ManagerName>
 				<AzureUserID>CWCARR@WILSONFIRE.COM</AzureUserID>
+				<PayrollType>Salary</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -536,7 +535,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -627,6 +625,7 @@
 				</VendorContactEmail>
 				<ManagerName>Shannon Sampson</ManagerName>
 				<AzureUserID>SChavez@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -662,14 +661,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-08-26T15:13:11.457</CreateDate>
-				<ModifyDate>2022-09-27T15:45:33.373</ModifyDate>
+				<ModifyDate>2022-11-07T14:08:33.310</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -752,7 +750,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Luzmarina I. Rodriguez</ManagerName>
-				<AzureUserID />
+				<AzureUserID>LCruz@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -788,12 +787,11 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-09-21T15:30:45.120</CreateDate>
-				<ModifyDate>2022-10-18T16:02:25.780</ModifyDate>
+				<ModifyDate>2022-11-07T14:09:02.437</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
 				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -878,7 +876,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Luzmarina I. Rodriguez</ManagerName>
-				<AzureUserID />
+				<AzureUserID>TCFarquharson@wilsonfire.com</AzureUserID>
+				<PayrollType>Salary</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -913,14 +912,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-06-06T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:16.087</CreateDate>
-				<ModifyDate>2022-10-25T13:33:35.270</ModifyDate>
+				<ModifyDate>2022-11-07T14:13:47.467</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -1004,6 +1002,7 @@
 				</VendorContactEmail>
 				<ManagerName>Bob Wilson</ManagerName>
 				<AzureUserID>WGandy@wilsonfire.com</AzureUserID>
+				<PayrollType>Salary</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -1038,14 +1037,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-10-17T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>71.3000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:16.127</CreateDate>
-				<ModifyDate>2022-09-27T15:45:34.340</ModifyDate>
+				<ModifyDate>2022-11-07T14:05:57.920</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation>0213</StockLocation>
@@ -1127,7 +1125,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
-				<AzureUserID>FieldPoint@wilsonfire.com</AzureUserID>
+				<AzureUserID>FGarcia@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -1163,14 +1162,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:16.163</CreateDate>
-				<ModifyDate>2022-10-25T13:33:35.693</ModifyDate>
+				<ModifyDate>2022-11-07T14:16:16.327</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -1254,6 +1252,7 @@
 				</VendorContactEmail>
 				<ManagerName>Bob Wilson</ManagerName>
 				<AzureUserID>PGallier@wilsonfire.com</AzureUserID>
+				<PayrollType>Salary</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -1288,14 +1287,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-09-19T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>55.8000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:16.203</CreateDate>
-				<ModifyDate>2022-10-17T16:16:17.103</ModifyDate>
+				<ModifyDate>2022-11-07T12:48:25.903</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation>0220</StockLocation>
@@ -1377,7 +1375,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Juan Vela</ManagerName>
-				<AzureUserID />
+				<AzureUserID>FGodinez@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -1412,7 +1411,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-11-07T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>68.2000</HourlyCost>
@@ -1502,6 +1500,7 @@
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
 				<AzureUserID>TPHEBERT@WILSONFIRE.COM</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -1537,7 +1536,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>2.8000</HourlyCost>
@@ -1628,6 +1626,7 @@
 				</VendorContactEmail>
 				<ManagerName>Bob Wilson</ManagerName>
 				<AzureUserID />
+				<PayrollType>Salary</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -1663,7 +1662,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -1754,6 +1752,7 @@
 				</VendorContactEmail>
 				<ManagerName>Bob Wilson</ManagerName>
 				<AzureUserID>CWHenderson@wilsonfire.com</AzureUserID>
+				<PayrollType>Salary</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -1789,7 +1788,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -1880,6 +1878,7 @@
 				</VendorContactEmail>
 				<ManagerName>Shannon Sampson</ManagerName>
 				<AzureUserID>SHolmes@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -1914,7 +1913,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-07-04T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>140.0000</HourlyCost>
@@ -2004,6 +2002,7 @@
 				</VendorContactEmail>
 				<ManagerName>Christopher Carr</ManagerName>
 				<AzureUserID>JAHowd@wilsonfire.com</AzureUserID>
+				<PayrollType>Salary</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -2038,7 +2037,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-10-31T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>65.1000</HourlyCost>
@@ -2128,6 +2126,7 @@
 				</VendorContactEmail>
 				<ManagerName>Jeffery Morris</ManagerName>
 				<AzureUserID>CLuera@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -2162,14 +2161,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-08-08T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:16.427</CreateDate>
-				<ModifyDate>2022-10-17T10:45:43.847</ModifyDate>
+				<ModifyDate>2022-11-07T12:49:08.777</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation>0427</StockLocation>
@@ -2251,7 +2249,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Salvador Chavez</ManagerName>
-				<AzureUserID />
+				<AzureUserID>JMartinez@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -2287,7 +2286,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -2378,6 +2376,7 @@
 				</VendorContactEmail>
 				<ManagerName>Donald Schatte</ManagerName>
 				<AzureUserID>KEMartinez@wilsonfire.com</AzureUserID>
+				<PayrollType>Salary</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -2412,7 +2411,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-10-31T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>86.8000</HourlyCost>
@@ -2502,6 +2500,7 @@
 				</VendorContactEmail>
 				<ManagerName>Jerry Wittorp</ManagerName>
 				<AzureUserID>JMORRIS@WILSONFIRE.COM</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -2536,7 +2535,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-10-17T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>56.1100</HourlyCost>
@@ -2626,6 +2624,7 @@
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
 				<AzureUserID>MOSMER@WILSONFIRE.COM</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -2660,7 +2659,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-10-10T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>52.7000</HourlyCost>
@@ -2750,6 +2748,7 @@
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
 				<AzureUserID>MPACHUCA@WILSONFIRE.COM</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -2784,7 +2783,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-10-17T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>66.6500</HourlyCost>
@@ -2874,6 +2872,7 @@
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
 				<AzureUserID>BHPARKER@WILSONFIRE.COM</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -2909,7 +2908,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -3000,6 +2998,7 @@
 				</VendorContactEmail>
 				<ManagerName>Luzmarina I. Rodriguez</ManagerName>
 				<AzureUserID />
+				<PayrollType>Salary</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -3035,7 +3034,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-10-03T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -3126,6 +3124,7 @@
 				</VendorContactEmail>
 				<ManagerName>Bob Wilson</ManagerName>
 				<AzureUserID>SLSampson@wilsonfire.com</AzureUserID>
+				<PayrollType>Salary</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -3161,7 +3160,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -3252,6 +3250,7 @@
 				</VendorContactEmail>
 				<ManagerName>Donald Schatte</ManagerName>
 				<AzureUserID>SSanchez@wilsonfire.com</AzureUserID>
+				<PayrollType>Salary</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -3287,7 +3286,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -3378,6 +3376,7 @@
 				</VendorContactEmail>
 				<ManagerName>Bob Wilson</ManagerName>
 				<AzureUserID>DKSchatte@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -3413,14 +3412,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:17.940</CreateDate>
-				<ModifyDate>2022-10-25T13:35:04.973</ModifyDate>
+				<ModifyDate>2022-11-07T14:14:37.923</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -3504,6 +3502,7 @@
 				</VendorContactEmail>
 				<ManagerName>Bob Wilson</ManagerName>
 				<AzureUserID>KAShafer@wilsonfire.com</AzureUserID>
+				<PayrollType>Salary</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -3538,7 +3537,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-09-05T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -3628,6 +3626,7 @@
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
 				<AzureUserID>swsimmons@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -3662,7 +3661,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-09-19T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>55.8000</HourlyCost>
@@ -3752,6 +3750,7 @@
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
 				<AzureUserID>RROMERO@WILSONFIRE.COM</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -3786,7 +3785,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-09-26T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>88.8200</HourlyCost>
@@ -3876,6 +3874,7 @@
 				</VendorContactEmail>
 				<ManagerName>Jeffery Morris</ManagerName>
 				<AzureUserID>TLTRUITT@WILSONFIRE.COM</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -3911,7 +3910,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -4002,6 +4000,7 @@
 				</VendorContactEmail>
 				<ManagerName>Bob Wilson</ManagerName>
 				<AzureUserID>JVela@wilsonfire.com</AzureUserID>
+				<PayrollType>Salary</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -4023,7 +4022,7 @@
 				<Department xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Department>
 				<JobRole>ENGINEER</JobRole>
-				<EmployeeCategory>Person</EmployeeCategory>
+				<EmployeeCategory>Technician</EmployeeCategory>
 				<email>JWeikel@wilsonfire.com</email>
 				<PagerEmail />
 				<Phone1>832-310-2467</Phone1>
@@ -4037,14 +4036,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-09-21T15:15:42.150</CreateDate>
-				<ModifyDate>2022-09-27T15:45:33.920</ModifyDate>
+				<ModifyDate>2022-11-07T14:23:38.107</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -4069,8 +4067,8 @@
 				<AppointmentManagerDefault />
 				<DefaultServiceCode xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</DefaultServiceCode>
-				<LaborRate>0.00</LaborRate>
-				<OT1Rate>0.00</OT1Rate>
+				<LaborRate>3.60</LaborRate>
+				<OT1Rate>7.20</OT1Rate>
 				<OT2Rate>0.00</OT2Rate>
 				<OT3Rate>0.00</OT3Rate>
 				<HolidayRate>0.00</HolidayRate>
@@ -4127,7 +4125,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Luzmarina I. Rodriguez</ManagerName>
-				<AzureUserID />
+				<AzureUserID>JWeikel@wilsonfire.com</AzureUserID>
+				<PayrollType>Salary</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -4163,14 +4162,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:18.030</CreateDate>
-				<ModifyDate>2022-10-25T13:35:05.550</ModifyDate>
+				<ModifyDate>2022-11-07T14:17:01.140</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -4254,6 +4252,7 @@
 				</VendorContactEmail>
 				<ManagerName>Bob Wilson</ManagerName>
 				<AzureUserID>LWeaver@wilsonfire.com</AzureUserID>
+				<PayrollType>Salary</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -4289,14 +4288,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:18.047</CreateDate>
-				<ModifyDate>2022-10-25T13:35:05.740</ModifyDate>
+				<ModifyDate>2022-11-07T14:16:47.873</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -4380,6 +4378,7 @@
 				</VendorContactEmail>
 				<ManagerName>Bob Wilson</ManagerName>
 				<AzureUserID>LWilhite@wilsonfire.com</AzureUserID>
+				<PayrollType>Salary</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -4415,14 +4414,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-09-21T15:21:43.160</CreateDate>
-				<ModifyDate>2022-10-18T14:51:58.010</ModifyDate>
+				<ModifyDate>2022-11-07T14:12:16.407</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -4506,6 +4504,7 @@
 				</VendorContactEmail>
 				<ManagerName>Donald Schatte</ManagerName>
 				<AzureUserID>BWILSON@WILSONFIRE.COM</AzureUserID>
+				<PayrollType>Salary</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -4542,15 +4541,14 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</IntegrationValue>
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-08-04T10:00:39.003</CreateDate>
-				<ModifyDate>2022-10-18T14:51:58.183</ModifyDate>
+				<ModifyDate>2022-11-07T14:12:39.203</ModifyDate>
 				<EnteredByUser>JWITTORP@WILSONFIRE.COM</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation>0800</StockLocation>
@@ -4634,6 +4632,7 @@
 				</VendorContactEmail>
 				<ManagerName>Bob Wilson</ManagerName>
 				<AzureUserID>JWittorp@wilsonfire.com</AzureUserID>
+				<PayrollType>Salary</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -4669,14 +4668,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:18.063</CreateDate>
-				<ModifyDate>2022-10-25T13:35:06.363</ModifyDate>
+				<ModifyDate>2022-11-07T14:14:19.030</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -4760,6 +4758,7 @@
 				</VendorContactEmail>
 				<ManagerName>Bob Wilson</ManagerName>
 				<AzureUserID />
+				<PayrollType>Salary</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -4794,7 +4793,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-10-10T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>55.8000</HourlyCost>
@@ -4884,6 +4882,7 @@
 				</VendorContactEmail>
 				<ManagerName>Jeffery Morris</ManagerName>
 				<AzureUserID>DYOUNG@WILSONFIRE.COM</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -4919,7 +4918,6 @@
 				<Active>False</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -5011,6 +5009,7 @@
 				<ManagerName xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</ManagerName>
 				<AzureUserID />
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -5046,7 +5045,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>86.8000</HourlyCost>
@@ -5137,6 +5135,7 @@
 				</VendorContactEmail>
 				<ManagerName>Shannon Sampson</ManagerName>
 				<AzureUserID>CHouse@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -5171,7 +5170,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-10-24T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -5261,6 +5259,7 @@
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
 				<AzureUserID>IVCOLUMBUS@WILSONFIRE.COM</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -5295,14 +5294,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-08-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:18.147</CreateDate>
-				<ModifyDate>2022-10-17T16:41:55.440</ModifyDate>
+				<ModifyDate>2022-11-07T12:49:57.717</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation>1047</StockLocation>
@@ -5384,7 +5382,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Christopher House</ManagerName>
-				<AzureUserID />
+				<AzureUserID>MCCollins@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -5420,7 +5419,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -5511,6 +5509,7 @@
 				</VendorContactEmail>
 				<ManagerName>Donald Schatte</ManagerName>
 				<AzureUserID />
+				<PayrollType />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -5546,14 +5545,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>68.2000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:19.830</CreateDate>
-				<ModifyDate>2022-10-25T13:35:06.613</ModifyDate>
+				<ModifyDate>2022-11-07T14:15:30.967</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -5637,6 +5635,7 @@
 				</VendorContactEmail>
 				<ManagerName>Bob Wilson</ManagerName>
 				<AzureUserID>WHPeters@wilsonfire.com</AzureUserID>
+				<PayrollType>Salary</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -5672,14 +5671,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-10-10T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-08-24T15:23:59.220</CreateDate>
-				<ModifyDate>2022-10-17T16:40:23.407</ModifyDate>
+				<ModifyDate>2022-11-07T13:43:10.153</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -5762,7 +5760,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Juan Vela</ManagerName>
-				<AzureUserID />
+				<AzureUserID>GLPerez@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -5798,7 +5797,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-06-25T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -5889,6 +5887,7 @@
 				</VendorContactEmail>
 				<ManagerName>Shannon Sampson</ManagerName>
 				<AzureUserID>EPerez@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -5924,7 +5923,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>80.6000</HourlyCost>
@@ -6015,6 +6013,7 @@
 				</VendorContactEmail>
 				<ManagerName>Shannon Sampson</ManagerName>
 				<AzureUserID>JChimene@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -6049,7 +6048,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-10-24T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -6139,6 +6137,7 @@
 				</VendorContactEmail>
 				<ManagerName>Jeffery Morris</ManagerName>
 				<AzureUserID>TLMALVEAUX@WILSONFIRE.COM</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -6174,14 +6173,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-08-24T15:26:59.723</CreateDate>
-				<ModifyDate>2022-10-17T16:38:53.253</ModifyDate>
+				<ModifyDate>2022-11-07T13:43:37.373</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -6264,7 +6262,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Juan Vela</ManagerName>
-				<AzureUserID />
+				<AzureUserID>HACeballo@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -6300,7 +6299,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -6391,6 +6389,7 @@
 				</VendorContactEmail>
 				<ManagerName>Shannon Sampson</ManagerName>
 				<AzureUserID>JSoto@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -6425,7 +6424,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-10-31T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>58.9000</HourlyCost>
@@ -6515,6 +6513,7 @@
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
 				<AzureUserID>CLMITCHELL@WILSONFIRE.COM</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -6549,14 +6548,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-10-31T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:19.940</CreateDate>
-				<ModifyDate>2022-10-17T16:22:19.497</ModifyDate>
+				<ModifyDate>2022-11-07T13:44:01.623</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation>1108</StockLocation>
@@ -6638,7 +6636,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Juan Vela</ManagerName>
-				<AzureUserID />
+				<AzureUserID>FDominguez@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -6673,14 +6672,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:19.960</CreateDate>
-				<ModifyDate>2022-10-17T16:08:46.730</ModifyDate>
+				<ModifyDate>2022-11-07T13:44:30.950</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation>1131</StockLocation>
@@ -6762,7 +6760,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Salvador Chavez</ManagerName>
-				<AzureUserID />
+				<AzureUserID>MIRivera@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -6797,14 +6796,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-09-05T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>55.4900</HourlyCost>
 				<CreateDate>2022-05-24T12:19:19.980</CreateDate>
-				<ModifyDate>2022-10-17T14:56:19.363</ModifyDate>
+				<ModifyDate>2022-11-07T13:44:59.843</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation>1136</StockLocation>
@@ -6886,7 +6884,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Anthony A. Lind</ManagerName>
-				<AzureUserID />
+				<AzureUserID>SDDillion@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -6921,14 +6920,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:19.997</CreateDate>
-				<ModifyDate>2022-10-17T16:17:47.993</ModifyDate>
+				<ModifyDate>2022-11-07T13:45:24.513</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation>1137</StockLocation>
@@ -7010,7 +7008,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Paul W. Hohlbaugh</ManagerName>
-				<AzureUserID />
+				<AzureUserID>JARoy@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -7045,7 +7044,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-10-31T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>50.3800</HourlyCost>
@@ -7135,6 +7133,7 @@
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
 				<AzureUserID>DRDURR@WILSONFIRE.COM</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -7169,7 +7168,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-09-19T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>59.6800</HourlyCost>
@@ -7259,6 +7257,7 @@
 				</VendorContactEmail>
 				<ManagerName>Jeffery Morris</ManagerName>
 				<AzureUserID>CLELLIS@WILSONFIRE.COM</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -7293,7 +7292,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-09-19T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>59.5200</HourlyCost>
@@ -7383,6 +7381,7 @@
 				</VendorContactEmail>
 				<ManagerName>Jeffery Morris</ManagerName>
 				<AzureUserID>SWTOLBERT@WILSONFIRE.COM</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -7418,7 +7417,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -7509,6 +7507,7 @@
 				</VendorContactEmail>
 				<ManagerName>Shannon Sampson</ManagerName>
 				<AzureUserID>PWHohlbaugh@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -7543,14 +7542,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>55.1800</HourlyCost>
 				<CreateDate>2022-05-24T12:19:20.090</CreateDate>
-				<ModifyDate>2022-10-17T16:17:48.230</ModifyDate>
+				<ModifyDate>2022-11-07T13:45:51.217</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation>1161</StockLocation>
@@ -7632,7 +7630,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Christopher House</ManagerName>
-				<AzureUserID />
+				<AzureUserID>RSPaul@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -7667,14 +7666,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:21.460</CreateDate>
-				<ModifyDate>2022-10-17T15:08:27.910</ModifyDate>
+				<ModifyDate>2022-11-07T13:46:23.280</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation>1178</StockLocation>
@@ -7756,7 +7754,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Esdras Perez</ManagerName>
-				<AzureUserID />
+				<AzureUserID>JFJones@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -7792,7 +7791,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -7883,6 +7881,7 @@
 				</VendorContactEmail>
 				<ManagerName>Shannon Sampson</ManagerName>
 				<AzureUserID>LIRodriguez@wilsonfire.com</AzureUserID>
+				<PayrollType />
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -7918,14 +7917,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-10-18T15:53:28.037</CreateDate>
-				<ModifyDate>2022-10-18T15:53:28.037</ModifyDate>
+				<ModifyDate>2022-11-07T14:11:54.547</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -8008,7 +8006,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Sheri R. Duggan</ManagerName>
-				<AzureUserID />
+				<AzureUserID>ECamarillo@wilsonfire.com</AzureUserID>
+				<PayrollType>Salary</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -8043,7 +8042,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-10-03T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>60.4500</HourlyCost>
@@ -8133,6 +8131,7 @@
 				</VendorContactEmail>
 				<ManagerName>Jeffery Morris</ManagerName>
 				<AzureUserID>ASDavis@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -8167,7 +8166,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-10-24T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>33.6000</HourlyCost>
@@ -8257,6 +8255,7 @@
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
 				<AzureUserID>AARODRIGUEZ@WILSONFIRE.COM</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -8292,7 +8291,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -8383,6 +8381,7 @@
 				</VendorContactEmail>
 				<ManagerName>Shannon Sampson</ManagerName>
 				<AzureUserID />
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -8414,15 +8413,14 @@
 				<Extension3 />
 				<Phone4 />
 				<Extension4 />
-				<Active>True</Active>
+				<Active>False</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-06-13T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:21.667</CreateDate>
-				<ModifyDate>2022-09-27T16:18:50.607</ModifyDate>
+				<ModifyDate>2022-11-07T13:48:06.187</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
 				<ModifiedByUser>admin</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -8507,6 +8505,7 @@
 				</VendorContactEmail>
 				<ManagerName>Paul W. Hohlbaugh</ManagerName>
 				<AzureUserID />
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -8542,14 +8541,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-09-27T16:36:32.497</CreateDate>
-				<ModifyDate>2022-09-27T16:36:32.497</ModifyDate>
+				<ModifyDate>2022-11-07T14:13:17.313</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -8633,6 +8631,7 @@
 				</VendorContactEmail>
 				<ManagerName>Donald Schatte</ManagerName>
 				<AzureUserID>RSCabrera@wilsonfire.com</AzureUserID>
+				<PayrollType>Salary</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -8668,7 +8667,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -8759,6 +8757,7 @@
 				</VendorContactEmail>
 				<ManagerName>Shannon Sampson</ManagerName>
 				<AzureUserID />
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -8794,14 +8793,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-09-22T12:23:12.820</CreateDate>
-				<ModifyDate>2022-10-18T14:53:28.417</ModifyDate>
+				<ModifyDate>2022-11-07T14:12:52.420</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -8885,6 +8883,7 @@
 				</VendorContactEmail>
 				<ManagerName>Donald Schatte</ManagerName>
 				<AzureUserID>LLHinojosa@wilsonfire.com</AzureUserID>
+				<PayrollType>Salary</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -8919,7 +8918,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-09-05T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>49.4500</HourlyCost>
@@ -9009,6 +9007,7 @@
 				</VendorContactEmail>
 				<ManagerName>Jeffery Morris</ManagerName>
 				<AzureUserID>GRodriguez@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -9043,14 +9042,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:21.803</CreateDate>
-				<ModifyDate>2022-10-17T15:12:58.503</ModifyDate>
+				<ModifyDate>2022-11-07T13:48:19.077</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation>1223</StockLocation>
@@ -9132,7 +9130,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Anthony Parson</ManagerName>
-				<AzureUserID />
+				<AzureUserID>PGDunn@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -9169,7 +9168,6 @@
 				<Active>False</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -9261,6 +9259,7 @@
 				<ManagerName xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</ManagerName>
 				<AzureUserID />
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -9295,14 +9294,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:21.840</CreateDate>
-				<ModifyDate>2022-10-17T16:22:19.030</ModifyDate>
+				<ModifyDate>2022-11-07T13:48:43.857</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation>1227</StockLocation>
@@ -9384,7 +9382,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Jeremiah G. Thompson</ManagerName>
-				<AzureUserID />
+				<AzureUserID>PALuckert@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -9419,14 +9418,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-07-04T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:21.877</CreateDate>
-				<ModifyDate>2022-09-27T16:17:19.670</ModifyDate>
+				<ModifyDate>2022-11-07T13:49:13.983</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation>1233</StockLocation>
@@ -9508,7 +9506,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Jeremiah G. Thompson</ManagerName>
-				<AzureUserID />
+				<AzureUserID>BJAlfaro@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -9543,14 +9542,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-08-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:21.950</CreateDate>
-				<ModifyDate>2022-10-17T16:19:17.917</ModifyDate>
+				<ModifyDate>2022-11-07T12:27:38.763</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation>1241</StockLocation>
@@ -9632,7 +9630,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Anthony A. Lind</ManagerName>
-				<AzureUserID />
+				<AzureUserID>JVera@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -9667,14 +9666,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-10-03T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>50.5300</HourlyCost>
 				<CreateDate>2022-05-24T12:19:22.027</CreateDate>
-				<ModifyDate>2022-09-27T15:48:42.623</ModifyDate>
+				<ModifyDate>2022-11-07T12:26:13.823</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation>1242</StockLocation>
@@ -9756,7 +9754,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
-				<AzureUserID />
+				<AzureUserID>JKSevin@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -9792,7 +9791,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -9883,6 +9881,7 @@
 				</VendorContactEmail>
 				<ManagerName>Shannon Sampson</ManagerName>
 				<AzureUserID>AALind@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -9917,14 +9916,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-09-12T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:22.110</CreateDate>
-				<ModifyDate>2022-10-17T16:20:48.810</ModifyDate>
+				<ModifyDate>2022-11-07T13:49:45.373</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation>1254</StockLocation>
@@ -10006,7 +10004,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Anthony A. Lind</ManagerName>
-				<AzureUserID />
+				<AzureUserID>JAMendoza@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -10041,14 +10040,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:22.150</CreateDate>
-				<ModifyDate>2022-10-17T15:08:27.520</ModifyDate>
+				<ModifyDate>2022-11-07T13:50:14.920</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation>1258</StockLocation>
@@ -10130,7 +10128,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Steven Holmes</ManagerName>
-				<AzureUserID />
+				<AzureUserID>RWThomas@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -10166,7 +10165,6 @@
 				<Active>False</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>49.6000</HourlyCost>
@@ -10258,6 +10256,7 @@
 				<ManagerName xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</ManagerName>
 				<AzureUserID />
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -10292,7 +10291,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-10-24T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -10382,6 +10380,7 @@
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
 				<AzureUserID>DKWASHINGTON@WILSONFIRE.COM</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -10416,7 +10415,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-10-31T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -10506,6 +10504,7 @@
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
 				<AzureUserID>JGWOODBURY@WILSONFIRE.COM</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -10541,18 +10540,18 @@
 				<Active>False</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-09-12T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:23.410</CreateDate>
-				<ModifyDate>2022-10-17T10:49:45.797</ModifyDate>
+				<ModifyDate>2022-11-07T13:51:13.467</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
 				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation>1282</StockLocation>
-				<VendorCode>V000506</VendorCode>
+				<VendorCode xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				</VendorCode>
 				<Fax />
 				<Rating1>0.00000</Rating1>
 				<Rating2>0.00000</Rating2>
@@ -10620,7 +10619,8 @@
 				<Status>Entered</Status>
 				<UDF_EmployeeGroup>TECHNICIAN</UDF_EmployeeGroup>
 				<UDF_SecondaryApprover />
-				<VendorName>Christopher Gonzalez</VendorName>
+				<VendorName xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				</VendorName>
 				<VendorContactName xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactName>
 				<VendorContactPhone xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -10630,6 +10630,7 @@
 				<ManagerName xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</ManagerName>
 				<AzureUserID />
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -10665,7 +10666,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -10756,6 +10756,7 @@
 				</VendorContactEmail>
 				<ManagerName>Shannon Sampson</ManagerName>
 				<AzureUserID>JGThompson@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -10790,14 +10791,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:23.487</CreateDate>
-				<ModifyDate>2022-10-17T16:02:45.357</ModifyDate>
+				<ModifyDate>2022-11-07T13:51:37.623</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation>1285</StockLocation>
@@ -10879,7 +10879,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Esdras Perez</ManagerName>
-				<AzureUserID />
+				<AzureUserID>WANolasco@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -10915,7 +10916,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -11006,6 +11006,7 @@
 				</VendorContactEmail>
 				<ManagerName>Bob Wilson</ManagerName>
 				<AzureUserID>SWShelby@wilsonfire.com</AzureUserID>
+				<PayrollType>Salary</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -11040,7 +11041,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-11-07T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>58.9000</HourlyCost>
@@ -11130,6 +11130,7 @@
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
 				<AzureUserID>JCTALIAFERRO@WILSONFIRE.COM</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -11165,7 +11166,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-10-31T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -11256,6 +11256,7 @@
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
 				<AzureUserID>GRGUERRERO@WILSONFIRE.COM</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -11291,14 +11292,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-10-24T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-08-24T15:31:30.737</CreateDate>
-				<ModifyDate>2022-10-17T10:54:44.813</ModifyDate>
+				<ModifyDate>2022-11-07T13:52:02.233</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -11381,7 +11381,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Paul W. Hohlbaugh</ManagerName>
-				<AzureUserID />
+				<AzureUserID>CDMontgomery@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -11416,7 +11417,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-10-17T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>58.9000</HourlyCost>
@@ -11506,6 +11506,7 @@
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
 				<AzureUserID>AJBRIGHT@WILSONFIRE.COM</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -11540,14 +11541,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:23.677</CreateDate>
-				<ModifyDate>2022-09-27T16:14:19.843</ModifyDate>
+				<ModifyDate>2022-11-07T13:56:55.843</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation>1323</StockLocation>
@@ -11629,7 +11629,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Anthony Parson</ManagerName>
-				<AzureUserID />
+				<AzureUserID>JRBenavides@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -11664,7 +11665,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-09-19T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>57.3500</HourlyCost>
@@ -11754,6 +11754,7 @@
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
 				<AzureUserID>BBCROWELL@WILSONFIRE.COM</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -11788,14 +11789,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-09-12T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:23.753</CreateDate>
-				<ModifyDate>2022-09-27T16:12:48.373</ModifyDate>
+				<ModifyDate>2022-11-07T13:57:28.687</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation>1326</StockLocation>
@@ -11877,7 +11877,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Paul W. Hohlbaugh</ManagerName>
-				<AzureUserID />
+				<AzureUserID>JMComo@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -11912,14 +11913,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:23.793</CreateDate>
-				<ModifyDate>2022-09-27T16:11:19.093</ModifyDate>
+				<ModifyDate>2022-11-07T13:57:54.250</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation>1331</StockLocation>
@@ -12001,7 +12001,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Salvador Chavez</ManagerName>
-				<AzureUserID />
+				<AzureUserID>AFuentes@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -12037,14 +12038,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-10-25T15:22:02.050</CreateDate>
-				<ModifyDate>2022-10-25T14:22:03.363</ModifyDate>
+				<ModifyDate>2022-11-07T14:16:30.513</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -12128,6 +12128,7 @@
 				</VendorContactEmail>
 				<ManagerName>Bob Wilson</ManagerName>
 				<AzureUserID />
+				<PayrollType>Salary</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -12163,14 +12164,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-08-24T15:34:32.200</CreateDate>
-				<ModifyDate>2022-09-27T16:11:18.967</ModifyDate>
+				<ModifyDate>2022-11-07T13:58:19.107</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -12253,7 +12253,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Salvador Chavez</ManagerName>
-				<AzureUserID />
+				<AzureUserID>JDRomero@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -12289,14 +12290,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-08-24T15:34:32.600</CreateDate>
-				<ModifyDate>2022-09-27T16:15:50.247</ModifyDate>
+				<ModifyDate>2022-11-07T13:58:44.407</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -12379,7 +12379,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Jesse Soto Jr.</ManagerName>
-				<AzureUserID />
+				<AzureUserID>OAFlores</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -12415,7 +12416,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -12506,6 +12506,7 @@
 				</VendorContactEmail>
 				<ManagerName>Donald Schatte</ManagerName>
 				<AzureUserID>VMTapscott@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -12541,7 +12542,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -12632,6 +12632,7 @@
 				</VendorContactEmail>
 				<ManagerName>Shannon Sampson</ManagerName>
 				<AzureUserID>AEParson@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -12667,7 +12668,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-09-12T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -12758,6 +12758,7 @@
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
 				<AzureUserID>JAGUZMAN@WILSONFIRE.COM</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -12793,14 +12794,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-08-22T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-08-24T15:37:33.237</CreateDate>
-				<ModifyDate>2022-10-24T13:50:22.803</ModifyDate>
+				<ModifyDate>2022-11-07T13:59:14.360</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -12883,7 +12883,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Esdras Perez</ManagerName>
-				<AzureUserID />
+				<AzureUserID>DLPrimeaux@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -12919,14 +12920,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-10-24T14:51:52.943</CreateDate>
-				<ModifyDate>2022-10-24T14:51:52.943</ModifyDate>
+				<ModifyDate>2022-11-07T13:59:48.937</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -13009,7 +13009,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Esdras Perez</ManagerName>
-				<AzureUserID />
+				<AzureUserID>FDCervantes@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -13045,14 +13046,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-10-24T14:47:21.367</CreateDate>
-				<ModifyDate>2022-10-24T13:48:49.867</ModifyDate>
+				<ModifyDate>2022-11-07T14:00:20.703</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -13135,7 +13135,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Salvador Chavez</ManagerName>
-				<AzureUserID />
+				<AzureUserID>DARomano@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -13171,7 +13172,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-09-19T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -13262,6 +13262,7 @@
 				</VendorContactEmail>
 				<ManagerName>Jeffery Morris</ManagerName>
 				<AzureUserID>SLPOSTELL@WILSONFIRE.COM</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -13294,17 +13295,16 @@
 				<Extension3 />
 				<Phone4 />
 				<Extension4 />
-				<Active>True</Active>
+				<Active>False</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-09-19T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-08-26T15:20:42.840</CreateDate>
-				<ModifyDate>2022-09-27T16:05:17.263</ModifyDate>
+				<ModifyDate>2022-11-07T14:04:29.983</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -13388,6 +13388,7 @@
 				</VendorContactEmail>
 				<ManagerName>Jeffery Morris</ManagerName>
 				<AzureUserID>DLFRANKLIN@WILSONFIRE.COM</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -13423,14 +13424,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-09-07T11:31:18.000</CreateDate>
-				<ModifyDate>2022-09-27T16:03:46.327</ModifyDate>
+				<ModifyDate>2022-11-07T14:00:42.233</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -13513,7 +13513,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Jesse Soto Jr.</ManagerName>
-				<AzureUserID />
+				<AzureUserID>CRHenry@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -13549,14 +13550,13 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-09-07T11:29:51.993</CreateDate>
-				<ModifyDate>2022-10-17T16:16:17.320</ModifyDate>
+				<ModifyDate>2022-11-07T14:01:14.670</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -13639,7 +13639,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Jesse Soto Jr.</ManagerName>
-				<AzureUserID />
+				<AzureUserID>RMCavazos@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -13675,7 +13676,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -13766,6 +13766,7 @@
 				</VendorContactEmail>
 				<ManagerName>Jeffery Morris</ManagerName>
 				<AzureUserID />
+				<PayrollType>Salary</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -13802,7 +13803,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -13894,6 +13894,7 @@
 				<ManagerName xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</ManagerName>
 				<AzureUserID />
+				<PayrollType>Salary</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -13929,7 +13930,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>2022-10-24T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -14020,6 +14020,7 @@
 				</VendorContactEmail>
 				<ManagerName>Test Manager</ManagerName>
 				<AzureUserID />
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -14055,7 +14056,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -14146,6 +14146,7 @@
 				</VendorContactEmail>
 				<ManagerName>Test Manager</ManagerName>
 				<AzureUserID />
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -14181,7 +14182,6 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -14272,6 +14272,7 @@
 				</VendorContactEmail>
 				<ManagerName>Christopher Carr</ManagerName>
 				<AzureUserID />
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -14308,7 +14309,6 @@
 				<Active>False</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
@@ -14400,6 +14400,7 @@
 				<ManagerName xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</ManagerName>
 				<AzureUserID />
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
@@ -14438,7 +14439,6 @@
 				<Active>False</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetPeriod>Weekly</TimeSheetPeriod>
 				<TimeSheetStart>1900-01-01T00:00:00.000</TimeSheetStart>
 				<IntegrationValue xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</IntegrationValue>
@@ -14530,6 +14530,7 @@
 				<ManagerName xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</ManagerName>
 				<AzureUserID />
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>
