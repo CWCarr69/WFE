@@ -1,5 +1,56 @@
-<FPDTS ExternalIpAddress="172.28.12.20" UTCTimeStamp="2022-11-10T16:42:04.396Z" FieldpointUserId="FPIntegration@wilsonfire.com" TransferName="WilsonFire-TimesheetDetails-InExport" IsLastPageToProcess="True">
+<FPDTS ExternalIpAddress="172.28.12.20" UTCTimeStamp="2022-11-21T18:52:17.838Z" FieldpointUserId="FPIntegration@wilsonfire.com" TransferName="WilsonFire-TimesheetDetails-InExport" IsLastPageToProcess="True">
 	<OutboundData>
-		<Records />
+		<Records>
+			<Record>
+				<EmployeeCode>1007</EmployeeCode>
+				<PayCode>Regular</PayCode>
+				<WorkDate>2022-10-14T00:00:00.000</WorkDate>
+				<ProfitCenter>125</ProfitCenter>
+				<Quantity>210</Quantity>
+				<ProjectNo />
+				<WorkOrderNo>103184</WorkOrderNo>
+				<CustomerName>Canal Cartage Company</CustomerName>
+				<UnitCost>27.00</UnitCost>
+				<ModifyDate>2022-11-15T08:21:37.067</ModifyDate>
+				<record>1078</record>
+				<JobTaskNumber xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				</JobTaskNumber>
+				<AzureUserID>DYOUNG@WILSONFIRE.COM</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
+				<TimesheetNumber>101929</TimesheetNumber>
+				<ProjectTaskDescription xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				</ProjectTaskDescription>
+				<WorkOrderDescription>TOP-Fault 015</WorkOrderDescription>
+				<ProjectDescription xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				</ProjectDescription>
+				<PageNumber>1</PageNumber>
+				<PageSize>1000</PageSize>
+			</Record>
+			<Record>
+				<EmployeeCode>1095</EmployeeCode>
+				<PayCode>Regular</PayCode>
+				<WorkDate>2022-11-21T00:00:00.000</WorkDate>
+				<ProfitCenter>125</ProfitCenter>
+				<Quantity>120</Quantity>
+				<ProjectNo />
+				<WorkOrderNo>104196</WorkOrderNo>
+				<CustomerName>NRG Park</CustomerName>
+				<UnitCost>76.65</UnitCost>
+				<ModifyDate>2022-11-21T09:26:33.050</ModifyDate>
+				<record>1079</record>
+				<JobTaskNumber xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				</JobTaskNumber>
+				<AzureUserID>TLMALVEAUX@WILSONFIRE.COM</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
+				<TimesheetNumber>101930</TimesheetNumber>
+				<ProjectTaskDescription xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				</ProjectTaskDescription>
+				<WorkOrderDescription>tech to go to the NRG Center Hall “E” to check str</WorkOrderDescription>
+				<ProjectDescription xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				</ProjectDescription>
+				<PageNumber>1</PageNumber>
+				<PageSize>1000</PageSize>
+			</Record>
+		</Records>
 	</OutboundData>
 </FPDTS>

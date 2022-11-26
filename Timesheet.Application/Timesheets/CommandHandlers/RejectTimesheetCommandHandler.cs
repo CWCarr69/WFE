@@ -28,14 +28,14 @@ namespace Timesheet.Application.Timesheets.CommandHandlers
 
         public async override Task<IEnumerable<IDomainEvent>> HandleCoreAsync(RejectTimesheet command, CancellationToken token)
         {
-            var employee = await GetEmployee(command.EmployeeId);
+            var employee = await RequireEmployee(command.EmployeeId);
 
-            var timesheet = await GetTimesheetOrThrowException(command.TimesheetId, employee?.Id);
+            var timesheet = await RequireTimesheet(command.TimesheetId, employee?.Id);
             this.RelatedAuditableEntity = timesheet;
 
             var timesheetEntryRef = GetTimesheetFirstData(timesheet);
 
-            EmployeeRoleOnData currentEmployeeRoleOnData = await GetCurrentEmployeeRoleOnData(command, employee);
+            EmployeeRoleOnData currentEmployeeRoleOnData = GetCurrentEmployeeRoleOnData(command, employee);
             _workflowService.AuthorizeTransition(timesheet, TimesheetTransitions.REJECT, timesheet.Status, currentEmployeeRoleOnData);
             if (timesheetEntryRef is not null)
             {

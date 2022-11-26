@@ -29,6 +29,7 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
         public string JobDescription { get; set; }
         [XmlElement("record")]
         public string RecordId { get; set; }
+        public string PayrollType {get; set;}
         public string CustomerName { get; set; }
         public DateTime ModifyDate { get; set; }
     }

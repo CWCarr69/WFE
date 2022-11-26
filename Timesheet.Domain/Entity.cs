@@ -70,5 +70,11 @@
             CreatedDate = createdDate;
             ModifiedDate = modifiedDate;
         }
+
+        public void UpdateMetadata()
+        {
+            this.UpdateMetadata(this.CreatedDate, DateTime.Now);
+        }
+
     }
 }

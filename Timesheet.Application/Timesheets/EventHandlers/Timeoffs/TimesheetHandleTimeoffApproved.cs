@@ -8,7 +8,7 @@ namespace Timesheet.Application.Timesheets.EventHandlers
     internal class TimesheetHandleTimeoffApproved : IEventHandler<TimeoffApproved>
     {
         private readonly ITimesheetReadRepository _readRepository;
-        private readonly IWriteRepository<TimesheetHeader> writeRepository;
+        private readonly IWriteRepository<TimesheetHeader> _writeRepository;
 
 
         public TimesheetHandleTimeoffApproved(
@@ -16,7 +16,7 @@ namespace Timesheet.Application.Timesheets.EventHandlers
             IWriteRepository<TimesheetHeader> writeRepository)
         {
             this._readRepository = readRepository;
-            this.writeRepository = writeRepository;
+            this._writeRepository = writeRepository;
         }
 
         public async Task Handle(TimeoffApproved @event)
@@ -39,7 +39,7 @@ namespace Timesheet.Application.Timesheets.EventHandlers
 
             if(alreadyAddedtimesheet is null)
             {
-                await writeRepository.Add(timesheet);
+                await _writeRepository.Add(timesheet);
             }
 
             timesheet.AddTimesheetEntry(timesheetEntry);

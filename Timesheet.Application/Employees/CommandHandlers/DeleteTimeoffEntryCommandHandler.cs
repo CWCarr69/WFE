@@ -1,5 +1,6 @@
 ﻿using Timesheet.Application.Employees.Commands;
 using Timesheet.Application.Employees.Services;
+using Timesheet.Application.Shared;
 using Timesheet.Application.Workflow;
 using Timesheet.Domain;
 using Timesheet.Domain.Models;
@@ -26,13 +27,13 @@ namespace Timesheet.Application.Employees.CommandHandlers
 
         public override async Task<IEnumerable<IDomainEvent>> HandleCoreAsync(DeleteTimeoffEntry command, CancellationToken token)
         {
-            var employee = await GetEmployee(command.EmployeeId);
-            var timeoff = GetTimeoffOrThrowException(employee, command.TimeoffId);
-            var timeoffEntry = GetTimeoffEntryOrThrowException(employee, timeoff, command.TimeoffEntryId);
+            var employee = await RequireEmployee(command.EmployeeId);
+            var timeoff = RequireTimeoff(employee, command.TimeoffId);
+            var timeoffEntry = RequireTimeoffEntry(employee, timeoff, command.TimeoffEntryId);
 
             this.RelatedAuditableEntity = timeoff;
 
-            EmployeeRoleOnData currentEmployeeRoleOnData = await GetCurrentEmployeeRoleOnData(command, employee);
+            EmployeeRoleOnData currentEmployeeRoleOnData = GetCurrentEmployeeRoleOnData(command, employee);
             _workflowService.AuthorizeTransition(timeoff, TimeoffTransitions.DELETE_ENTRY, timeoff.Status, currentEmployeeRoleOnData);
             _workflowService.AuthorizeTransition(timeoffEntry, TimeoffEntryTransitions.DELETE, timeoffEntry.Status, currentEmployeeRoleOnData);
 

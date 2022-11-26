@@ -1,5 +1,6 @@
 ﻿using Timesheet.Application.Employees.Commands;
 using Timesheet.Application.Employees.Services;
+using Timesheet.Application.Shared;
 using Timesheet.Application.Workflow;
 using Timesheet.Domain;
 using Timesheet.Domain.Models.Employees;
@@ -32,7 +33,7 @@ namespace Timesheet.Application.Employees.CommandHandlers
 
             this.RelatedAuditableEntity = LaunchedAsSubCommand ? null : timeoff;
 
-            EmployeeRoleOnData currentEmployeeRoleOnData = await GetCurrentEmployeeRoleOnData(command, employee);
+            EmployeeRoleOnData currentEmployeeRoleOnData = GetCurrentEmployeeRoleOnData(command, employee);
             _workflowService.AuthorizeTransition(timeoff, TimeoffTransitions.ADD_ENTRY, timeoff.Status, currentEmployeeRoleOnData);
 
             employee.AddTimeoffEntry(command.RequestDate, command.Type, command.Hours, timeoff, command.Label);
@@ -54,7 +55,7 @@ namespace Timesheet.Application.Employees.CommandHandlers
             }
             else
             {
-                return await GetEmployee(command.EmployeeId);
+                return await RequireEmployee(command.EmployeeId);
             }
         }
 
@@ -72,7 +73,7 @@ namespace Timesheet.Application.Employees.CommandHandlers
             }
             else
             {
-                return GetTimeoffOrThrowException(employee, command.TimeoffId);
+                return RequireTimeoff(employee, command.TimeoffId);
             }
         }
     }

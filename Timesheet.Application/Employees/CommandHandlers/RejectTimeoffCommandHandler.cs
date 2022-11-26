@@ -1,5 +1,6 @@
 ﻿using Timesheet.Application.Employees.Commands;
 using Timesheet.Application.Employees.Services;
+using Timesheet.Application.Shared;
 using Timesheet.Application.Workflow;
 using Timesheet.Domain;
 using Timesheet.Domain.Models.Employees;
@@ -24,10 +25,10 @@ namespace Timesheet.Application.Employees.CommandHandlers
 
         public override async Task<IEnumerable<IDomainEvent>> HandleCoreAsync(RejectTimeoff command, CancellationToken token)
         {
-            var employee = await GetEmployee(command.EmployeeId);
-            var timeoff = GetTimeoffOrThrowException(employee, command.TimeoffId);
+            var employee = await RequireEmployee(command.EmployeeId);
+            var timeoff = RequireTimeoff(employee, command.TimeoffId);
 
-            EmployeeRoleOnData currentEmployeeRoleOnData = await GetCurrentEmployeeRoleOnData(command, employee);
+            EmployeeRoleOnData currentEmployeeRoleOnData = GetCurrentEmployeeRoleOnData(command, employee);
             _workflowService.AuthorizeTransition(timeoff, TimeoffTransitions.REJECT, timeoff.Status, currentEmployeeRoleOnData);
 
             employee.RejectTimeoff(timeoff, command.Comment);

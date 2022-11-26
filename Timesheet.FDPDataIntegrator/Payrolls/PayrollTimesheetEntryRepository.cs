@@ -81,9 +81,10 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
                          END";
 
             var entry = timesheet.TimesheetEntries.FirstOrDefault();
-            //TODO if null
-            _databaseService.ExecuteAsync(query, new
+            if (entry is not null)
             {
+                _databaseService.ExecuteAsync(query, new
+                {
                     timesheetId = entry.Id,
                     timesheetHeaderId = timesheet.Id,
                     timesheetEmployeeId = entry.EmployeeId,
@@ -97,7 +98,8 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
                     timesheetCreatedDate = entry.CreatedDate,
                     timesheetModifiedDate = entry.ModifiedDate,
                     timesheetUpdatedBy = entry.UpdatedBy
-            }).Wait();
+                }).Wait();
+            }
         }
     }
 }

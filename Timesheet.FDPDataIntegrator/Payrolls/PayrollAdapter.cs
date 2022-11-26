@@ -1,17 +1,11 @@
-﻿using Timesheet.Domain;
-using Timesheet.Domain.Models.Timesheets;
+﻿using Timesheet.Domain.Models.Timesheets;
 using Timesheet.FDPDataIntegrator.Services;
 
 namespace Timesheet.FDPDataIntegrator.Payrolls
 {
     internal class PayrollAdapter : IAdapter<PayrollRecord, TimesheetHeader>
     {
-        private IDictionary<string, bool> _employeePayrollIsWeekly;
-
-        public PayrollAdapter(/*IDictionary<string, bool> employeePayrollIsHourly*/)
-        {
-            //_employeePayrollIsWeekly = employeePayrollIsHourly;
-        }
+        private const string PAYROLL_HOURLY_TYPE = "HOURLY";
 
         public TimesheetHeader Adapt (PayrollRecord record)
         {
@@ -20,14 +14,8 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
                 throw new ArgumentNullException(nameof(record));
             }
 
-            //TODO ACTIVATE 
-            //if(_employeePayrollIsWeekly.TryGetValue(record.EmployeeCode, out var isWeekly))
-            //{
-            //    throw new ArgumentNullException($"Cannot find employee with code : {record.EmployeeCode}");
-            //}
-            var isWeekly = false;//TODO REMOVE
+            var isWeekly = record.PayrollType.ToUpper() == PAYROLL_HOURLY_TYPE;
 
-            //Include EmployeeTimesheet if possible otherwise fill the dictionary above first, and how about status
             TimesheetHeader timesheetHeader = isWeekly
                 ? TimesheetHeader.CreateWeeklyTimesheet(record.WorkDate)
                 : TimesheetHeader.CreateMonthlyTimesheet(record.WorkDate);
@@ -43,11 +31,15 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
                 hours: record.Quantity,
                 description: record.CustomerName,
                 serviceOrderNumber: record.ServiceOrderNumber,
+                serviceOrderDescription: record.ServiceOrderDescription,
                 jobNumber: record.JobNumber,
-                profitCenter: record.ProfitCenter
+                jobDescription: record.JobDescription,
+                profitCenter: record.ProfitCenter,
+                false//TODO REMOVE (OUT OF COUNTRY)
             );
 
             timesheetHeader.UpdateMetadata(record.ModifyDate, record.ModifyDate);
+            timesheetEntry.UpdateMetadata(record.ModifyDate, record.ModifyDate);
             timesheetHeader.AddTimesheetEntry(timesheetEntry);
             return timesheetHeader;
         }

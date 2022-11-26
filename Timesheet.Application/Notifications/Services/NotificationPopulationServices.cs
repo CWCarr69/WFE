@@ -58,7 +58,6 @@ namespace Timesheet.Application.Notifications.Services
             }
         }
 
-        //TODO
         private async Task<IEnumerable<string>> GetAdministratorIds()
         {
             return (await _employeeReadRepository.GetAdministrators())

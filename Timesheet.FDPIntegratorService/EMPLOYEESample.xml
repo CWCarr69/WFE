@@ -1,4 +1,4 @@
-<FPDTS ExternalIpAddress="172.28.12.20" UTCTimeStamp="2022-11-10T16:43:05.255Z" FieldpointUserId="FPIntegration@wilsonfire.com" TransferName="WilsonFire-Resource-InExport" IsLastPageToProcess="True">
+<FPDTS ExternalIpAddress="172.28.12.20" UTCTimeStamp="2022-11-21T18:52:10.698Z" FieldpointUserId="FPIntegration@wilsonfire.com" TransferName="WilsonFire-Resource-InExport" IsLastPageToProcess="True">
 	<OutboundData>
 		<Records>
 			<Record>
@@ -1540,9 +1540,9 @@
 				<IntegrationValue />
 				<HourlyCost>2.8000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:16.273</CreateDate>
-				<ModifyDate>2022-10-25T13:32:04.833</ModifyDate>
+				<ModifyDate>2022-11-17T08:55:32.733</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -1625,7 +1625,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Bob Wilson</ManagerName>
-				<AzureUserID />
+				<AzureUserID>CWHenderson@wilsonfire.com</AzureUserID>
 				<PayrollType>Salary</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
@@ -1666,9 +1666,9 @@
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:16.313</CreateDate>
-				<ModifyDate>2022-10-25T13:35:04.520</ModifyDate>
+				<ModifyDate>2022-11-17T08:57:00.293</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -1751,7 +1751,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Bob Wilson</ManagerName>
-				<AzureUserID>CWHenderson@wilsonfire.com</AzureUserID>
+				<AzureUserID>KHenderson@wilsonfire.com</AzureUserID>
 				<PayrollType>Salary</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
@@ -2912,7 +2912,7 @@
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-09-21T15:17:12.247</CreateDate>
-				<ModifyDate>2022-10-18T16:02:38.517</ModifyDate>
+				<ModifyDate>2022-11-17T09:01:24.343</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
 				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -2997,7 +2997,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Luzmarina I. Rodriguez</ManagerName>
-				<AzureUserID />
+				<AzureUserID>MPeacock@wilsonfire.com</AzureUserID>
 				<PayrollType>Salary</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
@@ -3130,7 +3130,7 @@
 			</Record>
 			<Record>
 				<EmployeeCode>0636</EmployeeCode>
-				<Name>Shannon B. Sanchez</Name>
+				<Name>Shannon B Sanchez</Name>
 				<Title>Purchasing Agent</Title>
 				<Address1 />
 				<Address2 />
@@ -3164,7 +3164,7 @@
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-09-21T15:26:13.997</CreateDate>
-				<ModifyDate>2022-10-25T13:36:40.287</ModifyDate>
+				<ModifyDate>2022-11-10T13:40:00.307</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
 				<ModifiedByUser>admin</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -4793,7 +4793,7 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetStart>2022-10-10T00:00:00.000</TimeSheetStart>
+				<TimeSheetStart>2022-10-17T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>55.8000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:18.080</CreateDate>
@@ -6048,7 +6048,7 @@
 				<Active>True</Active>
 				<UsesTimeSheets>False</UsesTimeSheets>
 				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetStart>2022-10-24T00:00:00.000</TimeSheetStart>
+				<TimeSheetStart>2022-11-28T00:00:00.000</TimeSheetStart>
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:19.887</CreateDate>
@@ -8295,9 +8295,9 @@
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:21.630</CreateDate>
-				<ModifyDate>2022-10-25T13:44:10.020</ModifyDate>
+				<ModifyDate>2022-11-17T09:02:35.247</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -8380,7 +8380,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Shannon Sampson</ManagerName>
-				<AzureUserID />
+				<AzureUserID>ADHolmes@wilsonfire.com</AzureUserID>
 				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
@@ -8671,9 +8671,9 @@
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-05-24T12:19:21.720</CreateDate>
-				<ModifyDate>2022-10-17T16:34:22.143</ModifyDate>
+				<ModifyDate>2022-11-17T09:03:38.967</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>admin</ModifiedByUser>
+				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -8756,7 +8756,7 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Shannon Sampson</ManagerName>
-				<AzureUserID />
+				<AzureUserID>MWHackman@wilsonfire.com</AzureUserID>
 				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
@@ -10504,132 +10504,6 @@
 				</VendorContactEmail>
 				<ManagerName>Stephen Simmons Jr.</ManagerName>
 				<AzureUserID>JGWOODBURY@WILSONFIRE.COM</AzureUserID>
-				<PayrollType>Hourly</PayrollType>
-				<PageNumber>1</PageNumber>
-				<PageSize>1000</PageSize>
-			</Record>
-			<Record>
-				<EmployeeCode>1282</EmployeeCode>
-				<Name>Christopher Gonzalez</Name>
-				<Title />
-				<Address1 />
-				<Address2 />
-				<Address3 />
-				<Address4 />
-				<City />
-				<State />
-				<Zip />
-				<Country />
-				<ManagerEmployeeCode xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-				</ManagerEmployeeCode>
-				<Office>SMB</Office>
-				<Department xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-				</Department>
-				<JobRole>TECHNICIAN</JobRole>
-				<EmployeeCategory>Person</EmployeeCategory>
-				<email />
-				<PagerEmail />
-				<Phone1 />
-				<Extension1 />
-				<Phone2 />
-				<Extension2 />
-				<Phone3 />
-				<Extension3 />
-				<Phone4 />
-				<Extension4 />
-				<Active>False</Active>
-				<UsesTimeSheets>False</UsesTimeSheets>
-				<TimeSheetReminders>False</TimeSheetReminders>
-				<TimeSheetStart>2022-09-12T00:00:00.000</TimeSheetStart>
-				<IntegrationValue />
-				<HourlyCost>0.0000</HourlyCost>
-				<CreateDate>2022-05-24T12:19:23.410</CreateDate>
-				<ModifyDate>2022-11-07T13:51:13.467</ModifyDate>
-				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
-				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-				</Notes>
-				<StockLocation>1282</StockLocation>
-				<VendorCode xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-				</VendorCode>
-				<Fax />
-				<Rating1>0.00000</Rating1>
-				<Rating2>0.00000</Rating2>
-				<Rating3>0.00000</Rating3>
-				<Rating4>0.00000</Rating4>
-				<Rating5>0.00000</Rating5>
-				<WeightedRating>0.00000</WeightedRating>
-				<NumberofIncidents>0.00</NumberofIncidents>
-				<Division>MAIN</Division>
-				<IsCrew>False</IsCrew>
-				<ExchangeMailboxName />
-				<ExportAppointmentWithAttachment>False</ExportAppointmentWithAttachment>
-				<ExchangeSubscriptionID />
-				<ExchangeWatermark />
-				<GLSegment />
-				<AppointmentManagerDefault />
-				<DefaultServiceCode xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-				</DefaultServiceCode>
-				<LaborRate>17.50</LaborRate>
-				<OT1Rate>0.00</OT1Rate>
-				<OT2Rate>0.00</OT2Rate>
-				<OT3Rate>0.00</OT3Rate>
-				<HolidayRate>0.00</HolidayRate>
-				<FlatCharge1Rate>0.00</FlatCharge1Rate>
-				<FlatCharge2Rate>0.00</FlatCharge2Rate>
-				<TripChargeRate>0.00</TripChargeRate>
-				<NormalFirstRate>0.00</NormalFirstRate>
-				<OT1FirstRate>0.00</OT1FirstRate>
-				<OT2FirstRate>0.00</OT2FirstRate>
-				<OT3FirstRate>0.00</OT3FirstRate>
-				<HolidayFirstRate>0.00</HolidayFirstRate>
-				<NonBillableRate>0.00</NonBillableRate>
-				<COGSGLSegment />
-				<AppointmentManagerNewRecords>0</AppointmentManagerNewRecords>
-				<ExternalDocumentNumber />
-				<AvailableHoursPerDay>0</AvailableHoursPerDay>
-				<TimeZone xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-				</TimeZone>
-				<ShiftCode xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-				</ShiftCode>
-				<TravelRate>0.00</TravelRate>
-				<TravelFlatRate>0.00</TravelFlatRate>
-				<EmployeeTeamCode xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-				</EmployeeTeamCode>
-				<Territory xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-				</Territory>
-				<Latitude xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-				</Latitude>
-				<Longitude xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-				</Longitude>
-				<ERPRecordID>1282</ERPRecordID>
-				<ParentEmployeeCode xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-				</ParentEmployeeCode>
-				<EmployeeNumber />
-				<ExcludeFromMobile>False</ExcludeFromMobile>
-				<TravelOT1Rate>0.00</TravelOT1Rate>
-				<TravelOT2Rate>0.00</TravelOT2Rate>
-				<TravelOT3Rate>0.00</TravelOT3Rate>
-				<TravelHolidayRate>0.00</TravelHolidayRate>
-				<TravelNonBillableRate>0.00</TravelNonBillableRate>
-				<TradeUnion xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-				</TradeUnion>
-				<Trade xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-				</Trade>
-				<Status>Entered</Status>
-				<UDF_EmployeeGroup>TECHNICIAN</UDF_EmployeeGroup>
-				<UDF_SecondaryApprover />
-				<VendorName xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-				</VendorName>
-				<VendorContactName xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-				</VendorContactName>
-				<VendorContactPhone xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-				</VendorContactPhone>
-				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-				</VendorContactEmail>
-				<ManagerName xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-				</ManagerName>
-				<AzureUserID />
 				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
@@ -13665,7 +13539,7 @@
 				<EmployeeCategory>Person</EmployeeCategory>
 				<email>JLemm@wilsonfire.com</email>
 				<PagerEmail />
-				<Phone1>8323102418</Phone1>
+				<Phone1>832-310-2418</Phone1>
 				<Extension1 />
 				<Phone2 />
 				<Extension2 />
@@ -13680,9 +13554,9 @@
 				<IntegrationValue />
 				<HourlyCost>0.0000</HourlyCost>
 				<CreateDate>2022-11-02T16:10:10.780</CreateDate>
-				<ModifyDate>2022-11-02T15:12:19.157</ModifyDate>
+				<ModifyDate>2022-11-17T09:10:49.967</ModifyDate>
 				<EnteredByUser>admin</EnteredByUser>
-				<ModifiedByUser>CWCARR@WILSONFIRE.COM</ModifiedByUser>
+				<ModifiedByUser>admin</ModifiedByUser>
 				<Notes xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</Notes>
 				<StockLocation xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -13707,7 +13581,7 @@
 				<AppointmentManagerDefault />
 				<DefaultServiceCode xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</DefaultServiceCode>
-				<LaborRate>2.10</LaborRate>
+				<LaborRate>2.08</LaborRate>
 				<OT1Rate>0.00</OT1Rate>
 				<OT2Rate>0.00</OT2Rate>
 				<OT3Rate>0.00</OT3Rate>
@@ -13765,8 +13639,8 @@
 				<VendorContactEmail xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				</VendorContactEmail>
 				<ManagerName>Jeffery Morris</ManagerName>
-				<AzureUserID />
-				<PayrollType>Salary</PayrollType>
+				<AzureUserID>JRLemm@wilsonfire.com</AzureUserID>
+				<PayrollType>Hourly</PayrollType>
 				<PageNumber>1</PageNumber>
 				<PageSize>1000</PageSize>
 			</Record>

@@ -22,11 +22,12 @@
         public TimeoffType Type { get; private set; }
         public double Hours { get; private set; }
         public TimeoffEntryStatus Status { get; private set; }
-        public string Label { get; private set; }
+        public string? Label { get; private set; }
 
         internal void Validate()
         {
             this.Status = TimeoffEntryStatus.PROCESSED;
+            this.UpdateMetadata();
         }
 
         internal void Update(TimeoffType type, double hours, string label)
@@ -34,6 +35,7 @@
             this.Type = type;
             this.Label = label ?? this.Label;
             this.Hours = hours != 0 ? hours : this.Hours;
+            this.UpdateMetadata();
         }
     }
 }

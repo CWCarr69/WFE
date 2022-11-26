@@ -37,7 +37,7 @@ namespace Timesheet.Domain.Models.Timesheets
 
         public bool IsFinalizable => DateTime.Now >= EndDate;
 
-        public static TimesheetHeader CreateMonthlyTimesheet(DateTime workDate, string id = null)
+        public static TimesheetHeader CreateMonthlyTimesheet(DateTime workDate)
         {
             var now = workDate;
             var isInSecondHalf = now.IsInSecondHalfOfMonth();
@@ -50,7 +50,7 @@ namespace Timesheet.Domain.Models.Timesheets
             return new TimesheetHeader(payrollPeriod, payrollPeriod, start, end, TimesheetType.SALARLY, TimesheetStatus.IN_PROGRESS);
         }
 
-        public static TimesheetHeader CreateWeeklyTimesheet(DateTime workDate, string id = null)
+        public static TimesheetHeader CreateWeeklyTimesheet(DateTime workDate)
         {
             var now = workDate;
             var oneYearBefore = DateTime.Now.AddYears(-1);
@@ -85,6 +85,7 @@ namespace Timesheet.Domain.Models.Timesheets
                 throw new ArgumentNullException(nameof(timesheetEntry));
             }
             this.TimesheetEntries.Add(timesheetEntry);
+            this.UpdateMetadata();
         }
 
         public void Submit(Employee employee, string? comment)
@@ -94,6 +95,8 @@ namespace Timesheet.Domain.Models.Timesheets
             UpdateComment(employee, timesheetComment => timesheetComment.UpdateEmployeeComment(comment));
 
             TransitionEntries(employee, entry => entry.Submit());
+            this.UpdateMetadata();
+
             RaiseTimesheetWorkflowChangedEvent(employee, TimesheetEntryStatus.SUBMITTED.ToString());
         }
 
@@ -104,6 +107,8 @@ namespace Timesheet.Domain.Models.Timesheets
             UpdateComment(employee, timesheetComment => timesheetComment.UpdateApproverComment(comment));
 
             TransitionEntries(employee, entry => entry.Approve());
+            this.UpdateMetadata();
+
             RaiseTimesheetWorkflowChangedEvent(employee, TimesheetEntryStatus.APPROVED.ToString());
         }
 
@@ -114,10 +119,12 @@ namespace Timesheet.Domain.Models.Timesheets
             UpdateComment(employee, timesheetComment => timesheetComment.UpdateApproverComment(comment));
 
             TransitionEntries(employee, entry => entry.Reject());
+            this.UpdateMetadata();
+            
             RaiseTimesheetWorkflowChangedEvent(employee, TimesheetEntryStatus.REJECTED.ToString());
         }
 
-        public void Finalize()
+        public void FinalizeTimesheet()
         {
             if(!IsFinalizable)
             {
@@ -131,6 +138,8 @@ namespace Timesheet.Domain.Models.Timesheets
 
             this.Status = TimesheetStatus.FINALIZED;
 
+            this.UpdateMetadata();
+            
             RaiseDomainEvent(new TimesheetFinalized(this.PayrollPeriod));
         }
 
@@ -146,29 +155,40 @@ namespace Timesheet.Domain.Models.Timesheets
             if(existingHoliday is null)
             {
                 this.TimesheetHolidays.Add(timesheetHoliday);
+                this.UpdateMetadata();
             }
         }
 
         public void UpdateHoliday(string id, string description)
         {
             var holiday = this.TimesheetHolidays.FirstOrDefault(h => h.Id == Id);
-            //TODO LOG
             if(holiday is not null)
             {
                 throw new EntityNotFoundException<TimesheetHoliday>(id);
             }
             holiday.Updated(description);
+            this.UpdateMetadata();
         }
 
         public void DeleteHoliday(string id)
         {
             var holiday = this.TimesheetHolidays.FirstOrDefault(h => h.Id == Id);
-            //TODO LOG
             if (holiday is not null)
             {
                 throw new EntityNotFoundException<TimesheetHoliday>(id);
             }
             TimesheetHolidays.Remove(holiday);
+            this.UpdateMetadata();
+        }
+
+        public void DeleteTimesheet(TimesheetEntry timesheetEntry)
+        {
+            if (timesheetEntry.IsDeletable)
+            {
+                throw new TimesheetEntryIsNotDeletableException(timesheetEntry.Id);
+            }
+            this.TimesheetEntries.Remove(timesheetEntry);
+            this.UpdateMetadata();
         }
 
         private void TransitionEntries(Employee employee, Action<TimesheetEntry> doTransition)

@@ -5,6 +5,7 @@ using Timesheet.Domain.Models.Employees;
 using Timesheet.Domain.Models.Timesheets;
 using Timesheet.Domain.ReadModels;
 using Timesheet.Domain.ReadModels.Employees;
+using Timesheet.Domain.ReadModels.Referential;
 
 namespace Timesheet.Web.Api.Controllers
 {
@@ -48,6 +49,15 @@ namespace Timesheet.Web.Api.Controllers
             return Ok(periods);
         }
 
+        [HttpGet("PayrollCodes")]
+        public async Task<ActionResult<IEnumerable<EmployeeLight>>> GetPayrollCodes()
+        {
+            LogInformation($"Listing Payroll codes");
+
+            var periods = _referentialQuery.GetPayrollCodes();
+            return Ok(periods);
+        }
+
         [HttpGet("TimesheetStatuses")]
         public async Task<ActionResult<IEnumerable<EnumReadModel<TimesheetStatus>>>> GetTimesheetStatuses()
         {
@@ -82,6 +92,60 @@ namespace Timesheet.Web.Api.Controllers
 
             var statuses = await _referentialQuery.GetTimeoffLabels();
             return Ok(statuses);
+        }
+
+        [HttpGet("Jobs")]
+        public async Task<ActionResult<IEnumerable<SimpleDictionaryItem>>> GetJobs()
+        {
+            LogInformation($"Listing Jobs");
+
+            var statuses = await _referentialQuery.GetJobs();
+            return Ok(statuses);
+        }
+
+        [HttpGet("JobTasks")]
+        public async Task<ActionResult<IEnumerable<SimpleDictionaryItem>>> GetJobTasks()
+        {
+            LogInformation($"Listing Job tasks");
+
+            var statuses = await _referentialQuery.GetJobTasks();
+            return Ok(statuses);
+        }
+
+        [HttpGet("ServiceOrders")]
+        public async Task<ActionResult<IEnumerable<SimpleDictionaryItem>>> GetServiceOrders()
+        {
+            LogInformation($"Listing Service Orders");
+
+            var statuses = await _referentialQuery.GetServiceOrders();
+            return Ok(statuses);
+        }
+
+        [HttpGet("CustomerNumber")]
+        public async Task<ActionResult<IEnumerable<string>>> GetCustomerNumbers()
+        {
+            LogInformation($"Listing Customer number");
+
+            var customerNumbers = await _referentialQuery.GetCustomerNumbers();
+            return Ok(customerNumbers);
+        }
+
+        [HttpGet("ProfitCenters")]
+        public async Task<ActionResult<IEnumerable<string>>> GetProfitCenters()
+        {
+            LogInformation($"Listing profit centers");
+
+            var profitCenters = await _referentialQuery.GetProfitCenters();
+            return Ok(profitCenters);
+        }
+
+        [HttpGet("LaborCodes")]
+        public async Task<ActionResult<IEnumerable<string>>> GetLaborCodes()
+        {
+            LogInformation($"Listing profit centers");
+
+            var profitCenters = await _referentialQuery.GetLaborCodes();
+            return Ok(profitCenters);
         }
     }
 }

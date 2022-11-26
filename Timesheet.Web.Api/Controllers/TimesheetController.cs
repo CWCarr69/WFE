@@ -9,7 +9,6 @@ using Timesheet.Application.Timesheets.Queries;
 using Timesheet.Application.Timesheets.Services.Export;
 using Timesheet.Application.Workflow;
 using Timesheet.Domain.Models.Timesheets;
-using Timesheet.Domain.ReadModels.Employees;
 using Timesheet.Domain.ReadModels.Timesheets;
 using Timesheet.Web.Api.ViewModels;
 
@@ -131,6 +130,36 @@ namespace Timesheet.Web.Api.Controllers
             return File(filesBytes, "text/csv", $"Timesheet_{payrollPeriod}.csv");
         }
 
+        [Authorize(Roles = "ADMINISTRATOR")]
+        [HttpGet("{payrollPeriod}/Export/AfterFinalize")]
+        public async Task<IActionResult> ExportTimesheetAfterFinalize(string payrollPeriod)
+        {
+            await _exportTimesheet.ExportToExternal(payrollPeriod);
+            return Ok();
+        }
+
+        [Authorize(Roles = "ADMINISTRATOR")]
+        [HttpPost("Entries")]
+        public async Task<IActionResult> AddEntry([FromBody] AddTimesheetEntry command, CancellationToken token)
+        {
+            LogInformation($"Adding timesheet entry for employee ({command.EmployeeId} on date {command.WorkDate})");
+
+            await _dispatcher.RunCommand(command, CurrentUser, token);
+
+            LogInformation($"Timesheet entry added for employee ({command.EmployeeId} on date {command.WorkDate})");
+            return Ok();
+        }
+
+        [HttpDelete("Entries")]
+        public async Task<IActionResult> DeleteEntry([FromBody] DeleteTimesheetEntry command, CancellationToken token)
+        {
+            LogInformation($"Deleting timesheet entry ({command.TimesheetEntryId}) for employee ({command.EmployeeId})");
+
+            await _dispatcher.RunCommand(command, CurrentUser, token);
+
+            LogInformation($"Timesheet entry ({command.TimesheetEntryId}) for employee ({command.EmployeeId}) deleted");
+            return Ok();
+        }
 
         [HttpPut("Submit")]
         public async Task<IActionResult> Submit([FromBody] SubmitTimesheet command, CancellationToken token)

@@ -1,5 +1,0 @@
-Gérer Dapper
-Gérer l'authentification et les roles
-Tester les urls
-
-Gérer les batchs (employee, benefits)

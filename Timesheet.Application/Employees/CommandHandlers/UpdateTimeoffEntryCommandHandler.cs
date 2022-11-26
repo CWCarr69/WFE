@@ -4,6 +4,7 @@ using Timesheet.Domain;
 using Timesheet.Application.Employees.Services;
 using Timesheet.Domain.Models.Employees;
 using Timesheet.Domain.Repositories;
+using Timesheet.Application.Shared;
 
 namespace Timesheet.Application.Employees.CommandHandlers
 {
@@ -27,13 +28,13 @@ namespace Timesheet.Application.Employees.CommandHandlers
 
         public override async Task<IEnumerable<IDomainEvent>> HandleCoreAsync(UpdateTimeoffEntry command, CancellationToken token)
         {
-            var employee = await GetEmployee(command.EmployeeId);
-            var timeoff = GetTimeoffOrThrowException(employee, command.TimeoffId);
-            var timeoffEntry = GetTimeoffEntryOrThrowException(employee, timeoff, command.TimeoffEntryId);
+            var employee = await RequireEmployee(command.EmployeeId);
+            var timeoff = RequireTimeoff(employee, command.TimeoffId);
+            var timeoffEntry = RequireTimeoffEntry(employee, timeoff, command.TimeoffEntryId);
 
             this.RelatedAuditableEntity = timeoff;
 
-            EmployeeRoleOnData currentEmployeeRoleOnData = await GetCurrentEmployeeRoleOnData(command, employee);
+            EmployeeRoleOnData currentEmployeeRoleOnData = GetCurrentEmployeeRoleOnData(command, employee);
 
             _workflowService.AuthorizeTransition(timeoff, TimeoffTransitions.UPDATE_ENTRY, timeoff.Status, currentEmployeeRoleOnData);
             _workflowService.AuthorizeTransition(timeoffEntry, TimeoffEntryTransitions.UPDATE, timeoffEntry.Status, currentEmployeeRoleOnData);
@@ -58,7 +59,7 @@ namespace Timesheet.Application.Employees.CommandHandlers
             }
             else
             {
-                return await GetEmployee(command.EmployeeId);
+                return await RequireEmployee(command.EmployeeId);
             }
         }
 

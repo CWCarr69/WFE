@@ -30,13 +30,13 @@ namespace Timesheet.Application.Timesheets.CommandHandlers
         public async override Task<IEnumerable<IDomainEvent>> HandleCoreAsync(FinalizeTimesheet command, CancellationToken token)
         {
 
-            var timesheet = await GetTimesheetOrThrowException(command.TimesheetId);
+            var timesheet = await RequireTimesheet(command.TimesheetId);
             this.RelatedAuditableEntity = timesheet;
 
-            EmployeeRoleOnData currentEmployeeRoleOnData = await GetCurrentEmployeeRoleOnData(command, null);
+            EmployeeRoleOnData currentEmployeeRoleOnData = GetCurrentEmployeeRoleOnData(command, null);
             _workflowService.AuthorizeTransition(timesheet, TimesheetTransitions.FINALIZE, timesheet.Status, currentEmployeeRoleOnData);
 
-            timesheet.Finalize();
+            timesheet.FinalizeTimesheet();
             timesheet.UpdateMetadataOnModification(command.Author?.Id);
 
             var events = timesheet.GetDomainEvents();

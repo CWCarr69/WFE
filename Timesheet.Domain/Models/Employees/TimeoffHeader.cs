@@ -35,33 +35,39 @@
         {
             var removedEntries = TimeoffEntries;
             TimeoffEntries = new List<TimeoffEntry>();
+            this.UpdateMetadata();
         }
 
         internal void AddEntry(DateTime requestDate, TimeoffType type, double hours, TimeoffHeader timeoff, string label)
         {
             TimeoffEntries.Add(TimeoffEntry.Create(requestDate, type, hours, label));
+            this.UpdateMetadata();
         }
 
         internal void DeleteEntry(TimeoffEntry timeoffEntry)
         {
             TimeoffEntries.Remove(timeoffEntry);
+            this.UpdateMetadata();
         }
 
         internal void Approve(string comment)
         {
             Transition(TimeoffStatus.APPROVED, () => this.ApproverComment = comment ?? this.ApproverComment);
             ValidateAllEntries();
+            this.UpdateMetadata();
         }
 
         internal void Submit(string comment)
         {
             Transition(TimeoffStatus.SUBMITTED, () => this.EmployeeComment = comment ?? this.EmployeeComment);
+            this.UpdateMetadata();
         }
 
         internal void Reject(string comment)
         {
             Transition(TimeoffStatus.REJECTED, () => this.ApproverComment = comment ?? this.ApproverComment);
             ValidateAllEntries();
+            this.UpdateMetadata();
         }
 
         internal void Update()

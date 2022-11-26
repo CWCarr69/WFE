@@ -1,5 +1,6 @@
 ﻿using Timesheet.Application.Employees.Commands;
 using Timesheet.Application.Employees.Services;
+using Timesheet.Application.Shared;
 using Timesheet.Domain;
 using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Models.Employees;
@@ -34,7 +35,7 @@ namespace Timesheet.Application.Employees.CommandHandlers
                 command.EmployeeId = command.Author.Id;
             }
 
-            Employee employee = await GetEmployee(command.EmployeeId);
+            Employee employee = await RequireEmployee(command.EmployeeId);
 
             var timeoff = employee.CreateTimeoff(command.RequestStartDate, command.RequestEndDate, command.EmployeeComment);
             timeoff.UpdateMetadataOnModification(command.Author?.Id);
@@ -45,7 +46,12 @@ namespace Timesheet.Application.Employees.CommandHandlers
                 { "Employee", employee },
                 { "Timeoff", timeoff }
             };
-            command.Entries?.ToList().ForEach(async entryCommand => await _dispatcher.RunSubCommand(entryCommand, commandContext, command.Author, token));
+
+            var subCommands = command.Entries?.ToList();
+            foreach(var entryCommand in subCommands)
+            {
+                await _dispatcher.RunSubCommand(entryCommand, commandContext, command.Author, token);
+            }
 
             var events = employee.GetDomainEvents();
             employee.ClearDomainEvents();

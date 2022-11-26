@@ -4,12 +4,8 @@ namespace Timesheet.Domain.Models.Timesheets
 {
     public class TimesheetEntry : Entity
     {
-        public TimesheetEntry(string id) : base(id)
-        {
-        }
-
         public TimesheetEntry(string id, string employeeId, DateTime WorkDate, string payrollCode, double hours,
-            string description, string serviceOrderNumber, string jobNumber, string profitCenter): base(id)
+            string description, string serviceOrderNumber, string serviceOrderDescription, string jobNumber, string jobDescription, string profitCenter, bool outOffCountry, bool isDeletable=false) : base(id)
         {
             EmployeeId = employeeId;
             this.WorkDate = WorkDate;
@@ -17,8 +13,12 @@ namespace Timesheet.Domain.Models.Timesheets
             Hours = hours;
             Description = description;
             ServiceOrderNumber = serviceOrderNumber;
+            ServiceOrderDescription = serviceOrderDescription;
             JobNumber = jobNumber;
+            JobDescription = jobDescription;
             ProfitCenterNumber = profitCenter;
+            OutOffCountry = outOffCountry;
+            this.IsDeletable = isDeletable;
         }
 
         public TimesheetEntry(string id, string employeeId, DateTime workDate, string payrollCode, double hours,
@@ -49,22 +49,26 @@ namespace Timesheet.Domain.Models.Timesheets
         public string? ProfitCenterNumber { get; private set; }
         public bool? OutOffCountry { get; private set; } //TODO HERE
         public string? WorkArea => (OutOffCountry ?? false) ? "Out of country" : "In state";
+        public bool IsDeletable { get; set; }
 
         public TimesheetEntryStatus Status { get; set; }
 
         internal void Submit()
         {
             this.Status = TimesheetEntryStatus.SUBMITTED;
+            this.UpdateMetadata();
         }
 
         internal void Approve()
         {
             this.Status = TimesheetEntryStatus.APPROVED;
+            this.UpdateMetadata();
         }
 
         internal void Reject()
         {
             this.Status = TimesheetEntryStatus.REJECTED;
+            this.UpdateMetadata();
         }
     }
 }

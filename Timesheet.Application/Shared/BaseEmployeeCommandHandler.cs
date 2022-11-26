@@ -4,9 +4,9 @@ using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Models.Employees;
 using Timesheet.Domain.Repositories;
 
-namespace Timesheet.Application.Employees.CommandHandlers
+namespace Timesheet.Application.Shared
 {
-    internal abstract class BaseEmployeeCommandHandler<TEntity, TCommand> : BaseSubCommandHandler<TEntity, TCommand> 
+    internal abstract class BaseEmployeeCommandHandler<TEntity, TCommand> : BaseSubCommandHandler<TEntity, TCommand>
         where TEntity : Entity
         where TCommand : ICommand
     {
@@ -17,25 +17,25 @@ namespace Timesheet.Application.Employees.CommandHandlers
             IEmployeeReadRepository readRepository,
             IDispatcher dispatcher,
             IUnitOfWork unitOfWork,
-            IEmployeeHabilitation employeeHabilitations) 
+            IEmployeeHabilitation employeeHabilitations)
             : base(readRepository, auditHandler, dispatcher, unitOfWork, employeeHabilitations)
         {
-            this._readRepository = readRepository;
+            _readRepository = readRepository;
         }
 
-        protected async Task<Employee> GetEmployee(string employeeId)
+        protected async Task<Employee> RequireEmployee(string employeeId)
         {
             var employee = await _readRepository.GetEmployee(employeeId);
 
             if (employee is null)
             {
-                throw new EntityNotFoundException<Employee>(employee?.Id);
+                throw new EntityNotFoundException<Employee>(employeeId);
             }
 
             return employee;
         }
 
-        protected TimeoffEntry GetTimeoffEntryOrThrowException(Employee employee, TimeoffHeader timeoff, string timeoffEntryId)
+        protected TimeoffEntry RequireTimeoffEntry(Employee employee, TimeoffHeader timeoff, string timeoffEntryId)
         {
             var timeoffEntry = timeoff?.GetTimeoffEntry(timeoffEntryId);
             if (timeoffEntry is null)
@@ -45,7 +45,7 @@ namespace Timesheet.Application.Employees.CommandHandlers
             return timeoffEntry;
         }
 
-        protected TimeoffHeader GetTimeoffOrThrowException(Employee employee, string timeoffId)
+        protected TimeoffHeader RequireTimeoff(Employee employee, string timeoffId)
         {
             var timeoff = employee.GetTimeoff(timeoffId);
             if (timeoff is null)

@@ -26,5 +26,6 @@ namespace Timesheet.Domain.ReadModels.Timesheets
         public string WorkArea => OutOffCountry ? "Out of country" : "In state";
         public TimesheetEntryStatus Status { get; set; }
         public string StatusName => Status.ToString();
+        public bool IsDeletable { get; set; }
     }
 }

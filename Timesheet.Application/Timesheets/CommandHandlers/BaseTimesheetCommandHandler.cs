@@ -1,4 +1,5 @@
 ﻿using Timesheet.Application.Employees.Services;
+using Timesheet.Application.Shared;
 using Timesheet.Domain;
 using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Models.Employees;
@@ -7,7 +8,7 @@ using Timesheet.Domain.Repositories;
 
 namespace Timesheet.Application.TImesheets.CommandHandlers
 {
-    internal abstract class BaseTimesheetCommandHandler<TEntity, TCommand> : BaseCommandHandler<TEntity, TCommand> 
+    internal abstract class BaseTimesheetCommandHandler<TEntity, TCommand> : BaseEmployeeCommandHandler<TEntity, TCommand> 
         where TEntity : Entity
         where TCommand : ICommand
     {
@@ -21,22 +22,10 @@ namespace Timesheet.Application.TImesheets.CommandHandlers
             IDispatcher dispatcher,
             IUnitOfWork unitOfWork,
             IEmployeeHabilitation employeeHabilitations
-            ) : base(employeeReadRepository, auditHandler, dispatcher, unitOfWork, employeeHabilitations)
+            ) : base(auditHandler, employeeReadRepository, dispatcher, unitOfWork, employeeHabilitations)
         {
             this._employeeReadRepository = employeeReadRepository;
             this._readRepository = readRepository;
-        }
-
-        protected async Task<Employee> GetEmployee(string employeeId)
-        {
-            var employee = await _employeeReadRepository.GetEmployee(employeeId);
-
-            if (employee is null)
-            {
-                throw new EntityNotFoundException<Employee>(employee?.Id);
-            }
-
-            return employee;
         }
 
         protected TimesheetEntry GetTimesheetFirstData(TimesheetHeader timesheet)
@@ -44,7 +33,7 @@ namespace Timesheet.Application.TImesheets.CommandHandlers
             return timesheet.TimesheetEntriesWithoutTimeoffs.FirstOrDefault(t => t.Status != TimesheetEntryStatus.APPROVED);
         }
 
-        protected async Task<TimesheetHeader> GetTimesheetOrThrowException(string timesheetId, string? employeeId=null)
+        protected async Task<TimesheetHeader> RequireTimesheet(string timesheetId, string? employeeId=null)
         {
             var timesheet = await _readRepository.GetTimesheetWithEntries(timesheetId, employeeId);
             if (timesheet is null)

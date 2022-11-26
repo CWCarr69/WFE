@@ -1,5 +1,6 @@
 ﻿using Timesheet.Application.Employees.Commands;
 using Timesheet.Application.Employees.Services;
+using Timesheet.Application.Shared;
 using Timesheet.Domain;
 using Timesheet.Domain.Models.Employees;
 using Timesheet.Domain.Repositories;
@@ -21,19 +22,19 @@ namespace Timesheet.Application.Employees.CommandHandlers
 
         public override async Task<IEnumerable<IDomainEvent>> HandleCoreAsync(ModifyApprover command, CancellationToken token)
         {
-            var employee = await GetEmployee(command.EmployeeId);
+            var employee = await RequireEmployee(command.EmployeeId);
 
             this.RelatedAuditableEntity = employee;
 
             if (command.PrimaryApproverId is not null)
             {
-                var primaryApprover = await GetEmployee(command.PrimaryApproverId);
+                var primaryApprover = await RequireEmployee(command.PrimaryApproverId);
                 employee.SetPrimaryApprover(primaryApprover);
             }
 
             if(command.SecondaryApproverId is not null)
             {
-                var secondaryApprover = await GetEmployee(command.SecondaryApproverId);
+                var secondaryApprover = await RequireEmployee(command.SecondaryApproverId);
 
                 employee.SetSecondaryOfficer(secondaryApprover);
             }

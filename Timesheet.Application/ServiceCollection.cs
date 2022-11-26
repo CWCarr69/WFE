@@ -65,6 +65,9 @@ namespace Timesheet.Application
             services.AddScoped<UpdateTimeoffEntryCommandHandler, UpdateTimeoffEntryCommandHandler>();
             services.AddScoped<DeleteTimeoffEntryCommandHandler, DeleteTimeoffEntryCommandHandler>();
 
+            services.AddScoped<AddTimesheetEntryCommandHandler, AddTimesheetEntryCommandHandler>();
+            services.AddScoped<DeleteTimesheetEntryCommandHandler, DeleteTimesheetEntryCommandHandler>();
+            services.AddScoped<SubmitTimesheetCommandHandler, SubmitTimesheetCommandHandler>();
             services.AddScoped<SubmitTimesheetCommandHandler, SubmitTimesheetCommandHandler>();
             services.AddScoped<ApproveTimesheetCommandHandler, ApproveTimesheetCommandHandler>();
             services.AddScoped<RejectTimesheetCommandHandler, RejectTimesheetCommandHandler>();

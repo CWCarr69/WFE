@@ -77,7 +77,8 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             null  as {nameof(EmployeeTimesheetEntry.Department)},
             Description  as {nameof(EmployeeTimesheetEntry.Description)},
             OutOffCountry  as {nameof(EmployeeTimesheetEntry.OutOffCountry)},
-            Status  as {nameof(EmployeeTimesheetEntry.Status)}
+            Status  as {nameof(EmployeeTimesheetEntry.Status)},
+            IsDeletable  as {nameof(EmployeeTimesheetEntry.IsDeletable)}
             FROM timesheetEntry
             WHERE employeeId = {TimesheetDetailsQueryEmployeeIdParam} AND timesheetHeaderId = {TimesheetDetailsQueryTimesheetIdParam}
         ";
@@ -542,7 +543,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             return timesheetHistory;
         }
 
-        public async Task<AllEmployeesTimesheet<TEntry>?> GetAllEmployeeTimesheetByPayrollPeriod<TEntry>(string payrollPeriod)
+        public async Task<AllEmployeesTimesheet<TEntry>> GetAllEmployeeTimesheetByPayrollPeriod<TEntry>(string payrollPeriod)
         {
             var query = QueryTimesheetConstants.AllEmployeeTimesheetByPayrollPeriodQuery;
             var timesheet = (await _dbService.QueryAsync<AllEmployeesTimesheet<TEntry>>(query, new { payrollPeriod }))?.FirstOrDefault();
