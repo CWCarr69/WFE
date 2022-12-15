@@ -18,7 +18,6 @@ namespace Timesheet.Application.Timesheets.CommandHandlers
             IEmployeeReadRepository employeeReadRepository,
             IWriteRepository<TimesheetHeader> writeRepository,
             ITimesheetReadRepository readRepository, 
-            IWorkflowService workflowService,
             IDispatcher dispatcher,
             IUnitOfWork unitOfWork,
             IEmployeeHabilitation employeeHabilitations
@@ -37,7 +36,7 @@ namespace Timesheet.Application.Timesheets.CommandHandlers
                 Entity.GenerateId(),
                 command.EmployeeId,
                 command.WorkDate.Date,
-                command.PayrollCode,
+                command.PayrollCodeId,
                 command.Quantity,
                 command.Description,
                 command.ServiceOrderNumber,

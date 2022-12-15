@@ -2,6 +2,7 @@
 using Timesheet.Domain.Models.Notifications;
 using Timesheet.Domain.Models.Settings;
 using Timesheet.Domain.Models.Timesheets;
+using Timesheet.Models.Referential;
 
 namespace Timesheet.Infrastructure.Persistence
 {
@@ -28,6 +29,16 @@ namespace Timesheet.Infrastructure.Persistence
                 foreach (var notification in notifications)
                 {
                     context.Notifications.Add(notification);
+                }
+            }
+
+            if (!context.PayrollTypes.Any())
+            {
+                PayrollTypes[] payrollTypes = GetPayrollTypes();
+
+                foreach (var payrollType in payrollTypes)
+                {
+                    context.PayrollTypes.Add(payrollType);
                 }
             }
 
@@ -73,6 +84,22 @@ namespace Timesheet.Infrastructure.Persistence
                 Notification.Create(0, NotificationType.TIMEOFF, TimeoffStatus.SUBMITTED.ToString()),
                 Notification.Create(0, NotificationType.TIMEOFF, TimeoffStatus.APPROVED.ToString()),
                 Notification.Create(0, NotificationType.TIMEOFF, TimeoffStatus.REJECTED.ToString())
+            };
+        }
+
+        private static PayrollTypes[] GetPayrollTypes()
+        {
+            return new PayrollTypes[]
+            {
+                PayrollTypes.Create((int) TimesheetFixedPayrollCodeEnum.REGULAR, "REGULAR", PayrollTypesCategory.ALL, "REG"),
+                PayrollTypes.Create((int) TimesheetFixedPayrollCodeEnum.OVERTIME, "OVERTIME", PayrollTypesCategory.ALL, "OT"),
+                PayrollTypes.Create((int) TimesheetFixedPayrollCodeEnum.HOLIDAY, "HOLIDAY", PayrollTypesCategory.TIMEOFF, ""),
+                PayrollTypes.Create((int) TimesheetFixedPayrollCodeEnum.PERSONAL, "PERSONAL", PayrollTypesCategory.TIMEOFF, "VAC"),
+                PayrollTypes.Create((int) TimesheetFixedPayrollCodeEnum.VACATION, "VACATION", PayrollTypesCategory.TIMEOFF, "VAC"),
+                PayrollTypes.Create((int) TimesheetFixedPayrollCodeEnum.UNPAID, "UNPAID", PayrollTypesCategory.TIMEOFF, "UNPAID"),
+                PayrollTypes.Create((int) TimesheetFixedPayrollCodeEnum.JURY_DUTY, "JURY_DUTY", PayrollTypesCategory.TIMEOFF, "EJURY"),
+                PayrollTypes.Create((int) TimesheetFixedPayrollCodeEnum.BERV, "BERV", PayrollTypesCategory.TIMEOFF, "BERV"),
+                PayrollTypes.Create((int) TimesheetFixedPayrollCodeEnum.SHOP, "SHOP", PayrollTypesCategory.TIMEOFF, "SHOP")
             };
         }
     }

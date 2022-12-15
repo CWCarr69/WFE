@@ -6,6 +6,8 @@ using Timesheet.Domain.Models.Timesheets;
 using Timesheet.Domain.ReadModels;
 using Timesheet.Domain.ReadModels.Employees;
 using Timesheet.Domain.ReadModels.Referential;
+using Timesheet.Models.Referential;
+using PayrollTypes = Timesheet.Domain.ReadModels.Referential.PayrollTypes;
 
 namespace Timesheet.Web.Api.Controllers
 {
@@ -23,11 +25,11 @@ namespace Timesheet.Web.Api.Controllers
         }
 
         [HttpGet("TimeoffTypes")]
-        public async Task<ActionResult<IEnumerable<EnumReadModel<TimeoffType>>>> GetTimeoffTypes()
+        public async Task<ActionResult<IEnumerable<PayrollTypes>>> GetTimeoffTypes()
         {
             LogInformation($"Listing Timeoff types");
 
-            var timeoffs = _referentialQuery.GetTimeoffTypes();
+            var timeoffs = await _referentialQuery.GetTimeoffTypes();
             return Ok(timeoffs);
         }
 
@@ -54,7 +56,7 @@ namespace Timesheet.Web.Api.Controllers
         {
             LogInformation($"Listing Payroll codes");
 
-            var periods = _referentialQuery.GetPayrollCodes();
+            var periods = await _referentialQuery.GetPayrollCodes();
             return Ok(periods);
         }
 

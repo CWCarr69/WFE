@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Timesheet.Application;
+using Timesheet.Application.Employees.Commands;
 using Timesheet.Application.Employees.Queries;
 using Timesheet.Application.Employees.Services;
+using Timesheet.Application.Holidays.Commands;
 using Timesheet.Application.Workflow;
 using Timesheet.Domain.Employees.Services;
 using Timesheet.Domain.Models.Employees;
@@ -19,8 +22,11 @@ namespace Timesheet.Web.Api.Controllers
     {
         private readonly IQueryEmployee _employeeQuery;
         private readonly IEmployeeBenefitCalculator _benefitsServcies;
+        private readonly IDispatcher _dispatcher;
+
 
         public EmployeeController(IQueryEmployee employeeQuery,
+            IDispatcher dispatcher,
             IWorkflowService workflowService,
             IEmployeeHabilitation employeeHabilitation,
             IEmployeeBenefitCalculator benefitsServcies,
@@ -29,6 +35,7 @@ namespace Timesheet.Web.Api.Controllers
         {
             _employeeQuery = employeeQuery;
             this._benefitsServcies = benefitsServcies;
+            this._dispatcher = dispatcher;
         }
 
         [HttpGet]
@@ -41,11 +48,11 @@ namespace Timesheet.Web.Api.Controllers
         }
 
         [HttpGet("{employeeId}")]
-        public async Task<ActionResult<EmployeeProfile>> Get(string employeeId)
+        public async Task<ActionResult<EmployeeProfile>> Get(string employeeId, bool withApprovers = false)
         {
             LogInformation($"Getting Employee ({employeeId}) Details");
 
-            var employee = await _employeeQuery.GetEmployeeProfile(employeeId);
+            var employee = await _employeeQuery.GetEmployeeProfile(employeeId, withApprovers);
             return Ok(employee);
         }
 
@@ -58,10 +65,10 @@ namespace Timesheet.Web.Api.Controllers
             return Ok(employee);
         }
 
-        [HttpGet("{employeeId}/Benefits")]
-        public async Task<ActionResult<EmployeeBenefits>> GetBenefits(string employeeId)
+        [HttpGet("{employeeId}/CalculatedBenefits")]
+        public async Task<ActionResult<EmployeeCalculatedBenefits>> GetCalculatedBenefits(string employeeId)
         {
-            LogInformation($"Getting Employee ({employeeId}) Benefits");
+            LogInformation($"Getting Employee ({employeeId}) Calculated Benefits");
 
             var employee = await _employeeQuery.GetEmployeeProfile(employeeId);
             if(employee?.Id is null || employee?.EmploymentDate is null)
@@ -69,6 +76,19 @@ namespace Timesheet.Web.Api.Controllers
                 return BadRequest("Employee not found");
             }
             var employeeBenefits = await _benefitsServcies.GetBenefits(employeeId, employee.EmploymentDate.Value);
+            return Ok(employeeBenefits);
+        }
+
+        [HttpGet("{employeeId}/Benefits")]
+        public async Task<ActionResult<EmployeeCalculatedBenefits>> GetBenefits(string employeeId)
+        {
+            LogInformation($"Getting Employee ({employeeId}) Benefits");
+
+            var employeeBenefits = await _employeeQuery.GetEmployeeBenefitsVariation(employeeId);
+            if (employeeBenefits is null)
+            {
+                return BadRequest("Employee not found");
+            }
             return Ok(employeeBenefits);
         }
 
@@ -118,6 +138,18 @@ namespace Timesheet.Web.Api.Controllers
             }
 
             return Ok(Paginate(page, itemsPerPage, timesheets.TotalItems, timesheetWithHabilitations));
+        }
+
+
+        [HttpPut("{employeeId}/Benefits")]
+        public async Task<IActionResult> SetBenefits([FromBody] ModifyEmployeeBenefits modifyEmployeeBenefits, CancellationToken token)
+        {
+            LogInformation($"Set Employee ({modifyEmployeeBenefits.EmployeeId})");
+
+            await _dispatcher.RunCommand(modifyEmployeeBenefits, CurrentUser, token);
+
+            LogInformation($"Employee Benefits set");
+            return Ok();
         }
 
         private string Manager()

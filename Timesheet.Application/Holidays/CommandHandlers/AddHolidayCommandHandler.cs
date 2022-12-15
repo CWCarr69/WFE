@@ -34,7 +34,6 @@ namespace Timesheet.Application.Holidays.CommandHandlers
             }
 
             var holiday = Holiday.Create(addHoliday.Date.Date, addHoliday.Description, addHoliday.Notes, addHoliday.IsRecurrent);
-            holiday.UpdateMetadataOnModification(addHoliday.Author?.Id);
             await _writeRepository.Add(holiday);
 
             this.RelatedAuditableEntity = holiday;

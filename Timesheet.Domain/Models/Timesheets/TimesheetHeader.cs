@@ -1,8 +1,10 @@
-﻿using Timesheet.Domain.DomainEvents;
+﻿using System.Xml.Linq;
+using Timesheet.Domain.DomainEvents;
 using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Models.Employees;
 using Timesheet.Domain.ReadModels.Timesheets;
 using Timesheet.DomainEvents.Timesheets;
+using Timesheet.Models.Referential;
 
 namespace Timesheet.Domain.Models.Timesheets
 {
@@ -28,10 +30,13 @@ namespace Timesheet.Domain.Models.Timesheets
         public TimesheetType Type { get; private set; }
         public TimesheetStatus Status { get; private set; }
 
+
+
         public virtual ICollection<TimesheetEntry> TimesheetEntries { get; private set; } = new List<TimesheetEntry>();
         public IEnumerable<TimesheetEntry> TimesheetEntriesWithoutTimeoffs => TimesheetEntries
-        ?.Where(t => t.PayrollCode == TimesheetPayrollCode.REGULAR.ToString()
-            || t.PayrollCode == TimesheetPayrollCode.OVERTIME.ToString()) ?? new List<TimesheetEntry>();
+        ?.Where(t => t.PayrollCodeId == (int) TimesheetFixedPayrollCodeEnum.REGULAR
+
+            || t.PayrollCodeId == (int) TimesheetFixedPayrollCodeEnum.OVERTIME) ?? new List<TimesheetEntry>();
         public virtual ICollection<TimesheetHoliday> TimesheetHolidays { get; private set; } = new List<TimesheetHoliday>();
         public virtual ICollection<TimesheetComment> TimesheetComments { get; private set; } = new List<TimesheetComment>();
 
@@ -53,8 +58,8 @@ namespace Timesheet.Domain.Models.Timesheets
         public static TimesheetHeader CreateWeeklyTimesheet(DateTime workDate)
         {
             var now = workDate;
-            var oneYearBefore = DateTime.Now.AddYears(-1);
-            var oneYearAfter = DateTime.Now.AddYears(1);
+            var oneYearBefore = workDate.AddYears(-1);
+            var oneYearAfter = workDate.AddYears(1);
 
             //var currentPayrollPeriodStartDate = oneYearBefore.LastDayOfYear(DayOfWeek.Thursday).SevenDaysBefore();
             var currentPayrollPeriodStartDate = oneYearBefore.LastDayOfYear(DayOfWeek.Friday);
@@ -227,5 +232,15 @@ namespace Timesheet.Domain.Models.Timesheets
         private static string WeeklyPayrollPeriod(DateTime date, int periodNumber) => $"{date.Year}-{periodNumber}H";
 
         private static string BiWeeklyPayrollPeriod(DateTime date, int periodNumber) => $"{date.Year}-{periodNumber}SS";
+
+        public void AddComment(Employee? employee, string comment)
+        {
+            UpdateComment(employee, timesheetComment => timesheetComment.UpdateEmployeeComment(comment));
+        }
+
+        public void AddApproverComment(Employee? employee, string comment)
+        {
+            UpdateComment(employee, timesheetComment => timesheetComment.UpdateApproverComment(comment));
+        }
     }
 }

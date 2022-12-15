@@ -5,7 +5,7 @@ namespace Timesheet.Application.Workflow
 {
     internal enum TimeoffTransitions
     {
-        SUBMIT, APPROVE, REJECT, DELETE, ADD_ENTRY, DELETE_ENTRY, UPDATE_ENTRY
+        SUBMIT, APPROVE, REJECT, DELETE, ADD_ENTRY, DELETE_ENTRY, UPDATE_ENTRY, ADD_COMMENT
     }
 
     internal class TimeoffWorkflow : WorkflowDefinition
@@ -28,6 +28,8 @@ namespace Timesheet.Application.Workflow
                     .AuthorizeRoles(EmployeeRoleOnData.CREATOR),
                 new Transition(TimeoffTransitions.UPDATE_ENTRY, TimeoffStatus.IN_PROGRESS, TimeoffStatus.SUBMITTED, TimeoffStatus.REJECTED)
                     .AuthorizeRoles(EmployeeRoleOnData.CREATOR),
+                new Transition(TimeoffTransitions.ADD_COMMENT, TimeoffStatus.IN_PROGRESS, TimeoffStatus.SUBMITTED, TimeoffStatus.REJECTED)
+                    .AuthorizeRoles(EmployeeRoleOnData.CREATOR, EmployeeRoleOnData.APPROVER),
             })
         {
         }

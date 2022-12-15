@@ -14,7 +14,7 @@
 
         public DateTime RequestStartDate { get; private set; }
         public DateTime RequestEndDate { get; private set; }
-        public string EmployeeComment { get; private set; }
+        public string? EmployeeComment { get; private set; }
         public string? ApproverComment { get; private set; }
         public TimeoffStatus Status { get; private set; }
         public virtual ICollection<TimeoffEntry> TimeoffEntries { get; private set; } = new List<TimeoffEntry>();
@@ -26,7 +26,7 @@
                 requestEndDate.Date,
                 employeeComment);
 
-            timeoff.Status = TimeoffStatus.IN_PROGRESS;
+            timeoff.Status = TimeoffStatus.SUBMITTED;
 
             return timeoff;
         }
@@ -38,9 +38,9 @@
             this.UpdateMetadata();
         }
 
-        internal void AddEntry(DateTime requestDate, TimeoffType type, double hours, TimeoffHeader timeoff, string label)
+        internal void AddEntry(DateTime requestDate, int TypeId, double hours, string label)
         {
-            TimeoffEntries.Add(TimeoffEntry.Create(requestDate, type, hours, label));
+            TimeoffEntries.Add(TimeoffEntry.Create(requestDate, TypeId, hours, label));
             this.UpdateMetadata();
         }
 
@@ -76,6 +76,8 @@
             var timeoffEndDate = TimeoffEntries.Max(e => e.RequestDate);
             RequestStartDate = timeoffStartDate;
             RequestEndDate = timeoffEndDate;
+
+            this.UpdateMetadata();
         }
 
         private void Transition(TimeoffStatus status, Action updateData)
@@ -94,5 +96,16 @@
 
         public TimeoffEntry? GetTimeoffEntry(string timeoffEntryId) => TimeoffEntries.SingleOrDefault(e => e.Id == timeoffEntryId);
 
+        internal void AddComment(string comment)
+        {
+            this.EmployeeComment = comment;
+            this.UpdateMetadata();
+        }
+
+        internal void AddApproverComment(string comment)
+        {
+            this.ApproverComment = comment;
+            this.UpdateMetadata();
+        }
     }
 }

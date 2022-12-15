@@ -1,4 +1,5 @@
 ﻿using Timesheet.Domain.Models.Timesheets;
+using Timesheet.Models.Referential;
 
 namespace Timesheet.Domain.ReadModels.Timesheets
 {
@@ -16,7 +17,8 @@ namespace Timesheet.Domain.ReadModels.Timesheets
         public string StatusName => Status.ToString();
         public IEnumerable<EmployeeTimesheetEntry> Entries { get; set; } = new List<EmployeeTimesheetEntry>();
         public IEnumerable<EmployeeTimesheetEntry> EntriesWithoutTimeoffs => Entries
-        ?.Where(t => t.PayrollCode == TimesheetPayrollCode.REGULAR.ToString()
-            || t.PayrollCode == TimesheetPayrollCode.OVERTIME.ToString()) ?? new List<EmployeeTimesheetEntry>();
+        ?.Where(t => 
+            t.PayrollCodeId == (int) TimesheetFixedPayrollCodeEnum.REGULAR
+            || t.PayrollCodeId == (int)TimesheetFixedPayrollCodeEnum.OVERTIME) ?? new List<EmployeeTimesheetEntry>();
     }
 }

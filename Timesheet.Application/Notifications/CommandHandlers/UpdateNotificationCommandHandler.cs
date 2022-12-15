@@ -41,7 +41,6 @@ namespace Timesheet.Application.Notifications.CommandHandlers
             }
 
             existingNotification.UpdatePopulation(updateNotification.Population);
-            existingNotification.UpdateMetadataOnModification(updateNotification.Author?.Id);
 
             this.RelatedAuditableEntity = existingNotification;
 

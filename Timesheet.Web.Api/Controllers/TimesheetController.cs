@@ -150,6 +150,17 @@ namespace Timesheet.Web.Api.Controllers
             return Ok();
         }
 
+        [HttpPut("AddComment")]
+        public async Task<IActionResult> UpdateComment([FromBody] UpdateTimesheetComment command, CancellationToken token)
+        {
+            LogInformation($"Updatting comment on timesheet ({command.TimesheetId}) for employee ({command.EmployeeId})");
+
+            await _dispatcher.RunCommand(command, CurrentUser, token);
+
+            LogInformation($"Comment is updated on timesheet ({command.TimesheetId}) for employee ({command.EmployeeId})");
+            return Ok();
+        }
+
         [HttpDelete("Entries")]
         public async Task<IActionResult> DeleteEntry([FromBody] DeleteTimesheetEntry command, CancellationToken token)
         {

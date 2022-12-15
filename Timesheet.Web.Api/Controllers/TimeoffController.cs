@@ -96,7 +96,7 @@ namespace Timesheet.Web.Api.Controllers
         [HttpPost("timeoff/Entry")]
         public async Task<IActionResult> AddEntry([FromBody] AddEntryToTimeoff addEntryTimeoff, CancellationToken token)
         {
-            LogInformation($"Add new entry to Timeoff ({addEntryTimeoff.TimeoffId}) for Employee ({addEntryTimeoff.EmployeeId})");
+            LogInformation($"Adding new entry to Timeoff ({addEntryTimeoff.TimeoffId}) for Employee ({addEntryTimeoff.EmployeeId})");
 
             await _dispatcher.RunCommand(addEntryTimeoff, CurrentUser, token);
 
@@ -107,7 +107,7 @@ namespace Timesheet.Web.Api.Controllers
         [HttpPut("timeoff/Entry")]
         public async Task<IActionResult> UpdateEntry([FromBody] UpdateTimeoffEntry updateTimeoffEntry, CancellationToken token)
         {
-            LogInformation($"Update entry ({updateTimeoffEntry.TimeoffEntryId}) of Timeoff ({updateTimeoffEntry.TimeoffId}) for Employee ({updateTimeoffEntry.EmployeeId})");
+            LogInformation($"Updating entry ({updateTimeoffEntry.TimeoffEntryId}) of Timeoff ({updateTimeoffEntry.TimeoffId}) for Employee ({updateTimeoffEntry.EmployeeId})");
 
             await _dispatcher.RunCommand(updateTimeoffEntry, CurrentUser, token);
 
@@ -115,10 +115,22 @@ namespace Timesheet.Web.Api.Controllers
             return Ok();
         }
 
+        [HttpPut("timeoff/{timeoffId}/AddComment")]
+        public async Task<IActionResult> AddComment([FromBody] UpdateTimeoffComment updateTimeoffComment, CancellationToken token)
+        {
+            LogInformation($"Updating comment for Employee's ({updateTimeoffComment.EmployeeId}) Timeoff ({updateTimeoffComment.TimeoffId})");
+
+            var command = new DeleteTimeoff() { EmployeeId = updateTimeoffComment.EmployeeId, TimeoffId = updateTimeoffComment.TimeoffId };
+            await _dispatcher.RunCommand(command, CurrentUser, token);
+
+            LogInformation($"Comment updated for Timeoff ({updateTimeoffComment.TimeoffId})");
+            return Ok();
+        }
+
         [HttpDelete("timeoff/{timeoffId}")]
         public async Task<IActionResult> Delete(string employeeId, string timeoffId, CancellationToken token)
         {
-            LogInformation($"Delete Employee ({employeeId}) Timeoff ({timeoffId})");
+            LogInformation($"Deleting Employee ({employeeId}) Timeoff ({timeoffId})");
 
             var command = new DeleteTimeoff() { EmployeeId = employeeId, TimeoffId = timeoffId };
             await _dispatcher.RunCommand(command, CurrentUser, token);
@@ -130,7 +142,7 @@ namespace Timesheet.Web.Api.Controllers
         [HttpDelete("timeoff/{timeoffId}/Entry/{entryId}")]
         public async Task<IActionResult> DeleteEntry(string employeeId, string timeoffId, string entryId, CancellationToken token)
         {
-            LogInformation($"Delete entry ({entryId}) of Timeoff({timeoffId}) for Employee ({employeeId})");
+            LogInformation($"Deleting entry ({entryId}) of Timeoff({timeoffId}) for Employee ({employeeId})");
 
             var command = new DeleteTimeoffEntry() { EmployeeId = employeeId, TimeoffId = timeoffId, TimeoffEntryId = entryId };
             await _dispatcher.RunCommand(command, CurrentUser, token);

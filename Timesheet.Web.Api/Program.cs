@@ -9,6 +9,9 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using Serilog;
 using Timesheet.Web.Api.Middleware;
+using Timesheet.Web.Api.ServiceWorker;
+using Hangfire;
+using Timesheet.Benefits;
 
 namespace Timesheet.Web.Api
 {
@@ -28,8 +31,16 @@ namespace Timesheet.Web.Api
             builder.Services.RegisterCommandHandlers();
             builder.Services.AddAuthenticationServices();
             builder.Services.AddTimesheetExportServices(builder.Configuration.GetSection("TimesheetExport:Destination").Value);
-            builder.Services.AddOtherServices();
+            builder.Services.AddOtherApplicationServices();
 
+            builder.Services.AddBenefitsServices();
+
+            //Hangfire
+            builder.Services.AddHangfire(config => config
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UseSqlServerStorage(builder.Configuration.GetConnectionString("Timesheet")));
+            builder.Services.AddHangfireServer();
 
             //Logging
             builder.Services.AddTransient<LogUserNameMiddleware>();
@@ -61,6 +72,9 @@ namespace Timesheet.Web.Api
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
             }
             );
+
+            //HostedService
+            builder.Services.AddHostedService<TimesheetWebApiService>();
 
             //Authentication
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -97,6 +111,11 @@ namespace Timesheet.Web.Api
                 app.UseSwaggerUI();
             }
 
+            app.UseCors(p => p
+            .WithOrigins("http://localhost:3000", "https://localhost:3000", "http://ir:3000", "https://ir:3000")
+            .AllowAnyHeader().AllowAnyMethod()
+            .AllowCredentials());
+
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
@@ -105,6 +124,11 @@ namespace Timesheet.Web.Api
             app.UseMiddleware<LogUserNameMiddleware>();
 
             app.MapControllers();
+
+            app.UseHangfireDashboard();
+            app.MapHangfireDashboard();
+
+            RecurringJob.AddOrUpdate<IEmployeeBenefitsService>(x => x.UpdateEmployeeBenefits(), builder.Configuration.GetSection("AppSettings:BenefitsCron").Value);
 
             app.Run();
         }

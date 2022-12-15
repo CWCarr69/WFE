@@ -1,5 +1,7 @@
-﻿using Timesheet.Domain.Models.Timesheets;
+﻿using System;
+using Timesheet.Domain.Models.Timesheets;
 using Timesheet.FDPDataIntegrator.Services;
+using Timesheet.Models.Referential;
 
 namespace Timesheet.FDPDataIntegrator.Payrolls
 {
@@ -20,15 +22,14 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
                 ? TimesheetHeader.CreateWeeklyTimesheet(record.WorkDate)
                 : TimesheetHeader.CreateMonthlyTimesheet(record.WorkDate);
 
-            string payrollCode = record.PayrollCode?.ToUpper();
-            payrollCode = string.IsNullOrEmpty(payrollCode) ? TimesheetPayrollCode.OVERTIME.ToString() : payrollCode;
+            int payrollCodeId = string.IsNullOrEmpty(record.PayrollCode) ? (int)TimesheetFixedPayrollCodeEnum.OVERTIME : (int)TimesheetFixedPayrollCodeEnum.REGULAR;
 
             var timesheetEntry = new TimesheetEntry(
                 record.RecordId,
                 employeeId: record.EmployeeCode,
                 WorkDate: record.WorkDate,
-                payrollCode: payrollCode,
-                hours: record.Quantity,
+                payrollCodeId: payrollCodeId,
+                hours: Math.Round(record.Quantity / 60, 2),
                 description: record.CustomerName,
                 serviceOrderNumber: record.ServiceOrderNumber,
                 serviceOrderDescription: record.ServiceOrderDescription,

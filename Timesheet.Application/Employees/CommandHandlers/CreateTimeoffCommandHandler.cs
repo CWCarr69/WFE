@@ -38,7 +38,6 @@ namespace Timesheet.Application.Employees.CommandHandlers
             Employee employee = await RequireEmployee(command.EmployeeId);
 
             var timeoff = employee.CreateTimeoff(command.RequestStartDate, command.RequestEndDate, command.EmployeeComment);
-            timeoff.UpdateMetadataOnModification(command.Author?.Id);
             
             this.RelatedAuditableEntity = timeoff;
 

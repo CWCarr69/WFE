@@ -32,13 +32,15 @@ namespace Timesheet.Infrastructure.Persistence.Queries
         ";
 
         public const string TimeoffDetailsEntriesQuery = $@"SELECT
-            Id as {nameof(EmployeeTimeoffEntry.Id)},
-            CreatedDate AS {nameof(EmployeeTimeoffEntry.CreatedDate)},
-            RequestDate AS {nameof(EmployeeTimeoffEntry.RequestDate)},
-            Type AS {nameof(EmployeeTimeoffEntry.Type)},
-            Hours AS {nameof(EmployeeTimeoffEntry.Hours)},
-            Label AS {nameof(EmployeeTimeoffEntry.Label)}
-            FROM timeoffEntry
+            te.Id as {nameof(EmployeeTimeoffEntry.Id)},
+            te.CreatedDate AS {nameof(EmployeeTimeoffEntry.CreatedDate)},
+            te.RequestDate AS {nameof(EmployeeTimeoffEntry.RequestDate)},
+            te.TypeId AS {nameof(EmployeeTimeoffEntry.TypeId)},
+            pt.PayrollCode AS {nameof(EmployeeTimeoffEntry.PayrollCode)},
+            te.Hours AS {nameof(EmployeeTimeoffEntry.Hours)},
+            te.Label AS {nameof(EmployeeTimeoffEntry.Label)}
+            FROM timeoffEntry te
+            JOIN payrollTypes pt on pt.numId = te.typeId
             WHERE timeoffHeaderId = {TimeoffDetailsQueryTimeoffIdParam}
             ORDER BY RequestDate
         ";
@@ -97,13 +99,15 @@ namespace Timesheet.Infrastructure.Persistence.Queries
 
         public const string TimeoffSummaryQuery = $@"SELECT
             te.RequestDate as {nameof(EmployeeTimeoffDetailSummary.RequestDate)},
-            te.Type  as {nameof(EmployeeTimeoffDetailSummary.Type)},
+            te.TypeId  as {nameof(EmployeeTimeoffDetailSummary.TypeId)},
+            pt.PayrollCode  as {nameof(EmployeeTimeoffDetailSummary.PayrollCode)},
             SUM(te.Hours) as {nameof(EmployeeTimeoffDetailSummary.Hours)}
             FROM employees e
             JOIN timeoffHeader t on e.Id = t.EmployeeId
             JOIN timeoffEntry te on t.id = te.TimeoffHeaderId
+            JOIN payrollTypes pt on pt.numId = te.TypeId
             Where e.Id = {TimeoffSummaryQueryEmployeeIdParam} AND t.Id = {TimeoffSummaryQueryTimeoffIdParam}
-            GROUP BY te.RequestDate, te.Type
+            GROUP BY te.RequestDate, te.TypeId, pt.PayrollCode
         ";
         #endregion
 
@@ -116,10 +120,12 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             th.Id as {nameof(EmployeeTimeoffEntry.TimeoffHeaderId)},
             te.Id as {nameof(EmployeeTimeoffEntry.Id)},
             te.RequestDate AS {nameof(EmployeeTimeoffEntry.RequestDate)},
-            te.Type AS {nameof(EmployeeTimeoffEntry.Type)},
+            te.TypeId AS {nameof(EmployeeTimeoffEntry.TypeId)},
+            pt.payrollCode As {nameof(EmployeeTimeoffEntry.PayrollCode)},
             te.Hours AS {nameof(EmployeeTimeoffEntry.Hours)}
             FROM timeoffEntry te 
             JOIN timeoffHeader th on th.Id = te.TimeoffHeaderId
+            JOIN payrollTypes pt on pt.numId = te.typeId
             WHERE th.EmployeeId = {TimeoffEntriesInPeriodEmployeeIdParam}
             AND RequestDate BETWEEN {TimeoffEntriesInPeriodStartParam} AND {TimeoffEntriesInPeriodEndParam}
             ORDER BY RequestDate

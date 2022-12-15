@@ -32,7 +32,6 @@ namespace Timesheet.Application.Employees.CommandHandlers
             _workflowService.AuthorizeTransition(timeoff, TimeoffTransitions.REJECT, timeoff.Status, currentEmployeeRoleOnData);
 
             employee.RejectTimeoff(timeoff, command.Comment);
-            timeoff.UpdateMetadataOnModification(command.Author?.Id);
 
             return Enumerable.Empty<IDomainEvent>();
         }

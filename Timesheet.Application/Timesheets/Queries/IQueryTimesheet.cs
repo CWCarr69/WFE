@@ -11,7 +11,7 @@ namespace Timesheet.Application.Timesheets.Queries
         Task<IEnumerable<EmployeeTimesheetDetailSummary?>> GetEmployeeTimesheetSummaryByDate(string employeeId, string timesheetId);
         Task<EmployeeTimesheetHistory> GetEmployeeTimesheets(string employeeId, int page, int itemsPerPage);
         Task<TimesheetReview> GetTimesheetReview(string payrollPeriod, string? employeeId, string? department, int page, int itemsPerPage);
-        Task<AllEmployeesTimesheet<TEntry>> GetAllEmployeeTimesheetByPayrollPeriod<TEntry>(string payrollPeriod);
+        Task<AllEmployeesTimesheet<TEntry>> GetAllEmployeeTimesheetByPayrollPeriod<TEntry>(string payrollPeriod, bool ignoreHolidays);
         Task<IEnumerable<EmployeeTimesheetEntry>> GetEmployeeTimesheetEntriesInPeriod(string employeeId, DateTime start, DateTime end);
     }
 }

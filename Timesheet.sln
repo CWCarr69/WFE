@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timesheet.FDPDataIntegrator
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timesheet.FDPIntegratorService", "Timesheet.FDPIntegratorService\Timesheet.FDPIntegratorService.csproj", "{0456AF4D-0523-41DC-8ABA-DBA9102789BB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timesheet.Benefits", "Timesheet.Benefits\Timesheet.Benefits.csproj", "{E94F3D72-7307-4443-AF24-4A7C04DB1DA0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,10 @@ Global
 		{0456AF4D-0523-41DC-8ABA-DBA9102789BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0456AF4D-0523-41DC-8ABA-DBA9102789BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0456AF4D-0523-41DC-8ABA-DBA9102789BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E94F3D72-7307-4443-AF24-4A7C04DB1DA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E94F3D72-7307-4443-AF24-4A7C04DB1DA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E94F3D72-7307-4443-AF24-4A7C04DB1DA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E94F3D72-7307-4443-AF24-4A7C04DB1DA0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -99,6 +105,7 @@ Global
 		{E5157CAE-CD3E-4E85-8A93-67C1D0B3FF63} = {0F49CFD8-0D3C-4D80-9F2E-06C66D564FAF}
 		{43135493-1814-4822-9D4A-A240301211F8} = {1BBC0F75-F28F-4C1C-8AFE-B336066515E6}
 		{0456AF4D-0523-41DC-8ABA-DBA9102789BB} = {1BBC0F75-F28F-4C1C-8AFE-B336066515E6}
+		{E94F3D72-7307-4443-AF24-4A7C04DB1DA0} = {1BBC0F75-F28F-4C1C-8AFE-B336066515E6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50FBDF77-109D-4686-A2D9-F50A5139020D}

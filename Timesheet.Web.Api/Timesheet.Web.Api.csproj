@@ -7,6 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Hangfire" Version="1.7.32" />
+    <PackageReference Include="Hangfire.Core" Version="1.7.32" />
+    <PackageReference Include="Hangfire.SqlServer" Version="1.7.32" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.9">
       <PrivateAssets>all</PrivateAssets>
@@ -21,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Timesheet.Application\Timesheet.Application.csproj" />
+    <ProjectReference Include="..\Timesheet.Benefits\Timesheet.Benefits.csproj" />
     <ProjectReference Include="..\Timesheet.Domain\Timesheet.Domain.csproj" />
     <ProjectReference Include="..\Timesheet.Infrastructure.Authentication\Timesheet.Infrastructure.Authentication.csproj" />
     <ProjectReference Include="..\Timesheet.Infrastructure.Persistence\Timesheet.Infrastructure.Persistence.csproj" />
@@ -30,5 +34,7 @@
   <ItemGroup>
     <Folder Include="Models\" />
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>

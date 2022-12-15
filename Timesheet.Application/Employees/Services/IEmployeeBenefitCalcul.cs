@@ -1,10 +1,10 @@
 ﻿using Timesheet.Domain.Models.Employees;
 using Timesheet.Domain.ReadModels.Employees;
 
-namespace Timesheet.Domain.Employees.Services
+namespace Timesheet.Application.Employees.Services
 {
     public interface IEmployeeBenefitCalculator
     {
-        Task<EmployeeBenefits> GetBenefits(string employeeId, DateTime employmentDate);
+        Task<EmployeeCalculatedBenefits> GetBenefits(string employeeId, DateTime employmentDate);
     } 
 }

@@ -13,7 +13,7 @@ namespace Timesheet.Domain.Models.Employees
         {
         }
 
-        public Employee(string id, string userId, string fullName, 
+        public Employee(string id, string userId, string fullName,
             string managerId, string primaryApproverId, string secondaryApproverId,
             EmployeeEmploymentData employmentData, EmployeeContactData contacts, bool isActive) : base(id)
         {
@@ -28,9 +28,6 @@ namespace Timesheet.Domain.Models.Employees
         }
 
         #region Properties
-        //public string Firstname { get; private set; }
-        //public string Middlename { get; private set; }
-        //public string Lastname { get; private set; }
         public string FullName { get; private set; }
         public string? Initials { get; private set; }
         public Image? Picture { get; private set; }
@@ -39,14 +36,16 @@ namespace Timesheet.Domain.Models.Employees
         public Employee? SecondaryApprover { get; private set; }
         public EmployeeEmploymentData EmploymentData { get; private set; }
         public EmployeeContactData Contacts { get; private set; }
-        //public EmployeeBenefits Benefits { get; private set; }
+        public EmployeeBenefits BenefitsVariation { get; private set; }
+        public EmployeeBenefitsSnapshop BenefitsSnapshot { get; private set; }
+        public bool ConsiderFixedBenefits { get; private set; }
         public IReadOnlyCollection<TimeoffHeader> Timeoffs => _timeoffs;
         public bool IsActive { get; private set; }
         public string UserId { get; private set; }
-
         #endregion
 
-        public TimeoffStatus? LastTimeoffStatus() {
+        public TimeoffStatus? LastTimeoffStatus()
+        {
             if (!Timeoffs.Any())
             {
                 return null;
@@ -64,7 +63,7 @@ namespace Timesheet.Domain.Models.Employees
 
         public void SetPrimaryApprover(Employee primaryApprover)
         {
-            if(primaryApprover is not null)
+            if (primaryApprover is not null)
             {
                 this.PrimaryApprover = primaryApprover;
             }
@@ -78,12 +77,27 @@ namespace Timesheet.Domain.Models.Employees
             }
         }
 
+        public void ChangeBenefitsCalculationMode(bool considerFixedBenefits)
+        {
+            ConsiderFixedBenefits = considerFixedBenefits;
+        }
+
+        public void SetBenefits(double vacationHours, double personalHours, double rolloverHours)
+        {
+            BenefitsVariation = new EmployeeBenefits(vacationHours, personalHours, rolloverHours);
+        }
+
+        public void SnapshotBenefits(EmployeeBenefitsSnapshop snapshot)
+        {
+            BenefitsSnapshot = snapshot;
+        }
 
         #region Time Workflow
         public TimeoffHeader CreateTimeoff(DateTime requestStartDate, DateTime requestEndDate, string employeeComment)
         {
             var timeoff = TimeoffHeader.Create(requestStartDate, requestEndDate, employeeComment);
             _timeoffs.Add(timeoff);
+
             RaiseTimeoffWorkflowChangedEvent(timeoff, nameof(TimeoffStatus.IN_PROGRESS));
             return timeoff;
         }
@@ -113,7 +127,7 @@ namespace Timesheet.Domain.Models.Employees
             RaiseTimeoffWorkflowChangedEvent(timeoff, nameof(TimeoffStatus.REJECTED));
         }
 
-        public void AddTimeoffEntry(DateTime requestDate, TimeoffType type, double hours, TimeoffHeader timeoff, string label)
+        public void AddTimeoffEntry(DateTime requestDate, int typeId, double hours, TimeoffHeader timeoff, string label)
         {
             var timeoffEntriesOnSameDate = _timeoffs.SelectMany(t => t.TimeoffEntries)
                 .Where(e => e.RequestDate.ToShortDateString() == requestDate.ToShortDateString())
@@ -132,8 +146,8 @@ namespace Timesheet.Domain.Models.Employees
                 throw new EntityNotFoundException<TimeoffHeader>(timeoff.Id);
             }
 
-            timeoff.AddEntry(requestDate, type, hours, relatedTimeoff, label);
-            timeoff.Update();
+            relatedTimeoff.AddEntry(requestDate, typeId, hours, label);
+            relatedTimeoff.Update();
         }
 
         public void DeleteTimeoffEntry(TimeoffHeader timeoff, TimeoffEntry timeoffEntry)
@@ -142,7 +156,7 @@ namespace Timesheet.Domain.Models.Employees
             timeoff.Update();
         }
 
-        public void UpdateTimeoffEntry(TimeoffHeader timeoff, TimeoffEntry timeoffEntry, TimeoffType type, double hours, string label)
+        public void UpdateTimeoffEntry(TimeoffHeader timeoff, TimeoffEntry timeoffEntry, int typeId, double hours, string label)
         {
             var timeoffEntriesOnSameDate = _timeoffs.SelectMany(t => t.TimeoffEntries)
                 .Where(e => e != timeoffEntry && e.RequestDate.ToShortDateString() == timeoffEntry.RequestDate.ToShortDateString())
@@ -155,9 +169,20 @@ namespace Timesheet.Domain.Models.Employees
                 throw new TimeOffEntryHoursExceededException(timeoffEntry.RequestDate, EMPLOYEE_REGULAR_HOURS);
             }
 
-            timeoffEntry.Update(type, hours, label);
+            timeoffEntry.Update(typeId, hours, label);
 
             timeoff.Update();
+        }
+
+        public void AddComment(TimeoffHeader timeoff, string employeeComment)
+        {
+            timeoff.AddComment(employeeComment);
+            this.UpdateMetadata();
+        }
+
+        public void AddApproverComment(TimeoffHeader timeoff, string approverComment)
+        {
+            timeoff.AddApproverComment(approverComment);
         }
         #endregion
 
@@ -180,17 +205,21 @@ namespace Timesheet.Domain.Models.Employees
 
         private void RaiseTimeoffApprovedEvent(TimeoffHeader timeoff)
         {
-            foreach(var entry in timeoff.TimeoffEntries)
+            List<TimeoffApprovedEntry> timeoffEntries = new();
+
+            foreach (var entry in timeoff.TimeoffEntries)
             {
-                RaiseDomainEvent(new TimeoffApproved(
+                timeoffEntries.Add(new TimeoffApprovedEntry(
                     entry.Id,
                     Id,
                     entry.RequestDate,
-                    entry.Type.ToString(),
+                    entry.TypeId,
                     entry.Hours,
-                    entry.Type.ToString(),
+                    entry.TypeId.ToString(),
                     this.EmploymentData.IsSalaried));
             }
+
+            RaiseDomainEvent(new TimeoffApproved(timeoffEntries));
         }
 
         public TimeoffHeader? GetTimeoff(string timeoffId) => _timeoffs.SingleOrDefault(t => t.Id == timeoffId);
@@ -200,7 +229,6 @@ namespace Timesheet.Domain.Models.Employees
             var timeoff = GetTimeoff(timeoffId);
             return timeoff?.GetTimeoffEntry(timeoffEntryId);
         }
-
     }
 }
 

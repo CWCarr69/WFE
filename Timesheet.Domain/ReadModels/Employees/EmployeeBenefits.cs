@@ -8,12 +8,20 @@
         public double Scheduled { get; set; }
     }
 
-    public class EmployeeBenefits
+    public class EmployeeCalculatedBenefits
     {
         public double EligibleVacationHours { get; set; }
         public double EligiblePersonalHours { get; set; }
         public double RolloverHours { get; set; }
 
         public IEnumerable<HourInformation> Details { get; set; }
+    }
+
+    public class EmployeeBenefits
+    {
+        public double VacationHours { get; set; }
+        public double PersonalHours { get; set; }
+        public double RolloverHours { get; set; }
+        public bool ConsiderFixedBenefits { get; set; }
     }
 }

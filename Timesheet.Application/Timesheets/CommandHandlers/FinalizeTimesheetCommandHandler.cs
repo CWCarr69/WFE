@@ -37,7 +37,6 @@ namespace Timesheet.Application.Timesheets.CommandHandlers
             _workflowService.AuthorizeTransition(timesheet, TimesheetTransitions.FINALIZE, timesheet.Status, currentEmployeeRoleOnData);
 
             timesheet.FinalizeTimesheet();
-            timesheet.UpdateMetadataOnModification(command.Author?.Id);
 
             var events = timesheet.GetDomainEvents();
             timesheet.ClearDomainEvents();

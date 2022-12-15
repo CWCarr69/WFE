@@ -74,6 +74,9 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<bool>("ConsiderFixedBenefits")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -163,7 +166,7 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
                     b.Property<string>("TimeoffHeaderId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("Type")
+                    b.Property<int>("TypeId")
                         .HasColumnType("int");
 
                     b.Property<string>("UpdatedBy")
@@ -189,7 +192,6 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("EmployeeComment")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EmployeeId")
@@ -438,9 +440,8 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
                     b.Property<bool?>("OutOffCountry")
                         .HasColumnType("bit");
 
-                    b.Property<string>("PayrollCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("PayrollCodeId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ProfitCenterNumber")
                         .HasColumnType("nvarchar(max)");
@@ -549,6 +550,40 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
                     b.ToTable("TimesheetHoliday");
                 });
 
+            modelBuilder.Entity("Timesheet.Models.Referential.PayrollTypes", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Category")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ExternalCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("NumId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PayrollCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PayrollTypes");
+                });
+
             modelBuilder.Entity("Timesheet.Domain.Models.Employees.Employee", b =>
                 {
                     b.HasOne("Timesheet.Domain.Models.Employees.Employee", "Manager")
@@ -566,6 +601,74 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
                     b.HasOne("Timesheet.Domain.Models.Employees.Employee", "SecondaryApprover")
                         .WithMany()
                         .HasForeignKey("SecondaryApproverId");
+
+                    b.OwnsOne("Timesheet.Domain.Models.Employees.EmployeeBenefits", "BenefitsVariation", b1 =>
+                        {
+                            b1.Property<string>("EmployeeId")
+                                .HasColumnType("nvarchar(450)");
+
+                            b1.Property<double>("PersonalHours")
+                                .HasColumnType("float")
+                                .HasColumnName("PersonalHours");
+
+                            b1.Property<double>("RolloverHours")
+                                .HasColumnType("float")
+                                .HasColumnName("RolloverHours");
+
+                            b1.Property<double>("VacationHours")
+                                .HasColumnType("float")
+                                .HasColumnName("VacationHours");
+
+                            b1.HasKey("EmployeeId");
+
+                            b1.ToTable("Employees");
+
+                            b1.WithOwner()
+                                .HasForeignKey("EmployeeId");
+                        });
+
+                    b.OwnsOne("Timesheet.Domain.Models.Employees.EmployeeBenefitsSnapshop", "BenefitsSnapshot", b1 =>
+                        {
+                            b1.Property<string>("EmployeeId")
+                                .HasColumnType("nvarchar(450)");
+
+                            b1.Property<double>("PersonalBalance")
+                                .HasColumnType("float");
+
+                            b1.Property<double>("PersonalHours")
+                                .HasColumnType("float")
+                                .HasColumnName("PersonalHoursSnapshot");
+
+                            b1.Property<double>("PersonalScheduled")
+                                .HasColumnType("float");
+
+                            b1.Property<double>("PersonalUsed")
+                                .HasColumnType("float");
+
+                            b1.Property<double>("RolloverHours")
+                                .HasColumnType("float")
+                                .HasColumnName("RolloverHoursSnapshot");
+
+                            b1.Property<double>("VacationBalance")
+                                .HasColumnType("float");
+
+                            b1.Property<double>("VacationHours")
+                                .HasColumnType("float")
+                                .HasColumnName("VacationHoursSnapshot");
+
+                            b1.Property<double>("VacationScheduled")
+                                .HasColumnType("float");
+
+                            b1.Property<double>("VacationUsed")
+                                .HasColumnType("float");
+
+                            b1.HasKey("EmployeeId");
+
+                            b1.ToTable("Employees");
+
+                            b1.WithOwner()
+                                .HasForeignKey("EmployeeId");
+                        });
 
                     b.OwnsOne("Timesheet.Domain.Models.Employees.EmployeeContactData", "Contacts", b1 =>
                         {
@@ -626,6 +729,12 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("EmployeeId");
                         });
+
+                    b.Navigation("BenefitsSnapshot")
+                        .IsRequired();
+
+                    b.Navigation("BenefitsVariation")
+                        .IsRequired();
 
                     b.Navigation("Contacts")
                         .IsRequired();

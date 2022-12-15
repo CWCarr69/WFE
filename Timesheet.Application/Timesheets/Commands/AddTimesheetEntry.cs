@@ -7,7 +7,7 @@ namespace Timesheet.Application.Timesheets.Commands
     {
         public string EmployeeId { get; set; }
         public DateTime WorkDate { get; set; }
-        public string PayrollCode { get; set; }
+        public int PayrollCodeId { get; set; }
         public double Quantity { get; set; }
         public string? Description { get; set; }
         public string? ServiceOrderNumber { get; set; }

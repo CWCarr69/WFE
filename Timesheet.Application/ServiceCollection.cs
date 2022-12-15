@@ -55,6 +55,7 @@ namespace Timesheet.Application
             services.AddScoped<UpdateHolidayGeneralInformationsCommandHandler, UpdateHolidayGeneralInformationsCommandHandler>();
 
             services.AddScoped<ModifyApproverCommandHandler, ModifyApproverCommandHandler>();
+            services.AddScoped<ModifyEmployeeBenefitsCommandHandler, ModifyEmployeeBenefitsCommandHandler>();
 
             services.AddScoped<CreateTimeoffCommandHandler, CreateTimeoffCommandHandler>();
             services.AddScoped<SubmitTimeoffCommandHandler, SubmitTimeoffCommandHandler>();
@@ -64,6 +65,7 @@ namespace Timesheet.Application
             services.AddScoped<AddEntryToTimeoffCommandHandler, AddEntryToTimeoffCommandHandler>();
             services.AddScoped<UpdateTimeoffEntryCommandHandler, UpdateTimeoffEntryCommandHandler>();
             services.AddScoped<DeleteTimeoffEntryCommandHandler, DeleteTimeoffEntryCommandHandler>();
+            services.AddScoped<UpdateTimeoffCommentCommandHandler, UpdateTimeoffCommentCommandHandler>();
 
             services.AddScoped<AddTimesheetEntryCommandHandler, AddTimesheetEntryCommandHandler>();
             services.AddScoped<DeleteTimesheetEntryCommandHandler, DeleteTimesheetEntryCommandHandler>();
@@ -72,6 +74,8 @@ namespace Timesheet.Application
             services.AddScoped<ApproveTimesheetCommandHandler, ApproveTimesheetCommandHandler>();
             services.AddScoped<RejectTimesheetCommandHandler, RejectTimesheetCommandHandler>();
             services.AddScoped<FinalizeTimesheetCommandHandler, FinalizeTimesheetCommandHandler>();
+            services.AddScoped<UpdateTimesheetCommentCommandHandler, UpdateTimesheetCommentCommandHandler>();
+
 
             services.AddScoped<UpdateSettingCommandHandler, UpdateSettingCommandHandler>();
 
@@ -89,7 +93,7 @@ namespace Timesheet.Application
             services.AddScoped<IExportTimesheetDestination>(sp => new ExportTimesheetDestination(destination));
         }
 
-        public static void AddOtherServices(this IServiceCollection services)
+        public static void AddOtherApplicationServices(this IServiceCollection services)
         {
             services.AddScoped<IEmployeeBenefitCalculator, EmployeeBenefitCalculator>();
             services.AddScoped<INotificationPopulationServices, NotificationPopulationServices>();

@@ -9,6 +9,7 @@ namespace Timesheet.Domain.ReadModels.Timesheets
         public DateTime CreatedDate { get; set; }
         public DateTime ModifiedDate { get; set; }
         public DateTime WorkDate { get; set; }
+        public int PayrollCodeId { get; set; }
         public string PayrollCode { get; set; }
         public double Quantity { get; set; }
         public string CustomerNumber { get; set; }

@@ -40,31 +40,31 @@ namespace Timesheet.Application.Timesheets.Services.Export
 
         public async Task ExportToExternal(string payrollPeriod)
         {
-            string csv = await GetTimesheetAsCsv<ExternalTimesheetEntryDetails, ExternalTimesheetCSVEntryModel>(payrollPeriod, true, _externalAdapter);
+            string csv = await GetTimesheetAsCsv<ExternalTimesheetEntryDetails, ExternalTimesheetCSVEntryModel>(payrollPeriod, true, _externalAdapter, true);
             string outpuPath = Path.Combine(_externalDestinationBasePath, $"{_paylocityFileName}{payrollPeriod}");
             _csvWriter.SetPath(outpuPath);
             await _csvWriter.Write(csv);
         }
 
         public async Task<string> ExportToWeb(string payrollPeriod) 
-            => await GetTimesheetAsCsv<TimesheetEntryDetails,TimesheetCSVEntryModel>(payrollPeriod, false, _webAdapter);
+            => await GetTimesheetAsCsv<TimesheetEntryDetails,TimesheetCSVEntryModel>(payrollPeriod, false, _webAdapter, false);
 
-        private async Task<string> GetTimesheetAsCsv<TEntryDetail, TEntryCsvModel>(string payrollPeriod, bool checkFinalizedState, ITimesheetToCSVModelAdapter<TEntryDetail, TEntryCsvModel> adapter)
+        private async Task<string> GetTimesheetAsCsv<TEntryDetail, TEntryCsvModel>(string payrollPeriod, bool checkFinalizedState, ITimesheetToCSVModelAdapter<TEntryDetail, TEntryCsvModel> adapter, bool ignoreHolidays)
         {
             if (payrollPeriod is null)
             {
                 return string.Empty;
             }
 
-            var timesheet = await GetDataToExport<TEntryDetail>(payrollPeriod, checkFinalizedState);
+            var timesheet = await GetDataToExport<TEntryDetail>(payrollPeriod, checkFinalizedState, ignoreHolidays);
             var timesheetCSVModel = adapter.Adapt(timesheet);
             var csv = _formatter.Format(timesheetCSVModel);
             return csv;
         }
 
-        private async Task<AllEmployeesTimesheet<TEntryDetail>> GetDataToExport<TEntryDetail>(string payrollPeriod, bool checkFinalizedState)
+        private async Task<AllEmployeesTimesheet<TEntryDetail>> GetDataToExport<TEntryDetail>(string payrollPeriod, bool checkFinalizedState, bool ignoreHolidays)
         {
-            var timesheet = await _timesheets.GetAllEmployeeTimesheetByPayrollPeriod<TEntryDetail>(payrollPeriod);
+            var timesheet = await _timesheets.GetAllEmployeeTimesheetByPayrollPeriod<TEntryDetail>(payrollPeriod, ignoreHolidays);
 
             if(timesheet is null)
             {

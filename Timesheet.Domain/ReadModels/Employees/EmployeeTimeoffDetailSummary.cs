@@ -5,8 +5,8 @@ namespace Timesheet.Domain.ReadModels.Employees
     public class EmployeeTimeoffDetailSummary
     {
         public DateTime RequestDate { get; set; }
-        public TimeoffType Type { get; set; }
-        public string PayrollCode => Type.ToString();
+        public int TypeId { get; set; }
+        public string PayrollCode { get; set; }
         public double Hours { get; set; }
     }
 }

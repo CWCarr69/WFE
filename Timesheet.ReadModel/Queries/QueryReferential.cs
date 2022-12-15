@@ -7,6 +7,8 @@ using Timesheet.Domain.ReadModels.Employees;
 using Timesheet.Domain.ReadModels.Referential;
 using Timesheet.Domain.ReadModels.Timesheets;
 using Timesheet.Infrastructure.Dapper;
+using Timesheet.Models.Referential;
+using PayrollTypes = Timesheet.Domain.ReadModels.Referential.PayrollTypes;
 
 namespace Timesheet.Infrastruture.ReadModel.Queries
 {
@@ -91,17 +93,16 @@ namespace Timesheet.Infrastruture.ReadModel.Queries
             return profitCenterNumbers;
         }
 
-        public IEnumerable<EnumReadModel<TimeoffType>> GetTimeoffTypes()
+        public async Task<IEnumerable<PayrollTypes>> GetTimeoffTypes()
         {
-            return new List<EnumReadModel<TimeoffType>>
+            var categoryParam = "@category";
+            var query = $"SELECT * FROM PayrollTypes WHERE Category = {categoryParam} order by PayrollCode";
+            var timeoffTypes = await _dbService.QueryAsync<Domain.ReadModels.Referential.PayrollTypes>(query, new
             {
-                (EnumReadModel<TimeoffType>) TimeoffType.BERV,
-                (EnumReadModel<TimeoffType>) TimeoffType.HOLIDAY,
-                (EnumReadModel<TimeoffType>) TimeoffType.UNPAID,
-                (EnumReadModel<TimeoffType>) TimeoffType.PERSONAL,
-                (EnumReadModel<TimeoffType>) TimeoffType.VACATION,
-                (EnumReadModel<TimeoffType>) TimeoffType.SHOP
-            };
+                category = PayrollTypesCategory.TIMEOFF
+            });
+
+            return timeoffTypes;
         }
 
         public IEnumerable<EnumReadModel<TimeoffStatus>> GetTimeoffStatuses()
@@ -135,20 +136,12 @@ namespace Timesheet.Infrastruture.ReadModel.Queries
             };
         }
 
-        public IEnumerable<EnumReadModel<TimesheetPayrollCode>> GetPayrollCodes()
+        public async Task<IEnumerable<PayrollTypes>> GetPayrollCodes()
         {
-            return new List<EnumReadModel<TimesheetPayrollCode>>
-            {
-                (EnumReadModel<TimesheetPayrollCode>) TimesheetPayrollCode.REGULAR,
-                (EnumReadModel<TimesheetPayrollCode>) TimesheetPayrollCode.OVERTIME,
-                (EnumReadModel<TimesheetPayrollCode>) TimesheetPayrollCode.HOLIDAY,
-                (EnumReadModel<TimesheetPayrollCode>) TimesheetPayrollCode.SHOP, 
-                (EnumReadModel<TimesheetPayrollCode>) TimesheetPayrollCode.BERV,
-                (EnumReadModel<TimesheetPayrollCode>) TimesheetPayrollCode.JURY_DUTY,
-                (EnumReadModel<TimesheetPayrollCode>) TimesheetPayrollCode.UNPAID,
-                (EnumReadModel<TimesheetPayrollCode>) TimesheetPayrollCode.PERSONAL,
-                (EnumReadModel<TimesheetPayrollCode>) TimesheetPayrollCode.VACATION,
-            };
+            var query = $"SELECT * FROM PayrollTypes order by PayrollCode";
+            var payrollCodes = await _dbService.QueryAsync<PayrollTypes>(query);
+
+            return payrollCodes;
         }
     }
 }

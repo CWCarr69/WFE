@@ -41,7 +41,6 @@ namespace Timesheet.Application.Holidays.CommandHandlers
             }
 
             existingHoliday.UpdateInformations(updateHolidayGeneralInformations.Description, updateHolidayGeneralInformations.Notes); ;
-            existingHoliday.UpdateMetadataOnModification(updateHolidayGeneralInformations.Author?.Id);
 
 
             this.RelatedAuditableEntity = existingHoliday;

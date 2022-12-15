@@ -40,7 +40,6 @@ namespace Timesheet.Application.Settings.CommandHandlers
             }
 
             existingSetting.UpdateValue(updateSetting.Value);
-            existingSetting.UpdateMetadataOnModification(updateSetting.Author?.Id);
 
             this.RelatedAuditableEntity = existingSetting;
 

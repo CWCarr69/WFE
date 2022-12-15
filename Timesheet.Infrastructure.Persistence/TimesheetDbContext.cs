@@ -5,6 +5,7 @@ using Timesheet.Domain.Models.Holidays;
 using Timesheet.Domain.Models.Notifications;
 using Timesheet.Domain.Models.Settings;
 using Timesheet.Domain.Models.Timesheets;
+using Timesheet.Models.Referential;
 
 namespace Timesheet.Infrastructure.Persistence
 {
@@ -21,6 +22,8 @@ namespace Timesheet.Infrastructure.Persistence
         public DbSet<NotificationItem> NotificationItems { get; set; }
         public DbSet<Audit> Audits { get; set; }
         public DbSet<Setting> Settings { get; set; }
+        public DbSet<PayrollTypes> PayrollTypes { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -41,6 +44,16 @@ namespace Timesheet.Infrastructure.Persistence
             var contacts = employee.OwnsOne(e => e.Contacts);
             contacts.Property(d => d.CompanyEmail).HasColumnName(nameof(EmployeeContactData.CompanyEmail));
             contacts.Property(d => d.CompanyPhone).HasColumnName(nameof(EmployeeContactData.CompanyPhone));
+
+            var employeeBenefits = employee.OwnsOne(e => e.BenefitsVariation);
+            employeeBenefits.Property(d => d.VacationHours).HasColumnName(nameof(EmployeeBenefits.VacationHours));
+            employeeBenefits.Property(d => d.PersonalHours).HasColumnName(nameof(EmployeeBenefits.PersonalHours));
+            employeeBenefits.Property(d => d.RolloverHours).HasColumnName(nameof(EmployeeBenefits.RolloverHours));
+
+            var employeeBenefitsSnapshot = employee.OwnsOne(e => e.BenefitsSnapshot);
+            employeeBenefitsSnapshot.Property(d => d.VacationHours).HasColumnName(nameof(EmployeeBenefits.VacationHours) + "Snapshot");
+            employeeBenefitsSnapshot.Property(d => d.PersonalHours).HasColumnName(nameof(EmployeeBenefits.PersonalHours) + "Snapshot");
+            employeeBenefitsSnapshot.Property(d => d.RolloverHours).HasColumnName(nameof(EmployeeBenefits.RolloverHours) + "Snapshot");
 
             employee.HasOne(e => e.PrimaryApprover);
             employee.HasOne(e => e.SecondaryApprover);

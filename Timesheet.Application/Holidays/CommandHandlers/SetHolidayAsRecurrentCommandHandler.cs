@@ -41,7 +41,6 @@ namespace Timesheet.Application.Holidays.CommandHandlers
             }
 
             existingHoliday.SetAsRecurrent();
-            existingHoliday.UpdateMetadataOnModification(setHolidayAsRecurrent.Author?.Id);
             await _writeRepository.Add(existingHoliday);
 
             this.RelatedAuditableEntity = existingHoliday;

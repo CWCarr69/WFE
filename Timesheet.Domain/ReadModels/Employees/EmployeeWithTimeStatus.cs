@@ -9,6 +9,8 @@ namespace Timesheet.Domain.ReadModels.Employees
         public string FullName { get; set; }
         public string TimeoffId { get; set; }
         public string TimesheetId { get; set; }
+        public double VacationBalance { get; set; }
+        public double PersonalBalance { get; set; }
         public int LastTimeoffStatus { get; set; }
         public string LastTimeoffStatusString => ((TimeoffStatus)LastTimeoffStatus).ToString();
         public int LastTimesheetStatus { get; set; }

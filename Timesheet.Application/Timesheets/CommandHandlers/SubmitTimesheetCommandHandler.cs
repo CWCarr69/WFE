@@ -43,7 +43,6 @@ namespace Timesheet.Application.Timesheets.CommandHandlers
             }
 
             timesheet.Submit(employee, command.Comment);
-            timesheet.UpdateMetadataOnModification(command.Author?.Id);
 
             return Enumerable.Empty<IDomainEvent>();
         }

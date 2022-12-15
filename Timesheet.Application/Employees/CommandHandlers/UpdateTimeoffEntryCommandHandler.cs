@@ -40,7 +40,6 @@ namespace Timesheet.Application.Employees.CommandHandlers
             _workflowService.AuthorizeTransition(timeoffEntry, TimeoffEntryTransitions.UPDATE, timeoffEntry.Status, currentEmployeeRoleOnData);
 
             employee.UpdateTimeoffEntry(timeoff, timeoffEntry, command.Type, command.Hours, command.Label);
-            timeoff.UpdateMetadataOnModification(command.Author?.Id);
             timeoffEntry.UpdateMetadataOnModification(command.Author?.Id);
 
             return LaunchedAsSubCommand ? Enumerable.Empty<IDomainEvent>() : employee.GetDomainEvents();

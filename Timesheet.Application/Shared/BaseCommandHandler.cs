@@ -66,6 +66,7 @@ namespace Timesheet.Application
 
                 if (RelatedAuditableEntity is not null)
                 {
+                    RelatedAuditableEntity.UpdateMetadataOnModification(command.Author?.Id);
                     await _auditHandler.LogCommand(RelatedAuditableEntity, command, command.ActionType(), command.Author?.Id);
                 }
 

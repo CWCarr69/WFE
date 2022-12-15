@@ -9,5 +9,9 @@
         public DateTime? EmploymentDate { get; set; }
         public byte[]? Picture { get; set; }
         public bool IsAdministrator { get; set; }
+        public bool ConsiderFixedBenefits { get; set; }
+        public string? PrimaryApproverId { get; set; }
+        public string? SecondaryApproverId { get; set; }
+
     }
 }

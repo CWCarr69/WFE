@@ -4,12 +4,12 @@ namespace Timesheet.Domain.Models.Timesheets
 {
     public class TimesheetEntry : Entity
     {
-        public TimesheetEntry(string id, string employeeId, DateTime WorkDate, string payrollCode, double hours,
+        public TimesheetEntry(string id, string employeeId, DateTime WorkDate, int payrollCodeId, double hours,
             string description, string serviceOrderNumber, string serviceOrderDescription, string jobNumber, string jobDescription, string profitCenter, bool outOffCountry, bool isDeletable=false) : base(id)
         {
             EmployeeId = employeeId;
             this.WorkDate = WorkDate;
-            PayrollCode = payrollCode;
+            PayrollCodeId = payrollCodeId;
             Hours = hours;
             Description = description;
             ServiceOrderNumber = serviceOrderNumber;
@@ -21,20 +21,21 @@ namespace Timesheet.Domain.Models.Timesheets
             this.IsDeletable = isDeletable;
         }
 
-        public TimesheetEntry(string id, string employeeId, DateTime workDate, string payrollCode, double hours,
-            string description) : base(id)
+        public TimesheetEntry(string id, string employeeId, DateTime workDate, int payrollCodeId, double hours,
+            string description, TimesheetEntryStatus status) : base(id)
         {
             EmployeeId = employeeId.ToString();
             WorkDate = workDate;
-            PayrollCode = payrollCode;
+            PayrollCodeId = payrollCodeId;
             Hours = hours;
             Description = description;
+            Status = status;
         }
 
 
         public string EmployeeId { get; private set; }
         public DateTime WorkDate { get; private set; }
-        public string PayrollCode { get; private set; }
+        public int PayrollCodeId { get; private set; }
         public double Hours { get; private set; }
         public double Quantity => Hours;
         public string Description { get; private set; }

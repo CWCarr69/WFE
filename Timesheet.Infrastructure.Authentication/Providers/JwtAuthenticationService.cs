@@ -9,7 +9,7 @@ namespace Timesheet.Infrastructure.Authentication.Providers
     internal class JwtAuthenticationService : IAuthenticationService<AuthenticationResponse>
     {
         private readonly IAuthenticator _authenticator;
-        private readonly double SESSION_LIFE_HOURS = 3;
+        private readonly double SESSION_LIFE_DAYS = 3;
 
         public JwtAuthenticationService(IAuthenticator authenticator)
         {
@@ -41,7 +41,7 @@ namespace Timesheet.Infrastructure.Authentication.Providers
 
             var jwtToken = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddHours(SESSION_LIFE_HOURS),
+                expires: DateTime.Now.AddDays(SESSION_LIFE_DAYS),
                 signingCredentials: credentials);
 
             var token = new JwtSecurityTokenHandler().WriteToken(jwtToken);

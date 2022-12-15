@@ -2,13 +2,14 @@
 
 namespace Timesheet.DomainEvents.Employees
 {
-    public record TimeoffApproved(
+    public record TimeoffApprovedEntry(
         string Id, 
         string EmployeeId,
         DateTime RequestDate, 
-        string Type, 
+        int TypeId, 
         double Hours, 
         string Description,
-        bool IsSalaried) 
-        : IDomainEvent;
+        bool IsSalaried);
+        
+    public record TimeoffApproved(IEnumerable<TimeoffApprovedEntry> TimeoffEntries) : IDomainEvent;
 }

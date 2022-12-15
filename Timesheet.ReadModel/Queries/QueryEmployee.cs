@@ -6,6 +6,8 @@ using Timesheet.Domain.ReadModels.Employees;
 using Timesheet.Domain.ReadModels.Timesheets;
 using Timesheet.Infrastructure.Dapper;
 using Timesheet.Infrastruture.ReadModel.Queries;
+using Timesheet.Models.Referential;
+using EmployeeBenefits = Timesheet.Domain.ReadModels.Employees.EmployeeBenefits;
 
 namespace Timesheet.Infrastructure.ReadModel.Queries
 {
@@ -38,6 +40,19 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
                 LEFT JOIN employees s on s.Id = e.SecondaryApproverId
                 WHERE e.id = {EmployeeApproversParam}";
 
+        #endregion
+
+        #region EmployeeBenefits
+        private const string EmployeeBenefitsParam = "@id";
+        public const string EmployeeBenefitsQuery = $@"
+            SELECT 
+            ConsiderFixedBenefits as {nameof(EmployeeBenefits.ConsiderFixedBenefits)},
+            VacationHours as  {nameof(EmployeeBenefits.VacationHours)},
+            PersonalHours as {nameof(EmployeeBenefits.PersonalHours)},
+            RolloverHours as {nameof(EmployeeBenefits.RolloverHours)}
+            FROM employees e
+            WHERE e.id = {EmployeeBenefitsParam}
+        ";
         #endregion
 
         #region PendingTimeoffs
@@ -81,7 +96,7 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
         private const string PendingTimesheetsQueryFromClause = $@"
             FROM employees e
             JOIN timesheetEntry te on e.id = te.EmployeeId AND te.Status = {PendingTimesheetsQueryEntryStatusParam}
-                AND te.PayrollCode  IN ({PendingTimesheetsQueryRegularPayrollCodeParam}, {PendingTimesheetsQueryOvertimePayrollCodeParam}) 
+                AND te.PayrollCodeId  IN ({PendingTimesheetsQueryRegularPayrollCodeParam}, {PendingTimesheetsQueryOvertimePayrollCodeParam}) 
             JOIN timesheets t on t.Id = te.TimesheetHeaderId AND t.status != {PendingTimesheetsQueryStatusParam}
         ";
 
@@ -152,6 +167,8 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             SELECT 
             e.Id as {nameof(EmployeeWithTimeStatus.EmployeeId)},
             e.FullName  as {nameof(EmployeeWithTimeStatus.FullName)}, 
+            e.BenefitsSnapshot_VacationBalance as {nameof(EmployeeWithTimeStatus.VacationBalance)}, 
+            e.BenefitsSnapshot_PersonalBalance as {nameof(EmployeeWithTimeStatus.PersonalBalance)}, 
             tos.Id as {nameof(EmployeeWithTimeStatus.TimeoffId)},
             tos.Status as {nameof(EmployeeWithTimeStatus.LastTimeoffStatus)},
             ts.Id as {nameof(EmployeeWithTimeStatus.TimesheetId)},
@@ -175,7 +192,7 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             JOIN TimeoffHeader th on e.Id = th.employeeId AND th.status = {CalculateUsedBenefitsQueryStatusParam}
             JOIN TimeoffEntry te on th.Id = te.TimeoffHeaderId
             WHERE e.Id = {CalculateUsedBenefitsQueryEmployeeIdParam}
-            AND te.Type = {CalculateUsedBenefitsQueryTypeParam} 
+            AND te.TypeId = {CalculateUsedBenefitsQueryTypeParam} 
             AND te.RequestDate 
             BETWEEN {CalculateUsedBenefitsQueryStartDateParam} AND {CalculateUsedBenefitsQueryEndDateParam}
         ";
@@ -193,7 +210,7 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             JOIN TimeoffHeader th on e.Id = th.employeeId AND th.status != {CalculateScheduledBenefitsQueryStatusParam}
             JOIN TimeoffEntry te on th.Id = te.TimeoffHeaderId
             WHERE e.Id = {CalculateScheduledBenefitsQueryEmployeeIdParam}
-            AND te.Type = {CalculateScheduledBenefitsQueryTypeParam} 
+            AND te.TypeId = {CalculateScheduledBenefitsQueryTypeParam} 
             AND te.RequestDate 
             BETWEEN {CalculateScheduledBenefitsQueryStartDateParam} AND {CalculateScheduledBenefitsQueryEndDateParam}
         ";
@@ -217,12 +234,22 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             return employees;
         }
 
-        public async Task<EmployeeProfile?> GetEmployeeProfile(string id)
+        public async Task<EmployeeProfile?> GetEmployeeProfile(string id, bool withApprovers = false)
         {
             var query = QueryEmployeeConstants.EmployeeProfileQuery;
-            var employee = await _dbService.QueryAsync<EmployeeProfile>(query, new { id });
+            var employees = await _dbService.QueryAsync<EmployeeProfile>(query, new { id });
 
-            return employee.FirstOrDefault();
+            var employee = employees.FirstOrDefault();
+
+            if (employee is not null && withApprovers)
+            {
+                query = QueryEmployeeConstants.EmployeeApproversQuery;
+                var employeeApprovers = await _dbService.QueryAsync<EmployeeApprovers>(query, new { id = id });
+                employee.PrimaryApproverId = employeeApprovers.FirstOrDefault()?.PrimaryApproverId;
+                employee.SecondaryApproverId = employeeApprovers.FirstOrDefault()?.SecondaryApproverId;
+
+            }
+            return employee;
         }
 
         public async Task<EmployeeProfile?> GetEmployeeProfileByEmail(string email)
@@ -249,9 +276,12 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             return employee.FirstOrDefault();
         }
 
-        public Task<EmployeeBenefits?> GetEmployeeBenefits(string id)
+        public async Task<EmployeeBenefits?> GetEmployeeBenefitsVariation(string id)
         {
-            throw new NotImplementedException();
+            var query = QueryEmployeeConstants.EmployeeBenefitsQuery;
+            var employee = await _dbService.QueryAsync<EmployeeBenefits>(query, new { id = id });
+
+            return employee.FirstOrDefault();
         }
 
         public async Task<EmployeeTeam> GetEmployeeTeam(int page, int itemsPerPage, string approverId = null, bool directReports = false)
@@ -292,8 +322,8 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
 
             var timesheetEntrySubmittedStatus = TimesheetEntryStatus.SUBMITTED;
             var timesheetFinalizedStatus = TimesheetStatus.FINALIZED;
-            var regularPayrollCode = TimesheetPayrollCode.REGULAR.ToString();
-            var overtimePayrollCode = TimesheetPayrollCode.OVERTIME.ToString();
+            var regularPayrollCode = (int) TimesheetFixedPayrollCodeEnum.REGULAR;
+            var overtimePayrollCode = (int)TimesheetFixedPayrollCodeEnum.OVERTIME;
 
             var totalQuery = QueryEmployeeConstants.TotalPendingTimesheetsQuery;
             totalQuery = AddWhereClauseForDirectReports(approverId, directReports, totalQuery);
@@ -309,7 +339,7 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             return employeePendingTimesheets;
         }
 
-        public async Task<double> CalculateUsedBenefits(string employeeId, TimeoffType type, DateTime start, DateTime end)
+        public async Task<double> CalculateUsedBenefits(string employeeId, int type, DateTime start, DateTime end)
         {
             var query = QueryEmployeeConstants.CalculateUsedBenefitsQuery;
 
@@ -317,7 +347,7 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             return await _dbService.ExecuteScalarAsync<double>(query, new { start, end, status, type, employeeId });
         }
 
-        public async Task<double> CalculateScheduledBenefits(string employeeId, TimeoffType type)
+        public async Task<double> CalculateScheduledBenefits(string employeeId, int type)
         {
             var now = DateTime.Now;
             var start = new DateTime(now.Year, 1, 1);

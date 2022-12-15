@@ -6,10 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Models\Referential\**" />
-    <EmbeddedResource Remove="Models\Referential\**" />
-    <None Remove="Models\Referential\**" />
-  </ItemGroup>
-
 </Project>

@@ -38,7 +38,6 @@ namespace Timesheet.Application.Employees.CommandHandlers
             _workflowService.AuthorizeTransition(timeoffEntry, TimeoffEntryTransitions.DELETE, timeoffEntry.Status, currentEmployeeRoleOnData);
 
             employee.DeleteTimeoffEntry(timeoff, timeoffEntry);
-            timeoff.UpdateMetadataOnModification(command.Author?.Id);
 
             return employee.GetDomainEvents();
         }

@@ -1,7 +1,10 @@
 ﻿
 using Timesheet.Application.Employees.Queries;
+using Timesheet.Application.Employees.Services;
+using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Models.Employees;
 using Timesheet.Domain.ReadModels.Employees;
+using Timesheet.Models.Referential;
 
 namespace Timesheet.Domain.Employees.Services
 {
@@ -47,8 +50,18 @@ namespace Timesheet.Domain.Employees.Services
             this._queryEmployee = queryEmployee;
         }
 
-        public async Task<EmployeeBenefits> GetBenefits(string employeeId, DateTime employmentDate)
+        public async Task<EmployeeCalculatedBenefits> GetBenefits(string employeeId, DateTime employmentDate)
         {
+            var employeeProfile = await _queryEmployee.GetEmployeeProfile(employeeId);
+            if(employeeProfile is null)
+            {
+                throw new EntityNotFoundException<Employee>(employeeId);
+            }
+
+            var employeeBenefitsVariations = await _queryEmployee.GetEmployeeBenefitsVariation(employeeId);
+
+            var doNotUseCalculatedBenefits = !employeeProfile.ConsiderFixedBenefits;
+
             var scheduledVacations = await GetScheduledVacationTimes(employeeId);
             var usedVacations = await GetUsedVacationTimes(employeeId, DateTime.Now);
             var rollover = await GetTotalRollOverTimes(employeeId, employmentDate);
@@ -61,7 +74,7 @@ namespace Timesheet.Domain.Employees.Services
             var personalHours = new HourInformation
             {
                 Type = "Personal",
-                Balance = totalPersonals - scheduledPersonals - usedPersonals,
+                Balance = totalPersonals - scheduledPersonals - usedPersonals + (doNotUseCalculatedBenefits ? 0 : employeeBenefitsVariations.PersonalHours),
                 Used = usedPersonals,
                 Scheduled = scheduledPersonals
             };
@@ -69,28 +82,30 @@ namespace Timesheet.Domain.Employees.Services
             var vacationHours = new HourInformation
             {
                 Type = "Vacation",
-                Balance = totalVacations - scheduledVacations - usedVacations - rollover,
+                Balance = totalVacations + rollover - scheduledVacations - usedVacations 
+                + (doNotUseCalculatedBenefits ? 0 : employeeBenefitsVariations.VacationHours)
+                +(doNotUseCalculatedBenefits ? 0 : employeeBenefitsVariations.RolloverHours),
                 Used = usedVacations,
                 Scheduled = scheduledVacations
             };
 
-            var employeeBenefits = new EmployeeBenefits
+            var employeeCalcultatedBenefits = new EmployeeCalculatedBenefits
             {
-                EligibleVacationHours = totalVacations + rollover,
-                EligiblePersonalHours = totalPersonals,
-                RolloverHours = rollover,
+                EligibleVacationHours = totalVacations + rollover + (doNotUseCalculatedBenefits ? 0 : employeeBenefitsVariations.VacationHours),
+                EligiblePersonalHours = totalPersonals + (doNotUseCalculatedBenefits ? 0 : employeeBenefitsVariations.PersonalHours),
+                RolloverHours = rollover + (doNotUseCalculatedBenefits ? 0 : employeeBenefitsVariations.RolloverHours),
                 Details = new List<HourInformation> { personalHours, vacationHours }
             };
 
-            return employeeBenefits;
+            return employeeCalcultatedBenefits;
         }
 
         private async Task<double> GetUsedPersonalTimes(string employeeId)
             => await _queryEmployee
-                .CalculateUsedBenefits(employeeId, Models.Employees.TimeoffType.PERSONAL, new DateTime(DateTime.Now.Year, 1, 1), new DateTime(DateTime.Now.Year, 12, 31));
+                .CalculateUsedBenefits(employeeId, (int)TimesheetFixedPayrollCodeEnum.PERSONAL, new DateTime(DateTime.Now.Year, 1, 1), new DateTime(DateTime.Now.Year, 12, 31));
 
         private async Task<double> GetScheduledPersonalTimes(string employeeId)
-            => await _queryEmployee.CalculateScheduledBenefits(employeeId, TimeoffType.PERSONAL);
+            => await _queryEmployee.CalculateScheduledBenefits(employeeId, (int) TimesheetFixedPayrollCodeEnum.PERSONAL);
 
         private async Task<double> GetTotalRollOverTimes(string employeeId, DateTime employmentDate)
         {
@@ -128,7 +143,7 @@ namespace Timesheet.Domain.Employees.Services
             var anniversaryDate = new DateTime(now.Year, employmentDate.Month, employmentDate.Day);
             var yearsDifferencesSinceEmploymenDate = now.Year - employmentDate.Year;
             
-            var isAnniversaryBenefitDate = PeriodIsSufficentForScheduledVacations(yearsDifferencesSinceEmploymenDate)
+            var isAnniversaryBenefitDate = PeriodIsSufficentForBonusVacations(yearsDifferencesSinceEmploymenDate)
                 && anniversaryDate <= now;
 
             if (isAnniversaryBenefitDate)
@@ -143,13 +158,13 @@ namespace Timesheet.Domain.Employees.Services
 
         private async Task<double> GetUsedVacationTimes(string employeeId, DateTime now)
             => await _queryEmployee
-                .CalculateUsedBenefits(employeeId, 
-                TimeoffType.VACATION, 
+                .CalculateUsedBenefits(employeeId,
+                (int) TimesheetFixedPayrollCodeEnum.VACATION, 
                 new DateTime(now.Year, 1, 1), 
                 new DateTime(now.Year, 12, 31));
 
         private async Task<double> GetScheduledVacationTimes(string employeeId)
-            => await _queryEmployee.CalculateScheduledBenefits(employeeId, TimeoffType.VACATION);
+            => await _queryEmployee.CalculateScheduledBenefits(employeeId, (int)TimesheetFixedPayrollCodeEnum.VACATION);
 
         private int AtAnniversaryVacation(DateTime employmentDate, int yearsSinceEmployment)
         {
@@ -168,14 +183,15 @@ namespace Timesheet.Domain.Employees.Services
 
         private int AdditionalVacations(int yearsConsidered)
         {
-            if(yearsConsidered > 1) { return 10; }
-            if(yearsConsidered > 5) { return 15; }
+
             if(yearsConsidered > 15) { return 20; }
+            if (yearsConsidered > 5) { return 15; }
+            if (yearsConsidered > 1) { return 10; }
 
             return 0;
         }
 
-        private bool PeriodIsSufficentForScheduledVacations(int period)
+        private bool PeriodIsSufficentForBonusVacations(int period)
         {
             return period == 1 || period == 5 || period == 15;
         }
