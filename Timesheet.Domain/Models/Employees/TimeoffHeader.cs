@@ -13,20 +13,23 @@
         }
 
         public DateTime RequestStartDate { get; private set; }
+
+        public bool RequireApproval { get; private set; } = false;
+
         public DateTime RequestEndDate { get; private set; }
         public string? EmployeeComment { get; private set; }
         public string? ApproverComment { get; private set; }
         public TimeoffStatus Status { get; private set; }
         public virtual ICollection<TimeoffEntry> TimeoffEntries { get; private set; } = new List<TimeoffEntry>();
 
-        internal static TimeoffHeader Create(DateTime requestStartDate, DateTime requestEndDate, string employeeComment)
+        internal static TimeoffHeader Create(DateTime requestStartDate, DateTime requestEndDate, string employeeComment, bool requireApproval)
         {
-            var timeoff = new TimeoffHeader(Guid.NewGuid().ToString(), 
+            var timeoff = new TimeoffHeader(Guid.NewGuid().ToString(),
                 requestStartDate.Date,
                 requestEndDate.Date,
                 employeeComment);
 
-            timeoff.Status = TimeoffStatus.SUBMITTED;
+            timeoff.Status = requireApproval ? TimeoffStatus.SUBMITTED : TimeoffStatus.APPROVED;
 
             return timeoff;
         }

@@ -112,3 +112,5 @@
 /Timesheet.Web.Api.ServiceWorker/obj
 /Timesheet.Benefits/bin/Debug/net6.0
 /Timesheet.Benefits/obj
+/Timesheet.Benefits/bin/Release/net6.0
+/Timesheet.Web.Api/bin/Release/net6.0/Timesheet.Benefits.pdb

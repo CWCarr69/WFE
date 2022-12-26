@@ -93,7 +93,7 @@ namespace Timesheet.Web.Api.Controllers
         }
 
         [HttpGet("Team")]
-        public async Task<ActionResult<PaginatedResult<EmployeeWithTimeStatus>>> GetTeamRecordStatus(bool directReport, int page = 1, int itemsPerPage = 50)
+        public async Task<ActionResult<PaginatedResult<EmployeeWithTimeStatus>>> GetTeamRecordStatus(bool directReport, int page = 1, int itemsPerPage = 10000)
         {
             string managerId = Manager();
 
@@ -105,7 +105,7 @@ namespace Timesheet.Web.Api.Controllers
         }
 
         [HttpGet("Timeoff/Pending")]
-        public async Task<ActionResult<PaginatedResult<WithHabilitations<EmployeeTimeoff>>>> GetTeamPendingTimeoffs(bool directReport, int page = 1, int itemsPerPage = 50)
+        public async Task<ActionResult<PaginatedResult<WithHabilitations<EmployeeTimeoff>>>> GetTeamPendingTimeoffs(bool directReport, int page = 1, int itemsPerPage = 10000)
         {
             string managerId = Manager();
             LogInformation($"Getting Employee ({managerId}) Pending timeoffs");
@@ -123,7 +123,7 @@ namespace Timesheet.Web.Api.Controllers
         }
 
         [HttpGet("Timesheet/Pending")]
-        public async Task<ActionResult<IEnumerable<WithHabilitations<EmployeeTimesheet>>>> GetTeamPendingTimesheets(bool directReport, int page = 1, int itemsPerPage = 50)
+        public async Task<ActionResult<IEnumerable<WithHabilitations<EmployeeTimesheet>>>> GetTeamPendingTimesheets(bool directReport, int page = 1, int itemsPerPage = 10000)
         {
             string managerId = Manager();
             LogInformation($"Getting Employee ({managerId}) Pending timesheets");

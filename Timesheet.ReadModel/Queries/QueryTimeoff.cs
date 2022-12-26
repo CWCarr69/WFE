@@ -48,12 +48,13 @@ namespace Timesheet.Infrastructure.Persistence.Queries
 
         #region EmployeeTimeoffs
         private const string TimeoffsQueryEmployeeIdParam = "@employeeId";
+        private const string TimeoffsQueryRequireApprovalParam = "@requireApproval";
 
         private const string TimeoffDetailsQueryFromClause = $@"
             FROM employees e
             JOIN timeoffHeader t on e.Id = t.EmployeeId
             JOIN timeoffEntry te on t.id = te.TimeoffHeaderId
-            Where e.Id = {TimeoffsQueryEmployeeIdParam}
+            Where e.Id = {TimeoffsQueryEmployeeIdParam} AND t.RequireApproval = {TimeoffsQueryRequireApprovalParam}
             GROUP BY e.Id, e.Fullname, t.Id, t.CreatedDate, t.ModifiedDate, t.RequestStartDate, t.RequestEndDate, t.status
         ";
 
@@ -115,6 +116,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
         private const string TimeoffEntriesInPeriodEmployeeIdParam = "@employeeId";
         private const string TimeoffEntriesInPeriodStartParam = "@start";
         private const string TimeoffEntriesInPeriodEndParam = "@end";
+        private const string TimeoffEntriesInPeriodRequireApprovalParam = "@requireApproval";
 
         public const string TimeoffEntriesInPeriod = $@"SELECT
             th.Id as {nameof(EmployeeTimeoffEntry.TimeoffHeaderId)},
@@ -126,7 +128,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             FROM timeoffEntry te 
             JOIN timeoffHeader th on th.Id = te.TimeoffHeaderId
             JOIN payrollTypes pt on pt.numId = te.typeId
-            WHERE th.EmployeeId = {TimeoffEntriesInPeriodEmployeeIdParam}
+            WHERE th.EmployeeId = {TimeoffEntriesInPeriodEmployeeIdParam} AND th.RequireApproval = {TimeoffsQueryRequireApprovalParam}
             AND RequestDate BETWEEN {TimeoffEntriesInPeriodStartParam} AND {TimeoffEntriesInPeriodEndParam}
             ORDER BY RequestDate
         ";
@@ -158,17 +160,17 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             return timeoff;
         }
 
-        public async Task<EmployeeTimeoffHistory> GetEmployeeTimeoffs(string employeeId, int page, int itemsPerPage)
+        public async Task<EmployeeTimeoffHistory> GetEmployeeTimeoffs(string employeeId, int page, int itemsPerPage, bool requireApproval)
         {
             var totalQuery = QueryTimeoffConstants.TimeoffsTotalQuery;
 
             var query = QueryTimeoffConstants.TimeoffsQuery;
             query = Paginate(page, itemsPerPage, query, QueryTimeoffConstants.TimeoffDetailsQueryOrderByClause);
 
-            var timeoffHistory = (await _dbService.QueryAsync<EmployeeTimeoffHistory>(totalQuery, new { employeeId }))?.FirstOrDefault();
+            var timeoffHistory = (await _dbService.QueryAsync<EmployeeTimeoffHistory>(totalQuery, new { employeeId, requireApproval }))?.FirstOrDefault();
             if(timeoffHistory is not null)
             {
-                var timeoffs = await _dbService.QueryAsync<EmployeeTimeoff>(query, new { employeeId });
+                var timeoffs = await _dbService.QueryAsync<EmployeeTimeoff>(query, new { employeeId, requireApproval });
                 timeoffHistory.Items = timeoffs;
             }
 
@@ -198,10 +200,10 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             return timeoffSummary;
         }
 
-        public async Task<IEnumerable<EmployeeTimeoffEntry>> GetEmployeeTimeoffEntriesInPeriod(string employeeId, DateTime start, DateTime end)
+        public async Task<IEnumerable<EmployeeTimeoffEntry>> GetEmployeeTimeoffEntriesInPeriod(string employeeId, DateTime start, DateTime end, bool requireApproval)
         {
             var query = QueryTimeoffConstants.TimeoffEntriesInPeriod;
-            var entries = await _dbService.QueryAsync<EmployeeTimeoffEntry>(query, new { employeeId, start, end });
+            var entries = await _dbService.QueryAsync<EmployeeTimeoffEntry>(query, new { employeeId, start, end, requireApproval });
 
             return entries;
         }

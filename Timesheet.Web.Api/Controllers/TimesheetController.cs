@@ -41,7 +41,7 @@ namespace Timesheet.Web.Api.Controllers
         }
 
         [HttpGet("History/Employee/{employeeId}")]
-        public async Task<ActionResult<PaginatedResult<EmployeeTimesheet>>> GetTimesheetHistory(string employeeId, int page = 1, int itemsPerpage = 50)
+        public async Task<ActionResult<PaginatedResult<EmployeeTimesheet>>> GetTimesheetHistory(string employeeId, int page = 1, int itemsPerpage = 10000)
         {
             LogInformation($"Getting Employee ({employeeId}) Timesheet history");
             
@@ -90,7 +90,7 @@ namespace Timesheet.Web.Api.Controllers
         }
 
         [HttpGet("Review")]
-        public async Task<ActionResult<WithHabilitations<PaginatedResult<WithHabilitations<EmployeeTimesheetWithTotals>>>>> GetTimesheetReview(string payrollPeriod, string? employeeId, string? department, int page=1, int itemsPerpage=50)
+        public async Task<ActionResult<WithHabilitations<PaginatedResult<WithHabilitations<EmployeeTimesheetWithTotals>>>>> GetTimesheetReview(string payrollPeriod, string? employeeId, string? department, int page=1, int itemsPerpage=10000)
         {
             LogInformation($"Getting Timesheet ({payrollPeriod}) review");
             

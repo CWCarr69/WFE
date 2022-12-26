@@ -93,12 +93,13 @@ namespace Timesheet.Domain.Models.Employees
         }
 
         #region Time Workflow
-        public TimeoffHeader CreateTimeoff(DateTime requestStartDate, DateTime requestEndDate, string employeeComment)
+        public TimeoffHeader CreateTimeoff(DateTime requestStartDate, DateTime requestEndDate, string employeeComment, bool requireApproval)
         {
-            var timeoff = TimeoffHeader.Create(requestStartDate, requestEndDate, employeeComment);
+            var timeoff = TimeoffHeader.Create(requestStartDate, requestEndDate, employeeComment, requireApproval);
             _timeoffs.Add(timeoff);
 
             RaiseTimeoffWorkflowChangedEvent(timeoff, nameof(TimeoffStatus.IN_PROGRESS));
+            RaiseTimeoffWorkflowChangedEvent(timeoff, nameof(TimeoffStatus.SUBMITTED));
             return timeoff;
         }
 

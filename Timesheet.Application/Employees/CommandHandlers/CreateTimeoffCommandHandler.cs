@@ -37,7 +37,7 @@ namespace Timesheet.Application.Employees.CommandHandlers
 
             Employee employee = await RequireEmployee(command.EmployeeId);
 
-            var timeoff = employee.CreateTimeoff(command.RequestStartDate, command.RequestEndDate, command.EmployeeComment);
+            var timeoff = employee.CreateTimeoff(command.RequestStartDate, command.RequestEndDate, command.EmployeeComment, command.RequireApproval);
             
             this.RelatedAuditableEntity = timeoff;
 

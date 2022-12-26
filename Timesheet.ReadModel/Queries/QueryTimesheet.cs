@@ -125,6 +125,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
         private const string TimesheetReviewQueryWeeklyTimesheetParam = "@weeklyTimesheet";
         private const string TimesheetReviewQueryMonthlyTimesheetParam = "@monthlyTimesheet";
         private const string TimesheetReviewQueryHolidayPayrollCodeIdParam = "@holidayPayrollCodeId";
+        private const string TimesheetReviewQueryOvertimePayrollCodeIdParam = "@overtimePayrollCodeId";
 
         public const string TimesheetReviewQuerySearchFilterPlaceholder = "@searchFilter";
         public const string TimesheetReviewQueryPaginatePlaceholder = "@paginate";
@@ -227,7 +228,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
                 e.Fullname AS {nameof(TimesheetEntryDetails.Fullname)},
                 t.Id AS {nameof(TimesheetEntryDetails.TimesheetId)},
                 t.PayrollPeriod AS {nameof(TimesheetEntryDetails.PayrollPeriod)},
-                SUM(CASE WHEN te.{nameof(TimesheetEntryDetails.PayrollCode)} = 'Overtime' 
+                SUM(CASE WHEN te.{nameof(TimesheetEntryDetails.PayrollCodeId)} = {TimesheetReviewQueryOvertimePayrollCodeIdParam} 
                     THEN te.{nameof(TimesheetEntryDetails.Quantity)} else 0 END)
                     AS {nameof(TimesheetEntryDetails.Overtime)},
                 SUM(te.{nameof(TimesheetEntryDetails.Quantity)}) AS {nameof(TimesheetEntryDetails.Total)},
@@ -587,7 +588,8 @@ namespace Timesheet.Infrastructure.Persistence.Queries
                     isSalaried = true,
                     weeklyTimesheet = TimesheetType.WEEKLY,
                     monthlyTimesheet = TimesheetType.SALARLY,
-                    holidayPayrollCodeId = (int)TimesheetFixedPayrollCodeEnum.HOLIDAY
+                    holidayPayrollCodeId = (int)TimesheetFixedPayrollCodeEnum.HOLIDAY,
+                    overtimePayrollCodeId = (int)TimesheetFixedPayrollCodeEnum.OVERTIME
                 }
             );
 
@@ -644,7 +646,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
         private static List<EmployeeTimesheetWithTotals> GroupEntriesByTimesheetAndEmployee(List<TimesheetEntryDetails> entries)
         {
             return entries
-                .GroupBy(e => new { e.EmployeeId, e.Fullname, e.TimesheetId, e.PayrollPeriod, e.Total, e.StartDate, e.EndDate, e.Status })
+                .GroupBy(e => new { e.EmployeeId, e.Fullname, e.TimesheetId, e.PayrollPeriod, e.Total, e.Overtime, e.StartDate, e.EndDate, e.Status })
                 .Select(g => new EmployeeTimesheetWithTotals
                 {
                     EmployeeId = g.Key.EmployeeId,
@@ -652,6 +654,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
                     TimesheetId = g.Key.TimesheetId,
                     PayrollPeriod = g.Key.PayrollPeriod,
                     Total = g.Key.Total,
+                    Overtime = g.Key.Overtime,
                     StartDate = g.Key.StartDate,
                     EndDate = g.Key.EndDate,
                     Status = g.Key.Status,

@@ -38,11 +38,7 @@ namespace Timesheet.Application.Timesheets.CommandHandlers
             var timesheetEntryRef = GetTimesheetFirstData(timesheet);
 
             EmployeeRoleOnData currentEmployeeRoleOnData = GetCurrentEmployeeRoleOnData(command, employee);
-            _workflowService.AuthorizeTransition(timesheet, TimesheetTransitions.APPROVE, timesheet.Status, currentEmployeeRoleOnData);
-            if (timesheetEntryRef is not null)
-            {
-                _workflowService.AuthorizeTransition(timesheetEntryRef, TimesheetEntryTransitions.APPROVE, timesheetEntryRef.Status, currentEmployeeRoleOnData);
-            }
+            _workflowService.AuthorizeTransition(timesheet, TimesheetTransitions.UPDATE_COMMENT, timesheet.Status, currentEmployeeRoleOnData);
 
             if (command.ApproverComment != null)
             {

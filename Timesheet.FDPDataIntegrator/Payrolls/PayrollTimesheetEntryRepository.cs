@@ -13,7 +13,7 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
             var timesheetHeaderId = "@timesheetHeaderId";
             var timesheetEmployeeId = "@timesheetEmployeeId";
             var timesheetWorkDate = "@timesheetWorkDate";
-            var timesheetPayrollCode = "@timesheetPayrollCode";
+            var timesheetPayrollCodeId = "@timesheetPayrollCodeId";
             var timesheetHours = "@timesheetHours";
             var timesheetDescription = "@timesheetDescription";
             var timesheetServiceOrderNumber = "@timesheetServiceOrderNumber";
@@ -26,7 +26,7 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
             var updates = $@"
             {nameof(TimesheetEntry.EmployeeId)} = {timesheetEmployeeId},
             {nameof(TimesheetEntry.WorkDate)} = {timesheetWorkDate},
-            {nameof(TimesheetEntry.PayrollCodeId)} = {timesheetPayrollCode},
+            {nameof(TimesheetEntry.PayrollCodeId)} = {timesheetPayrollCodeId},
             {nameof(TimesheetEntry.Hours)} = {timesheetHours},
             {nameof(TimesheetEntry.Description)} = {timesheetDescription},
             {nameof(TimesheetEntry.ServiceOrderNumber)} = {timesheetServiceOrderNumber},
@@ -57,7 +57,7 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
             {timesheetHeaderId},
             {timesheetEmployeeId},
             {timesheetWorkDate},
-            {timesheetPayrollCode},
+            {timesheetPayrollCodeId},
             {timesheetHours},
             {timesheetDescription},
             {timesheetServiceOrderNumber},
@@ -89,7 +89,7 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
                     timesheetHeaderId = timesheet.Id,
                     timesheetEmployeeId = entry.EmployeeId,
                     timesheetWorkDate = entry.WorkDate,
-                    timesheetPayrollCode = entry.PayrollCodeId,
+                    timesheetPayrollCodeId = entry.PayrollCodeId,
                     timesheetHours = entry.Hours,
                     timesheetDescription = entry.Description,
                     timesheetServiceOrderNumber = entry.ServiceOrderNumber,

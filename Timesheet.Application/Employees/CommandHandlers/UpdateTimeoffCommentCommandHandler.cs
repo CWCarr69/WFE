@@ -32,7 +32,7 @@ namespace Timesheet.Application.Employees.CommandHandlers
             this.RelatedAuditableEntity = timeoff;
 
             EmployeeRoleOnData currentEmployeeRoleOnData = GetCurrentEmployeeRoleOnData(command, employee);
-            _workflowService.AuthorizeTransition(timeoff, TimeoffTransitions.APPROVE, timeoff.Status, currentEmployeeRoleOnData);
+            _workflowService.AuthorizeTransition(timeoff, TimeoffTransitions.UPDATE_COMMENT, timeoff.Status, currentEmployeeRoleOnData);
 
             if(command.ApproverComment!= null)
             {
