@@ -123,7 +123,9 @@ namespace Timesheet.Web.Api
 
             app.UseMiddleware<LogUserNameMiddleware>();
 
+            app.UseStaticFiles();
             app.MapControllers();
+
 
             app.UseHangfireDashboard();
             app.MapHangfireDashboard();

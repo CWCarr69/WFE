@@ -35,6 +35,34 @@
     <Folder Include="Models\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\static\css\main.fd927bf5.css.map" />
+    <None Include="wwwroot\static\js\787.aedc2f5b.chunk.js" />
+    <None Include="wwwroot\static\js\787.aedc2f5b.chunk.js.map" />
+    <None Include="wwwroot\static\js\main.952393d8.js" />
+    <None Include="wwwroot\static\js\main.952393d8.js.map" />
+    <None Include="wwwroot\static\media\avasta.52f0e64f452232316f1b.svg" />
+    <None Include="wwwroot\static\media\avasta.d2283edad95d676873d7.woff2" />
+    <None Include="wwwroot\static\media\bootstrap-icons.c1dcd4eed1b0c50ff856.woff2" />
+    <None Include="wwwroot\static\media\Flaticon.5b9118b487105304f2b7.svg" />
+    <None Include="wwwroot\static\media\Flaticon_1.3eb596130f76b5f932d4.woff2" />
+    <None Include="wwwroot\static\media\Flaticon_1.60e7069d382331c47f85.svg" />
+    <None Include="wwwroot\static\media\fontawesome-webfont3e6e.20fd1704ea223900efa9.woff2" />
+    <None Include="wwwroot\static\media\fontawesome-webfont3e6e.6878d55e3615ccf40c38.svg" />
+    <None Include="wwwroot\static\media\icomoon.3f12526f65765352526f.svg" />
+    <None Include="wwwroot\static\media\la-brands-400.3a8109c4ac75662f8355.woff2" />
+    <None Include="wwwroot\static\media\la-brands-400.928495fae14841a0d610.svg" />
+    <None Include="wwwroot\static\media\la-regular-400.86128b71644abd479cfb.svg" />
+    <None Include="wwwroot\static\media\la-regular-400.8dc1cedf1f4987f82b72.woff2" />
+    <None Include="wwwroot\static\media\la-solid-900.3efd5ba15a279377d224.woff2" />
+    <None Include="wwwroot\static\media\la-solid-900.a813034654b4ff0a0bac.svg" />
+    <None Include="wwwroot\static\media\materialdesignicons-webfont.6285372902a5d4634762.svg" />
+    <None Include="wwwroot\static\media\materialdesignicons-webfont.cf40208918fc49bf4cf2.woff2" />
+    <None Include="wwwroot\static\media\Simple-Line-Icons4c82.a736074699ec538328fe.woff2" />
+    <None Include="wwwroot\static\media\Simple-Line-Icons4c82.e44ce50cc5d614fac12e.svg" />
+    <None Include="wwwroot\static\media\themify9f24.c4292f34297f1004471a.svg" />
+  </ItemGroup>
+
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>
