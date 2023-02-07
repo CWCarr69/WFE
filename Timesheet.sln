@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timesheet.Application", "Ti
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timesheet.Infrastructure.Persistence", "Timesheet.Infrastructure.Persistence\Timesheet.Infrastructure.Persistence.csproj", "{820933D4-DF67-4DE5-91BE-E10EC6E7E99C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0F49CFD8-0D3C-4D80-9F2E-06C66D564FAF}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "back", "back", "{0F49CFD8-0D3C-4D80-9F2E-06C66D564FAF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{75EC6D6C-400A-46FD-8AED-01E73B3499CD}"
 EndProject
@@ -23,8 +23,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Batches", "Batches", "{1BBC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timesheet.EmailSender", "Timesheet.EmailSender\Timesheet.EmailSender.csproj", "{BF82C9A9-A729-4417-907F-32FB9A58A07F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sharedlibs", "sharedlibs", "{8738F187-6FBE-40FE-AFBF-D12AF548EF55}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timesheet.Infrastructure.Dapper", "Timesheet.Infrastructure.Dapper\Timesheet.Infrastructure.Dapper.csproj", "{29B1596B-CCDC-431B-B37B-586DECFFE6D3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timesheet.Infrastructure.Authentication", "Timesheet.Infrastructure.Authentication\Timesheet.Infrastructure.Authentication.csproj", "{E5157CAE-CD3E-4E85-8A93-67C1D0B3FF63}"
@@ -33,7 +31,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timesheet.FDPDataIntegrator
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timesheet.FDPIntegratorService", "Timesheet.FDPIntegratorService\Timesheet.FDPIntegratorService.csproj", "{0456AF4D-0523-41DC-8ABA-DBA9102789BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timesheet.Benefits", "Timesheet.Benefits\Timesheet.Benefits.csproj", "{E94F3D72-7307-4443-AF24-4A7C04DB1DA0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timesheet.Benefits", "Timesheet.Benefits\Timesheet.Benefits.csproj", "{E94F3D72-7307-4443-AF24-4A7C04DB1DA0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sharedlibs", "sharedlibs", "{54B60E0A-FCF1-4C7C-A402-6D6332B74916}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timesheet.Tools.IdGenerator", "Timesheet.Tools.IdGenerator\Timesheet.Tools.IdGenerator.csproj", "{DFBD2900-15AD-47C0-8E28-50F3FC0D8754}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -89,6 +91,10 @@ Global
 		{E94F3D72-7307-4443-AF24-4A7C04DB1DA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E94F3D72-7307-4443-AF24-4A7C04DB1DA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E94F3D72-7307-4443-AF24-4A7C04DB1DA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFBD2900-15AD-47C0-8E28-50F3FC0D8754}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFBD2900-15AD-47C0-8E28-50F3FC0D8754}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFBD2900-15AD-47C0-8E28-50F3FC0D8754}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFBD2900-15AD-47C0-8E28-50F3FC0D8754}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -101,11 +107,13 @@ Global
 		{698F7EB6-E860-486E-9FA4-17F5CA9F3957} = {0F49CFD8-0D3C-4D80-9F2E-06C66D564FAF}
 		{B20C4B30-7C23-4C55-B1AB-A45AAFD7052B} = {0F49CFD8-0D3C-4D80-9F2E-06C66D564FAF}
 		{BF82C9A9-A729-4417-907F-32FB9A58A07F} = {1BBC0F75-F28F-4C1C-8AFE-B336066515E6}
-		{29B1596B-CCDC-431B-B37B-586DECFFE6D3} = {8738F187-6FBE-40FE-AFBF-D12AF548EF55}
+		{29B1596B-CCDC-431B-B37B-586DECFFE6D3} = {54B60E0A-FCF1-4C7C-A402-6D6332B74916}
 		{E5157CAE-CD3E-4E85-8A93-67C1D0B3FF63} = {0F49CFD8-0D3C-4D80-9F2E-06C66D564FAF}
 		{43135493-1814-4822-9D4A-A240301211F8} = {1BBC0F75-F28F-4C1C-8AFE-B336066515E6}
 		{0456AF4D-0523-41DC-8ABA-DBA9102789BB} = {1BBC0F75-F28F-4C1C-8AFE-B336066515E6}
 		{E94F3D72-7307-4443-AF24-4A7C04DB1DA0} = {1BBC0F75-F28F-4C1C-8AFE-B336066515E6}
+		{54B60E0A-FCF1-4C7C-A402-6D6332B74916} = {0F49CFD8-0D3C-4D80-9F2E-06C66D564FAF}
+		{DFBD2900-15AD-47C0-8E28-50F3FC0D8754} = {54B60E0A-FCF1-4C7C-A402-6D6332B74916}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50FBDF77-109D-4686-A2D9-F50A5139020D}

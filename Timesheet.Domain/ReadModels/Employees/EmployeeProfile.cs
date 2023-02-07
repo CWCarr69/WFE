@@ -12,6 +12,7 @@
         public bool ConsiderFixedBenefits { get; set; }
         public string? PrimaryApproverId { get; set; }
         public string? SecondaryApproverId { get; set; }
+        public bool IsSalaried { get; set; }
 
     }
 }

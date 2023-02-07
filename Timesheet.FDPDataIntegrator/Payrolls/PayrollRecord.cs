@@ -19,13 +19,13 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
         public DateTime WorkDate { get; set; }
         public string ProfitCenter { get; set; }
         public double Quantity { get; set; }
-        [XmlElement("ProjectNo")]
-        public string ServiceOrderNumber { get; set; }
-        [XmlElement("ProjectDescription")]
-        public string ServiceOrderDescription { get; set; }
         [XmlElement("WorkOrderNo")]
-        public string JobNumber { get; set; }
+        public string ServiceOrderNumber { get; set; }
         [XmlElement("WorkOrderDescription")]
+        public string ServiceOrderDescription { get; set; }
+        [XmlElement("ProjectNo")]
+        public string JobNumber { get; set; }
+        [XmlElement("ProjectDescription")]
         public string JobDescription { get; set; }
         [XmlElement("record")]
         public string RecordId { get; set; }

@@ -7,6 +7,7 @@ using Timesheet.Domain.Models.Notifications;
 using Timesheet.Domain.Models.Settings;
 using Timesheet.Domain.Models.Timesheets;
 using Timesheet.Domain.Repositories;
+using Timesheet.Domain.Timesheets;
 using Timesheet.Infrastructure.Persistence.Repositories;
 
 namespace Timesheet.Infrastructure.Persistence
@@ -35,6 +36,7 @@ namespace Timesheet.Infrastructure.Persistence
             services.AddScoped<IWriteRepository<Notification>, WriteRepository<Notification>>();
             services.AddScoped<IWriteRepository<NotificationItem>, WriteRepository<NotificationItem>>();
             services.AddScoped<IWriteRepository<Setting>, WriteRepository<Setting>>();
+            services.AddScoped<IWriteRepository<TimesheetException>, WriteRepository<TimesheetException>>();
 
             services.AddScoped<IWriteRepository<Audit>, WriteRepository<Audit>>();
 

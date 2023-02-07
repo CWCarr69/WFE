@@ -54,7 +54,9 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             FROM employees e
             JOIN timeoffHeader t on e.Id = t.EmployeeId
             JOIN timeoffEntry te on t.id = te.TimeoffHeaderId
-            Where e.Id = {TimeoffsQueryEmployeeIdParam} AND t.RequireApproval = {TimeoffsQueryRequireApprovalParam}
+            JOIN payrollTypes pt on pt.numId = te.TypeId
+            Where e.Id = {TimeoffsQueryEmployeeIdParam} 
+            --AND pt.RequireApproval = {TimeoffsQueryRequireApprovalParam}
             GROUP BY e.Id, e.Fullname, t.Id, t.CreatedDate, t.ModifiedDate, t.RequestStartDate, t.RequestEndDate, t.status
         ";
 
@@ -128,7 +130,8 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             FROM timeoffEntry te 
             JOIN timeoffHeader th on th.Id = te.TimeoffHeaderId
             JOIN payrollTypes pt on pt.numId = te.typeId
-            WHERE th.EmployeeId = {TimeoffEntriesInPeriodEmployeeIdParam} AND th.RequireApproval = {TimeoffsQueryRequireApprovalParam}
+            WHERE th.EmployeeId = {TimeoffEntriesInPeriodEmployeeIdParam} 
+            -- AND pt.RequireApproval = {TimeoffEntriesInPeriodRequireApprovalParam}
             AND RequestDate BETWEEN {TimeoffEntriesInPeriodStartParam} AND {TimeoffEntriesInPeriodEndParam}
             ORDER BY RequestDate
         ";
@@ -160,17 +163,17 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             return timeoff;
         }
 
-        public async Task<EmployeeTimeoffHistory> GetEmployeeTimeoffs(string employeeId, int page, int itemsPerPage, bool requireApproval)
+        public async Task<EmployeeTimeoffHistory> GetEmployeeTimeoffs(string employeeId, int page, int itemsPerPage/*, bool requireApproval*/)
         {
             var totalQuery = QueryTimeoffConstants.TimeoffsTotalQuery;
 
             var query = QueryTimeoffConstants.TimeoffsQuery;
             query = Paginate(page, itemsPerPage, query, QueryTimeoffConstants.TimeoffDetailsQueryOrderByClause);
 
-            var timeoffHistory = (await _dbService.QueryAsync<EmployeeTimeoffHistory>(totalQuery, new { employeeId, requireApproval }))?.FirstOrDefault();
+            var timeoffHistory = (await _dbService.QueryAsync<EmployeeTimeoffHistory>(totalQuery, new { employeeId/*, requireApproval */}))?.FirstOrDefault();
             if(timeoffHistory is not null)
             {
-                var timeoffs = await _dbService.QueryAsync<EmployeeTimeoff>(query, new { employeeId, requireApproval });
+                var timeoffs = await _dbService.QueryAsync<EmployeeTimeoff>(query, new { employeeId/*, requireApproval */});
                 timeoffHistory.Items = timeoffs;
             }
 
@@ -200,10 +203,10 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             return timeoffSummary;
         }
 
-        public async Task<IEnumerable<EmployeeTimeoffEntry>> GetEmployeeTimeoffEntriesInPeriod(string employeeId, DateTime start, DateTime end, bool requireApproval)
+        public async Task<IEnumerable<EmployeeTimeoffEntry>> GetEmployeeTimeoffEntriesInPeriod(string employeeId, DateTime start, DateTime end/*, bool requireApproval*/)
         {
             var query = QueryTimeoffConstants.TimeoffEntriesInPeriod;
-            var entries = await _dbService.QueryAsync<EmployeeTimeoffEntry>(query, new { employeeId, start, end, requireApproval });
+            var entries = await _dbService.QueryAsync<EmployeeTimeoffEntry>(query, new { employeeId, start, end/*, requireApproval */});
 
             return entries;
         }

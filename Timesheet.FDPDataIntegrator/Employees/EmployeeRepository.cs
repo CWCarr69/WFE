@@ -45,6 +45,8 @@ namespace Timesheet.FDPDataIntegrator.Employees
             var employeeEmploymentDate = "@employeeEmploymentDate";
             var employeeIsSalaried = "@employeeIsSalaried";
             var employeeIsAdministrator = "@employeeIsAdministrator";
+            var employeeIsActive = "@employeeIsActive";
+            var employeeUsesTimesheet = "@employeeUsesTimesheet";
             var employeeCompanyEmail = "@employeeCompanyEmail";
             var employeeCompanyPhone = "@employeeCompanyPhone";
             var employeeCreatedDate = "@employeeCreatedDate";
@@ -62,6 +64,8 @@ namespace Timesheet.FDPDataIntegrator.Employees
             {nameof(EmployeeEmploymentData.EmploymentDate)} = {employeeEmploymentDate},
             {nameof(EmployeeEmploymentData.IsSalaried)} = {employeeIsSalaried},
             {nameof(EmployeeEmploymentData.IsAdministrator)} = {employeeIsAdministrator},
+            {nameof(Employee.IsActive)} = {employeeIsActive},
+            {nameof(Employee.UsesTimesheet)} = {employeeUsesTimesheet},
             {nameof(EmployeeContactData.CompanyEmail)} = {employeeCompanyEmail},
             {nameof(EmployeeContactData.CompanyPhone)} = {employeeCompanyPhone},
             {nameof(Employee.ModifiedDate)} = {employeeModifiedDate},
@@ -80,6 +84,8 @@ namespace Timesheet.FDPDataIntegrator.Employees
             {nameof(EmployeeEmploymentData.EmploymentDate)},
             {nameof(EmployeeEmploymentData.IsSalaried)},
             {nameof(EmployeeEmploymentData.IsAdministrator)},
+            {nameof(Employee.IsActive)},
+            {nameof(Employee.UsesTimesheet)},
             {nameof(EmployeeContactData.CompanyEmail)},
             {nameof(EmployeeContactData.CompanyPhone)},
             {nameof(Employee.CreatedDate)},
@@ -99,6 +105,8 @@ namespace Timesheet.FDPDataIntegrator.Employees
                 {employeeEmploymentDate},
                 {employeeIsSalaried},
                 {employeeIsAdministrator},
+                {employeeIsActive},
+                {employeeUsesTimesheet},
                 {employeeCompanyEmail},
                 {employeeCompanyPhone},
                 {employeeCreatedDate},
@@ -130,6 +138,8 @@ namespace Timesheet.FDPDataIntegrator.Employees
                 employeeEmploymentDate = employee.EmploymentData.EmploymentDate,
                 employeeIsSalaried = employee.EmploymentData.IsSalaried,
                 employeeIsAdministrator = employee.EmploymentData.IsAdministrator,
+                employeeIsActive = employee.IsActive,
+                employeeUsesTimesheet = employee.UsesTimesheet,
                 employeeCompanyEmail = employee.Contacts.CompanyEmail,
                 employeeCompanyPhone = employee.Contacts.CompanyPhone,
                 employeeCreatedDate = employee.CreatedDate,

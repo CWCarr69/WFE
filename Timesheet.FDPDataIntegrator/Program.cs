@@ -10,19 +10,19 @@ namespace Timesheet.FDPDataIntegrator
     {
         static async Task Main(string[] args)
         {
-            var serviceProvider = new ServiceCollection().AddServices(ConfigurationManager.ConnectionStrings["Timesheet"].ToString()).BuildServiceProvider();
+            /*var serviceProvider = new ServiceCollection().AddServices(ConfigurationManager.ConnectionStrings["Timesheet"].ToString()).BuildServiceProvider();
 
             (var employeeProcessor, var payrollProcessor) = GetRecordsProcessors(serviceProvider);
             var nodeReader = GetNodeReader(serviceProvider);
             var settingsRepository = GetSettings(serviceProvider);
 
             var settings = new FDPSettings();
-            var fdpClient = new FieldPointClient(settingsRepository);
-            await ProcessEmployees(employeeProcessor, nodeReader, fdpClient);
+            var fdpClient = new FieldPointClient(settingsRepository, null);
+            await ProcessEmployees(employeeProcessor, nodeReader, fdpClient);*/
             //await ProcessPayrolls(payrollProcessor, nodeReader, fdpClient);
         }
 
-        private static async Task ProcessPayrolls(IPayrollRecordProcessor payrollProcessor, INodeReader nodeReader, FieldPointClient client)
+        /*private static async Task ProcessPayrolls(IPayrollRecordProcessor payrollProcessor, INodeReader nodeReader, FieldPointClient client)
         {
             await client.LoadDataAsync(IntegrationType.PAYROLL);
 
@@ -79,6 +79,6 @@ namespace Timesheet.FDPDataIntegrator
         private static ISettingRepository GetSettings(ServiceProvider serviceProvider)
         {
             return serviceProvider.GetRequiredService<ISettingRepository>();
-        }
+        }*/
     }
 }

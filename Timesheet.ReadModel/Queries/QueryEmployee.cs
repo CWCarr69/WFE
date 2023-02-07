@@ -14,18 +14,19 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
     public static class QueryEmployeeConstants
     {
         #region Employees
-        public const string EmployeesQuery = $@"SELECT * FROM employees";
+        private const string EmployeesQueryUsesTimesheetParam = "@usesTimesheet";
+        public const string EmployeesQuery = $@"SELECT * FROM employees where usesTimesheet = {EmployeesQueryUsesTimesheetParam} order by Fullname";
         #endregion
 
         #region EmployeeProfile
         private const string EmployeeProfileQueryParam = "@id";
         private const string EmployeeProfileQueryEmailParam = "@email";
-        private const string EmployeeProfileQueryLoginParam = "@login";
+        private const string EmployeeProfileQueryLoginParam = "@userId";
         private const string BaseEmployeeProfileQuery = $@"SELECT * FROM employees ";
 
         public const string EmployeeProfileQuery = $@"{BaseEmployeeProfileQuery} WHERE id = {EmployeeProfileQueryParam}";
         public const string EmployeeProfileQueryByEmail = $@"{BaseEmployeeProfileQuery} WHERE email = {EmployeeProfileQueryEmailParam}";
-        public const string EmployeeProfileQueryByLogin = $@"{BaseEmployeeProfileQuery} WHERE login = {EmployeeProfileQueryLoginParam}";
+        public const string EmployeeProfileQueryByLogin = $@"{BaseEmployeeProfileQuery} WHERE userId = {EmployeeProfileQueryLoginParam}";
         #endregion
 
         #region EmployeeApprovers
@@ -127,11 +128,11 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
         #region EmployeeTeam
         private const string EmployeeTeamQueryLastTimesheetStatusPerEmployee = $@"WITH LastTimesheets
             AS(
-                SELECT employeeId, status, id
+                SELECT employeeId, status, id, payrollPeriod, workDate
                 FROM (
-                    SELECT ROW_NUMBER() OVER (PARTITION BY te.employeeId ORDER by t.CreatedDate DESC) AS rowNum, te.employeeId, t.status, t.id
+                    SELECT ROW_NUMBER() OVER (PARTITION BY fte.employeeId ORDER by t.CreatedDate DESC) AS rowNum, fte.employeeId, t.status, t.id, t.PayrollPeriod, fte.Workdate
                     FROM timesheets t
-                    JOIN timesheetEntry te on t.id = te.TimesheetHeaderId
+                    JOIN FirstTimesheetEntryOfLastTimesheet fte on fte.TimesheetHeaderId = t.Id
                 ) T
                 WHERE rowNum = 1
             ),
@@ -139,19 +140,23 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
 
         private const string EmployeeTeamQueryLastTimeOffStatusPerEmployee = $@"LastTimeoffs
             AS(
-                SELECT employeeId, status, id
+                SELECT employeeId, status, id, requireApproval, timeoffEntryId, requestDate
                 FROM (
-                    SELECT ROW_NUMBER() OVER (PARTITION BY employeeId ORDER by CreatedDate DESC) AS rowNum, employeeId, status, id
-                    FROM timeoffHeader
+                    SELECT ROW_NUMBER() OVER (PARTITION BY employeeId ORDER by CreatedDate DESC) AS rowNum, employeeId, status, id, requireApproval, TimeoffEntryId, requestDate
+                    FROM TimeoffHeader th
+                    JOIN TimeoffHeaderRequireApproval thr on thr.TimeoffHeaderId = th.Id
+                    JOIN FirstTimeoffEntryOfLastTimeoff fte on fte.TimeoffHeaderId = th.Id
                 ) T
                 WHERE rowNum = 1
             )
         ";
 
+        private const string EmployeeTeamQueryUsesTimesheetParam = "@usesTimesheet";
         private const string EmployeeTeamQueryFromClause = $@"
             FROM employees e
             LEFT JOIN LastTimeoffs tos ON e.Id = tos.employeeId
             LEFT JOIN LastTimesheets ts ON e.Id = ts.EmployeeId
+            WHERE (e.employmentDate is not null or (e.employmentDate is null and ts.id is not null)) AND (e.usesTimesheet = {EmployeeTeamQueryUsesTimesheetParam})
         ";
 
         public const string TotalEmployeeTeamQuery = $@"
@@ -171,8 +176,13 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             e.BenefitsSnapshot_PersonalBalance as {nameof(EmployeeWithTimeStatus.PersonalBalance)}, 
             tos.Id as {nameof(EmployeeWithTimeStatus.TimeoffId)},
             tos.Status as {nameof(EmployeeWithTimeStatus.LastTimeoffStatus)},
+            tos.timeoffEntryId as {nameof(EmployeeWithTimeStatus.LastTimeoffEntryId)},
+            tos.requestDate as {nameof(EmployeeWithTimeStatus.LastTimeoffRequestDate)},
+            tos.RequireApproval as  {nameof(EmployeeWithTimeStatus.IsLastTimeoffRequireApproval)},
             ts.Id as {nameof(EmployeeWithTimeStatus.TimesheetId)},
-            ts.Status as {nameof(EmployeeWithTimeStatus.LastTimesheetStatus)}
+            ts.Status as {nameof(EmployeeWithTimeStatus.LastTimesheetStatus)},
+            ts.payrollPeriod as {nameof(EmployeeWithTimeStatus.LastTimesheetPayrollPeriod)},
+            ts.workDate as {nameof(EmployeeWithTimeStatus.LastTimesheetWorkDate)}
             {EmployeeTeamQueryFromClause}
         ";
 
@@ -229,7 +239,7 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
         public async Task<IEnumerable<EmployeeProfile?>> GetEmployees()
         {
             var query = QueryEmployeeConstants.EmployeesQuery;
-            var employees = await _dbService.QueryAsync<EmployeeProfile>(query);
+            var employees = await _dbService.QueryAsync<EmployeeProfile>(query, new { UsesTimesheet = true});
 
             return employees;
         }
@@ -263,7 +273,7 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
         public async Task<EmployeeProfile?> GetEmployeeProfileByLogin(string login)
         {
             var query = QueryEmployeeConstants.EmployeeProfileQueryByLogin;
-            var employee = await _dbService.QueryAsync<EmployeeProfile>(query, new { login });
+            var employee = await _dbService.QueryAsync<EmployeeProfile>(query, new { userId=login });
 
             return employee.FirstOrDefault();
         }
@@ -293,7 +303,7 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             query = AddWhereClauseForDirectReports(approverId, directReports, query);
             query = Paginate(page, itemsPerPage, query, QueryEmployeeConstants.EmployeeTeamQueryOrderByClause);
 
-            var queryParams = new { approverId };
+            var queryParams = new { approverId, usesTimesheet = true };
             var employeeTeam = await QueryWithTotal<EmployeeTeam, EmployeeWithTimeStatus>(queryParams, totalQuery, query);
                 
             return employeeTeam;

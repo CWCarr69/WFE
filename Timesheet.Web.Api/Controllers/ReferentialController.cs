@@ -33,6 +33,24 @@ namespace Timesheet.Web.Api.Controllers
             return Ok(timeoffs);
         }
 
+        [HttpGet("AllTimeoffTypes")]
+        public async Task<ActionResult<IEnumerable<PayrollTypes>>> GetAllTimeoffTypes()
+        {
+            LogInformation($"Listing All Timeoff types");
+
+            var timeoffs = await _referentialQuery.GetAllTimeoffTypes();
+            return Ok(timeoffs);
+        }
+
+        [HttpGet("NonRegularTimeoffTypes")]
+        public async Task<ActionResult<IEnumerable<PayrollTypes>>> GetNonRegularTimeoffTypes()
+        {
+            LogInformation($"Listing Non Regular Timeoff types");
+
+            var timeoffs = await _referentialQuery.GetTimeoffTypes(false);
+            return Ok(timeoffs);
+        }
+
         [HttpGet("Departments")]
         public async Task<ActionResult<IEnumerable<Department>>> GetDepartments()
         {
@@ -52,9 +70,9 @@ namespace Timesheet.Web.Api.Controllers
         }
 
         [HttpGet("PayrollCodes")]
-        public async Task<ActionResult<IEnumerable<EmployeeLight>>> GetPayrollCodes()
+        public async Task<ActionResult<IEnumerable<EmployeeLight>>> GetRegularPayrollCodes()
         {
-            LogInformation($"Listing Payroll codes");
+            LogInformation($"Listing regular Payroll codes");
 
             var periods = await _referentialQuery.GetPayrollCodes();
             return Ok(periods);

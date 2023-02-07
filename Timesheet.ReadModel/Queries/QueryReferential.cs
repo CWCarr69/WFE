@@ -23,7 +23,10 @@ namespace Timesheet.Infrastruture.ReadModel.Queries
 
         public async Task<IEnumerable<Department>> GetDepartments()
         {
-            var query = $"SELECT distinct department as DepartmentName FROM employees order by department";
+            var query = $@"SELECT distinct department as DepartmentName, department as DepartmentId
+                FROM employees 
+                WHERE department is not null
+                ORDER BY department";
             var departments = await _dbService.QueryAsync<Department>(query);
 
             return departments;
@@ -31,8 +34,19 @@ namespace Timesheet.Infrastruture.ReadModel.Queries
 
         public async Task<IEnumerable<PayrollPeriod>> GetPayrollPeriods()
         {
-            var query = $"SELECT distinct payrollPeriod as Code FROM timesheets order by payrollPeriod";
+            var query = $@"SELECT distinct payrollPeriod as Code, StartDate, EndDate
+                            FROM timesheets order by payrollPeriod";
+                            
             var payrollPeriods = await _dbService.QueryAsync<PayrollPeriod>(query);
+
+            var now = DateTime.Now;
+            var currentPeriod = payrollPeriods.FirstOrDefault(p => p.StartDate <= now && now <= p.EndDate);
+
+            if(currentPeriod != null)
+            {
+                payrollPeriods.Remove(currentPeriod);
+                payrollPeriods.Insert(0, currentPeriod);
+            }
 
             return payrollPeriods;
         }
@@ -93,16 +107,32 @@ namespace Timesheet.Infrastruture.ReadModel.Queries
             return profitCenterNumbers;
         }
 
-        public async Task<IEnumerable<PayrollTypes>> GetTimeoffTypes()
+        public async Task<IEnumerable<PayrollTypes>> GetTimeoffTypes(bool requireApproval = true)
         {
             var categoryParam = "@category";
-            var query = $"SELECT * FROM PayrollTypes WHERE Category = {categoryParam} order by PayrollCode";
+            var requireApprovalParam = "@requireApproval";
+            var query = $"SELECT * FROM PayrollTypes WHERE Category = {categoryParam} AND requireApproval = {requireApprovalParam} ORDER BY PayrollCode";
             var timeoffTypes = await _dbService.QueryAsync<Domain.ReadModels.Referential.PayrollTypes>(query, new
             {
-                category = PayrollTypesCategory.TIMEOFF
+                category = PayrollTypesCategory.TIMEOFF,
+                requireApproval
             });
 
-            return timeoffTypes;
+            return timeoffTypes.Where(p => p.NumId != (int)TimesheetFixedPayrollCodeEnum.OTHERS_WITH_APPROVAL
+                && p.NumId != (int)TimesheetFixedPayrollCodeEnum.OTHERS_WITHOUT_APPROVAL).ToList();
+        }
+
+        public async Task<IEnumerable<PayrollTypes>> GetAllTimeoffTypes()
+        {
+            var categoryParam = "@category";
+            var query = $"SELECT * FROM PayrollTypes WHERE Category = {categoryParam} ORDER BY PayrollCode";
+            var timeoffTypes = await _dbService.QueryAsync<Domain.ReadModels.Referential.PayrollTypes>(query, new
+            {
+                category = PayrollTypesCategory.TIMEOFF,
+            });
+
+            return timeoffTypes.Where(p => p.NumId != (int)TimesheetFixedPayrollCodeEnum.OTHERS_WITH_APPROVAL 
+                && p.NumId != (int)TimesheetFixedPayrollCodeEnum.OTHERS_WITHOUT_APPROVAL).ToList();
         }
 
         public IEnumerable<EnumReadModel<TimeoffStatus>> GetTimeoffStatuses()
@@ -138,7 +168,7 @@ namespace Timesheet.Infrastruture.ReadModel.Queries
 
         public async Task<IEnumerable<PayrollTypes>> GetPayrollCodes()
         {
-            var query = $"SELECT * FROM PayrollTypes order by PayrollCode";
+            var query = $"SELECT * FROM PayrollTypes ORDER BY PayrollCode";
             var payrollCodes = await _dbService.QueryAsync<PayrollTypes>(query);
 
             return payrollCodes;

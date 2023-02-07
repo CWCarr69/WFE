@@ -38,7 +38,7 @@ namespace Timesheet.Application.Timesheets.Services.Export
             _csvWriter = csvWriter;
         }
 
-        public async Task ExportToExternal(string payrollPeriod)
+        public async Task ExportAdaptedReviewToExternal(string payrollPeriod)
         {
             string csv = await GetTimesheetAsCsv<ExternalTimesheetEntryDetails, ExternalTimesheetCSVEntryModel>(payrollPeriod, true, _externalAdapter, true);
             string outpuPath = Path.Combine(_externalDestinationBasePath, $"{_paylocityFileName}{payrollPeriod}");
@@ -46,7 +46,10 @@ namespace Timesheet.Application.Timesheets.Services.Export
             await _csvWriter.Write(csv);
         }
 
-        public async Task<string> ExportToWeb(string payrollPeriod) 
+        public async Task<string> ExportAdaptedReviewToWeb(string payrollPeriod)
+        => await GetTimesheetAsCsv<ExternalTimesheetEntryDetails, ExternalTimesheetCSVEntryModel>(payrollPeriod, true, _externalAdapter, true);
+          
+        public async Task<string> ExportRawReviewToWeb(string payrollPeriod) 
             => await GetTimesheetAsCsv<TimesheetEntryDetails,TimesheetCSVEntryModel>(payrollPeriod, false, _webAdapter, false);
 
         private async Task<string> GetTimesheetAsCsv<TEntryDetail, TEntryCsvModel>(string payrollPeriod, bool checkFinalizedState, ITimesheetToCSVModelAdapter<TEntryDetail, TEntryCsvModel> adapter, bool ignoreHolidays)
@@ -71,7 +74,7 @@ namespace Timesheet.Application.Timesheets.Services.Export
                 throw new EntityNotFoundException<TimesheetHeader>(payrollPeriod);
             }
 
-            if (checkFinalizedState && timesheet.IsFinalized)
+            if (checkFinalizedState && !timesheet.IsFinalized)
             {
                 throw new CannotExportNotFinalizedTimesheetException(payrollPeriod);
 

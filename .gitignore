@@ -115,3 +115,19 @@
 /Timesheet.Benefits/bin/Release/net6.0
 /Timesheet.Web.Api/bin/Release/net6.0/Timesheet.Benefits.pdb
 
+/Timesheet.Application/bin/Release/net6.0/win-x64
+/Timesheet.Domain/bin/Release/net6.0/win-x64
+/Timesheet.EmailSender/bin/Release/net6.0/win-x64
+/Timesheet.FDPIntegratorService/Uploads
+/timesheet.frontend/obj/Debug
+/timesheet.frontend
+/Timesheet.Infrastructure.Authentication/bin/Release/net6.0/win-x64
+/Timesheet.Infrastructure.Dapper/bin/Release/net6.0/win-x64/publish
+/Timesheet.Infrastructure.Persistence/bin/Release/net6.0/win-x64
+/Timesheet.Infrastructure.Dapper/bin/Release/net6.0/win-x64
+/Timesheet.Tools.IdGenerator/bin/Debug/net6.0
+/Timesheet.Tools.IdGenerator/obj
+/Timesheet.Web.Api/bin/Release/net6.0
+/Timesheet.Web.Api/TimesheetExport/Paylocity_Timesheet_2022-51H
+/efbundle.exe
+/efbundle.zip

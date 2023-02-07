@@ -5,7 +5,7 @@ namespace Timesheet.Application.Timesheets.Services.Export
 {
     internal class TimesheetCSVFormatter : ITimesheetCSVFormatter
     {
-        private readonly string CSVSeparator = ";";
+        private readonly string CSVSeparator = ",";
 
         private IEnumerable<PropertyInfo> _properties;
 

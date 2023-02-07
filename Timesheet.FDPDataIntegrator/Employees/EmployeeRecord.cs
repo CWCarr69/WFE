@@ -25,16 +25,21 @@ namespace Timesheet.FDPDataIntegrator.Employees
         [XmlElement("EmployeeCategory")]
         public string Category { get; set; }
         public string Department { get; set; }
+        [XmlElement("EmploymentDate")]
+        public DateTime EmploymentDate { get; set; }
         public string Email { get; set; }
         [XmlElement("Phone1")]
         public string Phone { get; set; }
         public string Active { get; set; }
-        [XmlElement("TImesheetPeriod")]
+        [XmlElement("PayrollType")]
         public string TimesheetPeriod { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime ModifyDate { get; set; }
         public string Status { get; set; }
         [XmlElement("UDF_SecondaryApprover")]
-        public string SecondaryApproverId { get; set; } 
+        public string SecondaryApproverId { get; set; }
+        [XmlElement("UsesTimeSheets")]
+        public string UsesTimesheet { get; set; } 
+
     }
 }

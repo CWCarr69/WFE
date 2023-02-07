@@ -35,29 +35,35 @@ namespace Timesheet.Infrastructure.Authentication.Providers
             }
             catch (LdapException ex)
             {
-               //return null;
+               return null;
             }
             finally
             {
                 connection.Dispose();
             }
 
-            var employeeId = "0000";
-            if(credentials.Login == "UTest1")
-            {
-                employeeId = "0213";
-            }
-            else if(credentials.Login == "MTest")
-            {
-                employeeId = "0645";
-            }
-            else
-            {
-                employeeId = "0078";
-            }
-            //var employee = _queryEmployee.GetEmployeeProfileByLogin(credentials.Login).Result;
+            var employee = _queryEmployee.GetEmployeeProfileByLogin(credentials.Login).Result;
 
-            var employee = _queryEmployee.GetEmployeeProfile(employeeId).Result;
+            //TO REMOVE
+            if(employee is null)
+            {
+                var employeeId = "0000";
+                if (credentials.Login == "UTest1")
+                {
+                    employeeId = "0213";
+                }
+                else if (credentials.Login == "MTest")
+                {
+                    employeeId = "0645";
+                }
+                else
+                {
+                    employeeId = "0078";
+                }
+                employee = _queryEmployee.GetEmployeeProfile(employeeId).Result;
+
+            }
+
             var user = new User
             {
                 Id = employee.Id,

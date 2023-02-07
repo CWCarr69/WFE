@@ -6,6 +6,7 @@ using Timesheet.Application.Employees.Queries;
 using Timesheet.Application.Employees.Services;
 using Timesheet.Application.Timesheets.Commands;
 using Timesheet.Application.Timesheets.Queries;
+using Timesheet.Application.Timesheets.Services;
 using Timesheet.Application.Timesheets.Services.Export;
 using Timesheet.Application.Workflow;
 using Timesheet.Domain.Models.Timesheets;
@@ -21,8 +22,10 @@ namespace Timesheet.Web.Api.Controllers
     {
         private const TimesheetTransitions FINALIZE_TRANSITION = TimesheetTransitions.FINALIZE;
         private readonly IQueryTimesheet _timesheetQuery;
+        private readonly IQueryEmployee _employeeQuery;
         private readonly IDispatcher _dispatcher;
         private readonly IExportTimesheetService _exportTimesheet;
+        private readonly ITimesheetPeriodService _periodService;
 
         public TimesheetController(
             IQueryTimesheet timesheetQuery,
@@ -31,13 +34,16 @@ namespace Timesheet.Web.Api.Controllers
             IWorkflowService workflowService,
             IEmployeeHabilitation habilitations,
             IExportTimesheetService exportTimesheet,
+            ITimesheetPeriodService periodService,
             ILogger<TimesheetController> logger
             )
             : base(employeeQuery, workflowService, habilitations, logger)
         {
+            this._employeeQuery = employeeQuery;
             this._timesheetQuery = timesheetQuery;
             this._dispatcher = dispatcher;
             this._exportTimesheet = exportTimesheet;
+            this._periodService = periodService;
         }
 
         [HttpGet("History/Employee/{employeeId}")]
@@ -78,6 +84,21 @@ namespace Timesheet.Web.Api.Controllers
 
             var timeoffs = await _timesheetQuery.GetEmployeeTimesheetSummaryByDate(employeeId, timesheetId);
             return Ok(timeoffs);
+        }
+
+        [HttpGet("CurrentTimesheetPeriod/Employee/{employeeId}")]
+        public async Task<ActionResult<TimesheetPeriod>> GetCurrentTimesheet(string employeeId)
+        {
+            LogInformation($"Getting Employee ({employeeId}) current period");
+
+            var employee = await _employeeQuery.GetEmployeeProfile(employeeId);
+
+            if (employee?.Id is null)
+            {
+                return BadRequest("Employee not found");
+            }
+
+            return Ok(_periodService.GetCurrentPeriod(employee.IsSalaried));
         }
 
         [HttpGet("{timesheetId}/SummaryByPayroll/Employee/{employeeId}")]
@@ -121,10 +142,11 @@ namespace Timesheet.Web.Api.Controllers
             return Ok(resultWithHabilitations);
         }
 
+        [AllowAnonymous]
         [HttpGet("{payrollPeriod}/Export")]
         public async Task<IActionResult> ExportTimesheet(string payrollPeriod)
         {
-            var csvData = await _exportTimesheet.ExportToWeb(payrollPeriod);
+            var csvData = await _exportTimesheet.ExportRawReviewToWeb(payrollPeriod);
             var filesBytes = Encoding.UTF8.GetBytes(csvData);
 
             return File(filesBytes, "text/csv", $"Timesheet_{payrollPeriod}.csv");
@@ -134,8 +156,10 @@ namespace Timesheet.Web.Api.Controllers
         [HttpGet("{payrollPeriod}/Export/AfterFinalize")]
         public async Task<IActionResult> ExportTimesheetAfterFinalize(string payrollPeriod)
         {
-            await _exportTimesheet.ExportToExternal(payrollPeriod);
-            return Ok();
+            var csvData = await _exportTimesheet.ExportAdaptedReviewToWeb(payrollPeriod);
+            var filesBytes = Encoding.UTF8.GetBytes(csvData);
+
+            return File(filesBytes, "text/csv", $"Timesheet_external_{payrollPeriod}.csv");
         }
 
         [Authorize(Roles = "ADMINISTRATOR")]
@@ -217,6 +241,18 @@ namespace Timesheet.Web.Api.Controllers
             await _dispatcher.RunCommand(command, CurrentUser, token);
             
             LogInformation($"Timesheet ({command.TimesheetId}) Updated");
+            return Ok();
+        }
+
+        [Authorize(Roles = "ADMINISTRATOR")]
+        [HttpPost("Exceptions")]
+        public async Task<IActionResult> AddExceptions([FromBody] AddTimesheetException command, CancellationToken token)
+        {
+            LogInformation($"Adding timesheet exception for employee ({command.EmployeeId}) on Timesheet ({command.TimesheetId})");
+
+            await _dispatcher.RunCommand(command, CurrentUser, token);
+
+            LogInformation($"Exception added to timesheet {command.TimesheetId}) for employee ({command.EmployeeId})");
             return Ok();
         }
 

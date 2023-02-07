@@ -40,13 +40,14 @@ namespace Timesheet.Benefits
 
         private async Task SetEmployeeBenefits(Employee employee)
         {
-            if(employee.EmploymentData is null)
+            if(employee.EmploymentData is null || employee.EmploymentData?.EmploymentDate is null)
             {
                 _logger.LogWarning($"[Employee Benefits Services] - No employement Data for employee with Id ({employee.Id})");
                 return;
             }
 
-            var benefits = await _benefitCalculator.GetBenefits(employee.Id, employee.EmploymentData.EmploymentDate);
+            DateTime employmentDate = (DateTime)employee.EmploymentData?.EmploymentDate;
+            var benefits = await _benefitCalculator.GetBenefits(employee.Id, employmentDate);
             var vacationDetails = benefits.Details.FirstOrDefault(x => x.Type == "Vacation");
             var personalDetails = benefits.Details.FirstOrDefault(x => x.Type == "Personal");
 

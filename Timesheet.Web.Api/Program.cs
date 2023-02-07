@@ -19,7 +19,9 @@ namespace Timesheet.Web.Api
     {
         public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
+            var webApplicationOptions = new WebApplicationOptions() { ContentRootPath = AppContext.BaseDirectory, Args = args, ApplicationName = System.Diagnostics.Process.GetCurrentProcess().ProcessName };
+            var builder = WebApplication.CreateBuilder(webApplicationOptions);
+            builder.Host.UseWindowsService();
 
             // Add services to the container.
             builder.Services.AddTimesheetContext(builder.Configuration.GetConnectionString("Timesheet"));
@@ -112,7 +114,8 @@ namespace Timesheet.Web.Api
             }
 
             app.UseCors(p => p
-            .WithOrigins("http://localhost:3000", "https://localhost:3000", "http://ir:3000", "https://ir:3000")
+            .SetIsOriginAllowedToAllowWildcardSubdomains()
+            .WithOrigins("https://*.wilsonfire.com", "https://localhost")
             .AllowAnyHeader().AllowAnyMethod()
             .AllowCredentials());
 
@@ -123,9 +126,23 @@ namespace Timesheet.Web.Api
 
             app.UseMiddleware<LogUserNameMiddleware>();
 
-            app.UseStaticFiles();
-            app.MapControllers();
+            app.Use(async (context, next) =>
+            {
+                var url = context.Request.Path.Value;
 
+                // Rewrite to index
+                if (!url.Contains("/api") && !url.Contains("/static"))
+                {
+                    // rewrite and continue processing
+                    context.Request.Path = "/index.html";
+                }
+
+                await next();
+            });
+
+            app.UseStaticFiles();
+
+            app.MapControllers();
 
             app.UseHangfireDashboard();
             app.MapHangfireDashboard();

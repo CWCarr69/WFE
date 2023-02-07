@@ -30,8 +30,12 @@ namespace Timesheet.FDPDataIntegrator.Services
                 {
                     Console.WriteLine(JsonConvert.SerializeObject(record));
                     var entity = _adapter.Adapt(record);
-                    await _repository.UpSert(entity);
-                }catch (Exception ex) { Console.WriteLine(ex.ToString()); }
+                    if(entity != null)
+                    {
+                        await _repository.UpSert(entity);
+                    }
+                }
+                catch (Exception ex) { Console.WriteLine(ex.ToString()); }
             }
         }
     }

@@ -8,7 +8,7 @@
             var where = string.Empty;
             if (directReports && approverId is not null)
             {
-                where = $"WHERE primaryApproverId = {employeeIdParam} or (primaryApproverId is null && secondaryApproverId = {employeeIdParam})";
+                where = $"WHERE primaryApproverId = {employeeIdParam} or (primaryApproverId is null AND secondaryApproverId = {employeeIdParam})";
 
             }
             else if (approverId is not null)

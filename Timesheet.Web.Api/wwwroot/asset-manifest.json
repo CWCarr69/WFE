@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.fd927bf5.css",
-    "main.js": "/static/js/main.e456a2de.js",
+    "main.css": "/static/css/main.cf02d05e.css",
+    "main.js": "/static/js/main.00b58581.js",
     "static/js/787.aedc2f5b.chunk.js": "/static/js/787.aedc2f5b.chunk.js",
     "static/media/materialdesignicons-webfont.svg?v=2.4.85": "/static/media/materialdesignicons-webfont.6285372902a5d4634762.svg",
     "static/media/login-bg-1.jpg": "/static/media/login-bg-1.0cdb81c8cd8f92d60ab9.jpg",
@@ -65,12 +65,12 @@
     "static/media/Flaticon_1.woff": "/static/media/Flaticon_1.93e92dbbcc807d153e3b.woff",
     "static/media/Flaticon_1.woff2": "/static/media/Flaticon_1.3eb596130f76b5f932d4.woff2",
     "index.html": "/index.html",
-    "main.fd927bf5.css.map": "/static/css/main.fd927bf5.css.map",
-    "main.e456a2de.js.map": "/static/js/main.e456a2de.js.map",
+    "main.cf02d05e.css.map": "/static/css/main.cf02d05e.css.map",
+    "main.00b58581.js.map": "/static/js/main.00b58581.js.map",
     "787.aedc2f5b.chunk.js.map": "/static/js/787.aedc2f5b.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.fd927bf5.css",
-    "static/js/main.e456a2de.js"
+    "static/css/main.cf02d05e.css",
+    "static/js/main.00b58581.js"
   ]
 }

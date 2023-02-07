@@ -1,4 +1,5 @@
-﻿using static ServiceReference1.FPDTSWSSoapClient;
+﻿using Microsoft.Extensions.Configuration;
+using static ServiceReference1.FPDTSWSSoapClient;
 
 namespace Timesheet.FDPDataIntegrator.Services
 {
@@ -8,10 +9,12 @@ namespace Timesheet.FDPDataIntegrator.Services
 
         public string Response { get; private set; }
         public int MaxRetryTime { get; private set; } = 34;
+        private IConfiguration _configuration { get; }
 
-        public FieldPointClient(ISettingRepository settings)
+        public FieldPointClient(ISettingRepository settings, IConfiguration configuration)
         {
             this._settings = settings.GetFDPParameters();
+            this._configuration = configuration;
         }
 
         public async Task LoadDataAsync(IntegrationType type)
@@ -26,8 +29,15 @@ namespace Timesheet.FDPDataIntegrator.Services
 
                     (var transfertName, var inboundData) = FDPInboundDataTemplate.GetIntegrationParams(type);
                     Response = await fieldPointClient.TransferAsync(transfertName, inboundData, _settings.FDP_Username, _settings.FDP_Password);
-                    //File.WriteAllText($@"{type}Sample.xml", Response);
-                    //Console.WriteLine(Response);
+                    if (_settings.FDP_RetainFiles?.ToUpper() == FDPSettings.FDP_RetainFilesTrue)
+                    {
+                        var basePath = _configuration.GetSection("FPUpload:BaseDir").Value;
+                        if(basePath == null)
+                        {
+                            throw new Exception("No base directory found to persist FP upload files");
+                        }
+                        File.WriteAllText($@"{basePath}/{type}{DateTime.Now.Ticks}.xml", Response);
+                    }
                     return;
                 }
                 catch (Exception ex)

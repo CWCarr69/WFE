@@ -3,7 +3,7 @@ using Timesheet.Infrastructure.Dapper;
 
 namespace Timesheet.FDPDataIntegrator.Services;
 
-internal class SettingRepository: ISettingRepository
+public class SettingRepository: ISettingRepository
 {
     private readonly IDatabaseService _dbServices;
 

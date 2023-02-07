@@ -2,7 +2,7 @@
 {
     public class EmployeeEmploymentData: ValueObject
     {
-        public EmployeeEmploymentData(string jobTitle, string department, DateTime employmentDate, DateTime? terminationDate, bool isSalaried, bool isAdministrator)
+        public EmployeeEmploymentData(string jobTitle, string department, DateTime? employmentDate, DateTime? terminationDate, bool isSalaried, bool isAdministrator)
         {
             JobTitle = jobTitle;
             Department = department;
@@ -13,7 +13,7 @@
         }
         public string JobTitle { get; private set; }
         public string Department { get; private set; }
-        public DateTime EmploymentDate { get; private set; }
+        public DateTime? EmploymentDate { get; private set; }
         public DateTime? TerminationDate { get; private set; }
         public bool IsSalaried { get; private set; }
         public bool IsAdministrator { get; private set; }

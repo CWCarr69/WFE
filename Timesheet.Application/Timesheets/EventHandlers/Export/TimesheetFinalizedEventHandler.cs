@@ -19,7 +19,7 @@ namespace Timesheet.Application.Timesheets.EventHandlers.Export
                 return;
             }
 
-            await _exportTimesheet.ExportToExternal(@event.payrollPeriod);
+            await _exportTimesheet.ExportAdaptedReviewToExternal(@event.payrollPeriod);
         }
     }
 }

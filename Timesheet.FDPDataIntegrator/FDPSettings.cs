@@ -1,11 +1,15 @@
 ﻿namespace Timesheet.FDPDataIntegrator
 {
-    internal class FDPSettings
+    public class FDPSettings
     {
         public string FDP_Username { get; private set; }
         public string FDP_Password { get; private set; }
         public string FDP_Url { get; private set; }
         public string FDP_Domain { get; private set; }
+        public string FDP_RetainFiles { get; private set; }
+        public string FDP_UploadFrequency { get; private set; }
+
+        public static string FDP_RetainFilesTrue = "TRUE";
 
         public static FDPSettings CreateFromConfigurationList(IEnumerable<(string Name, string Value)> configurations)
         {
@@ -33,6 +37,16 @@
                 if (nameof(FDP_Domain).ToUpper() == name.ToUpper())
                 {
                     fdpSettings.FDP_Domain = value;
+                }
+
+                if (nameof(FDP_RetainFiles).ToUpper() == name.ToUpper())
+                {
+                    fdpSettings.FDP_RetainFiles = value;
+                }
+
+                if (nameof(FDP_UploadFrequency).ToUpper() == name.ToUpper())
+                {
+                    fdpSettings.FDP_UploadFrequency = value;
                 }
             }
 

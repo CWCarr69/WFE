@@ -11,6 +11,7 @@ using Timesheet.Application.Timesheets.CommandHandlers;
 using Timesheet.Application.Timesheets.EventHandlers;
 using Timesheet.Application.Timesheets.EventHandlers.Export;
 using Timesheet.Application.Timesheets.EventHandlers.Holidays;
+using Timesheet.Application.Timesheets.Services;
 using Timesheet.Application.Timesheets.Services.Export;
 using Timesheet.Application.Workflow;
 using Timesheet.Domain.Employees.Services;
@@ -76,6 +77,9 @@ namespace Timesheet.Application
             services.AddScoped<FinalizeTimesheetCommandHandler, FinalizeTimesheetCommandHandler>();
             services.AddScoped<UpdateTimesheetCommentCommandHandler, UpdateTimesheetCommentCommandHandler>();
 
+            services.AddScoped<AddTimesheetExceptionCommandHandler, AddTimesheetExceptionCommandHandler>();
+
+
 
             services.AddScoped<UpdateSettingCommandHandler, UpdateSettingCommandHandler>();
 
@@ -98,6 +102,7 @@ namespace Timesheet.Application
             services.AddScoped<IEmployeeBenefitCalculator, EmployeeBenefitCalculator>();
             services.AddScoped<INotificationPopulationServices, NotificationPopulationServices>();
             services.AddScoped<IEmployeeHabilitation, EmployeeHabilitation>();
+            services.AddScoped<ITimesheetPeriodService, TimesheetPeriodService>();
         }
     }
 }

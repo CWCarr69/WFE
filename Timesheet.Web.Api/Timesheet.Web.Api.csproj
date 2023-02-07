@@ -15,6 +15,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="7.0.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
     <PackageReference Include="Serilog.Enrichers.Thread" Version="3.1.0" />
     <PackageReference Include="Serilog.Sinks.Seq" Version="5.2.1" />
@@ -36,11 +37,38 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\static\css\main.cf02d05e.css.map" />
     <None Include="wwwroot\static\css\main.fd927bf5.css.map" />
     <None Include="wwwroot\static\js\787.aedc2f5b.chunk.js" />
     <None Include="wwwroot\static\js\787.aedc2f5b.chunk.js.map" />
-    <None Include="wwwroot\static\js\main.952393d8.js" />
-    <None Include="wwwroot\static\js\main.952393d8.js.map" />
+    <None Include="wwwroot\static\js\main.03784321.js" />
+    <None Include="wwwroot\static\js\main.03784321.js.map" />
+    <None Include="wwwroot\static\js\main.4786ad4c.js" />
+    <None Include="wwwroot\static\js\main.4786ad4c.js.map" />
+    <None Include="wwwroot\static\js\main.509a6582.js" />
+    <None Include="wwwroot\static\js\main.509a6582.js.map" />
+    <None Include="wwwroot\static\js\main.617d98df.js" />
+    <None Include="wwwroot\static\js\main.617d98df.js.map" />
+    <None Include="wwwroot\static\js\main.824e5687.js" />
+    <None Include="wwwroot\static\js\main.824e5687.js.map" />
+    <None Include="wwwroot\static\js\main.97a312c7.js" />
+    <None Include="wwwroot\static\js\main.97a312c7.js.map" />
+    <None Include="wwwroot\static\js\main.97ca60ff.js" />
+    <None Include="wwwroot\static\js\main.97ca60ff.js.map" />
+    <None Include="wwwroot\static\js\main.a2317a74.js" />
+    <None Include="wwwroot\static\js\main.a2317a74.js.map" />
+    <None Include="wwwroot\static\js\main.ac5baae3.js" />
+    <None Include="wwwroot\static\js\main.ac5baae3.js.map" />
+    <None Include="wwwroot\static\js\main.cc97837a.js" />
+    <None Include="wwwroot\static\js\main.cc97837a.js.map" />
+    <None Include="wwwroot\static\js\main.d6a50c74.js" />
+    <None Include="wwwroot\static\js\main.d6a50c74.js.map" />
+    <None Include="wwwroot\static\js\main.eddd3cad.js" />
+    <None Include="wwwroot\static\js\main.eddd3cad.js.map" />
+    <None Include="wwwroot\static\js\main.f3c59334.js" />
+    <None Include="wwwroot\static\js\main.f3c59334.js.map" />
+    <None Include="wwwroot\static\js\main.fbb18cc7.js" />
+    <None Include="wwwroot\static\js\main.fbb18cc7.js.map" />
     <None Include="wwwroot\static\media\avasta.52f0e64f452232316f1b.svg" />
     <None Include="wwwroot\static\media\avasta.d2283edad95d676873d7.woff2" />
     <None Include="wwwroot\static\media\bootstrap-icons.c1dcd4eed1b0c50ff856.woff2" />

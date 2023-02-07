@@ -17,9 +17,10 @@ namespace Timesheet.Application.Referential.Queries
         IEnumerable<EnumReadModel<TimesheetStatus>> GetTimesheetStatuses();
         IEnumerable<EnumReadModel<TimesheetEntryStatus>> GetTimesheetEntryStatuses();
         IEnumerable<EnumReadModel<TimeoffStatus>> GetTimeoffStatuses();
-        Task<IEnumerable<PayrollTypes>> GetTimeoffTypes();
+        Task<IEnumerable<PayrollTypes>> GetTimeoffTypes(bool requireApproval = true);
         Task<IEnumerable<string>> GetTimeoffLabels();
         Task<IEnumerable<PayrollTypes>> GetPayrollCodes();
+        Task<IEnumerable<PayrollTypes>> GetAllTimeoffTypes();
         Task<IEnumerable<SimpleDictionaryItem>> GetJobs();
         Task<IEnumerable<SimpleDictionaryItem>> GetJobTasks();
         Task<IEnumerable<SimpleDictionaryItem>> GetServiceOrders();

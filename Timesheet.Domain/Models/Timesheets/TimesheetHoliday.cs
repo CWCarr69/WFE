@@ -1,4 +1,6 @@
-﻿namespace Timesheet.Domain.Models.Timesheets
+﻿using Timesheet.Models.Referential;
+
+namespace Timesheet.Domain.Models.Timesheets
 {
     public class TimesheetHoliday : Entity
     {
@@ -11,14 +13,14 @@
         public TimesheetHoliday(string id, DateTime WorkDate, string description) : base(id)
         {
             this.WorkDate = WorkDate.Date;
-            PayrollCode = "HOLIDAY";
+            PayrollCodeId = (int)TimesheetFixedPayrollCodeEnum.HOLIDAY;
             Hours = DefaultHolidayHours;
             Description = description ?? string.Empty;
             Status = TimesheetEntryStatus.APPROVED;
         }
 
         public DateTime WorkDate { get; private set; }
-        public string PayrollCode { get; private set; }
+        public int PayrollCodeId { get; private set; }
         public double Hours { get; private set; }
         public double Quantity => Hours;
         public string Description { get; private set; }

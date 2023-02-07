@@ -14,8 +14,6 @@
 
         public DateTime RequestStartDate { get; private set; }
 
-        public bool RequireApproval { get; private set; } = false;
-
         public DateTime RequestEndDate { get; private set; }
         public string? EmployeeComment { get; private set; }
         public string? ApproverComment { get; private set; }

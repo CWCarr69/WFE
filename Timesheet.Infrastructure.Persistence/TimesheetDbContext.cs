@@ -5,6 +5,7 @@ using Timesheet.Domain.Models.Holidays;
 using Timesheet.Domain.Models.Notifications;
 using Timesheet.Domain.Models.Settings;
 using Timesheet.Domain.Models.Timesheets;
+using Timesheet.Domain.Timesheets;
 using Timesheet.Models.Referential;
 
 namespace Timesheet.Infrastructure.Persistence
@@ -23,6 +24,7 @@ namespace Timesheet.Infrastructure.Persistence
         public DbSet<Audit> Audits { get; set; }
         public DbSet<Setting> Settings { get; set; }
         public DbSet<PayrollTypes> PayrollTypes { get; set; }
+        public DbSet<TimesheetException> TImesheetException { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -61,5 +63,6 @@ namespace Timesheet.Infrastructure.Persistence
 
             builder.Entity<TimesheetHeader>().Ignore(e => e.TimesheetEntriesWithoutTimeoffs);
         }
+
     }
 }

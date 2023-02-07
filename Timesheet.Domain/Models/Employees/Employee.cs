@@ -15,7 +15,7 @@ namespace Timesheet.Domain.Models.Employees
 
         public Employee(string id, string userId, string fullName,
             string managerId, string primaryApproverId, string secondaryApproverId,
-            EmployeeEmploymentData employmentData, EmployeeContactData contacts, bool isActive) : base(id)
+            EmployeeEmploymentData employmentData, EmployeeContactData contacts, bool isActive, bool usesTimesheet) : base(id)
         {
             FullName = fullName;
             Manager = managerId is not null ? new Employee(managerId) : null;
@@ -24,6 +24,7 @@ namespace Timesheet.Domain.Models.Employees
             EmploymentData = employmentData;
             Contacts = contacts;
             IsActive = isActive;
+            UsesTimesheet = usesTimesheet;
             UserId = userId;
         }
 
@@ -42,6 +43,7 @@ namespace Timesheet.Domain.Models.Employees
         public IReadOnlyCollection<TimeoffHeader> Timeoffs => _timeoffs;
         public bool IsActive { get; private set; }
         public string UserId { get; private set; }
+        public bool UsesTimesheet { get; private set; }
         #endregion
 
         public TimeoffStatus? LastTimeoffStatus()

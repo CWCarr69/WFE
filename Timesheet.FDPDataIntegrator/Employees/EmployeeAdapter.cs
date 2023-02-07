@@ -16,7 +16,7 @@ namespace Timesheet.FDPDataIntegrator.Employees
                 .ToList();
         }
 
-        public Employee Adapt(EmployeeRecord record)
+        public Employee? Adapt(EmployeeRecord record)
         {
             if(record == null || string.IsNullOrEmpty(record.EmployeeCode))
             {
@@ -26,15 +26,19 @@ namespace Timesheet.FDPDataIntegrator.Employees
             var employmentData = new EmployeeEmploymentData(
                 jobTitle: record.Title,
                 department: record.Department,
-                employmentDate: record.CreateDate,
+                employmentDate: record.EmploymentDate,
                 terminationDate: null,
-                isSalaried: record.TimesheetPeriod != "WEEKLY",
+                isSalaried: record.TimesheetPeriod.ToLower() == "hourly",
                 isAdministrator: /*record.JobRole == "ADMIN"*/ _administrators is not null && _administrators
                     .Any(a => record.ADLogin is not null 
                         && record.ADLogin.ToLower().StartsWith(a.ToLower()))
             );
 
             var employeeContactData = new EmployeeContactData(companyEmail: record.Email, companyPhone:record.Phone);
+            if(record.UsesTimesheet == "True")
+            {
+                var a = 1;
+            }
 
             var employee = new Employee(
                 record.EmployeeCode,
@@ -45,7 +49,8 @@ namespace Timesheet.FDPDataIntegrator.Employees
                 record.SecondaryApproverId,
                 employmentData,
                 employeeContactData,
-                record.Active != "False"
+                record.Active.ToLower() != "false",
+                record.UsesTimesheet.ToLower() == "true"
             );
 			
 			employee.UpdateMetadata(record.CreateDate, record.ModifyDate);

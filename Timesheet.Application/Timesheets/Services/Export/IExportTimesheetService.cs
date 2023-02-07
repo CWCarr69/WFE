@@ -2,7 +2,8 @@
 {
     public interface IExportTimesheetService
     {
-        Task<string> ExportToWeb(string payrollperiod);
-        Task ExportToExternal(string payrollperiod);
+        Task<string> ExportRawReviewToWeb(string payrollperiod);
+        Task<string> ExportAdaptedReviewToWeb(string payrollperiod);
+        Task ExportAdaptedReviewToExternal(string payrollperiod);
     }
 }
