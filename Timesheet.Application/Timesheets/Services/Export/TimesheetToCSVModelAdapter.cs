@@ -60,7 +60,7 @@ namespace Timesheet.Application.Timesheets.Services.Export
             return new ExternalTimesheetCSVEntryModel
             {
                 No = entry.No,
-                DetCode = entry.DetCode,
+                PayrollCodeId = entry.PayrollCodeId,
                 Hours = entry.Hours,
                 CC1 = entry.CC1,
                 Job_Code = entry.Job_Code,

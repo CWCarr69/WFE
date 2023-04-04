@@ -4,7 +4,7 @@
     {
         public bool SMTP_UseSSL { get;private set; } = false;
         public int SMTP_Port { get;private set; } = 25;
-        public string SMTP_EmailServer { get;private set; }
+        public string SMTP_Server { get;private set; }
         public string SMTP_Username { get;private set; }
         public string SMTP_Password { get;private set; }
         public string SMTP_Email { get;private set; } 
@@ -15,43 +15,43 @@
             var SmtpSettings = new SMTPSettings();
             foreach(var setting in configurations)
             {
-                if (nameof(SMTP_UseSSL) == setting.Name)
+                if (nameof(SMTP_UseSSL).ToLower() == setting.Name.ToLower())
                 {
-                    SmtpSettings.SMTP_UseSSL = bool.Parse(setting.Value);
+                    SmtpSettings.SMTP_UseSSL = int.Parse(setting.Value) == 1;
                 }
 
-                if (nameof(SMTP_Port) == setting.Name)
+                if (nameof(SMTP_Port).ToLower() == setting.Name.ToLower())
                 {
                     SmtpSettings.SMTP_Port = int.Parse(setting.Value);
                 }
 
-                if (nameof(SMTP_EmailServer) == setting.Name)
+                if (nameof(SMTP_Server).ToLower() == setting.Name.ToLower())
                 {
-                    SmtpSettings.SMTP_EmailServer = setting.Value;
+                    SmtpSettings.SMTP_Server = setting.Value;
                 }
 
-                if (nameof(SMTP_Username) == setting.Name)
+                if (nameof(SMTP_Username).ToLower() == setting.Name.ToLower())
                 {
                     SmtpSettings.SMTP_Username = setting.Value;
                 }
 
-                if (nameof(SMTP_Password) == setting.Name)
+                if (nameof(SMTP_Password).ToLower() == setting.Name.ToLower())
                 {
                     SmtpSettings.SMTP_Password = setting.Value;
                 }
 
-                if (nameof(SMTP_Email) == setting.Name)
+                if (nameof(SMTP_Email).ToLower() == setting.Name.ToLower())
                 {
                     SmtpSettings.SMTP_Email = setting.Value;
                 }
 
-                if (nameof(SMTP_SenderName) == setting.Name)
+                if (nameof(SMTP_SenderName).ToLower() == setting.Name.ToLower())
                 {
                     SmtpSettings.SMTP_SenderName = setting.Value;
                 }
             }
 
-            if (string.IsNullOrEmpty(SmtpSettings.SMTP_EmailServer) 
+            if (string.IsNullOrEmpty(SmtpSettings.SMTP_Server) 
                 || string.IsNullOrEmpty(SmtpSettings.SMTP_Username)
                 || string.IsNullOrEmpty(SmtpSettings.SMTP_Password)
                 || string.IsNullOrEmpty(SmtpSettings.SMTP_Email))

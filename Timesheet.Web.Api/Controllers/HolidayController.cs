@@ -7,7 +7,6 @@ using Timesheet.Domain.ReadModels.Holidays;
 
 namespace Timesheet.Web.Api.Controllers
 {
-    [Authorize(Roles = "ADMINISTRATOR")]
     [Route("api/[controller]")]
     [ApiController]
     public class HolidayController : BaseController<HolidayController>
@@ -23,6 +22,7 @@ namespace Timesheet.Web.Api.Controllers
         }
 
         [HttpGet()]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<HolidayDetails>>> Get()
         {
             LogInformation($"Getting Holidays");
@@ -31,7 +31,7 @@ namespace Timesheet.Web.Api.Controllers
             return Ok(holidays);
         }
 
-
+        [Authorize]
         [HttpGet("{id}")]
         public ActionResult<HolidayDetails?> Get(string id)
         {
@@ -41,6 +41,7 @@ namespace Timesheet.Web.Api.Controllers
         } 
         
         [HttpPost]
+        [Authorize(Roles = "ADMINISTRATOR")]
         public async Task<IActionResult> Post([FromBody] AddHoliday addHoliday, CancellationToken token)
         {
             LogInformation($"Adding Holiday ({addHoliday.Description}) on {addHoliday.Date.ToShortDateString()}");
@@ -52,6 +53,7 @@ namespace Timesheet.Web.Api.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "ADMINISTRATOR")]
         public async Task<IActionResult> UpdateGeneralInformations([FromBody] UpdateHolidayGeneralInformations updateHoliday, CancellationToken token)
         {
             LogInformation($"Updating Holiday ({updateHoliday.Id} - {updateHoliday.Description})");
@@ -63,6 +65,7 @@ namespace Timesheet.Web.Api.Controllers
         }
 
         [HttpPut("/setAsRecurrent")]
+        [Authorize(Roles = "ADMINISTRATOR")]
         public async Task<IActionResult> SetAsRecurrent([FromBody] SetHolidayAsRecurrent setHolidayAsRecurrent, CancellationToken token)
         {
             LogInformation($"Set Holiday ({setHolidayAsRecurrent.Id}) as recurrent");
@@ -74,6 +77,7 @@ namespace Timesheet.Web.Api.Controllers
         }
 
         [HttpDelete]
+        [Authorize(Roles = "ADMINISTRATOR")]
         public async Task<IActionResult> Delete([FromBody] DeleteHoliday deleteHoliday, CancellationToken token)
         {
             LogInformation($"Delete Holiday ({deleteHoliday.Id})");

@@ -8,7 +8,7 @@ namespace Timesheet.FDPIntegratorService
         private readonly IFDPIntegratorProcess _fdpIntegrator;
         private readonly ILogger<FDPIntegratorWorker> _logger;
         private readonly long _uploadFrequency;
-        private const long DEFAULT_UPLOAD_FREQUENCY = 3600000;
+        private const long DEFAULT_UPLOAD_FREQUENCY = 60000;
 
         public FDPIntegratorWorker(IFDPIntegratorProcess fdpIntegrator, ISettingRepository settingRepository, ILogger<FDPIntegratorWorker> logger)
         {
@@ -17,7 +17,7 @@ namespace Timesheet.FDPIntegratorService
 
             var settings = settingRepository.GetFDPParameters();
             long.TryParse(settings.FDP_UploadFrequency, out _uploadFrequency);
-            _uploadFrequency = _uploadFrequency == 0 ? DEFAULT_UPLOAD_FREQUENCY : _uploadFrequency * 3600000;
+            _uploadFrequency = _uploadFrequency == 0 ? DEFAULT_UPLOAD_FREQUENCY : _uploadFrequency * 60000;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)

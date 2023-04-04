@@ -1,6 +1,5 @@
 ﻿using Timesheet.Application.Timesheets.Queries;
 using Timesheet.Domain.Models.Timesheets;
-using Timesheet.Domain.ReadModels.Employees;
 using Timesheet.Domain.ReadModels.Timesheets;
 using Timesheet.Infrastructure.Dapper;
 using Timesheet.Infrastruture.ReadModel.Queries;
@@ -102,21 +101,23 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             te.PayrollCodeId  as {nameof(EmployeeTimesheetEntry.PayrollCodeId)},
             pt.PayrollCode  as {nameof(EmployeeTimesheetEntry.PayrollCode)},
             te.Hours  as {nameof(EmployeeTimesheetEntry.Quantity)},
-            te.CustomerNumber  as {nameof(EmployeeTimesheetEntry.CustomerNumber)},
             te.JobNumber  as {nameof(EmployeeTimesheetEntry.JobNumber)},
             te.JobDescription  as {nameof(EmployeeTimesheetEntry.JobDescription)},
             te.LaborCode  as {nameof(EmployeeTimesheetEntry.LaborCode)},
             te.ServiceOrderNumber  as {nameof(EmployeeTimesheetEntry.ServiceOrderNumber)},
-            te.ProfitCenterNumber  as {nameof(EmployeeTimesheetEntry.ProfitCenterNumber)},
+            COALESCE(te.ProfitCenterNumber, e.DefaultProfitCenter)  as {nameof(EmployeeTimesheetEntry.ProfitCenterNumber)},
             e.Department  as {nameof(EmployeeTimesheetEntry.Department)},
-            te.Description  as {nameof(EmployeeTimesheetEntry.Description)},
+            CASE WHEN pt.Category = 2 THEN te.Description 
+            ELSE ptdesc.PayrollCode END AS {nameof(EmployeeTimesheetEntry.Description)}, 
             te.OutOffCountry  as {nameof(EmployeeTimesheetEntry.OutOffCountry)},
             te.Status  as {nameof(EmployeeTimesheetEntry.Status)},
             te.IsDeletable  as {nameof(EmployeeTimesheetEntry.IsDeletable)}
             FROM timesheetEntry te
             JOIN payrollTypes pt on pt.numId = te.PayrollCodeId
+            JOIN payrollTypes ptdesc on ptdesc.numId = CAST(te.PayrollCodeId AS INT)  
             JOIN employees e on e.id = te.employeeId
             WHERE employeeId = {TimesheetDetailsQueryEmployeeIdParam} AND timesheetHeaderId = {TimesheetDetailsQueryTimesheetIdParam}
+            ORDER BY te.WorkDate
         ";
         #endregion
 
@@ -144,7 +145,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
                         JOIN timesheetEntry te on e.Id = te.EmployeeId
                         JOIN timesheets t on t.id = te.TimesheetHeaderId
                         LEFT JOIN TimesheetException tex ON tex.TimesheetEntryId = te.Id And tex.EmployeeId = e.Id
-                        WHERE tex.Id is null  
+                        WHERE @teamClause tex.Id is null  
                         { TimesheetReviewQuerySearchFilterPlaceholder }
                     ) t
                     UNION ALL(
@@ -158,7 +159,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
                             OR 
                             (e.IsSalaried != {TimesheetReviewQueryIsSalariedParam} AND t.type = {TimesheetReviewQueryMonthlyTimesheetParam}))
                         LEFT JOIN TimesheetException ho ON ho.TimesheetEntryId = tho.Id And ho.EmployeeId = e.Id
-                        WHERE ho.Id is null
+                        WHERE @teamClause ho.Id is null
                         { TimesheetReviewQuerySearchFilterPlaceholder }
                     )  
                 ) tsr
@@ -179,7 +180,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
                     te.JobDescription  as {nameof(TimesheetEntryDetails.JobDescription)},
                     te.LaborCode  as {nameof(TimesheetEntryDetails.LaborCode)},
                     te.ServiceOrderNumber  as {nameof(TimesheetEntryDetails.ServiceOrderNumber)},
-                    COALESCE(te.ProfitCenterNumber, e.Department)  as {nameof(TimesheetEntryDetails.ProfitCenterNumber)},
+                    COALESCE(te.ProfitCenterNumber, e.DefaultProfitCenter)  as {nameof(TimesheetEntryDetails.ProfitCenterNumber)},
                     e.Department  as {nameof(TimesheetEntryDetails.Department)},
                     te.Description  as {nameof(TimesheetEntryDetails.Description)},
                     te.OutOffCountry  as {nameof(TimesheetEntryDetails.OutOffCountry)},
@@ -189,7 +190,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
                     JOIN employees e on e.Id = te.EmployeeId
                     JOIN payrollTypes pt on pt.numId = te.PayrollCodeId
                     LEFT JOIN TimesheetException tex ON tex.TimesheetEntryId = te.Id And tex.EmployeeId = e.Id
-                    WHERE tex.Id is null 
+                    WHERE @teamClause tex.Id is null 
                     { TimesheetReviewQuerySearchFilterPlaceholder }
                 ) entries
                 UNION ALL
@@ -206,7 +207,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
                     null  as {nameof(TimesheetEntryDetails.JobDescription)},
                     null  as {nameof(TimesheetEntryDetails.LaborCode)},
                     null  as {nameof(TimesheetEntryDetails.ServiceOrderNumber)},
-                    null  as {nameof(TimesheetEntryDetails.ProfitCenterNumber)},
+                    e.defaultProfitCenter  as {nameof(TimesheetEntryDetails.ProfitCenterNumber)},
                     e.Department  as {nameof(TimesheetEntryDetails.Department)},
                     tho.Description  as {nameof(TimesheetEntryDetails.Description)},
                     null  as {nameof(TimesheetEntryDetails.OutOffCountry)},
@@ -219,7 +220,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
                         OR 
                         (e.IsSalaried != {TimesheetReviewQueryIsSalariedParam} AND t.type = {TimesheetReviewQueryMonthlyTimesheetParam}))
                     LEFT JOIN TimesheetException ho ON ho.TimesheetEntryId = tho.Id And ho.EmployeeId = e.Id
-                    WHERE ho.Id is null
+                    WHERE @teamClause ho.Id is null
                     { TimesheetReviewQuerySearchFilterPlaceholder }
                 )
             )";
@@ -230,6 +231,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             (SELECT
                 e.Id AS {nameof(TimesheetEntryDetails.EmployeeId)},
                 e.Fullname AS {nameof(TimesheetEntryDetails.Fullname)},
+                e.DefaultProfitCenter AS {nameof(TimesheetEntryDetails.DefaultProfitCenter)},
                 t.Id AS {nameof(TimesheetEntryDetails.TimesheetId)},
                 t.PayrollPeriod AS {nameof(TimesheetEntryDetails.PayrollPeriod)},
                 SUM(CASE WHEN te.{nameof(TimesheetEntryDetails.PayrollCodeId)} = {TimesheetReviewQueryOvertimePayrollCodeIdParam} 
@@ -242,9 +244,9 @@ namespace Timesheet.Infrastructure.Persistence.Queries
                 FROM employees e
                 JOIN employeeTimesheetEntries te on e.Id = te.EmployeeId
                 JOIN timesheets t on t.id = te.TimesheetHeaderId
-                WHERE 1=1 
+                WHERE @teamClause 1=1 
                 { TimesheetReviewQuerySearchFilterPlaceholder }
-                GROUP BY e.Id, e.Fullname, t.Id, t.PayrollPeriod, t.StartDate, t.EndDate,  t.Status
+                GROUP BY e.Id, e.Fullname, t.Id, t.PayrollPeriod, t.StartDate, t.EndDate, t.Status, e.DefaultProfitCenter
                 {TimesheetReviewQueryPaginatePlaceholder}
             )
         ";
@@ -252,6 +254,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
         public const string TimesheetReviewQuery = $@"SELECT 
             et.{nameof(TimesheetEntryDetails.EmployeeId)},
             et.{nameof(TimesheetEntryDetails.Fullname)},
+            et.{nameof(TimesheetEntryDetails.DefaultProfitCenter)},
             et.{nameof(TimesheetEntryDetails.TimesheetId)},
             et.{nameof(TimesheetEntryDetails.PayrollPeriod)},
             et.{nameof(TimesheetEntryDetails.Overtime)},
@@ -276,7 +279,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             te.{nameof(TimesheetEntryDetails.TimesheetEntryStatus)}
             FROM employeeTimesheet et
             JOIN employeeTimesheetEntries te on te.EmployeeId = et.employeeId AND te.TimesheetHeaderId = et.TimesheetId
-            ORDER BY et.{nameof(TimesheetEntryDetails.Fullname)}
+            ORDER BY et.{nameof(TimesheetEntryDetails.Fullname)}, te.{nameof(TimesheetEntryDetails.WorkDate)}
         ";
 
         #endregion
@@ -290,7 +293,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             Where e.Id = {EmployeeTimesheetsQueryEmployeeIdParam}
             GROUP BY e.Id, e.Fullname, t.Id, t.PayrollPeriod, t.CreatedDate, t.ModifiedDate, t.StartDate, t.EndDate, t.status";
 
-        public const string EmployeeTimesheetsQueryOrderByClause = $@"t.{nameof(EmployeeTimesheet.CreatedDate)} DESC";
+        public const string EmployeeTimesheetsQueryOrderByClause = $@"t.{nameof(EmployeeTimesheet.StartDate)} DESC";
 
         public const string EmployeeTimesheetsTotalQuery = $@"SELECT
             COUNT(DISTINCT t.Id) AS  {nameof(EmployeeTimesheetHistory.TotalItems)}
@@ -318,6 +321,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
         private const string AllEmployeeTimesheetByPayrollPeriodQueryWeeklyTimesheetParam = "@weeklyTimesheet";
         private const string AllEmployeeTimesheetByPayrollPeriodQueryMonthlyTimesheetParam = "@monthlyTimesheet";
         private const string AllEmployeeTimesheetByPayrollPeriodQueryHolidayPayrollCodeIdParam = "@holidayPayrollCodeId";
+        private const string AllEmployeeTimesheetByPayrollPeriodQueryUnpaidPayrollCodeIdParam = "@unpaidPayrollCodeId";
 
 
         public const string AllEmployeeTimesheetByPayrollPeriodQuery = $@"
@@ -331,13 +335,17 @@ namespace Timesheet.Infrastructure.Persistence.Queries
         #region External Export
         private const string ExternalAllEmployeeTimesheetEntriesByPayrollPeriodQuery = $@"
             SELECT 
-                te.EmployeeId AS {nameof(ExternalTimesheetEntryDetails.No)},
-                concat(replace(convert(varchar, te.WorkDate, 10),'-','/'), ' 1:01am') AS {nameof(ExternalTimesheetEntryDetails.Begin_Date)},
-                concat(replace(convert(varchar, te.WorkDate, 10),'-','/'), ' 23:49:59') AS {nameof(ExternalTimesheetEntryDetails.End_Date)},
-                pt.ExternalCode AS {nameof(ExternalTimesheetEntryDetails.DetCode)},
+                ('""""""' +  RIGHT('0000' + CAST(te.EmployeeId AS varchar(4)), 4 )+ '""""""') AS {nameof(ExternalTimesheetEntryDetails.No)},
+                pt.ExternalCode AS {nameof(ExternalTimesheetEntryDetails.PayrollCodeId)},
                 te.Hours  as {nameof(ExternalTimesheetEntryDetails.Hours)},
-                coalesce(te.JobNumber, te.ServiceOrderNumber) as {nameof(ExternalTimesheetEntryDetails.Job_Code)},
-                te.ProfitCenterNumber  as {nameof(ExternalTimesheetEntryDetails.CC1)}
+                ('""""""'+ cast((coalesce(te.ProfitCenterNumber, e.defaultProfitCenter)) as varchar)+'""""""') as {nameof(ExternalTimesheetEntryDetails.CC1)},
+                IIF(COALESCE(JobNumber, ServiceOrderNumber) is null or LEN(COALESCE(JobNumber, ServiceOrderNumber)) = 0, '', ('""""""'+ Left(coalesce(te.JobNumber, te.ServiceOrderNumber),10) +'""""""')) AS {nameof(ExternalTimesheetEntryDetails.Job_Code)},
+                ('""""""'+Convert(varchar,WorkDate,1)+'""""""') AS {nameof(ExternalTimesheetEntryDetails.Begin_Date)},
+                ('""""""'+Convert(varchar,WorkDate,1)+'""""""') AS {nameof(ExternalTimesheetEntryDetails.End_Date)}
+
+                --concat(replace(convert(varchar, te.WorkDate, 10),'-','/'), ' 1:01am') AS {nameof(ExternalTimesheetEntryDetails.Begin_Date)},
+                --concat(replace(convert(varchar, te.WorkDate, 10),'-','/'), ' 23:49:59') AS {nameof(ExternalTimesheetEntryDetails.End_Date)},
+
             FROM timesheetEntry te
             JOIN timesheets t on t.id = te.TimesheetHeaderId
             JOIN employees e on e.Id = te.EmployeeId
@@ -345,17 +353,18 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             LEFT JOIN TimesheetException tex ON tex.TimesheetEntryId = te.Id And tex.EmployeeId = e.Id
             WHERE tex.Id is null AND 
             t.payrollPeriod = {AllEmployeeTimesheetByPayrollPeriodQueryPayrollPeriodParam}
+            AND pt.numId != {AllEmployeeTimesheetByPayrollPeriodQueryUnpaidPayrollCodeIdParam}
         ";
 
         private const string ExternalAllEmployeeTimesheetHolidaysByPayrollPeriodQuery = $@"
             SELECT 
-                e.Id AS {nameof(ExternalTimesheetEntryDetails.No)},
-                concat(replace(convert(varchar, tho.WorkDate, 10),'-','/'), ' 1:01am') AS {nameof(ExternalTimesheetEntryDetails.Begin_Date)},
-                concat(replace(convert(varchar, tho.WorkDate, 10),'-','/'), ' 23:49:59') AS {nameof(ExternalTimesheetEntryDetails.End_Date)},
-                pt.ExternalCode AS {nameof(ExternalTimesheetEntryDetails.DetCode)},
+                ('""""""' +  RIGHT('0000' + CAST(e.Id AS varchar(4)), 4 )+ '""""""') AS {nameof(ExternalTimesheetEntryDetails.No)},
+                pt.ExternalCode AS {nameof(ExternalTimesheetEntryDetails.PayrollCodeId)},
                 tho.Hours  as {nameof(ExternalTimesheetEntryDetails.Hours)},
-                null AS {nameof(ExternalTimesheetEntryDetails.Job_Code)},
-                null  as {nameof(ExternalTimesheetEntryDetails.CC1)}
+                (e.defaultProfitCenter) as {nameof(ExternalTimesheetEntryDetails.CC1)},
+                ('') as {nameof(ExternalTimesheetEntryDetails.Job_Code)},
+                (''+Convert(varchar,tho.WorkDate,1)+'""""""') AS {nameof(ExternalTimesheetEntryDetails.Begin_Date)},
+                (''+Convert(varchar,tho.WorkDate,1)+'""""""') AS {nameof(ExternalTimesheetEntryDetails.End_Date)}
             FROM timesheetHoliday tho
             JOIN timesheets t on t.id = tho.TimesheetHeaderId
             JOIN PayrollTypes pt on pt.numId = {AllEmployeeTimesheetByPayrollPeriodQueryHolidayPayrollCodeIdParam}
@@ -383,10 +392,23 @@ namespace Timesheet.Infrastructure.Persistence.Queries
         #endregion
 
         #region Export web
-        private const string AllEmployeeTimesheetEntriesByPayrollPeriodQuery = $@"
+        private const string AllTimesheetEntriesBySearchCriteriaQueryPayrollPeriodParam = "@payrollPeriod";
+        private const string AllTimesheetEntriesBySearchCriteriaQueryDepartmentParam = "@department";
+        private const string AllTimesheetEntriesBySearchCriteriaQueryEmployeeIdParam = "@employeeId";
+
+        public const string AllTimesheetEntriesBySearchCriteriaQueryDepartmentWhereClause = $@"
+            AND e.Department = {AllTimesheetEntriesBySearchCriteriaQueryDepartmentParam}
+        ";
+
+        public const string AllTimesheetEntriesBySearchCriteriaQueryEmployeeWhereClause = $@"
+            AND e.Id = {AllTimesheetEntriesBySearchCriteriaQueryEmployeeIdParam}
+        ";
+
+        private const string AllTimesheetEntriesBySearchCriteriaQuery = $@"
             SELECT 
                 te.Id AS {nameof(TimesheetEntryDetails.TimesheetEntryId)},
-                te.EmployeeId AS EmployeeId,
+                te.EmployeeId as {nameof(TimesheetEntryDetails.EmployeeId)},
+                e.Fullname as {nameof(TimesheetEntryDetails.Fullname)},
                 te.TimesheetHeaderId AS TimesheetHeaderId,
                 te.WorkDate  as {nameof(TimesheetEntryDetails.WorkDate)},
                 te.PayrollCodeId  as {nameof(TimesheetEntryDetails.PayrollCodeId)},
@@ -397,7 +419,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
                 te.JobDescription  as {nameof(TimesheetEntryDetails.JobDescription)},
                 te.LaborCode  as {nameof(TimesheetEntryDetails.LaborCode)},
                 te.ServiceOrderNumber  as {nameof(TimesheetEntryDetails.ServiceOrderNumber)},
-                te.ProfitCenterNumber  as {nameof(TimesheetEntryDetails.ProfitCenterNumber)},
+                coalesce(te.ProfitCenterNumber, e.defaultProfitCenter)  as {nameof(TimesheetEntryDetails.ProfitCenterNumber)},
                 e.Department  as {nameof(TimesheetEntryDetails.Department)},
                 te.Description  as {nameof(TimesheetEntryDetails.Description)},
                 te.OutOffCountry  as {nameof(TimesheetEntryDetails.OutOffCountry)},
@@ -408,13 +430,16 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             JOIN payrollTypes pt on pt.numId =  te.PayrollCodeId
             LEFT JOIN TimesheetException tex ON tex.TimesheetEntryId = te.Id And tex.EmployeeId = e.Id
             WHERE tex.Id is null AND 
-            t.payrollPeriod = {AllEmployeeTimesheetByPayrollPeriodQueryPayrollPeriodParam}
+            t.payrollPeriod = {AllTimesheetEntriesBySearchCriteriaQueryPayrollPeriodParam}
+            @AllTimesheetEntriesBySearchCriteriaQueryDepartmentWhereClause
+            @AllTimesheetEntriesBySearchCriteriaQueryEmployeeWhereClause
         ";
 
-        private const string AllEmployeeTimesheetHolidaysByPayrollPeriodQuery = $@"
+        private const string AllEmployeeTimesheetHolidaysBySearchCriteriaQuery = $@"
             SELECT 
                 tho.Id AS {nameof(TimesheetEntryDetails.TimesheetEntryId)},
-                e.Id as EmployeeId,
+                e.Id as {nameof(TimesheetEntryDetails.EmployeeId)},
+                e.Fullname as {nameof(TimesheetEntryDetails.Fullname)},
                 tho.TimesheetHeaderId AS TimesheetHeaderId,
                 tho.WorkDate  as {nameof(TimesheetEntryDetails.WorkDate)},
                 3  as {nameof(TimesheetEntryDetails.PayrollCodeId)},
@@ -425,7 +450,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
                 null  as {nameof(TimesheetEntryDetails.JobDescription)},
                 null  as {nameof(TimesheetEntryDetails.LaborCode)},
                 null  as {nameof(TimesheetEntryDetails.ServiceOrderNumber)},
-                null  as {nameof(TimesheetEntryDetails.ProfitCenterNumber)},
+                e.defaultProfitCenter  as {nameof(TimesheetEntryDetails.ProfitCenterNumber)},
                 e.Department  as {nameof(TimesheetEntryDetails.Department)},
                 tho.Description  as {nameof(TimesheetEntryDetails.Description)},
                 null  as {nameof(TimesheetEntryDetails.OutOffCountry)},
@@ -439,12 +464,14 @@ namespace Timesheet.Infrastructure.Persistence.Queries
                 (e.IsSalaried != {AllEmployeeTimesheetByPayrollPeriodQueryIsSalariedParam} AND t.type = {AllEmployeeTimesheetByPayrollPeriodQueryMonthlyTimesheetParam}))
             LEFT JOIN TimesheetException ho ON ho.TimesheetEntryId = tho.Id And ho.EmployeeId = e.Id
             WHERE ho.Id is null AND t.payrollPeriod = {AllEmployeeTimesheetByPayrollPeriodQueryPayrollPeriodParam}
+            @{nameof(AllTimesheetEntriesBySearchCriteriaQueryDepartmentWhereClause)}
+            @{nameof(AllTimesheetEntriesBySearchCriteriaQueryEmployeeWhereClause)}
         ";
 
         public const string AllEmployeeTimesheetAllEntriesByPayrollPeriodQuery = $@"
             SELECT * 
-            FROM ({AllEmployeeTimesheetEntriesByPayrollPeriodQuery}) entries
-            UNION ALL ({AllEmployeeTimesheetHolidaysByPayrollPeriodQuery})
+            FROM ({AllTimesheetEntriesBySearchCriteriaQuery}) entries
+            UNION ALL ({AllEmployeeTimesheetHolidaysBySearchCriteriaQuery})
             ORDER BY 2
         ";
         #endregion
@@ -544,7 +571,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             return timesheet;
         }
 
-        public async Task<TimesheetReview> GetTimesheetReview(string payrollPeriod, string? employeeId, string? department, int page, int itemsPerPage)
+        public async Task<TimesheetReview> GetTimesheetReview(string payrollPeriod, string? employeeId, string? department, int page, int itemsPerPage, string managerId = null)
         {
             var payrollPeriodParam = "@payrollPeriod";
             var employeeIdParam = "@employeeId";
@@ -559,6 +586,8 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             var query = QueryTimesheetConstants.TimesheetReviewTotalQuery;
             query = query.Replace(QueryTimesheetConstants.TimesheetReviewQuerySearchFilterPlaceholder, searchFilter);
 
+            query = AddWhereClauseForDirectReports(managerId, false, query, "e.id", whereKey: "", "@teamClause", addAnd: ADD_AND.AND_AFTER);
+
             var timesheetReview = (await _dbService.QueryAsync<TimesheetReview>(
                 query,
                 new
@@ -568,7 +597,8 @@ namespace Timesheet.Infrastructure.Persistence.Queries
                     department,
                     isSalaried = true,
                     weeklyTimesheet = TimesheetType.WEEKLY,
-                    monthlyTimesheet = TimesheetType.SALARLY
+                    monthlyTimesheet = TimesheetType.SALARLY,
+                    approverId = managerId
                 }))
                 ?.FirstOrDefault();
 
@@ -578,7 +608,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             }
 
             var paginate = Paginate(page, itemsPerPage, string.Empty, QueryTimesheetConstants.TimesheetReviewQueryEmployeeTimesheetOrderByClause);
-            query = query.Replace(QueryTimesheetConstants.TimesheetReviewQuerySearchFilterPlaceholder, searchFilter);
+            //query = query.Replace(QueryTimesheetConstants.TimesheetReviewQuerySearchFilterPlaceholder, searchFilter);
 
             query = $@"WITH 
             {QueryTimesheetConstants.TimesheetReviewQueryEmployeeTimesheetEntries},
@@ -588,6 +618,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             query = query.Replace(QueryTimesheetConstants.TimesheetReviewQuerySearchFilterPlaceholder, searchFilter);
             query = query.Replace(QueryTimesheetConstants.TimesheetReviewQueryPaginatePlaceholder, paginate);
 
+            query = AddWhereClauseForDirectReports(managerId, false, query, "e.id", whereKey: "", "@teamClause", addAnd: ADD_AND.AND_AFTER);
 
             var entries = await _dbService.QueryAsync<TimesheetEntryDetails>(
                 query,
@@ -600,7 +631,8 @@ namespace Timesheet.Infrastructure.Persistence.Queries
                     weeklyTimesheet = TimesheetType.WEEKLY,
                     monthlyTimesheet = TimesheetType.SALARLY,
                     holidayPayrollCodeId = (int)TimesheetFixedPayrollCodeEnum.HOLIDAY,
-                    overtimePayrollCodeId = (int)TimesheetFixedPayrollCodeEnum.OVERTIME
+                    overtimePayrollCodeId = (int)TimesheetFixedPayrollCodeEnum.OVERTIME,
+                    approverId = managerId
                 }
             );
 
@@ -626,42 +658,73 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             return timesheetHistory;
         }
 
-        public async Task<AllEmployeesTimesheet<TEntry>> GetAllEmployeeTimesheetByPayrollPeriod<TEntry>(string payrollPeriod, bool ignoreHolidays)
+        public async Task<AllEmployeesTimesheet<TimesheetEntryDetails>> GetAllTimesheetEntriesByPayrollPeriodAndCriteria(string payrollPeriod, string? department, string? employeeId)
         {
             var query = QueryTimesheetConstants.AllEmployeeTimesheetByPayrollPeriodQuery;
-            var timesheet = (await _dbService.QueryAsync<AllEmployeesTimesheet<TEntry>>(query, new { payrollPeriod }))?.FirstOrDefault();
+            var timesheet = (await _dbService.QueryAsync<AllEmployeesTimesheet<TimesheetEntryDetails>>(query, new { payrollPeriod }))?.FirstOrDefault();
             
             if(timesheet is null)
             {
                 return null;
             }
 
-            query = typeof(TEntry) == typeof(ExternalTimesheetEntryDetails)
-                ? ignoreHolidays 
-                    ? QueryTimesheetConstants.ExternalAllEmployeeTimesheetAllEntriesByPayrollPeriodQuery
-                    : QueryTimesheetConstants.ExternalAllEmployeeTimesheetEntriesWithoutHolidaysByPayrollPeriodQuery
-                : QueryTimesheetConstants.AllEmployeeTimesheetAllEntriesByPayrollPeriodQuery;
+            query = QueryTimesheetConstants.AllEmployeeTimesheetAllEntriesByPayrollPeriodQuery;
+            query = query.Replace($"@{nameof(QueryTimesheetConstants.AllTimesheetEntriesBySearchCriteriaQueryDepartmentWhereClause)}", department!=null ? QueryTimesheetConstants.AllTimesheetEntriesBySearchCriteriaQueryDepartmentWhereClause : string.Empty);
+            query = query.Replace($"@{nameof(QueryTimesheetConstants.AllTimesheetEntriesBySearchCriteriaQueryEmployeeWhereClause)}", employeeId!=null ? QueryTimesheetConstants.AllTimesheetEntriesBySearchCriteriaQueryEmployeeWhereClause : string.Empty);
+           
 
-            var entries = await _dbService.QueryAsync<TEntry>(query, new { 
+            var entries = await _dbService.QueryAsync<TimesheetEntryDetails>(query, new { 
                 payrollPeriod,
+                department,
+                employeeId,
                 isSalaried = true,
                 weeklyTimesheet = TimesheetType.WEEKLY,
                 monthlyTimesheet = TimesheetType.SALARLY,
                 holidayPayrollCodeId = (int) TimesheetFixedPayrollCodeEnum.HOLIDAY
             });
+
             timesheet.Entries = entries;
 
             return timesheet;
         }
 
+        public async Task<AllEmployeesTimesheet<ExternalTimesheetEntryDetails>> GetAllTimesheetEntriesByPayrollPeriod(string payrollPeriod, bool ignoreHolidays)
+        {
+            var query = QueryTimesheetConstants.AllEmployeeTimesheetByPayrollPeriodQuery;
+            var timesheet = (await _dbService.QueryAsync<AllEmployeesTimesheet<ExternalTimesheetEntryDetails>>(query, new { payrollPeriod }))?.FirstOrDefault();
+
+            if (timesheet is null)
+            {
+                return null;
+            }
+
+            query = ignoreHolidays
+                ? QueryTimesheetConstants.ExternalAllEmployeeTimesheetEntriesWithoutHolidaysByPayrollPeriodQuery
+                : QueryTimesheetConstants.ExternalAllEmployeeTimesheetAllEntriesByPayrollPeriodQuery;
+
+            var entries = await _dbService.QueryAsync<ExternalTimesheetEntryDetails>(query, new
+            {
+                payrollPeriod,
+                isSalaried = true,
+                weeklyTimesheet = TimesheetType.WEEKLY,
+                monthlyTimesheet = TimesheetType.SALARLY,
+                holidayPayrollCodeId = (int)TimesheetFixedPayrollCodeEnum.HOLIDAY,
+                unpaidPayrollCodeId = (int)TimesheetFixedPayrollCodeEnum.UNPAID
+            });
+            timesheet.Entries = entries;
+
+            return timesheet;
+        }
+        
         private static List<EmployeeTimesheetWithTotals> GroupEntriesByTimesheetAndEmployee(List<TimesheetEntryDetails> entries)
         {
             return entries
-                .GroupBy(e => new { e.EmployeeId, e.Fullname, e.TimesheetId, e.PayrollPeriod, e.Total, e.Overtime, e.StartDate, e.EndDate, e.Status })
+                .GroupBy(e => new { e.EmployeeId, e.Fullname, e.DefaultProfitCenter, e.TimesheetId, e.PayrollPeriod, e.Total, e.Overtime, e.StartDate, e.EndDate, e.Status })
                 .Select(g => new EmployeeTimesheetWithTotals
                 {
                     EmployeeId = g.Key.EmployeeId,
                     Fullname = g.Key.Fullname,
+                    DefaultProfitCenter = g.Key.DefaultProfitCenter,
                     TimesheetId = g.Key.TimesheetId,
                     PayrollPeriod = g.Key.PayrollPeriod,
                     Total = g.Key.Total,
@@ -675,7 +738,6 @@ namespace Timesheet.Infrastructure.Persistence.Queries
                         WorkDate = e.WorkDate,
                         PayrollCode = e.PayrollCode,
                         Quantity = e.Quantity,
-                        CustomerNumber = e.CustomerNumber,
                         JobNumber = e.JobNumber,
                         JobDescription = e.JobDescription,
                         LaborCode = e.LaborCode,

@@ -23,7 +23,7 @@ namespace Timesheet.Infrastructure.Authentication.Providers
             {
                 throw new Exception("Invalid credentials. No such user.");
             }
-
+            
             return GenerateToken(user, signingKey);
         }
 

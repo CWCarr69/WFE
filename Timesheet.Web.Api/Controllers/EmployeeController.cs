@@ -4,9 +4,7 @@ using Timesheet.Application;
 using Timesheet.Application.Employees.Commands;
 using Timesheet.Application.Employees.Queries;
 using Timesheet.Application.Employees.Services;
-using Timesheet.Application.Holidays.Commands;
 using Timesheet.Application.Workflow;
-using Timesheet.Domain.Employees.Services;
 using Timesheet.Domain.Models.Employees;
 using Timesheet.Domain.Models.Timesheets;
 using Timesheet.Domain.ReadModels.Employees;
@@ -80,7 +78,7 @@ namespace Timesheet.Web.Api.Controllers
         }
 
         [HttpGet("{employeeId}/Benefits")]
-        public async Task<ActionResult<EmployeeCalculatedBenefits>> GetBenefits(string employeeId)
+        public async Task<ActionResult<EmployeeCalculatedBenefits>> GetBenefitsVariation(string employeeId)
         {
             LogInformation($"Getting Employee ({employeeId}) Benefits");
 
@@ -151,11 +149,5 @@ namespace Timesheet.Web.Api.Controllers
             LogInformation($"Employee Benefits set");
             return Ok();
         }
-
-        private string Manager()
-        {
-            return CurrentUser.IsAdministrator ? null : CurrentUser.Id;
-        }
-
     }
 }

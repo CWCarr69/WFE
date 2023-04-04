@@ -81,8 +81,6 @@ namespace Timesheet.Application
             {
                 throw ex;
             }
-
-
         }
 
         private async Task PublishEvents() => await this._eventDispatcher.Publish(Events);

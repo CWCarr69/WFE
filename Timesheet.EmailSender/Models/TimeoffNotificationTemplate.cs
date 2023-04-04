@@ -6,8 +6,7 @@ namespace Timesheet.EmailSender.Models
     {
         public string Date { get; set; }
         public double Hours { get; set; }
-        public TimeoffEntryStatus VacationTypeId { get; set; }
-        public string VacationType => VacationTypeId.ToString();
+        public string VacationType { get; set; }
     } 
 
     public class TimeoffNotificationTemplate : BaseNotificationTemplate

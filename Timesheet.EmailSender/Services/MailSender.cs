@@ -26,7 +26,7 @@ namespace Timesheet.EmailSender.Services
                 mail.IsBodyHtml = true;
                 mail.Body = message;
                 smtp.Port = 587;
-                smtp.Host = _settings.SMTP_EmailServer; //for gmail host  
+                smtp.Host = _settings.SMTP_Server; //for gmail host  
                 smtp.EnableSsl = _settings.SMTP_UseSSL;
                 smtp.UseDefaultCredentials = false;
                 smtp.Credentials = new NetworkCredential(_settings.SMTP_Username, _settings.SMTP_Password);

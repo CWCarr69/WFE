@@ -10,6 +10,10 @@ namespace Timesheet.Domain.Models.Timesheets
 {
     public class TimesheetHeader : AggregateRoot
     {
+        public TimesheetHeader(string id) : base(id)
+        {
+        }
+
         public TimesheetHeader(string id,
             string payrollPeriod,
             DateTime startDate,

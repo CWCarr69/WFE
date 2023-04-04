@@ -4,11 +4,13 @@ namespace Timesheet.Domain.Models.Timesheets
 {
     public class TimesheetEntry : Entity
     {
-        public TimesheetEntry(string id, string employeeId, DateTime WorkDate, int payrollCodeId, double hours,
-            string description, string serviceOrderNumber, string serviceOrderDescription, string jobNumber, string jobDescription, string profitCenter, bool outOffCountry, bool isDeletable=false) : base(id)
+        public TimesheetEntry(string id) : base(id) { }
+
+        public TimesheetEntry(string id, string employeeId, DateTime workDate, int payrollCodeId, double hours,
+            string description, string serviceOrderNumber, string serviceOrderDescription, string jobNumber, string jobDescription, string jobTaskNumber, string profitCenter, bool outOffCountry, bool isDeletable=false) : base(id)
         {
             EmployeeId = employeeId;
-            this.WorkDate = WorkDate;
+            WorkDate = workDate;
             PayrollCodeId = payrollCodeId;
             Hours = hours;
             Description = description;
@@ -18,7 +20,8 @@ namespace Timesheet.Domain.Models.Timesheets
             JobDescription = jobDescription;
             ProfitCenterNumber = profitCenter;
             OutOffCountry = outOffCountry;
-            this.IsDeletable = isDeletable;
+            IsDeletable = isDeletable;
+            JobTaskNumber = jobTaskNumber;
         }
 
         public TimesheetEntry(string id, string employeeId, DateTime workDate, int payrollCodeId, double hours,

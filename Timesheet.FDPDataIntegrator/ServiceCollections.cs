@@ -13,13 +13,13 @@ namespace Timesheet.FDPDataIntegrator
         public static IServiceCollection AddServices(this IServiceCollection services, string connectionString)
         {
             return services.AddLogging()
-                .AddSingleton<IDatabaseService, DatabaseService>()
-
+                .AddSingletonDatabaseQueryService()
                 .AddSingleton(typeof(ISqlConnectionString), sp => new TimesheetSqlConnection(connectionString))
 
                 .AddSingleton<IRepository<Employee>, EmployeeRepository>()
                 .AddSingleton<IRepository<TimesheetHeader>, PayrollRepository>()
                 .AddSingleton<ISettingRepository, SettingRepository>()
+                .AddSingleton<IPayrollTypesRepository, PayrollTypesRepository>()
 
                 .AddSingleton<IAdapter<PayrollRecord, TimesheetHeader>, PayrollAdapter>()
                 .AddSingleton<IAdapter<EmployeeRecord, Employee>, EmployeeAdapter>()

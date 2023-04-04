@@ -16,19 +16,18 @@ namespace Timesheet.ReadModel
 {
     public static class ServiceCollection
     {
-        public static void AddTimesheedReadModelDatabase(this IServiceCollection services, string configuration)
+        public static IServiceCollection AddTimesheedReadModelDatabase(this IServiceCollection services, string configuration)
         {
-            services.AddScoped(typeof(ISqlConnectionString), sp => new TimesheetSqlConnection(configuration));
-            services.AddScoped<IDatabaseService, DatabaseService>();
-
-            services.AddScoped<IQueryHoliday, QueryHoliday>();
-            services.AddScoped<IQueryReferential, QueryReferential>();
-            services.AddScoped<IQueryEmployee, QueryEmployee>();
-            services.AddScoped<IQueryTimeoff, QueryTimeoff>();
-            services.AddScoped<IQueryTimesheet, QueryTimesheet>();
-            services.AddScoped<IQuerySetting, QuerySetting>();
-            services.AddScoped<IQueryNotification, QueryNotification>();
-            services.AddScoped<IQueryAudit, QueryAudit>();
+            return services.AddScopedDatabaseQueryService()
+            .AddScoped(typeof(ISqlConnectionString), sp => new TimesheetSqlConnection(configuration))
+            .AddScoped<IQueryHoliday, QueryHoliday>()
+            .AddScoped<IQueryReferential, QueryReferential>()
+            .AddScoped<IQueryEmployee, QueryEmployee>()
+            .AddScoped<IQueryTimeoff, QueryTimeoff>()
+            .AddScoped<IQueryTimesheet, QueryTimesheet>()
+            .AddScoped<IQuerySetting, QuerySetting>()
+            .AddScoped<IQueryNotification, QueryNotification>()
+            .AddScoped<IQueryAudit, QueryAudit>();
         }
     }
 }

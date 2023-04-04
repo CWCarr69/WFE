@@ -3,6 +3,5 @@
     internal interface IEmployeeRepository
     {
         IDictionary<string, string> GetEmails();
-        void CompleteTransaction();
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Timesheet.FDPDataIntegrator.Services
+﻿using Timesheet.Domain;
+
+namespace Timesheet.FDPDataIntegrator.Services
 {
     public interface IRepository<TEntity>
     {
@@ -6,6 +8,7 @@
         Task DisableConstraints();
         Task EnableConstraints();
         Task BeginTransaction(Action p);
-
+        Task Delete(string id);
+        IEnumerable<TEntity> GetRecents();
     }
 }

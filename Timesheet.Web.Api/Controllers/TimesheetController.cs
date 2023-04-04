@@ -114,8 +114,9 @@ namespace Timesheet.Web.Api.Controllers
         public async Task<ActionResult<WithHabilitations<PaginatedResult<WithHabilitations<EmployeeTimesheetWithTotals>>>>> GetTimesheetReview(string payrollPeriod, string? employeeId, string? department, int page=1, int itemsPerpage=10000)
         {
             LogInformation($"Getting Timesheet ({payrollPeriod}) review");
-            
-            var timesheetReview = await _timesheetQuery.GetTimesheetReview(payrollPeriod, employeeId, department, page, itemsPerpage);
+            string managerId = Manager();
+
+            var timesheetReview = await _timesheetQuery.GetTimesheetReview(payrollPeriod, employeeId, department, page, itemsPerpage, managerId);
 
             var reviewWithHabilitations = new List<WithHabilitations<EmployeeTimesheetWithTotals>>();
             foreach(var review in timesheetReview.Items)
@@ -144,15 +145,15 @@ namespace Timesheet.Web.Api.Controllers
 
         [AllowAnonymous]
         [HttpGet("{payrollPeriod}/Export")]
-        public async Task<IActionResult> ExportTimesheet(string payrollPeriod)
+        public async Task<IActionResult> ExportTimesheet(string payrollPeriod, string? department = null, string? employeeId = null)
         {
-            var csvData = await _exportTimesheet.ExportRawReviewToWeb(payrollPeriod);
+            var csvData = await _exportTimesheet.ExportRawReviewToWeb(payrollPeriod, department, employeeId);
             var filesBytes = Encoding.UTF8.GetBytes(csvData);
 
             return File(filesBytes, "text/csv", $"Timesheet_{payrollPeriod}.csv");
         }
 
-        [Authorize(Roles = "ADMINISTRATOR")]
+        [AllowAnonymous]
         [HttpGet("{payrollPeriod}/Export/AfterFinalize")]
         public async Task<IActionResult> ExportTimesheetAfterFinalize(string payrollPeriod)
         {
@@ -244,7 +245,6 @@ namespace Timesheet.Web.Api.Controllers
             return Ok();
         }
 
-        [Authorize(Roles = "ADMINISTRATOR")]
         [HttpPost("Exceptions")]
         public async Task<IActionResult> AddExceptions([FromBody] AddTimesheetException command, CancellationToken token)
         {

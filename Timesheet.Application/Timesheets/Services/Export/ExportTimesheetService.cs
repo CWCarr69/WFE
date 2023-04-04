@@ -9,7 +9,7 @@ namespace Timesheet.Application.Timesheets.Services.Export
     internal class ExportTimesheetService : IExportTimesheetService
     {
         private readonly IQueryTimesheet _timesheets;
-        private readonly ITimesheetToCSVModelAdapter<ExternalTimesheetEntryDetails,ExternalTimesheetCSVEntryModel> _externalAdapter;
+        private readonly ITimesheetToCSVModelAdapter<ExternalTimesheetEntryDetails, ExternalTimesheetCSVEntryModel> _externalAdapter;
         private readonly ITimesheetToCSVModelAdapter<TimesheetEntryDetails, TimesheetCSVEntryModel> _webAdapter;
         private readonly ITimesheetCSVFormatter _formatter;
         private readonly ITimesheetCSVWriter _csvWriter;
@@ -18,7 +18,7 @@ namespace Timesheet.Application.Timesheets.Services.Export
         private readonly string _paylocityFileName = "Paylocity_Timesheet_";
 
         public ExportTimesheetService(IQueryTimesheet timesheets,
-            ITimesheetToCSVModelAdapter<ExternalTimesheetEntryDetails,ExternalTimesheetCSVEntryModel> externalAdapter,
+            ITimesheetToCSVModelAdapter<ExternalTimesheetEntryDetails, ExternalTimesheetCSVEntryModel> externalAdapter,
             ITimesheetToCSVModelAdapter<TimesheetEntryDetails, TimesheetCSVEntryModel> adapter,
             ITimesheetCSVFormatter formatter,
             ITimesheetCSVWriter csvWriter,
@@ -40,47 +40,62 @@ namespace Timesheet.Application.Timesheets.Services.Export
 
         public async Task ExportAdaptedReviewToExternal(string payrollPeriod)
         {
-            string csv = await GetTimesheetAsCsv<ExternalTimesheetEntryDetails, ExternalTimesheetCSVEntryModel>(payrollPeriod, true, _externalAdapter, true);
+            string csv = await GetTimesheetAsCsv(payrollPeriod, _externalAdapter, true);
             string outpuPath = Path.Combine(_externalDestinationBasePath, $"{_paylocityFileName}{payrollPeriod}");
             _csvWriter.SetPath(outpuPath);
             await _csvWriter.Write(csv);
         }
 
         public async Task<string> ExportAdaptedReviewToWeb(string payrollPeriod)
-        => await GetTimesheetAsCsv<ExternalTimesheetEntryDetails, ExternalTimesheetCSVEntryModel>(payrollPeriod, true, _externalAdapter, true);
-          
-        public async Task<string> ExportRawReviewToWeb(string payrollPeriod) 
-            => await GetTimesheetAsCsv<TimesheetEntryDetails,TimesheetCSVEntryModel>(payrollPeriod, false, _webAdapter, false);
+        => await GetTimesheetAsCsv(payrollPeriod, _externalAdapter, true);
 
-        private async Task<string> GetTimesheetAsCsv<TEntryDetail, TEntryCsvModel>(string payrollPeriod, bool checkFinalizedState, ITimesheetToCSVModelAdapter<TEntryDetail, TEntryCsvModel> adapter, bool ignoreHolidays)
+        public async Task<string> ExportRawReviewToWeb(string payrollPeriod, string? department, string? employeeId)
+            => await GetTimesheetAsCsv(payrollPeriod, department, employeeId, _webAdapter);
+
+        private async Task<string> GetTimesheetAsCsv(string payrollPeriod, ITimesheetToCSVModelAdapter<ExternalTimesheetEntryDetails, ExternalTimesheetCSVEntryModel> adapter, bool ignoreHolidays)
         {
             if (payrollPeriod is null)
             {
                 return string.Empty;
             }
 
-            var timesheet = await GetDataToExport<TEntryDetail>(payrollPeriod, checkFinalizedState, ignoreHolidays);
-            var timesheetCSVModel = adapter.Adapt(timesheet);
-            var csv = _formatter.Format(timesheetCSVModel);
-            return csv;
-        }
+            var timesheet = await _timesheets.GetAllTimesheetEntriesByPayrollPeriod(payrollPeriod, ignoreHolidays);
 
-        private async Task<AllEmployeesTimesheet<TEntryDetail>> GetDataToExport<TEntryDetail>(string payrollPeriod, bool checkFinalizedState, bool ignoreHolidays)
-        {
-            var timesheet = await _timesheets.GetAllEmployeeTimesheetByPayrollPeriod<TEntryDetail>(payrollPeriod, ignoreHolidays);
-
-            if(timesheet is null)
+            if (timesheet is null)
             {
                 throw new EntityNotFoundException<TimesheetHeader>(payrollPeriod);
             }
 
-            if (checkFinalizedState && !timesheet.IsFinalized)
+            if (!timesheet.IsFinalized)
             {
                 throw new CannotExportNotFinalizedTimesheetException(payrollPeriod);
 
             }
+            return AdaptDataAndFormat(adapter, timesheet);
+        }
 
-            return timesheet;
-        } 
+        private async Task<string> GetTimesheetAsCsv(string payrollPeriod, string? department, string? employeeId, ITimesheetToCSVModelAdapter<TimesheetEntryDetails, TimesheetCSVEntryModel> adapter)
+        {
+            if (payrollPeriod is null)
+            {
+                return string.Empty;
+            }
+
+            var timesheet = await _timesheets.GetAllTimesheetEntriesByPayrollPeriodAndCriteria(payrollPeriod, department, employeeId);
+
+            if (timesheet is null)
+            {
+                throw new EntityNotFoundException<TimesheetHeader>(payrollPeriod);
+            }
+
+            return AdaptDataAndFormat<TimesheetEntryDetails, TimesheetCSVEntryModel>(adapter, timesheet);
+        }
+
+        private string AdaptDataAndFormat<TEntryDetail, TEntryCsvModel>(ITimesheetToCSVModelAdapter<TEntryDetail, TEntryCsvModel> adapter, AllEmployeesTimesheet<TEntryDetail> timesheet)
+        {
+            var timesheetCSVModel = adapter.Adapt(timesheet);
+            var csv = _formatter.Format(timesheetCSVModel);
+            return csv;
+        }
     }
 }

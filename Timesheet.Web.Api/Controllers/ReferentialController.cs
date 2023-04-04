@@ -7,7 +7,7 @@ using Timesheet.Domain.ReadModels;
 using Timesheet.Domain.ReadModels.Employees;
 using Timesheet.Domain.ReadModels.Referential;
 using Timesheet.Models.Referential;
-using PayrollTypes = Timesheet.Domain.ReadModels.Referential.PayrollTypes;
+using PayrollType = Timesheet.Domain.ReadModels.Referential.PayrollType;
 
 namespace Timesheet.Web.Api.Controllers
 {
@@ -25,7 +25,7 @@ namespace Timesheet.Web.Api.Controllers
         }
 
         [HttpGet("TimeoffTypes")]
-        public async Task<ActionResult<IEnumerable<PayrollTypes>>> GetTimeoffTypes()
+        public async Task<ActionResult<IEnumerable<PayrollType>>> GetTimeoffTypes()
         {
             LogInformation($"Listing Timeoff types");
 
@@ -34,7 +34,7 @@ namespace Timesheet.Web.Api.Controllers
         }
 
         [HttpGet("AllTimeoffTypes")]
-        public async Task<ActionResult<IEnumerable<PayrollTypes>>> GetAllTimeoffTypes()
+        public async Task<ActionResult<IEnumerable<PayrollType>>> GetAllTimeoffTypes()
         {
             LogInformation($"Listing All Timeoff types");
 
@@ -43,7 +43,7 @@ namespace Timesheet.Web.Api.Controllers
         }
 
         [HttpGet("NonRegularTimeoffTypes")]
-        public async Task<ActionResult<IEnumerable<PayrollTypes>>> GetNonRegularTimeoffTypes()
+        public async Task<ActionResult<IEnumerable<PayrollType>>> GetNonRegularTimeoffTypes()
         {
             LogInformation($"Listing Non Regular Timeoff types");
 

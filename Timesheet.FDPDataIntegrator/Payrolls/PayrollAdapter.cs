@@ -1,6 +1,6 @@
-﻿using System;
-using Timesheet.Domain.Models.Timesheets;
+﻿using Timesheet.Domain.Models.Timesheets;
 using Timesheet.FDPDataIntegrator.Services;
+using Timesheet.Domain.ReadModels.Referential;
 using Timesheet.Models.Referential;
 
 namespace Timesheet.FDPDataIntegrator.Payrolls
@@ -8,6 +8,11 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
     internal class PayrollAdapter : IAdapter<PayrollRecord, TimesheetHeader>
     {
         private const string PAYROLL_HOURLY_TYPE = "HOURLY";
+        private readonly List<PayrollType> _payrollTypes;
+
+        public PayrollAdapter(IPayrollTypesRepository payrollTypesRepository) {
+            _payrollTypes = payrollTypesRepository.GetPayrollTypes();
+        }
 
         public TimesheetHeader Adapt (PayrollRecord record)
         {
@@ -22,19 +27,20 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
                 ? TimesheetHeader.CreateWeeklyTimesheet(record.WorkDate)
                 : TimesheetHeader.CreateMonthlyTimesheet(record.WorkDate);
 
-            int payrollCodeId = string.IsNullOrEmpty(record.PayrollCode) ? (int)TimesheetFixedPayrollCodeEnum.OVERTIME : (int)TimesheetFixedPayrollCodeEnum.REGULAR;
+            int payrollCodeId = _payrollTypes.SingleOrDefault(p => p.PayrollCode.ToUpper() == record.PayrollCode?.ToUpper())?.NumId ?? (int)TimesheetFixedPayrollCodeEnum.REGULAR;
 
             var timesheetEntry = new TimesheetEntry(
                 record.RecordId,
-                employeeId: record.EmployeeCode,
-                WorkDate: record.WorkDate,
-                payrollCodeId: payrollCodeId,
-                hours: Math.Round(record.Quantity / 60, 2),
-                description: record.CustomerName,
-                serviceOrderNumber: record.ServiceOrderNumber,
-                serviceOrderDescription: record.ServiceOrderDescription,
+                record.EmployeeCode,
+                record.WorkDate,
+                payrollCodeId,
+                Math.Round(record.Quantity / 60, 2),
+                record.CustomerName,
+                record.ServiceOrderNumber,
+                record.ServiceOrderDescription,
                 jobNumber: record.JobNumber,
                 jobDescription: record.JobDescription,
+                jobTaskNumber: record.JobTaskNumber == "0" ? null : record.JobTaskNumber,
                 profitCenter: record.ProfitCenter,
                 false//TODO REMOVE (OUT OF COUNTRY)
             );

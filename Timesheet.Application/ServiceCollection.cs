@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using System.Reflection.Metadata.Ecma335;
 using Timesheet.Application.Employees.CommandHandlers;
 using Timesheet.Application.Employees.Services;
 using Timesheet.Application.Holidays.CommandHandlers;
@@ -21,88 +22,86 @@ namespace Timesheet.Application
 {
     public static class ServiceCollection
     {
-        public static void AddWorkflowService(this IServiceCollection services)
+        public static IServiceCollection AddWorkflowService(this IServiceCollection services)
         {
-            services.AddScoped<IWorkflowRegistry, WorkflowRegistry>();
-            services.AddScoped<IWorkflowService, WorkflowService>();
+            return services.AddScoped<IWorkflowRegistry, WorkflowRegistry>()
+            .AddScoped<IWorkflowService, WorkflowService>();
         }
 
-        public static void RegisterEventDispatcher(this IServiceCollection services)
+        public static IServiceCollection RegisterEventDispatcher(this IServiceCollection services)
         {
-            services.AddScoped<IDispatcher, Dispatcher>();
-            services.AddSingleton<HandlersConfiguration, HandlersConfiguration>();
+            return services.AddScoped<IDispatcher, Dispatcher>()
+                .AddSingleton<HandlersConfiguration, HandlersConfiguration>();
         }
 
-        public static void RegisterEventHandlers(this IServiceCollection services)
+        public static IServiceCollection RegisterEventHandlers(this IServiceCollection services)
         {
-            services.AddScoped<TimesheetHandleHolidayAdded, TimesheetHandleHolidayAdded>();
-            services.AddScoped<TimesheetHandleHolidayDeleted, TimesheetHandleHolidayDeleted>();
-            services.AddScoped<TimehsheetHandleHolidayGeneralInformationsUpdated, TimehsheetHandleHolidayGeneralInformationsUpdated>();
+            return services.AddScoped<TimesheetHandleHolidayAdded, TimesheetHandleHolidayAdded>()
+            .AddScoped<TimesheetHandleHolidayDeleted, TimesheetHandleHolidayDeleted>()
+            .AddScoped<TimehsheetHandleHolidayGeneralInformationsUpdated, TimehsheetHandleHolidayGeneralInformationsUpdated>()
 
-            services.AddScoped<TimeoffStateChangedEventHandler, TimeoffStateChangedEventHandler>();
-            services.AddScoped<TimesheetStateChangedEventHandler, TimesheetStateChangedEventHandler>();
+            .AddScoped<TimeoffStateChangedEventHandler, TimeoffStateChangedEventHandler>()
+            .AddScoped<TimesheetStateChangedEventHandler, TimesheetStateChangedEventHandler>()
             
-            services.AddScoped<TimesheetHandleTimeoffApproved, TimesheetHandleTimeoffApproved>();
-            services.AddScoped<TimehsheetHandleTimesheetFinalized, TimehsheetHandleTimesheetFinalized>();
+            .AddScoped<TimesheetHandleTimeoffApproved, TimesheetHandleTimeoffApproved>()
+            .AddScoped<TimehsheetHandleTimesheetFinalized, TimehsheetHandleTimesheetFinalized>()
 
-            services.AddScoped<IAuditHandler, AuditHandler>();
+            .AddScoped<IAuditHandler, AuditHandler>();
         }
 
-        public static void RegisterCommandHandlers(this IServiceCollection services)
+        public static IServiceCollection RegisterCommandHandlers(this IServiceCollection services)
         {
-            services.AddScoped<AddHolidayCommandHandler, AddHolidayCommandHandler>();
-            services.AddScoped<DeleteHolidayCommandHandler, DeleteHolidayCommandHandler>();
-            services.AddScoped<SetHolidayAsRecurrentCommandHandler, SetHolidayAsRecurrentCommandHandler>();
-            services.AddScoped<UpdateHolidayGeneralInformationsCommandHandler, UpdateHolidayGeneralInformationsCommandHandler>();
+            return services.AddScoped<AddHolidayCommandHandler, AddHolidayCommandHandler>()
+            .AddScoped<DeleteHolidayCommandHandler, DeleteHolidayCommandHandler>()
+            .AddScoped<SetHolidayAsRecurrentCommandHandler, SetHolidayAsRecurrentCommandHandler>()
+            .AddScoped<UpdateHolidayGeneralInformationsCommandHandler, UpdateHolidayGeneralInformationsCommandHandler>()
+            
+            .AddScoped<ModifyApproverCommandHandler, ModifyApproverCommandHandler>()
+            .AddScoped<ModifyEmployeeBenefitsCommandHandler, ModifyEmployeeBenefitsCommandHandler>()
+            
+            .AddScoped<CreateTimeoffCommandHandler, CreateTimeoffCommandHandler>()
+            .AddScoped<SubmitTimeoffCommandHandler, SubmitTimeoffCommandHandler>()
+            .AddScoped<DeleteTimeoffCommandHandler, DeleteTimeoffCommandHandler>()
+            .AddScoped<ApproveTimeoffCommandHandler, ApproveTimeoffCommandHandler>()
+            .AddScoped<RejectTimeoffCommandHandler, RejectTimeoffCommandHandler>()
+            .AddScoped<AddEntryToTimeoffCommandHandler, AddEntryToTimeoffCommandHandler>()
+            .AddScoped<UpdateTimeoffEntryCommandHandler, UpdateTimeoffEntryCommandHandler>()
+            .AddScoped<DeleteTimeoffEntryCommandHandler, DeleteTimeoffEntryCommandHandler>()
+            .AddScoped<UpdateTimeoffCommentCommandHandler, UpdateTimeoffCommentCommandHandler>()
+            
+            .AddScoped<AddTimesheetEntryCommandHandler, AddTimesheetEntryCommandHandler>()
+            .AddScoped<DeleteTimesheetEntryCommandHandler, DeleteTimesheetEntryCommandHandler>()
+            .AddScoped<SubmitTimesheetCommandHandler, SubmitTimesheetCommandHandler>()
+            .AddScoped<SubmitTimesheetCommandHandler, SubmitTimesheetCommandHandler>()
+            .AddScoped<ApproveTimesheetCommandHandler, ApproveTimesheetCommandHandler>()
+            .AddScoped<RejectTimesheetCommandHandler, RejectTimesheetCommandHandler>()
+            .AddScoped<FinalizeTimesheetCommandHandler, FinalizeTimesheetCommandHandler>()
+            .AddScoped<UpdateTimesheetCommentCommandHandler, UpdateTimesheetCommentCommandHandler>()
+            
+            .AddScoped<AddTimesheetExceptionCommandHandler, AddTimesheetExceptionCommandHandler>()
 
-            services.AddScoped<ModifyApproverCommandHandler, ModifyApproverCommandHandler>();
-            services.AddScoped<ModifyEmployeeBenefitsCommandHandler, ModifyEmployeeBenefitsCommandHandler>();
-
-            services.AddScoped<CreateTimeoffCommandHandler, CreateTimeoffCommandHandler>();
-            services.AddScoped<SubmitTimeoffCommandHandler, SubmitTimeoffCommandHandler>();
-            services.AddScoped<DeleteTimeoffCommandHandler, DeleteTimeoffCommandHandler>();
-            services.AddScoped<ApproveTimeoffCommandHandler, ApproveTimeoffCommandHandler>();
-            services.AddScoped<RejectTimeoffCommandHandler, RejectTimeoffCommandHandler>();
-            services.AddScoped<AddEntryToTimeoffCommandHandler, AddEntryToTimeoffCommandHandler>();
-            services.AddScoped<UpdateTimeoffEntryCommandHandler, UpdateTimeoffEntryCommandHandler>();
-            services.AddScoped<DeleteTimeoffEntryCommandHandler, DeleteTimeoffEntryCommandHandler>();
-            services.AddScoped<UpdateTimeoffCommentCommandHandler, UpdateTimeoffCommentCommandHandler>();
-
-            services.AddScoped<AddTimesheetEntryCommandHandler, AddTimesheetEntryCommandHandler>();
-            services.AddScoped<DeleteTimesheetEntryCommandHandler, DeleteTimesheetEntryCommandHandler>();
-            services.AddScoped<SubmitTimesheetCommandHandler, SubmitTimesheetCommandHandler>();
-            services.AddScoped<SubmitTimesheetCommandHandler, SubmitTimesheetCommandHandler>();
-            services.AddScoped<ApproveTimesheetCommandHandler, ApproveTimesheetCommandHandler>();
-            services.AddScoped<RejectTimesheetCommandHandler, RejectTimesheetCommandHandler>();
-            services.AddScoped<FinalizeTimesheetCommandHandler, FinalizeTimesheetCommandHandler>();
-            services.AddScoped<UpdateTimesheetCommentCommandHandler, UpdateTimesheetCommentCommandHandler>();
-
-            services.AddScoped<AddTimesheetExceptionCommandHandler, AddTimesheetExceptionCommandHandler>();
-
-
-
-            services.AddScoped<UpdateSettingCommandHandler, UpdateSettingCommandHandler>();
-
-            services.AddScoped<UpdateNotificationCommandHandler, UpdateNotificationCommandHandler>();
+            .AddScoped<UpdateSettingCommandHandler, UpdateSettingCommandHandler>()
+            
+            .AddScoped<UpdateNotificationCommandHandler, UpdateNotificationCommandHandler>();
         }
 
-        public static void AddTimesheetExportServices(this IServiceCollection services, string destination)
+        public static IServiceCollection AddTimesheetExportServices(this IServiceCollection services, string destination)
         {
-            services.AddScoped<IExportTimesheetService, ExportTimesheetService>();
-            services.AddScoped<ITimesheetToCSVModelAdapter<TimesheetEntryDetails, TimesheetCSVEntryModel>, TimesheetToCSVModelAdapter>();
-            services.AddScoped<ITimesheetToCSVModelAdapter<ExternalTimesheetEntryDetails, ExternalTimesheetCSVEntryModel>, ExternalTimesheetToCSVModelAdapter>();
-            services.AddScoped<ITimesheetCSVWriter, TimesheetCSVWriter>();
-            services.AddScoped<ITimesheetCSVFormatter, TimesheetCSVFormatter>();
+            return services.AddScoped<IExportTimesheetService, ExportTimesheetService>()
+            .AddScoped<ITimesheetToCSVModelAdapter<TimesheetEntryDetails, TimesheetCSVEntryModel>, TimesheetToCSVModelAdapter>()
+            .AddScoped<ITimesheetToCSVModelAdapter<ExternalTimesheetEntryDetails, ExternalTimesheetCSVEntryModel>, ExternalTimesheetToCSVModelAdapter>()
+            .AddScoped<ITimesheetCSVWriter, TimesheetCSVWriter>()
+            .AddScoped<ITimesheetCSVFormatter, TimesheetCSVFormatter>()
 
-            services.AddScoped<IExportTimesheetDestination>(sp => new ExportTimesheetDestination(destination));
+            .AddScoped<IExportTimesheetDestination>(sp => new ExportTimesheetDestination(destination));
         }
 
-        public static void AddOtherApplicationServices(this IServiceCollection services)
+        public static IServiceCollection AddOtherApplicationServices(this IServiceCollection services)
         {
-            services.AddScoped<IEmployeeBenefitCalculator, EmployeeBenefitCalculator>();
-            services.AddScoped<INotificationPopulationServices, NotificationPopulationServices>();
-            services.AddScoped<IEmployeeHabilitation, EmployeeHabilitation>();
-            services.AddScoped<ITimesheetPeriodService, TimesheetPeriodService>();
+            return services.AddScoped<IEmployeeBenefitCalculator, EmployeeBenefitCalculator>()
+            .AddScoped<INotificationPopulationServices, NotificationPopulationServices>()
+            .AddScoped<IEmployeeHabilitation, EmployeeHabilitation>()
+            .AddScoped<ITimesheetPeriodService, TimesheetPeriodService>();
         }
     }
 }

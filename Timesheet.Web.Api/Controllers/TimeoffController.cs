@@ -4,6 +4,7 @@ using Timesheet.Application;
 using Timesheet.Application.Employees.Commands;
 using Timesheet.Application.Employees.Queries;
 using Timesheet.Application.Employees.Services;
+using Timesheet.Application.Shared;
 using Timesheet.Application.Workflow;
 using Timesheet.Domain.Models.Employees;
 using Timesheet.Domain.ReadModels.Employees;
@@ -69,6 +70,10 @@ namespace Timesheet.Web.Api.Controllers
             LogInformation($"Getting Employee ({employeeId}) Timeoff ({timeoffId}) Details");
             
             var timeoff = await _timeoffQuery.GetEmployeeTimeoffDetails(employeeId, timeoffId);
+            if(timeoff is null)
+            {
+                return NotFound();
+            }
             var response = await SetAuthorizedTransitions(timeoff, typeof(TimeoffHeader), timeoff?.Status, CurrentUser, employeeId);
             return Ok(response);
         }
@@ -144,11 +149,28 @@ namespace Timesheet.Web.Api.Controllers
         {
             LogInformation($"Deleting entry ({entryId}) of Timeoff({timeoffId}) for Employee ({employeeId})");
 
-            var command = new DeleteTimeoffEntry() { EmployeeId = employeeId, TimeoffId = timeoffId, TimeoffEntryId = entryId };
+            var timeoff = await _timeoffQuery.GetEmployeeTimeoffDetails(employeeId, timeoffId);
+            if (timeoff is null)
+            {
+                return NotFound();
+            }
+
+            dynamic command;
+
+            var timeoffHasMaximumOneEntry = timeoff.Entries.Count() <= 1;
+            if (timeoffHasMaximumOneEntry)
+            {
+                command = new DeleteTimeoff() { EmployeeId = employeeId, TimeoffId = timeoffId };
+            }
+            else
+            {
+                command = new DeleteTimeoffEntry() { EmployeeId = employeeId, TimeoffId = timeoffId, TimeoffEntryId = entryId };
+            }
+
             await _dispatcher.RunCommand(command, CurrentUser, token);
 
             LogInformation($"Timeoff ({timeoffId}) Updated");
-            return Ok();
+            return Ok(new { timeoffDeleted = timeoffHasMaximumOneEntry });
         }
 
         [HttpPut("timeoff/Submit")]

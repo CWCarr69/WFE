@@ -5,13 +5,12 @@ namespace Timesheet.Domain.ReadModels.Timesheets
     public class ExternalTimesheetEntryDetails
     {
         public string No { get; set; }
-        public string DetCode { get; set; }
+        public string PayrollCodeId { get; set; }
         public double Hours { get; set; }
         public string CC1 { get; set; }
         public string Job_Code { get; set; }
         public string Begin_Date { get; set; }
         public string End_Date { get; set; }
-        public int Sequence => 1;
     }
 
     public class TimesheetEntryDetails
@@ -19,6 +18,7 @@ namespace Timesheet.Domain.ReadModels.Timesheets
         public string TimesheetId { get; set; }
         public string EmployeeId { get; set; }
         public string Fullname { get; set; }
+        public string DefaultProfitCenter { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public string PayrollPeriod { get; set; }

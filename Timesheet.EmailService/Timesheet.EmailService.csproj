@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-Timesheet.EmailService-372b81d6-c76e-4001-bbce-318b8db73b4d</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="7.0.0" />
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="5.0.1" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="3.4.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Timesheet.EmailSender\Timesheet.EmailSender.csproj" />
+  </ItemGroup>
+</Project>

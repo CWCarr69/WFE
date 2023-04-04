@@ -5,7 +5,7 @@ namespace Timesheet.Models.Referential
 
     public enum TimesheetFixedPayrollCodeEnum
     {
-        REGULAR = 1, OVERTIME = 2, HOLIDAY = 3, PERSONAL = 4, VACATION = 5, UNPAID = 6, JURY_DUTY = 7, BERV = 8, SHOP = 9, TRAINING = 10, OTHERS_WITH_APPROVAL = 11, OTHERS_WITHOUT_APPROVAL = 12
+        REGULAR = 1, OVERTIME = 2, HOLIDAY = 3, PERSONAL = 4, VACATION = 5, UNPAID = 6, JURY_DUTY = 7, BERV = 8, SHOP = 9, TRAINING = 10
     }
   
     public enum PayrollTypesCategory
@@ -20,7 +20,6 @@ namespace Timesheet.Models.Referential
                 (int) TimesheetFixedPayrollCodeEnum.SHOP,
                 (int) TimesheetFixedPayrollCodeEnum.UNPAID,
                 (int) TimesheetFixedPayrollCodeEnum.TRAINING,
-                (int) TimesheetFixedPayrollCodeEnum.OTHERS_WITHOUT_APPROVAL
             };
 
         public PayrollTypes(string id) : base(id)

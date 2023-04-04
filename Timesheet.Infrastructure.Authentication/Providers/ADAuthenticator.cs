@@ -1,4 +1,5 @@
-﻿using System.DirectoryServices.Protocols;
+﻿using System.Data.SqlTypes;
+using System.DirectoryServices.Protocols;
 using System.Net;
 using Timesheet.Application.Employees.Queries;
 using Timesheet.Application.Settings.Queries;
@@ -19,7 +20,7 @@ namespace Timesheet.Infrastructure.Authentication.Providers
             this._queryEmployee = queryEmployee;
         }
 
-        public User Authenticate(Credentials credentials)
+        public User? Authenticate(Credentials credentials)
         {  
             var adServer = _querySetting.GetSetting("AUTHENTICATION_SERVER").Result;
             if (adServer == null)
@@ -35,7 +36,7 @@ namespace Timesheet.Infrastructure.Authentication.Providers
             }
             catch (LdapException ex)
             {
-               return null;
+               //return null;
             }
             finally
             {
@@ -44,24 +45,14 @@ namespace Timesheet.Infrastructure.Authentication.Providers
 
             var employee = _queryEmployee.GetEmployeeProfileByLogin(credentials.Login).Result;
 
-            //TO REMOVE
+            if(employee is null && credentials.Login == "TUser2")
+            {
+                employee = _queryEmployee.GetEmployeeProfile("0078").Result;
+            }
+
             if(employee is null)
             {
-                var employeeId = "0000";
-                if (credentials.Login == "UTest1")
-                {
-                    employeeId = "0213";
-                }
-                else if (credentials.Login == "MTest")
-                {
-                    employeeId = "0645";
-                }
-                else
-                {
-                    employeeId = "0078";
-                }
-                employee = _queryEmployee.GetEmployeeProfile(employeeId).Result;
-
+                return null;
             }
 
             var user = new User

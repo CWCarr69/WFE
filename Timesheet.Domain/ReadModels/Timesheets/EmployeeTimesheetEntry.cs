@@ -12,7 +12,7 @@ namespace Timesheet.Domain.ReadModels.Timesheets
         public int PayrollCodeId { get; set; }
         public string PayrollCode { get; set; }
         public double Quantity { get; set; }
-        public string CustomerNumber { get; set; }
+        //public string CustomerNumber { get; set; }
         public string JobNumber { get; set; }
         public string JobDescription { get; set; }
         public string JobTaskNumber { get; set; }

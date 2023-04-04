@@ -39,7 +39,10 @@ namespace Timesheet.FDPDataIntegrator.Employees
         [XmlElement("UDF_SecondaryApprover")]
         public string SecondaryApproverId { get; set; }
         [XmlElement("UsesTimeSheets")]
-        public string UsesTimesheet { get; set; } 
+        public string UsesTimesheet { get; set; }
+
+        [XmlElement("DefaultServiceCode")]
+        public string DefaultServiceCode { get; set; }
 
     }
 }

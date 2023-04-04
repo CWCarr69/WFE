@@ -47,5 +47,10 @@ namespace Timesheet.Web.Api.Controllers
         {
             _logger.LogInformation(message);
         }
+
+        public string Manager()
+        {
+            return !CurrentUser.IsAdministrator ? null : CurrentUser.Id;
+        }
     }
 }

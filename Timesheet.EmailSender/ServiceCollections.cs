@@ -6,15 +6,18 @@ using Timesheet.Infrastructure.Dapper;
 
 namespace Timesheet.EmailSender
 {
-    internal static class ServiceCollections
+    public static class ServiceCollections
     {
-        public static IServiceCollection AddServices(this IServiceCollection services)
+        public static IServiceCollection AddServices(this IServiceCollection services, string connectionString, string webAppUri, string templatesBasePath)
         {
             return services.AddLogging()
-                .AddSingleton(typeof(ISqlConnectionString), sp => new NotificationSqlConnection(ConfigurationManager.ConnectionStrings["Notification"].ToString()))
+                .AddSingletonDatabaseQueryService()
+                .AddSingleton(typeof(ISqlConnectionString), sp => new NotificationSqlConnection(connectionString))
                 .AddSingleton<ISettingRepository, SettingRepository>()
                 .AddSingleton<INotificationRepository, NotificationRepository>()
-                .AddSingleton<INotificationService, NotificationService>();
+                .AddSingleton<INotificationService, NotificationService>()
+                .AddSingleton<IEmployeeRepository, EmployeeRepository>()
+                .AddSingleton(typeof(ITemplateProcessor), sp => new TemplateProcessor(webAppUri, templatesBasePath));
         }
     }
 }

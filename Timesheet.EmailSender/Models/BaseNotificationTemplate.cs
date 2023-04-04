@@ -6,7 +6,7 @@
         public string ItemId { get; set; }
         public string EmployeeId { get; set; }
         public string Subject { get; set; }
-        public string ViewLink { get; set; }
+        public string Link { get; set; }
 
         public bool Sent { get; set; } = false;
         public void Complete() => Sent = true;

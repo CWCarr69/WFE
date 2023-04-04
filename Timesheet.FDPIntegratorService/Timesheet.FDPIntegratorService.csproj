@@ -10,9 +10,16 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="6.0.1" />
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="5.0.1" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="3.4.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Timesheet.FDPDataIntegrator\Timesheet.FDPDataIntegrator.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="log\" />
   </ItemGroup>
 </Project>

@@ -1,4 +1,5 @@
 ﻿using Timesheet.Domain.Exceptions;
+using Timesheet.Models.Referential;
 using Timesheet.DomainEvents.Employees;
 
 namespace Timesheet.Domain.Models.Employees
@@ -15,7 +16,7 @@ namespace Timesheet.Domain.Models.Employees
 
         public Employee(string id, string userId, string fullName,
             string managerId, string primaryApproverId, string secondaryApproverId,
-            EmployeeEmploymentData employmentData, EmployeeContactData contacts, bool isActive, bool usesTimesheet) : base(id)
+            EmployeeEmploymentData employmentData, EmployeeContactData contacts, bool isActive, bool usesTimesheet, string? defaultProfitCenter) : base(id)
         {
             FullName = fullName;
             Manager = managerId is not null ? new Employee(managerId) : null;
@@ -26,18 +27,20 @@ namespace Timesheet.Domain.Models.Employees
             IsActive = isActive;
             UsesTimesheet = usesTimesheet;
             UserId = userId;
+            DefaultProfitCenter = defaultProfitCenter;
         }
 
         #region Properties
         public string FullName { get; private set; }
         public string? Initials { get; private set; }
+        public string? DefaultProfitCenter { get; private set; }
         public Image? Picture { get; private set; }
         public Employee? Manager { get; private set; }
         public Employee? PrimaryApprover { get; private set; }
         public Employee? SecondaryApprover { get; private set; }
         public EmployeeEmploymentData EmploymentData { get; private set; }
         public EmployeeContactData Contacts { get; private set; }
-        public EmployeeBenefits BenefitsVariation { get; private set; }
+        public EmployeeBenefits BenefitsVariation { get; private set; } //Represent Benefit variation!
         public EmployeeBenefitsSnapshop BenefitsSnapshot { get; private set; }
         public bool ConsiderFixedBenefits { get; private set; }
         public IReadOnlyCollection<TimeoffHeader> Timeoffs => _timeoffs;
@@ -100,8 +103,14 @@ namespace Timesheet.Domain.Models.Employees
             var timeoff = TimeoffHeader.Create(requestStartDate, requestEndDate, employeeComment, requireApproval);
             _timeoffs.Add(timeoff);
 
-            RaiseTimeoffWorkflowChangedEvent(timeoff, nameof(TimeoffStatus.IN_PROGRESS));
+            //RaiseTimeoffWorkflowChangedEvent(timeoff, nameof(TimeoffStatus.IN_PROGRESS));
             RaiseTimeoffWorkflowChangedEvent(timeoff, nameof(TimeoffStatus.SUBMITTED));
+
+            if(!requireApproval)
+            {
+                RaiseTimeoffWorkflowChangedEvent(timeoff, nameof(TimeoffStatus.APPROVED));
+            }
+
             return timeoff;
         }
 
@@ -136,7 +145,7 @@ namespace Timesheet.Domain.Models.Employees
                 .Where(e => e.RequestDate.ToShortDateString() == requestDate.ToShortDateString())
                 .ToList();
 
-            var totalHoursOnSameDateExceedLimit = timeoffEntriesOnSameDate.Sum(e => e.Hours) + hours > EMPLOYEE_REGULAR_HOURS;
+            var totalHoursOnSameDateExceedLimit = timeoffEntriesOnSameDate.Sum(e => /*e.Status != TimeoffEntryStatus.PROCESSED ? 0 : */e.Hours) + hours > EMPLOYEE_REGULAR_HOURS;
 
             if (totalHoursOnSameDateExceedLimit)
             {
@@ -149,8 +158,15 @@ namespace Timesheet.Domain.Models.Employees
                 throw new EntityNotFoundException<TimeoffHeader>(timeoff.Id);
             }
 
-            relatedTimeoff.AddEntry(requestDate, typeId, hours, label);
+            var entry = relatedTimeoff.AddEntry(requestDate, typeId, hours, label);
             relatedTimeoff.Update();
+
+            var doesNotRequireApproval = PayrollTypes.PayrollTypesWithoutApproval.Any(t => entry.TypeId == t);
+            if (doesNotRequireApproval)
+            {
+                RaiseTimeoffWorkflowChangedEvent(timeoff, nameof(TimeoffStatus.APPROVED));
+                RaiseTimeoffEntryApprovedEvent(entry);
+            }
         }
 
         public void DeleteTimeoffEntry(TimeoffHeader timeoff, TimeoffEntry timeoffEntry)
@@ -189,21 +205,26 @@ namespace Timesheet.Domain.Models.Employees
         }
         #endregion
 
-        //public bool IsInEmployeeTeam(string teamApproverId, bool directReports = false)
-        //{
-        //    if (directReports)
-        //    {
-        //        string? directApproverId = Supervisor?.Id ?? Manager?.Id;
-        //        return teamApproverId != null && teamApproverId == directApproverId;
-        //    }
-
-        //    return teamApproverId != null
-        //    && (Manager?.Id == teamApproverId || Supervisor?.Id == teamApproverId);
-        //}
-
         private void RaiseTimeoffWorkflowChangedEvent(TimeoffHeader timeoff, string status)
         {
             RaiseDomainEvent(new TimeoffStateChanged(Id, PrimaryApprover?.Id, SecondaryApprover?.Id, status, timeoff.Id)); ;
+        }
+
+        private void RaiseTimeoffEntryApprovedEvent(TimeoffEntry entry)
+        {
+            List<TimeoffApprovedEntry> timeoffEntries = new() 
+            {
+                new TimeoffApprovedEntry(
+                    entry.Id,
+                    Id,
+                    entry.RequestDate,
+                    entry.TypeId,
+                    entry.Hours,
+                    entry.TypeId.ToString(),
+                    this.EmploymentData.IsSalaried)
+            };
+
+            RaiseDomainEvent(new TimeoffApproved(timeoffEntries));
         }
 
         private void RaiseTimeoffApprovedEvent(TimeoffHeader timeoff)

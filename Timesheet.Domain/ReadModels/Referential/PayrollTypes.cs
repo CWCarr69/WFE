@@ -4,7 +4,7 @@ namespace Timesheet.Domain.ReadModels.Referential
 {
 
 
-    public class PayrollTypes
+    public class PayrollType
     {
         public int NumId { get; set; }
 

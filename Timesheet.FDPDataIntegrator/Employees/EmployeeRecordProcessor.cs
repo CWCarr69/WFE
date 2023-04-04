@@ -1,4 +1,5 @@
-﻿using Timesheet.Domain.Models.Employees;
+﻿using Microsoft.Extensions.Logging;
+using Timesheet.Domain.Models.Employees;
 using Timesheet.FDPDataIntegrator.Services;
 
 namespace Timesheet.FDPDataIntegrator.Employees
@@ -11,8 +12,8 @@ namespace Timesheet.FDPDataIntegrator.Employees
     {
         private readonly IRepository<Employee> _repository;
 
-        public EmployeeRecordProcessor(IRepository<Employee> repository, IAdapter<EmployeeRecord, Employee> adapter)
-            : base(repository, adapter)
+        public EmployeeRecordProcessor(IRepository<Employee> repository, IAdapter<EmployeeRecord, Employee> adapter, ILogger<EmployeeRecordProcessor> logger)
+            : base(repository, adapter, logger)
         {
             this._repository = repository;
         }

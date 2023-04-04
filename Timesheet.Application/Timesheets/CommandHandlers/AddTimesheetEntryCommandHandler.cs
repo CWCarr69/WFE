@@ -44,6 +44,7 @@ namespace Timesheet.Application.Timesheets.CommandHandlers
                 command.JobNumber,
                 command.JobDescription,
                 command.ProfitCenterNumber,
+                command.JobTaskNumber,
                 command.OutOffCountry,
                 true);
 

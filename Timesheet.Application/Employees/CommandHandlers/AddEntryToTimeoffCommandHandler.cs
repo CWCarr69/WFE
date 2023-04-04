@@ -28,17 +28,26 @@ namespace Timesheet.Application.Employees.CommandHandlers
         public override async Task<IEnumerable<IDomainEvent>> HandleCoreAsync(AddEntryToTimeoff command, CancellationToken token)
         {
             var employee = await GetEmployee(command);
-            var timeoff = GetTimeoff(employee, command);
+            (var timeoff, var proceedAuthorization) = GetTimeoff(employee, command);
 
 
             this.RelatedAuditableEntity = LaunchedAsSubCommand ? null : timeoff;
 
-            EmployeeRoleOnData currentEmployeeRoleOnData = GetCurrentEmployeeRoleOnData(command, employee);
-            _workflowService.AuthorizeTransition(timeoff, TimeoffTransitions.ADD_ENTRY, timeoff.Status, currentEmployeeRoleOnData);
+            if(proceedAuthorization)
+            {
+                EmployeeRoleOnData currentEmployeeRoleOnData = GetCurrentEmployeeRoleOnData(command, employee);
+                _workflowService.AuthorizeTransition(timeoff, TimeoffTransitions.ADD_ENTRY, timeoff.Status, currentEmployeeRoleOnData);
+            }
 
             employee.AddTimeoffEntry(command.RequestDate, command.Type, command.Hours, timeoff, command.Label);
 
-            return Enumerable.Empty<IDomainEvent>();
+            var events = employee.GetDomainEvents();
+            if (!LaunchedAsSubCommand)
+            {
+                employee.ClearDomainEvents();
+            }
+
+            return events;
         }
 
         private async Task<Employee> GetEmployee(AddEntryToTimeoff command)
@@ -58,7 +67,7 @@ namespace Timesheet.Application.Employees.CommandHandlers
             }
         }
 
-        private TimeoffHeader GetTimeoff(Employee employee, AddEntryToTimeoff command)
+        private (TimeoffHeader timeoff, bool ignoreAuthorization) GetTimeoff(Employee employee, AddEntryToTimeoff command)
         {
             if (LaunchedAsSubCommand)
             {
@@ -68,11 +77,11 @@ namespace Timesheet.Application.Employees.CommandHandlers
                     throw new InvalidOperationException($"Cannot call subcommand {nameof(AddEntryToTimeoff)} without providing Timeoff data");
                 }
 
-                return timeoff;
+                return (timeoff, timeoff.Status != TimeoffStatus.APPROVED);
             }
             else
             {
-                return RequireTimeoff(employee, command.TimeoffId);
+                return (RequireTimeoff(employee, command.TimeoffId), true);
             }
         }
     }

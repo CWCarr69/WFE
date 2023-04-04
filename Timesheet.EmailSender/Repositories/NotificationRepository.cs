@@ -26,7 +26,7 @@ namespace Timesheet.EmailSender.Repositories
             var timeoffIdParam = "@timeoffHeaderId";
 
             string query = $@"
-                SELECT TOP(100) DISTINCT
+                SELECT DISTINCT TOP(100)
                 n.Id AS {nameof(TimeoffNotificationTemplate.NotificationId)},
                 t.Id AS {nameof(TimeoffNotificationTemplate.ItemId)},
                 n.EmployeeId AS {nameof(TimeoffNotificationTemplate.EmployeeId)},
@@ -46,21 +46,22 @@ namespace Timesheet.EmailSender.Repositories
             var timeoffs = _dbServices.Query<TimeoffNotificationTemplate>(query, new {sent = false});
 
             query = $@"
-                SELECT 
+                SELECT DISTINCT te.Id,
                 te.RequestDate AS {nameof(TimeoffEntryRowTemplate.Date)},
                 te.Hours AS {nameof(TimeoffEntryRowTemplate.Hours)},
-                te.Type AS {nameof(TimeoffEntryRowTemplate.VacationTypeId)},
+                pt.PayrollCode AS {nameof(TimeoffEntryRowTemplate.VacationType)}
                 FROM notificationItems n
                 JOIN employees e on e.Id = n.EmployeeId
                 JOIN employees m on e.PrimaryApproverId = m.Id
                 JOIN timeoffHeader t on t.Id = n.ObjectId
                 JOIN timeoffEntry te on te.timeoffHeaderId = t.Id
+                JOIN payrollTypes pt on pt.NumId = te.TypeId
                 WHERE t.Id = {timeoffIdParam}
             ";
 
             foreach (var timeoff in timeoffs)
             {
-                var entries = _dbServices.Query<TimeoffEntryRowTemplate>(query, new { timeoffId = timeoff.ItemId });
+                var entries = _dbServices.Query<TimeoffEntryRowTemplate>(query, new { timeoffHeaderId = timeoff.ItemId });
                 timeoff.Rows = entries;
             }
 
@@ -73,7 +74,7 @@ namespace Timesheet.EmailSender.Repositories
             var timesheetIdParam = "@timeoffHeaderId";
 
             string query = $@"
-                SELECT TOP(100) DISTINCT
+                SELECT DISTINCT TOP(100)
                 n.Id AS {nameof(TimeoffNotificationTemplate.NotificationId)},
                 t.Id AS {nameof(TimesheetNotificationTemplate.ItemId)},
                 n.EmployeeId AS {nameof(TimesheetNotificationTemplate.EmployeeId)},
@@ -85,7 +86,7 @@ namespace Timesheet.EmailSender.Repositories
                 t.PayrollPeriod AS {nameof(TimesheetNotificationTemplate.PayrollPeriod)},
                 t.StartDate AS {nameof(TimesheetNotificationTemplate.PayrollStartDate)},
                 t.EndDate AS {nameof(TimesheetNotificationTemplate.PayrollEndDate)},
-                n.status AS {nameof(TimesheetNotificationTemplate.Status)}
+                n.Action AS {nameof(TimesheetNotificationTemplate.Status)}
                 FROM notificationItems n
                 JOIN employees e on e.Id = n.EmployeeId
                 JOIN employees m on e.PrimaryApproverId = m.Id
@@ -96,19 +97,20 @@ namespace Timesheet.EmailSender.Repositories
             var timesheets = _dbServices.Query<TimesheetNotificationTemplate>(query, new {sent = false});
 
             query = $@"
-                SELECT 
-                te.PayrollCode AS {nameof(TimesheetEntryRowTemplate.PayrollCode)},
+                SELECT DISTINCt te.Id,
+                pt.PayrollCode AS {nameof(TimesheetEntryRowTemplate.PayrollCode)},
                 te.Hours AS {nameof(TimesheetEntryRowTemplate.Quantity)},
                 te.ServiceOrderNumber AS {nameof(TimesheetEntryRowTemplate.ServiceOrderNo)},
                 te.CustomerNumber AS {nameof(TimesheetEntryRowTemplate.CustomerName)},
                 te.WorkDate AS {nameof(TimesheetEntryRowTemplate.WorkDate)},
-                te.ProfitCenter AS {nameof(TimesheetEntryRowTemplate.ProfitCenter)},
+                COALESCE(te.ProfitCenter, e.DefaultProfitCenter) AS {nameof(TimesheetEntryRowTemplate.ProfitCenter)},
                 te.LaborCode AS {nameof(TimesheetEntryRowTemplate.LaborCode)},
                 te.JobTaskNumber AS {nameof(TimesheetEntryRowTemplate.JobTaskNo)}
                 FROM notificationItems n
                 JOIN employees e on e.Id = n.EmployeeId
                 JOIN timesheets t on t.Id = n.ObjectId
                 JOIN timesheetEntry te on te.timesheetHeaderId = t.Id
+                JOIN payrollTypes pt on pt.NumId = te.PayrollCodeId
                 WHERE t.Id = {timesheetIdParam}
             ";
 

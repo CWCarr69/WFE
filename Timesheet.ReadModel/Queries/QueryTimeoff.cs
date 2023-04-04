@@ -60,7 +60,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             GROUP BY e.Id, e.Fullname, t.Id, t.CreatedDate, t.ModifiedDate, t.RequestStartDate, t.RequestEndDate, t.status
         ";
 
-        public const string TimeoffDetailsQueryOrderByClause = $@"t.{nameof(EmployeeTimeoff.CreatedDate)} DESC";
+        public const string TimeoffDetailsQueryOrderByClause = $@"t.{nameof(EmployeeTimeoff.RequestStartDate)} DESC";
 
         public const string TimeoffsTotalQuery = $@"SELECT
             COUNT(DISTINCT t.id) AS {nameof(EmployeeTimeoffHistory.TotalItems)}

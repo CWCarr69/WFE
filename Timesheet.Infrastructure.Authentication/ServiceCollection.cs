@@ -6,10 +6,10 @@ namespace Timesheet.Infrastructure.Authentication
 {
     public static class ServiceCollection
     {
-        public static void AddAuthenticationServices(this IServiceCollection services)
+        public static IServiceCollection AddAuthenticationServices(this IServiceCollection services)
         {
-            services.AddScoped<IAuthenticationService<AuthenticationResponse>, JwtAuthenticationService>();
-            services.AddScoped<IAuthenticator, ADAuthenticator>();
+            return services.AddScoped<IAuthenticationService<AuthenticationResponse>, JwtAuthenticationService>()
+            .AddScoped<IAuthenticator, ADAuthenticator>();
         }
     }
 }

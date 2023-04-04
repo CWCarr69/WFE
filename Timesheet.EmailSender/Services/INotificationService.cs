@@ -1,6 +1,6 @@
 ﻿namespace Timesheet.EmailSender.Services
 {
-    internal interface INotificationService
+    public interface INotificationService
     {
         public void SendNotifications();
     }

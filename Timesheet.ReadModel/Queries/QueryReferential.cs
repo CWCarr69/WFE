@@ -8,7 +8,7 @@ using Timesheet.Domain.ReadModels.Referential;
 using Timesheet.Domain.ReadModels.Timesheets;
 using Timesheet.Infrastructure.Dapper;
 using Timesheet.Models.Referential;
-using PayrollTypes = Timesheet.Domain.ReadModels.Referential.PayrollTypes;
+using PayrollType = Timesheet.Domain.ReadModels.Referential.PayrollType;
 
 namespace Timesheet.Infrastruture.ReadModel.Queries
 {
@@ -34,18 +34,28 @@ namespace Timesheet.Infrastruture.ReadModel.Queries
 
         public async Task<IEnumerable<PayrollPeriod>> GetPayrollPeriods()
         {
-            var query = $@"SELECT distinct payrollPeriod as Code, StartDate, EndDate
-                            FROM timesheets order by payrollPeriod";
+            var query = $@"SELECT distinct payrollPeriod as Code, StartDate, EndDate, Type
+                            FROM timesheets order by payrollPeriod desc";
                             
             var payrollPeriods = await _dbService.QueryAsync<PayrollPeriod>(query);
 
             var now = DateTime.Now;
-            var currentPeriod = payrollPeriods.FirstOrDefault(p => p.StartDate <= now && now <= p.EndDate);
+            var currentPeriodWeekly = payrollPeriods.FirstOrDefault(p => p.StartDate <= now && now <= p.EndDate && p.Type == TimesheetType.WEEKLY);
+            var beforeCurrentPeriodWeekly = payrollPeriods.FirstOrDefault(p => p.EndDate <= currentPeriodWeekly?.EndDate && p.Type == TimesheetType.WEEKLY);
 
-            if(currentPeriod != null)
+            var currentPeriodSalarly = payrollPeriods.FirstOrDefault(p => p.StartDate <= now && now <= p.EndDate && p.Type == TimesheetType.SALARLY);
+            var beforeCurrentPeriodSalarly = payrollPeriods.FirstOrDefault(p => p.EndDate <= currentPeriodSalarly?.EndDate && p.Type == TimesheetType.SALARLY);
+
+            if (beforeCurrentPeriodSalarly != null)
             {
-                payrollPeriods.Remove(currentPeriod);
-                payrollPeriods.Insert(0, currentPeriod);
+                payrollPeriods.Remove(beforeCurrentPeriodSalarly);
+                payrollPeriods.Insert(0, beforeCurrentPeriodSalarly);
+            }
+
+            if (beforeCurrentPeriodWeekly != null)
+            {
+                payrollPeriods.Remove(beforeCurrentPeriodWeekly);
+                payrollPeriods.Insert(0, beforeCurrentPeriodWeekly);
             }
 
             return payrollPeriods;
@@ -107,32 +117,30 @@ namespace Timesheet.Infrastruture.ReadModel.Queries
             return profitCenterNumbers;
         }
 
-        public async Task<IEnumerable<PayrollTypes>> GetTimeoffTypes(bool requireApproval = true)
+        public async Task<IEnumerable<PayrollType>> GetTimeoffTypes(bool requireApproval = true)
         {
             var categoryParam = "@category";
             var requireApprovalParam = "@requireApproval";
             var query = $"SELECT * FROM PayrollTypes WHERE Category = {categoryParam} AND requireApproval = {requireApprovalParam} ORDER BY PayrollCode";
-            var timeoffTypes = await _dbService.QueryAsync<Domain.ReadModels.Referential.PayrollTypes>(query, new
+            var timeoffTypes = await _dbService.QueryAsync<Domain.ReadModels.Referential.PayrollType>(query, new
             {
                 category = PayrollTypesCategory.TIMEOFF,
                 requireApproval
             });
 
-            return timeoffTypes.Where(p => p.NumId != (int)TimesheetFixedPayrollCodeEnum.OTHERS_WITH_APPROVAL
-                && p.NumId != (int)TimesheetFixedPayrollCodeEnum.OTHERS_WITHOUT_APPROVAL).ToList();
+            return timeoffTypes;
         }
 
-        public async Task<IEnumerable<PayrollTypes>> GetAllTimeoffTypes()
+        public async Task<IEnumerable<PayrollType>> GetAllTimeoffTypes()
         {
             var categoryParam = "@category";
             var query = $"SELECT * FROM PayrollTypes WHERE Category = {categoryParam} ORDER BY PayrollCode";
-            var timeoffTypes = await _dbService.QueryAsync<Domain.ReadModels.Referential.PayrollTypes>(query, new
+            var timeoffTypes = await _dbService.QueryAsync<Domain.ReadModels.Referential.PayrollType>(query, new
             {
                 category = PayrollTypesCategory.TIMEOFF,
             });
 
-            return timeoffTypes.Where(p => p.NumId != (int)TimesheetFixedPayrollCodeEnum.OTHERS_WITH_APPROVAL 
-                && p.NumId != (int)TimesheetFixedPayrollCodeEnum.OTHERS_WITHOUT_APPROVAL).ToList();
+            return timeoffTypes;
         }
 
         public IEnumerable<EnumReadModel<TimeoffStatus>> GetTimeoffStatuses()
@@ -166,10 +174,10 @@ namespace Timesheet.Infrastruture.ReadModel.Queries
             };
         }
 
-        public async Task<IEnumerable<PayrollTypes>> GetPayrollCodes()
+        public async Task<IEnumerable<PayrollType>> GetPayrollCodes()
         {
             var query = $"SELECT * FROM PayrollTypes ORDER BY PayrollCode";
-            var payrollCodes = await _dbService.QueryAsync<PayrollTypes>(query);
+            var payrollCodes = await _dbService.QueryAsync<PayrollType>(query);
 
             return payrollCodes;
         }

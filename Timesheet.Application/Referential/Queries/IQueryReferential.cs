@@ -6,7 +6,7 @@ using Timesheet.Domain.ReadModels.Employees;
 using Timesheet.Domain.ReadModels.Referential;
 using Timesheet.Domain.ReadModels.Timesheets;
 using Timesheet.Models.Referential;
-using PayrollTypes = Timesheet.Domain.ReadModels.Referential.PayrollTypes;
+using PayrollType = Timesheet.Domain.ReadModels.Referential.PayrollType;
 
 namespace Timesheet.Application.Referential.Queries
 {
@@ -17,10 +17,10 @@ namespace Timesheet.Application.Referential.Queries
         IEnumerable<EnumReadModel<TimesheetStatus>> GetTimesheetStatuses();
         IEnumerable<EnumReadModel<TimesheetEntryStatus>> GetTimesheetEntryStatuses();
         IEnumerable<EnumReadModel<TimeoffStatus>> GetTimeoffStatuses();
-        Task<IEnumerable<PayrollTypes>> GetTimeoffTypes(bool requireApproval = true);
+        Task<IEnumerable<PayrollType>> GetTimeoffTypes(bool requireApproval = true);
         Task<IEnumerable<string>> GetTimeoffLabels();
-        Task<IEnumerable<PayrollTypes>> GetPayrollCodes();
-        Task<IEnumerable<PayrollTypes>> GetAllTimeoffTypes();
+        Task<IEnumerable<PayrollType>> GetPayrollCodes();
+        Task<IEnumerable<PayrollType>> GetAllTimeoffTypes();
         Task<IEnumerable<SimpleDictionaryItem>> GetJobs();
         Task<IEnumerable<SimpleDictionaryItem>> GetJobTasks();
         Task<IEnumerable<SimpleDictionaryItem>> GetServiceOrders();

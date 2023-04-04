@@ -1,22 +1,35 @@
 ﻿namespace Timesheet.Infrastruture.ReadModel.Queries
 {
+    public enum ADD_AND { AND_BEFORE, AND_AFTER, AND_BOTH, AND_NONE }
     public  class BaseQuery
     {
-        protected string AddWhereClauseForDirectReports(string approverId, bool directReports, string query)
+
+        protected string AddWhereClauseForDirectReports(string approverId, bool directReports, string query, string employeeIdKey = "e.id", string whereKey="WHERE", string replace=null, ADD_AND addAnd = ADD_AND.AND_NONE)
         {
-            var employeeIdParam = "@approverId";
+            var approverIdParam = "@approverId";
             var where = string.Empty;
             if (directReports && approverId is not null)
             {
-                where = $"WHERE primaryApproverId = {employeeIdParam} or (primaryApproverId is null AND secondaryApproverId = {employeeIdParam})";
-
+                where = $"{whereKey} (primaryApproverId = {approverIdParam} or secondaryApproverId = {approverIdParam})";
             }
+
             else if (approverId is not null)
             {
-                where = $"WHERE primaryApproverId = {employeeIdParam} or secondaryApproverId = {employeeIdParam}";
+                where = $"{whereKey} ({employeeIdKey} IN (SELECT employeeId FROM EmployeeHierarchy WHERE managerId = {approverIdParam}))";
             }
 
-            return $"{query} {where}";
+            if(where != string.Empty)
+            {
+                where = addAnd switch
+                {
+                    ADD_AND.AND_BOTH => $" AND {where} AND ",
+                    ADD_AND.AND_BEFORE => $" AND {where} ",
+                    ADD_AND.AND_AFTER => $" {where} AND ",
+                    _ => where
+                };
+            }
+
+            return replace != null ? query.Replace(replace, where): $"{query} {where}";
         }
 
         protected string Paginate(int page, int itemsPerPage, string query, string orderBy)

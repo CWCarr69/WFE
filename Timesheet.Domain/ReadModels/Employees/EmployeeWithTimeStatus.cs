@@ -9,8 +9,15 @@ namespace Timesheet.Domain.ReadModels.Employees
         public string FullName { get; set; }
         public string TimeoffId { get; set; }
         public string TimesheetId { get; set; }
-        public double VacationBalance { get; set; }
-        public double PersonalBalance { get; set; }
+
+        public double VacationSnapshot { private get; set; }
+        public double PersonalSnapshot { private get; set; }
+        public double VacationVariation { private get; set; }
+        public double PersonalVariation { private get; set; }
+        public bool ConsiderFixedBenefits { private get; set; }
+        public double VacationBalance => ConsiderFixedBenefits ? VacationSnapshot - VacationVariation : VacationSnapshot;
+        public double PersonalBalance => ConsiderFixedBenefits ? PersonalSnapshot - PersonalVariation : PersonalSnapshot;
+
         public int LastTimeoffStatus { get; set; }
         public string LastTimeoffEntryId { get; set; }
         public DateTime LastTimeoffRequestDate { get; set; }

@@ -14,33 +14,32 @@ namespace Timesheet.Infrastructure.Persistence
 {
     public static class ServiceCollection
     {
-        public static void AddTimesheetContext(this IServiceCollection services, string connectionString)
+        public static IServiceCollection AddTimesheetContext(this IServiceCollection services, string connectionString)
         {
-            services.AddDbContext<TimesheetDbContext>(options =>
+            return services.AddDbContext<TimesheetDbContext>(options =>
             {
                 options.UseSqlServer(connectionString);
-            });
+            })
+            .AddScoped<IEmployeeReadRepository, EmployeeReadRepository>()
+            .AddScoped<ITimesheetReadRepository, TimesheetReadRepository>()
+            .AddScoped<IHolidayReadRepository, HolidayReadRepository>()
+            .AddScoped<INotificationReadRepository, NotificationReadRepository>()
+            .AddScoped<IReadRepository<NotificationItem>, ReadRepository<NotificationItem>>()
+            .AddScoped<IReadRepository<Setting>, ReadRepository<Setting>>()
 
-            services.AddScoped<IEmployeeReadRepository, EmployeeReadRepository>();
-            services.AddScoped<ITimesheetReadRepository, TimesheetReadRepository>();
-            services.AddScoped<IHolidayReadRepository, HolidayReadRepository>();
-            services.AddScoped<INotificationReadRepository, NotificationReadRepository>();
-            services.AddScoped<IReadRepository<NotificationItem>, ReadRepository<NotificationItem>>();
-            services.AddScoped<IReadRepository<Setting>, ReadRepository<Setting>>();
+            .AddScoped<IReadRepository<Audit>, ReadRepository<Audit>>()
 
-            services.AddScoped<IReadRepository<Audit>, ReadRepository<Audit>>();
+            .AddScoped<IWriteRepository<Holiday>, WriteRepository<Holiday>>()
+            .AddScoped<IWriteRepository<Employee>, WriteRepository<Employee>>()
+            .AddScoped<IWriteRepository<TimesheetHeader>, WriteRepository<TimesheetHeader>>()
+            .AddScoped<IWriteRepository<Notification>, WriteRepository<Notification>>()
+            .AddScoped<IWriteRepository<NotificationItem>, WriteRepository<NotificationItem>>()
+            .AddScoped<IWriteRepository<Setting>, WriteRepository<Setting>>()
+            .AddScoped<IWriteRepository<TimesheetException>, WriteRepository<TimesheetException>>()
 
-            services.AddScoped<IWriteRepository<Holiday>, WriteRepository<Holiday>>();
-            services.AddScoped<IWriteRepository<Employee>, WriteRepository<Employee>>();
-            services.AddScoped<IWriteRepository<TimesheetHeader>, WriteRepository<TimesheetHeader>>();
-            services.AddScoped<IWriteRepository<Notification>, WriteRepository<Notification>>();
-            services.AddScoped<IWriteRepository<NotificationItem>, WriteRepository<NotificationItem>>();
-            services.AddScoped<IWriteRepository<Setting>, WriteRepository<Setting>>();
-            services.AddScoped<IWriteRepository<TimesheetException>, WriteRepository<TimesheetException>>();
+            .AddScoped<IWriteRepository<Audit>, WriteRepository<Audit>>()
 
-            services.AddScoped<IWriteRepository<Audit>, WriteRepository<Audit>>();
-
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            .AddScoped<IUnitOfWork, UnitOfWork>();
         }
     }
 }

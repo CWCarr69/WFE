@@ -26,7 +26,7 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
 
         public const string EmployeeProfileQuery = $@"{BaseEmployeeProfileQuery} WHERE id = {EmployeeProfileQueryParam}";
         public const string EmployeeProfileQueryByEmail = $@"{BaseEmployeeProfileQuery} WHERE email = {EmployeeProfileQueryEmailParam}";
-        public const string EmployeeProfileQueryByLogin = $@"{BaseEmployeeProfileQuery} WHERE userId = {EmployeeProfileQueryLoginParam}";
+        public const string EmployeeProfileQueryByLogin = $@"{BaseEmployeeProfileQuery} WHERE lower(userId) = lower({EmployeeProfileQueryLoginParam}) or replace(lower(userId), '@wilsonfire', '') = lower({EmployeeProfileQueryLoginParam})";
         #endregion
 
         #region EmployeeApprovers
@@ -63,6 +63,7 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
                 FROM employees e
                 JOIN timeoffHeader t on e.Id = t.EmployeeId AND t.status = {PendingTimeoffsQueryStatusParam}
                 JOIN timeoffEntry te on t.id = te.TimeoffHeaderId
+                JOIN payrollTypes pt on pt.numId = te.typeId
         ";
 
         public const string TotalPendingTimeoffsQuery = $@"SELECT
@@ -73,7 +74,12 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
         public const string PendingTimeoffsQuery = $@"SELECT
             e.Id as {nameof(EmployeeTimeoff.EmployeeId)},
             e.Fullname as {nameof(EmployeeTimeoff.FullName)},
+            e.BenefitsSnapshot_VacationBalance as {nameof(EmployeeTimeoff.VacationSnapshot)}, 
+            e.VacationHours + e.RolloverHours as {nameof(EmployeeTimeoff.VacationVariation)}, 
+            e.BenefitsSnapshot_PersonalBalance as {nameof(EmployeeTimeoff.PersonalSnapshot)}, 
+            e.PersonalHours as {nameof(EmployeeTimeoff.PersonalVariation)}, 
             t.Id as {nameof(EmployeeTimeoff.TimeoffId)},
+            pt.PayrollCode AS {nameof(EmployeeTimeoff.PayrollCode)},
             t.CreatedDate  as {nameof(EmployeeTimeoff.CreatedDate)},
             t.ModifiedDate  as {nameof(EmployeeTimeoff.ModifiedDate)},
             t.RequestStartDate  as {nameof(EmployeeTimeoff.RequestStartDate)},
@@ -83,8 +89,11 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             {PendingTimeoffsQueryFromClause}
         ";
 
-        public const string PendingTimeoffsQueryGroupByClause = $@"GROUP BY e.Id, e.Fullname, t.Id, t.CreatedDate, t.ModifiedDate, t.RequestStartDate, t.RequestEndDate, t.status";
-        public const string PendingTimeoffsQueryOrderByClause = $@"t.{ nameof(EmployeeTimeoff.CreatedDate)}";
+        public const string PendingTimeoffsQueryGroupByClause = $@"GROUP BY e.Id, e.Fullname, 
+            e.BenefitsSnapshot_VacationBalance, e.VacationHours, e.RolloverHours, e.BenefitsSnapshot_PersonalBalance, e.PersonalHours,
+            t.Id, pt.PayrollCode, t.CreatedDate, t.ModifiedDate, t.RequestStartDate, t.RequestEndDate, t.status";
+
+        public const string PendingTimeoffsQueryOrderByClause = $@"t.{ nameof(EmployeeTimeoff.RequestStartDate)}";
 
         #endregion
 
@@ -121,16 +130,18 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
         ";
 
         public const string PendingTimesheetsQueryGroupByClause = $@"GROUP BY e.Id, e.Fullname, t.Id, t.CreatedDate, t.ModifiedDate, t.StartDate, t.EndDate, t.PayrollPeriod";
-        public const string PendingTimesheetsQueryOrderByClause = $@"t.{ nameof(EmployeeTimesheet.CreatedDate)}";
-        
+        public const string PendingTimesheetsQueryOrderByClause = $@"t.{ nameof(EmployeeTimesheet.StartDate)}";
+
         #endregion
 
         #region EmployeeTeam
+        private const string EmployeeTeamQueryEmployeeIdParam = "@approverId";
+
         private const string EmployeeTeamQueryLastTimesheetStatusPerEmployee = $@"WITH LastTimesheets
             AS(
                 SELECT employeeId, status, id, payrollPeriod, workDate
                 FROM (
-                    SELECT ROW_NUMBER() OVER (PARTITION BY fte.employeeId ORDER by t.CreatedDate DESC) AS rowNum, fte.employeeId, t.status, t.id, t.PayrollPeriod, fte.Workdate
+                    SELECT ROW_NUMBER() OVER (PARTITION BY fte.employeeId ORDER by t.status ASC, t.StartDate ASC) AS rowNum, fte.employeeId, t.status, t.id, t.PayrollPeriod, fte.Workdate
                     FROM timesheets t
                     JOIN FirstTimesheetEntryOfLastTimesheet fte on fte.TimesheetHeaderId = t.Id
                 ) T
@@ -156,7 +167,10 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             FROM employees e
             LEFT JOIN LastTimeoffs tos ON e.Id = tos.employeeId
             LEFT JOIN LastTimesheets ts ON e.Id = ts.EmployeeId
-            WHERE (e.employmentDate is not null or (e.employmentDate is null and ts.id is not null)) AND (e.usesTimesheet = {EmployeeTeamQueryUsesTimesheetParam})
+            WHERE e.Id = {EmployeeTeamQueryEmployeeIdParam} OR (
+                (e.employmentDate is not null or (e.employmentDate is null and ts.id is not null)) AND (e.usesTimesheet = {EmployeeTeamQueryUsesTimesheetParam})
+                @clauseForDirectReport
+            )
         ";
 
         public const string TotalEmployeeTeamQuery = $@"
@@ -172,8 +186,10 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             SELECT 
             e.Id as {nameof(EmployeeWithTimeStatus.EmployeeId)},
             e.FullName  as {nameof(EmployeeWithTimeStatus.FullName)}, 
-            e.BenefitsSnapshot_VacationBalance as {nameof(EmployeeWithTimeStatus.VacationBalance)}, 
-            e.BenefitsSnapshot_PersonalBalance as {nameof(EmployeeWithTimeStatus.PersonalBalance)}, 
+            e.BenefitsSnapshot_VacationBalance as {nameof(EmployeeWithTimeStatus.VacationSnapshot)}, 
+            e.VacationHours + e.RolloverHours as {nameof(EmployeeWithTimeStatus.VacationVariation)}, 
+            e.BenefitsSnapshot_PersonalBalance as {nameof(EmployeeWithTimeStatus.PersonalSnapshot)}, 
+            e.PersonalHours as {nameof(EmployeeWithTimeStatus.PersonalVariation)}, 
             tos.Id as {nameof(EmployeeWithTimeStatus.TimeoffId)},
             tos.Status as {nameof(EmployeeWithTimeStatus.LastTimeoffStatus)},
             tos.timeoffEntryId as {nameof(EmployeeWithTimeStatus.LastTimeoffEntryId)},
@@ -297,10 +313,10 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
         public async Task<EmployeeTeam> GetEmployeeTeam(int page, int itemsPerPage, string approverId = null, bool directReports = false)
         {
             var totalQuery = QueryEmployeeConstants.TotalEmployeeTeamQuery;
-            totalQuery = AddWhereClauseForDirectReports(approverId, directReports, totalQuery);
+            totalQuery = AddWhereClauseForDirectReports(approverId, directReports, totalQuery, whereKey: "", replace: "@clauseForDirectReport", addAnd: ADD_AND.AND_BEFORE);
 
             var query = QueryEmployeeConstants.EmployeeTeamQuery;
-            query = AddWhereClauseForDirectReports(approverId, directReports, query);
+            query = AddWhereClauseForDirectReports(approverId, directReports, query, whereKey: "", replace: "@clauseForDirectReport", addAnd: ADD_AND.AND_BEFORE);
             query = Paginate(page, itemsPerPage, query, QueryEmployeeConstants.EmployeeTeamQueryOrderByClause);
 
             var queryParams = new { approverId, usesTimesheet = true };

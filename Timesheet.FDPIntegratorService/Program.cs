@@ -1,5 +1,7 @@
 using Timesheet.FDPIntegratorService.Service;
+using Timesheet.Infrastructure.Dapper;
 using Timesheet.FDPDataIntegrator;
+using Serilog;
 
 namespace Timesheet.FDPIntegratorService
 {
@@ -7,24 +9,31 @@ namespace Timesheet.FDPIntegratorService
     {
         public static void Main(string[] args) => CreateHostBuilder(args).Build().Run();
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-           Host.CreateDefaultBuilder(args)
+        public static IHostBuilder CreateHostBuilder(string[] args) {
+           return Host.CreateDefaultBuilder(args)
                .ConfigureLogging(logging =>
                {
-                   logging.ClearProviders();
-                   logging.AddConsole();
-                   logging.AddEventLog();
-               })
+                    logging.ClearProviders();
+                    logging.AddConsole();
+                    logging.AddEventLog();
+                })
                // Essential to run this as a window service
                .UseWindowsService()
-               .ConfigureServices(configureServices);
+               .ConfigureServices(Program.ConfigureServices)
+               .UseSerilog(((ctx, lc) => lc
+                .ReadFrom.Configuration(ctx.Configuration)
 
-        private static void configureServices(HostBuilderContext context, IServiceCollection services)
+                    .Enrich.FromLogContext()
+                ));
+        }
+
+        private static void ConfigureServices(HostBuilderContext context, IServiceCollection services)
         {
-            services.AddLogging();
-            services.AddServices(context.Configuration.GetConnectionString("Timesheet"));
-            services.AddSingleton<IFDPIntegratorProcess, FDPIntegratorProcess>();
-            services.AddHostedService<FDPIntegratorWorker>();
+            services.AddLogging()
+            .AddServices(context.Configuration.GetConnectionString("Timesheet"))
+            .AddSingletonDatabaseQueryService()
+            .AddSingleton<IFDPIntegratorProcess, FDPIntegratorProcess>()
+            .AddHostedService<FDPIntegratorWorker>();
         }
     }
 }

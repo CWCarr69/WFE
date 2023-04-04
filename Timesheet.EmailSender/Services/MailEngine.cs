@@ -9,9 +9,10 @@ namespace Timesheet.EmailSender.Services
         private readonly IMailSender _mailSender;
         private readonly IDictionary<string, string> _employeeEmails;
 
-        private readonly Uri _host = new Uri(ConfigurationManager.AppSettings.Get("host"));
-        private readonly string _timeheetTemplatePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Templates/TimesheetEmailTemplate.html");
-        private readonly string _timeoffTemplatePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Templates/TimeoffEmailTemplate.html");
+        private readonly Uri _host;
+
+        private readonly string _timeheetTemplatePath =  @"TTimesheetEmailTemplate.html";
+        private readonly string _timeoffTemplatePath = @"TimeoffEmailTemplate.html";
         private const string _timesheetViewLink = "/Timesheet/{0}/Employee/{1}";
         private const string _timeoffViewLink = "/Employee/{0}/Timeoff/{1}/";
 
@@ -20,6 +21,8 @@ namespace Timesheet.EmailSender.Services
             this._templateProcessor = templateProcessor;
             this._mailSender = mailSender;
             this._employeeEmails = employeeEmails;
+
+            this._host = new Uri(templateProcessor.GetWebAppUri());
         }
 
         internal void SendEmail<T>(T notificationItem)
@@ -28,13 +31,13 @@ namespace Timesheet.EmailSender.Services
             if(notificationItem is TimeoffNotificationTemplate)
             {
                 var linkFormat = new Uri(_host, _timeoffViewLink).ToString();
-                notificationItem.ViewLink = string.Format(linkFormat, notificationItem.ItemId);
+                notificationItem.Link = string.Format(linkFormat, notificationItem.EmployeeId, notificationItem.ItemId); ;
                 SendEmail(notificationItem, _timeoffTemplatePath);
             }
             else
             {
                 var linkFormat = new Uri(_host, _timesheetViewLink).ToString();
-                notificationItem.ViewLink = string.Format(linkFormat, notificationItem.ItemId);
+                notificationItem.Link = string.Format(linkFormat, notificationItem.EmployeeId, notificationItem.ItemId);
                 SendEmail(notificationItem, _timeheetTemplatePath);
             }
         }

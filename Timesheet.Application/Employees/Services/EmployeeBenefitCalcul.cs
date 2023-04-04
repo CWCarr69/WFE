@@ -11,6 +11,7 @@ namespace Timesheet.Domain.Employees.Services
     public class EmployeeBenefitCalculator : IEmployeeBenefitCalculator
     {
         private const double WORK_DAY_HOURS = 8;
+        private const double PERSONAL_TIME_UNITY = 4;
         IDictionary<(DateTime start, DateTime end), int> ScheduleFirstYears =
         new Dictionary<(DateTime start, DateTime end), int>()
         {
@@ -73,7 +74,7 @@ namespace Timesheet.Domain.Employees.Services
 
             var personalHours = new HourInformation
             {
-                Type = "Personal",
+                Type = HourInformationType.Personal.ToString(),
                 Balance = totalPersonals - scheduledPersonals - usedPersonals + (doNotUseCalculatedBenefits ? 0 : employeeBenefitsVariations.PersonalHours),
                 Used = usedPersonals,
                 Scheduled = scheduledPersonals
@@ -81,7 +82,7 @@ namespace Timesheet.Domain.Employees.Services
 
             var vacationHours = new HourInformation
             {
-                Type = "Vacation",
+                Type = HourInformationType.Vacation.ToString(),
                 Balance = totalVacations + rollover - scheduledVacations - usedVacations 
                 + (doNotUseCalculatedBenefits ? 0 : employeeBenefitsVariations.VacationHours)
                 +(doNotUseCalculatedBenefits ? 0 : employeeBenefitsVariations.RolloverHours),
@@ -91,8 +92,8 @@ namespace Timesheet.Domain.Employees.Services
 
             var employeeCalcultatedBenefits = new EmployeeCalculatedBenefits
             {
-                EligibleVacationHours = totalVacations + rollover + (doNotUseCalculatedBenefits ? 0 : employeeBenefitsVariations.VacationHours),
-                EligiblePersonalHours = totalPersonals + (doNotUseCalculatedBenefits ? 0 : employeeBenefitsVariations.PersonalHours),
+                TotalVacationHours = totalVacations + rollover + (doNotUseCalculatedBenefits ? 0 : employeeBenefitsVariations.VacationHours),
+                TotalPersonalHours = totalPersonals + (doNotUseCalculatedBenefits ? 0 : employeeBenefitsVariations.PersonalHours),
                 RolloverHours = rollover + (doNotUseCalculatedBenefits ? 0 : employeeBenefitsVariations.RolloverHours),
                 Details = new List<HourInformation> { personalHours, vacationHours }
             };
@@ -126,8 +127,8 @@ namespace Timesheet.Domain.Employees.Services
 
         private double GetTotalCurrentPersonalTimes()
         {
-            var months = DateTime.Now.Month;
-            return months * WORK_DAY_HOURS;
+            var months = DateTime.Now.Month - 1;
+            return months * PERSONAL_TIME_UNITY;
         }
 
         private double GetTotalCurrentVacationsTime(DateTime employmentDate, DateTime now)

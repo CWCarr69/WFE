@@ -23,6 +23,12 @@ namespace Timesheet.Application.Timesheets.EventHandlers
             //var @type = EventTypeToTimesheetPayrollCode(@event.Type);
             foreach (var entry in @event.TimeoffEntries)
             {
+                var entryExists = await _readRepository.DoesEntryExists(entry.Id);
+
+                if (entryExists)
+                {
+                    return;
+                }
 
                 var timesheetEntry = new TimesheetEntry(
                     entry.Id,

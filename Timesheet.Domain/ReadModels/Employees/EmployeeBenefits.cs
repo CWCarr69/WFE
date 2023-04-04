@@ -1,5 +1,7 @@
 ﻿namespace Timesheet.Domain.ReadModels.Employees
 {
+    public enum HourInformationType { Personal, Vacation }
+
     public class HourInformation
     {
         public string Type { get; set; }
@@ -10,11 +12,19 @@
 
     public class EmployeeCalculatedBenefits
     {
-        public double EligibleVacationHours { get; set; }
-        public double EligiblePersonalHours { get; set; }
+        public double TotalVacationHours { get; set; }
+        public double TotalPersonalHours { get; set; }
         public double RolloverHours { get; set; }
-
         public IEnumerable<HourInformation> Details { get; set; }
+
+        public string EligibleVacationHours => $@"{GetBalance(HourInformationType.Vacation)} / {TotalVacationHours}";
+        public string EligiblePersonalHours => $@"{GetBalance(HourInformationType.Personal)} / {TotalPersonalHours}";
+
+        private double GetBalance(HourInformationType hourType)
+        {
+            return Details?.FirstOrDefault(d => d.Type == hourType.ToString())?.Balance ?? 0d;
+        }
+
     }
 
     public class EmployeeBenefits

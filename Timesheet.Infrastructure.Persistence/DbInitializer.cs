@@ -51,12 +51,12 @@ namespace Timesheet.Infrastructure.Persistence
             {
                 Setting.Create("AUTHENTICATION_SERVER", "10.73.4.10", "Active directory server"),
 
-                Setting.Create("SMTP_USE_SSL", "0", "Use ssl for smtp connection (true, false)"),
-                Setting.Create("SMTP_SET_EMAIL", "0", "True/False for SMTP email setting"),
-                Setting.Create("SMTP_ACCOUNT_PASSWORD", "", "Password of email account"),
+                Setting.Create("SMTP_USESSL", "0", "Use ssl for smtp connection (true, false)"),
+                Setting.Create("SMTP_PASSWORD", "", "Password of email account"),
                 Setting.Create("SMTP_PORT", "25", "Smtp email server port"),
-                Setting.Create("SMTP_ACCOUNT_ADDRESS", "25", "Smtp email server address"),
-                Setting.Create("SMTP_ACCOUNT_USERNAME", "", "User name of email account"),
+                Setting.Create("SMTP_SERVER", "25", "Smtp email server address"),
+                Setting.Create("SMTP_USERNAME", "", "User name of email account"),
+                Setting.Create("SMTP_EMAIL", "", "Email account"),
 
                 Setting.Create("NOTIFICATION_HR", "HR Support Email", "HR Support Email"),
                 Setting.Create("NOTIFICATION_WFE", "HR@WilsonFire.com", "Wilson Fire Equip. and Services"),
@@ -103,8 +103,6 @@ namespace Timesheet.Infrastructure.Persistence
                 PayrollTypes.Create((int) TimesheetFixedPayrollCodeEnum.BERV, "BERV", PayrollTypesCategory.TIMEOFF, "BERV", true),
                 PayrollTypes.Create((int) TimesheetFixedPayrollCodeEnum.SHOP, "SHOP", PayrollTypesCategory.TIMEOFF, "SHOP", false),
                 PayrollTypes.Create((int) TimesheetFixedPayrollCodeEnum.TRAINING, "TRAINING", PayrollTypesCategory.TIMEOFF, "TRAINING", false),
-                PayrollTypes.Create((int) TimesheetFixedPayrollCodeEnum.OTHERS_WITHOUT_APPROVAL, "OTHERS_WITHOUT_APPROVAL", PayrollTypesCategory.TIMEOFF, "OTHERS_WITHOUT_APPROVAL", false),
-                PayrollTypes.Create((int) TimesheetFixedPayrollCodeEnum.OTHERS_WITH_APPROVAL, "OTHERS_WITH_APPROVAL", PayrollTypesCategory.TIMEOFF, "OTHERS_WITH_APPROVAL", true),
             };
         }
     }

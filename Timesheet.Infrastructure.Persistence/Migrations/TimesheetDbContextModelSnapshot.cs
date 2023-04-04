@@ -80,6 +80,9 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("DefaultProfitCenter")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

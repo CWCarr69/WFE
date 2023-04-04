@@ -24,16 +24,16 @@ namespace Timesheet.Web.Api
             builder.Host.UseWindowsService();
 
             // Add services to the container.
-            builder.Services.AddTimesheetContext(builder.Configuration.GetConnectionString("Timesheet"));
-            builder.Services.AddTimesheedReadModelDatabase(builder.Configuration.GetConnectionString("Timesheet"));
+            builder.Services.AddTimesheetContext(builder.Configuration.GetConnectionString("Timesheet"))
+            .AddTimesheedReadModelDatabase(builder.Configuration.GetConnectionString("Timesheet"))
 
-            builder.Services.AddWorkflowService();
-            builder.Services.RegisterEventDispatcher();
-            builder.Services.RegisterEventHandlers();
-            builder.Services.RegisterCommandHandlers();
-            builder.Services.AddAuthenticationServices();
-            builder.Services.AddTimesheetExportServices(builder.Configuration.GetSection("TimesheetExport:Destination").Value);
-            builder.Services.AddOtherApplicationServices();
+            .AddWorkflowService()
+            .RegisterEventDispatcher()
+            .RegisterEventHandlers()
+            .RegisterCommandHandlers()
+            .AddAuthenticationServices()
+            .AddTimesheetExportServices(builder.Configuration.GetSection("TimesheetExport:Destination").Value)
+            .AddOtherApplicationServices();
 
             builder.Services.AddBenefitsServices();
 
@@ -115,7 +115,7 @@ namespace Timesheet.Web.Api
 
             app.UseCors(p => p
             .SetIsOriginAllowedToAllowWildcardSubdomains()
-            .WithOrigins("https://*.wilsonfire.com", "https://localhost")
+            .WithOrigins("https://*.wilsonfire.net", "https://localhost")
             .AllowAnyHeader().AllowAnyMethod()
             .AllowCredentials());
 

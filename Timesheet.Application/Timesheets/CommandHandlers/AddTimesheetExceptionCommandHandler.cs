@@ -27,6 +27,7 @@ namespace Timesheet.Application.Timesheets.CommandHandlers
         public async override Task<IEnumerable<IDomainEvent>> HandleCoreAsync(AddTimesheetException command, CancellationToken token)
         {
             var timesheetException = new TimesheetException(command.TimesheetEntryId, command.EmployeeId, command.IsHoliday ? nameof(Domain.Models.Holidays.Holiday) : nameof(Domain.Models.Timesheets));
+            await _writeRepository.Add(timesheetException);
 
             this.RelatedAuditableEntity = timesheetException;
 

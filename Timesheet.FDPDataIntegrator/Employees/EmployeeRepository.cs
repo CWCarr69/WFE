@@ -19,6 +19,11 @@ namespace Timesheet.FDPDataIntegrator.Employees
             await _databaseService.ExecuteTransactionAsync(transaction);
         }
 
+        public async Task Delete(string id)
+        {
+            await Task.CompletedTask;
+        }
+
         public async Task DisableConstraints()
         {
             var employeeTableParam = "@tableName";
@@ -33,10 +38,16 @@ namespace Timesheet.FDPDataIntegrator.Employees
             await _databaseService.ExecuteAsync(query, new { tableName = EmployeeTable });
         }
 
+        public IEnumerable<Employee> GetRecents()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task UpSert(Employee employee)
         {
             var employeeId = "@employeeId";
             var employeeFullName = "@employeeFullName";
+            var employeeDefaultProfitCenter = "@employeeDefaultProfitCenter";
             var employeeManagerId = "@employeeManagerId";
             var employeePrimaryApproverId = "@employeePrimaryApproverId";
             var employeeSecondaryApproverId = "@employeeSecondaryApproverId";
@@ -56,6 +67,7 @@ namespace Timesheet.FDPDataIntegrator.Employees
 
             var updates = $@"
             {nameof(Employee.FullName)} = {employeeFullName},
+            {nameof(Employee.DefaultProfitCenter)} = {employeeDefaultProfitCenter},
             {nameof(Employee.Manager)}{nameof(Employee.Id)} = {employeeManagerId},
             {nameof(Employee.PrimaryApprover)}{nameof(Employee.Id)} = {employeePrimaryApproverId},
             {nameof(Employee.SecondaryApprover)}{nameof(Employee.Id)} = {employeeSecondaryApproverId},
@@ -76,6 +88,7 @@ namespace Timesheet.FDPDataIntegrator.Employees
             var insertColums = $@"
             {nameof(Employee.Id)},
             {nameof(Employee.FullName)},
+            {nameof(Employee.DefaultProfitCenter)},
             {nameof(Employee.Manager)}{nameof(Employee.Id)},
             {nameof(Employee.PrimaryApprover)}{nameof(Employee.Id)},
             {nameof(Employee.SecondaryApprover)}{nameof(Employee.Id)},
@@ -97,6 +110,7 @@ namespace Timesheet.FDPDataIntegrator.Employees
             var insertValues = $@"
                 {employeeId},
                 {employeeFullName},
+                {employeeDefaultProfitCenter},
                 {employeeManagerId},
                 {employeePrimaryApproverId},
                 {employeeSecondaryApproverId},
@@ -130,6 +144,7 @@ namespace Timesheet.FDPDataIntegrator.Employees
             await _databaseService.ExecuteAsync(query, new { 
                 employeeId = employee.Id,
                 employeeFullName = employee.FullName,
+                employeeDefaultProfitCenter = employee.DefaultProfitCenter,
                 employeeManagerId = employee.PrimaryApprover?.Id,
                 employeePrimaryApproverId = employee.PrimaryApprover?.Id,
                 employeeSecondaryApproverId = employee.SecondaryApprover?.Id,

@@ -17,6 +17,7 @@
                         <Record>
                             <ModifiedAfter>{ModificationDateParam}</ModifiedAfter>
                             <PageNumber>{PageNumberParam}</PageNumber>
+                            <PageSize>15000</PageSize>
                         </Record>
                     </Records>
                 </InboundData>

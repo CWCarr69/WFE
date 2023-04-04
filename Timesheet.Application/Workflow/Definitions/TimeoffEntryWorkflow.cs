@@ -14,9 +14,9 @@ namespace Timesheet.Application.Workflow
             : base(new List<Transition>()
             {
                 new Transition(TimeoffEntryTransitions.DELETE, TimeoffEntryStatus.NOT_PROCESSED, TimeoffEntryStatus.PROCESSED)
-                    .AuthorizeRoles(EmployeeRoleOnData.CREATOR),
+                    .AuthorizeRoles(EmployeeRoleOnData.CREATOR, EmployeeRoleOnData.APPROVER),
                 new Transition(TimeoffEntryTransitions.UPDATE, TimeoffEntryStatus.NOT_PROCESSED, TimeoffEntryStatus.PROCESSED)
-                    .AuthorizeRoles(EmployeeRoleOnData.CREATOR)
+                    .AuthorizeRoles(EmployeeRoleOnData.CREATOR, EmployeeRoleOnData.APPROVER)
             })
         {
         }

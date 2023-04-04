@@ -131,3 +131,8 @@
 /Timesheet.Web.Api/TimesheetExport/Paylocity_Timesheet_2022-51H
 /efbundle.exe
 /efbundle.zip
+/Timesheet.EmailService/bin/Debug/net6.0
+/Timesheet.EmailService/obj/Debug/net6.0
+/Timesheet.EmailService/obj
+/Timesheet.Web.Api/bin/Release/net6.0/Serilog.dll
+/Timesheet.Web.Api/bin/Release/net6.0/Serilog.dll

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Timesheet.Domain.Models.Holidays;
 using Timesheet.Domain.Models.Timesheets;
 using Timesheet.Domain.Repositories;
 
@@ -66,6 +67,13 @@ namespace Timesheet.Infrastructure.Persistence.Repositories
                 .Where(t => t.TimesheetHolidays.Any(h => h.Id == holidayId))
                 .Include(t => t.TimesheetHolidays)
                 .ToListAsync();
+        }
+
+        public async Task<bool> DoesEntryExists(string entryId)
+        {
+            return (await _context.Timesheets
+                .Where(t => t.TimesheetEntries.Any(t => t.Id == entryId))
+                .FirstOrDefaultAsync()) != null;
         }
     }
 }

@@ -30,7 +30,7 @@ namespace Timesheet.Application.Employees.CommandHandlers
                 throw new TimeoffInvalidDateIntervalException(command.RequestStartDate, command.RequestEndDate);
             }
 
-            if(command.Author is null || (!command.Author.IsAdministrator))
+            if(command.Author is null)
             {
                 command.EmployeeId = command.Author.Id;
             }

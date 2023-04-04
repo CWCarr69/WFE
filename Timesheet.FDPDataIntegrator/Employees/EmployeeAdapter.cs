@@ -35,10 +35,6 @@ namespace Timesheet.FDPDataIntegrator.Employees
             );
 
             var employeeContactData = new EmployeeContactData(companyEmail: record.Email, companyPhone:record.Phone);
-            if(record.UsesTimesheet == "True")
-            {
-                var a = 1;
-            }
 
             var employee = new Employee(
                 record.EmployeeCode,
@@ -50,7 +46,8 @@ namespace Timesheet.FDPDataIntegrator.Employees
                 employmentData,
                 employeeContactData,
                 record.Active.ToLower() != "false",
-                record.UsesTimesheet.ToLower() == "true"
+                record.UsesTimesheet.ToLower() == "true",
+                record.DefaultServiceCode
             );
 			
 			employee.UpdateMetadata(record.CreateDate, record.ModifyDate);

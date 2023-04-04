@@ -15,19 +15,19 @@ namespace Timesheet.Application.Workflow
             : base(new List<Transition>()
             {
                 new Transition(TimeoffTransitions.SUBMIT, TimeoffStatus.IN_PROGRESS, TimeoffStatus.REJECTED)
-                    .AuthorizeRoles(EmployeeRoleOnData.CREATOR),
+                    .AuthorizeRoles(EmployeeRoleOnData.CREATOR, EmployeeRoleOnData.APPROVER),
                 new Transition(TimeoffTransitions.APPROVE, TimeoffStatus.SUBMITTED, TimeoffStatus.REJECTED)
                     .AuthorizeRoles(EmployeeRoleOnData.APPROVER),
                 new Transition(TimeoffTransitions.REJECT, TimeoffStatus.SUBMITTED)
                     .AuthorizeRoles(EmployeeRoleOnData.APPROVER),
                 new Transition(TimeoffTransitions.DELETE, TimeoffStatus.IN_PROGRESS, TimeoffStatus.SUBMITTED, TimeoffStatus.REJECTED)
-                    .AuthorizeRoles(EmployeeRoleOnData.CREATOR),
+                    .AuthorizeRoles(EmployeeRoleOnData.CREATOR, EmployeeRoleOnData.APPROVER),
                 new Transition(TimeoffTransitions.ADD_ENTRY, TimeoffStatus.IN_PROGRESS, TimeoffStatus.SUBMITTED, TimeoffStatus.REJECTED)
-                    .AuthorizeRoles(EmployeeRoleOnData.CREATOR),
+                    .AuthorizeRoles(EmployeeRoleOnData.CREATOR, EmployeeRoleOnData.APPROVER),
                 new Transition(TimeoffTransitions.DELETE_ENTRY, TimeoffStatus.IN_PROGRESS, TimeoffStatus.SUBMITTED, TimeoffStatus.REJECTED)
-                    .AuthorizeRoles(EmployeeRoleOnData.CREATOR),
+                    .AuthorizeRoles(EmployeeRoleOnData.CREATOR, EmployeeRoleOnData.APPROVER),
                 new Transition(TimeoffTransitions.UPDATE_ENTRY, TimeoffStatus.IN_PROGRESS, TimeoffStatus.SUBMITTED, TimeoffStatus.REJECTED)
-                    .AuthorizeRoles(EmployeeRoleOnData.CREATOR),
+                    .AuthorizeRoles(EmployeeRoleOnData.CREATOR, EmployeeRoleOnData.APPROVER),
                 new Transition(TimeoffTransitions.UPDATE_COMMENT, TimeoffStatus.IN_PROGRESS, TimeoffStatus.SUBMITTED, TimeoffStatus.REJECTED)
                     .AuthorizeRoles(EmployeeRoleOnData.CREATOR, EmployeeRoleOnData.APPROVER),
             })

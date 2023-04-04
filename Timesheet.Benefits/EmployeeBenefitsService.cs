@@ -52,7 +52,7 @@ namespace Timesheet.Benefits
             var personalDetails = benefits.Details.FirstOrDefault(x => x.Type == "Personal");
 
             employee.SnapshotBenefits(
-                new EmployeeBenefitsSnapshop(benefits.EligibleVacationHours, benefits.EligiblePersonalHours, benefits.RolloverHours)
+                new EmployeeBenefitsSnapshop(benefits.TotalVacationHours, benefits.TotalPersonalHours, benefits.RolloverHours)
                 .SetVacationDetails(vacationDetails.Balance, vacationDetails.Used, vacationDetails.Scheduled)
                 .SetPersonalDetails(personalDetails.Balance, personalDetails.Used, personalDetails.Scheduled)
             );

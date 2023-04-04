@@ -25,6 +25,8 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
         public string ServiceOrderDescription { get; set; }
         [XmlElement("ProjectNo")]
         public string JobNumber { get; set; }
+        [XmlElement("JobTaskNumber")]
+        public string JobTaskNumber { get; set; }
         [XmlElement("ProjectDescription")]
         public string JobDescription { get; set; }
         [XmlElement("record")]

@@ -39,10 +39,13 @@
             this.UpdateMetadata();
         }
 
-        internal void AddEntry(DateTime requestDate, int TypeId, double hours, string label)
+        internal TimeoffEntry AddEntry(DateTime requestDate, int TypeId, double hours, string label)
         {
-            TimeoffEntries.Add(TimeoffEntry.Create(requestDate, TypeId, hours, label));
+            var entry = TimeoffEntry.Create(requestDate, TypeId, hours, label);
+            TimeoffEntries.Add(entry);
             this.UpdateMetadata();
+
+            return entry;
         }
 
         internal void DeleteEntry(TimeoffEntry timeoffEntry)
@@ -73,10 +76,13 @@
 
         internal void Update()
         {
-            var timeoffStartDate = TimeoffEntries.Min(e => e.RequestDate);
-            var timeoffEndDate = TimeoffEntries.Max(e => e.RequestDate);
-            RequestStartDate = timeoffStartDate;
-            RequestEndDate = timeoffEndDate;
+            if (TimeoffEntries.Any())
+            {
+                var timeoffStartDate = TimeoffEntries.Min(e => e.RequestDate);
+                var timeoffEndDate = TimeoffEntries.Max(e => e.RequestDate);
+                RequestStartDate = timeoffStartDate;
+                RequestEndDate = timeoffEndDate;
+            }
 
             this.UpdateMetadata();
         }

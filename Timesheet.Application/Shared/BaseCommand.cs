@@ -7,6 +7,7 @@ namespace Timesheet.Application.Shared
     {
         [JsonIgnore]
         public User? Author { get; set; }
+
         public abstract CommandActionType ActionType();
        
     }
