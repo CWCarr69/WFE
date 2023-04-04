@@ -1,0 +1,27 @@
+.jqvmap-zoomin,
+.jqvmap-zoomout {
+    height: 20px;
+    width: 20px;
+    line-height: 14px;
+    background-color: $primary;
+    color: $white;
+}
+
+.jqvmap-zoomout {
+    top: 35px;
+}
+
+#usa {
+    height: 400px;
+	@include respond ('tab-port'){
+		height:350px;
+	}
+	@include respond ('phone'){
+		height:230px;
+	}
+}
+//map
+.map-img{
+	width:100%;
+	height: auto;
+}

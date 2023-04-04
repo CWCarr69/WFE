@@ -136,3 +136,5 @@
 /Timesheet.EmailService/obj
 /Timesheet.Web.Api/bin/Release/net6.0/Serilog.dll
 /Timesheet.Web.Api/bin/Release/net6.0/Serilog.dll
+/Front/build
+/Front/node_modules
