@@ -21,6 +21,11 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
                 throw new ArgumentNullException(nameof(record));
             }
 
+            if(string.IsNullOrEmpty(record.PayrollCode))
+            {
+                return null;
+            }
+
             var isWeekly = record.PayrollType.ToUpper() == PAYROLL_HOURLY_TYPE;
 
             TimesheetHeader timesheetHeader = isWeekly

@@ -28,5 +28,6 @@ namespace Timesheet.Domain.ReadModels.Timesheets
         public TimesheetEntryStatus Status { get; set; }
         public string StatusName => Status.ToString();
         public bool IsDeletable { get; set; }
+        public bool IsTimeoff { get; set; }
     }
 }

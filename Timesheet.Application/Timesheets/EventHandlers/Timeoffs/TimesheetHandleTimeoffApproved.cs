@@ -30,7 +30,7 @@ namespace Timesheet.Application.Timesheets.EventHandlers
                     return;
                 }
 
-                var timesheetEntry = new TimesheetEntry(
+                var timesheetEntry = TimesheetEntry.CreateFromApprovedTimeOff(
                     entry.Id,
                     entry.EmployeeId,
                     entry.RequestDate,
@@ -54,18 +54,5 @@ namespace Timesheet.Application.Timesheets.EventHandlers
                 alreadyAddedtimesheet.AddTimesheetEntry(timesheetEntry);
             }
         }
-
-        //private TimesheetPayrollCode EventTypeToTimesheetPayrollCode(string @type)
-        //{
-        //    return new TimesheetPayrollCode(@type.Code);
-        //    //if (@type == TimeoffType.BERV.ToString()) return TimesheetPayrollCode.BERV.ToString();
-        //    //if (@type == TimeoffType.UNPAID.ToString()) return TimesheetPayrollCode.UNPAID.ToString();
-        //    //if (@type == TimeoffType.VACATION.ToString()) return TimesheetPayrollCode.VACATION.ToString();
-        //    //if (@type == TimeoffType.SHOP.ToString()) return TimesheetPayrollCode.SHOP.ToString();
-        //    //if (@type == TimeoffType.JURY_DUTY.ToString()) return TimesheetPayrollCode.JURY_DUTY.ToString();
-        //    //if (@type == TimeoffType.PERSONAL.ToString()) return TimesheetPayrollCode.PERSONAL.ToString();
-
-        //    //return TimesheetPayrollCode.REGULAR.ToString();
-        //}
     }
 }

@@ -2,6 +2,7 @@
 {
     public class NotificationItem : Entity
     {
+        public string RelatedEmployeeId { get; private set; }
         public string EmployeeId { get; private set; }
         public string Action { get; private set; }
         public string Subject { get; private set; }
@@ -12,7 +13,7 @@
         {
         }
 
-        public static NotificationItem Create(string employeeId, string action, string subject, bool sent, string objectId, NotificationType group)
+        public static NotificationItem Create(string relatedEmployeeId, string employeeId, string action, string subject, bool sent, string objectId, NotificationType group)
         {
             var notification = new NotificationItem(Entity.GenerateId()) {
                 EmployeeId = employeeId,
@@ -20,6 +21,7 @@
                 Subject = subject,
                 Sent = sent,
                 ObjectId = objectId,
+                RelatedEmployeeId = relatedEmployeeId
             };
 
             return notification;

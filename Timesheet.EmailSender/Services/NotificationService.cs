@@ -32,6 +32,11 @@ namespace Timesheet.EmailSender.Services
             var settings = _settingsRepository.GetSMTPParameters();
             var employeeEmails = _employeeRepository.GetEmails();
 
+            //foreach(var kvp in employeeEmails)
+            //{
+            //    employeeEmails[kvp.Key] = "daerquyl@gmail.com";
+            //}
+
             IMailSender mailSender = new MailSender(settings);
             _mailEngine = new MailEngine(_templateProcessor, mailSender, employeeEmails);
         }

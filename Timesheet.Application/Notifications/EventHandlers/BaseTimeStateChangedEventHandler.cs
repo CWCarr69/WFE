@@ -59,7 +59,7 @@ namespace Timesheet.Application.Notifications.EventHandlers
             await _populationServices.AddAdministratorsToEmployeesIfConcerned(populationsConcerned, employeeIds);
 
             var notificationItems = employeeIds.Select(employeeId =>
-                NotificationItem.Create(employeeId, notification.Action, ActionToSubject(notification.Action), false, objectId, notification.Group));
+                NotificationItem.Create(employee.Id, employeeId, notification.Action, ActionToSubject(notification.Action), false, objectId, notification.Group));
 
             return notificationItems;
         }

@@ -19,9 +19,6 @@ namespace Timesheet.Domain.ReadModels.Timesheets
         public TimesheetStatus Status { get; set; }
         public string StatusName => Status.ToString();
         public IEnumerable<EmployeeTimesheetEntry> Entries { get; set; } = new List<EmployeeTimesheetEntry>();
-        public IEnumerable<EmployeeTimesheetEntry> EntriesWithoutTimeoffs => Entries
-        ?.Where(t => 
-            t.PayrollCodeId == (int) TimesheetFixedPayrollCodeEnum.REGULAR
-            || t.PayrollCodeId == (int)TimesheetFixedPayrollCodeEnum.OVERTIME) ?? new List<EmployeeTimesheetEntry>();
+        public IEnumerable<EmployeeTimesheetEntry> EntriesWithoutTimeoffs => Entries?.Where(t => !t.IsTimeoff) ?? new List<EmployeeTimesheetEntry>();
     }
 }

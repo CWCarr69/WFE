@@ -1,4 +1,5 @@
-﻿using Timesheet.Domain.Models.Employees;
+﻿using System.Runtime.InteropServices;
+using Timesheet.Domain.Models.Employees;
 
 namespace Timesheet.Domain.Models.Timesheets
 {
@@ -24,16 +25,18 @@ namespace Timesheet.Domain.Models.Timesheets
             JobTaskNumber = jobTaskNumber;
         }
 
-        public TimesheetEntry(string id, string employeeId, DateTime workDate, int payrollCodeId, double hours,
-            string description, TimesheetEntryStatus status) : base(id)
+        public static TimesheetEntry CreateFromApprovedTimeOff (string id, string employeeId, DateTime workDate, int payrollCodeId, double hours,
+            string description, TimesheetEntryStatus status) => new TimesheetEntry(id)
         {
-            EmployeeId = employeeId.ToString();
-            WorkDate = workDate;
-            PayrollCodeId = payrollCodeId;
-            Hours = hours;
-            Description = description;
-            Status = status;
-        }
+            EmployeeId = employeeId.ToString(),
+            WorkDate = workDate,
+            PayrollCodeId = payrollCodeId,
+            Hours = hours,
+            Description = description,
+            Status = status,
+            IsTimeoff = true
+        };
+
 
 
         public string EmployeeId { get; private set; }
@@ -54,6 +57,8 @@ namespace Timesheet.Domain.Models.Timesheets
         public bool? OutOffCountry { get; private set; } //TODO HERE
         public string? WorkArea => (OutOffCountry ?? false) ? "Out of country" : "In state";
         public bool IsDeletable { get; set; }
+
+        public bool IsTimeoff { get; set; }
 
         public TimesheetEntryStatus Status { get; set; }
 

@@ -1,4 +1,5 @@
-﻿using Timesheet.Domain.Models.Timesheets;
+﻿using System.Security;
+using Timesheet.Domain.Models.Timesheets;
 using Timesheet.Models.Referential;
 
 namespace Timesheet.Domain.ReadModels.Timesheets
@@ -6,20 +7,9 @@ namespace Timesheet.Domain.ReadModels.Timesheets
     public class EmployeeTimesheet
     {
         public string NextTimesheetId { get; set; }
-        //{
-        //    get
-        //    {
-        //        return GetTimesheetPayrollPeriod(EndDate.AddDays(1));
-        //    }
-        //}
 
         public string PreviousTimesheetId { get; set; }
-        //{
-        //    get
-        //    {
-        //        return GetTimesheetPayrollPeriod(StartDate.AddDays(-1));
-        //    }
-        //}
+
         public string EmployeeId { get; set; }
         public string FullName { get; set; }
         public string TimesheetId { get; set; }
@@ -36,18 +26,14 @@ namespace Timesheet.Domain.ReadModels.Timesheets
         public double TotalHours { get; set; }
         public TimesheetType Type { get; set; }
         public IEnumerable<EmployeeTimesheetEntry> Entries { get; set; } = new List<EmployeeTimesheetEntry>();
-        public IEnumerable<EmployeeTimesheetEntry> EntriesWithoutTimeoffs => Entries
-        ?.Where(t => 
-            t.PayrollCodeId == (int) TimesheetFixedPayrollCodeEnum.REGULAR
-            || t.PayrollCodeId == (int) TimesheetFixedPayrollCodeEnum.OVERTIME
-        ) ?? new List<EmployeeTimesheetEntry>();
 
+        public IEnumerable<EmployeeTimesheetEntry> EntriesWithoutTimeoffs => Entries?.Where(t => !t.IsTimeoff) ?? new List<EmployeeTimesheetEntry>();
+    }
 
-        //private string GetTimesheetPayrollPeriod(DateTime datetime)
-        //{
-        //    return Type == TimesheetType.WEEKLY
-        //        ? TimesheetHeader.CreateWeeklyTimesheet(datetime).PayrollPeriod
-        //        : TimesheetHeader.CreateMonthlyTimesheet(datetime).PayrollPeriod;
-        //}
+    public class EmployeeTimesheetWhithHoursPerStatus : EmployeeTimesheet
+    {
+        public Dictionary<string, double> HoursPerStatus => Entries
+            .GroupBy(e => e.Status)
+            .ToDictionary(g => g.Key.ToString(), g => g.Sum(e => e.Quantity));
     }
 }

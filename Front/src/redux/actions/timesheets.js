@@ -1,232 +1,82 @@
 import { API } from "../../constants";
+import { interactWithAPI } from "./base";
 import instance from "../../services/axiosInstance";
 
-export const getTimesheetEmployeeById = async (id, employee) => {
-  var config = {
-    method: "GET",
-    url: `${API()}/Timesheet/${id}/Employee/${employee}`,
-  };
+export const getTimesheetEmployeeById = async (id, employee) => interactWithAPI({
+  method: "GET",
+  url: `${API()}/Timesheet/${id}/Employee/${employee}`,
+});
 
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
-
-export const getTimesheetEmployeeSummaryByDate = async (id, employee) => {
-  var config = {
+export const getTimesheetEmployeeSummaryByDate = async (id, employee) => interactWithAPI({
     method: "GET",
     url: `${API()}/Timesheet/${id}/SummaryByDate/Employee/${employee}`,
-  };
+});
 
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
+export const getTimesheetEmployeeSummaryByPayroll = async (id, employee) => interactWithAPI({
+  method: "GET",
+  url: `${API()}/Timesheet/${id}/SummaryByPayroll/Employee/${employee}`,
+});
 
-export const getTimesheetEmployeeSummaryByPayroll = async (id, employee) => {
-  var config = {
-    method: "GET",
-    url: `${API()}/Timesheet/${id}/SummaryByPayroll/Employee/${employee}`,
-  };
+export const getTimesheetEmployeeHistory = async (employee) => interactWithAPI({
+  method: "GET",
+  url: `${API()}/Timesheet/History/Employee/${employee}`,
+});
 
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
+export const getTimesheetEmployeeEntriesHistory = async (employee, date) => interactWithAPI({
+  method: "GET",
+  url: `${API()}/Timesheet/History/Entries/Employee/${employee}?start=${date}`,
+});
 
-export const getTimesheetEmployeeHistory = async (employee) => {
-  var config = {
-    method: "GET",
-    url: `${API()}/Timesheet/History/Employee/${employee}`,
-  };
+export const getCurrentEmployeeTimesheetPeriod = async (employee) => interactWithAPI({
+  method: "GET",
+  url: `${API()}/Timesheet/CurrentTimesheetPeriod/Employee/${employee}`,
+});
 
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
+export const getPendingTimessheets = async (direct, page) => interactWithAPI({
+  method: "GET",
+  url: `${API()}/Employee/Timesheet/Pending?directReport=${direct}&page=${page}`,
+});
 
-export const getTimesheetEmployeeEntriesHistory = async (employee, date) => {
-  var config = {
-    method: "GET",
-    url: `${API()}/Timesheet/History/Entries/Employee/${employee}?start=${date}`,
-  };
+export const getOrphanTimessheets = async (direct, page) => interactWithAPI({
+  method: "GET",
+  url: `${API()}/Employee/Timesheet/Orphan?directReport=${direct}&page=${page}`,
+});
 
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
+export const addTimesheetEntry = async (data) => interactWithAPI({
+  method: "POST",
+  url: `${API()}/Timesheet/Entries`,
+  data: data,
+});
 
-export const getCurrentEmployeeTimesheetPeriod = async (employee) => {
-  var config = {
-    method: "GET",
-    url: `${API()}/Timesheet/CurrentTimesheetPeriod/Employee/${employee}`,
-  };
+export const submitTimesheet = async (data) => interactWithAPI({
+  method: "PUT",
+  url: `${API()}/Timesheet/Submit`,
+  data: data,
+});
 
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
+export const approveTimesheet = async (data) => interactWithAPI({
+  method: "PUT",
+  url: `${API()}/Timesheet/Approve`,
+  data: data,
+});
 
-export const getPendingTimessheets = async (direct, page) => {
-  var config = {
-    method: "GET",
-    url: `${API()}/Employee/Timesheet/Pending?directReport=${direct}&page=${page}`,
-  };
+export const rejectTimesheet = async (data) => interactWithAPI({
+  method: "PUT",
+  url: `${API()}/Timesheet/Reject`,
+  data: data,
+});
 
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
+export const finalizeTimesheet = async (data) => interactWithAPI({
+  method: "PUT",
+  url: `${API()}/Timesheet/Finalize`,
+  data: data,
+});
 
-export const addTimesheetEntry = async (data) => {
-  var config = {
-    method: "POST",
-    url: `${API()}/Timesheet/Entries`,
-    data: data,
-  };
-
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
-
-export const submitTimesheet = async (data) => {
-  var config = {
-    method: "PUT",
-    url: `${API()}/Timesheet/Submit`,
-    data: data,
-  };
-
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
-
-export const approveTimesheet = async (data) => {
-  var config = {
-    method: "PUT",
-    url: `${API()}/Timesheet/Approve`,
-    data: data,
-  };
-
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
-
-export const rejectTimesheet = async (data) => {
-  var config = {
-    method: "PUT",
-    url: `${API()}/Timesheet/Reject`,
-    data: data,
-  };
-
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
-
-export const finalizeTimesheet = async (data) => {
-  var config = {
-    method: "PUT",
-    url: `${API()}/Timesheet/Finalize`,
-    data: data,
-  };
-
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
-
-export const addTimesheetException = async (data) => {
-  var config = {
-    method: "POST",
-    url: `${API()}/Timesheet/Exceptions`,
-    data: data,
-  };
-
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
+export const addTimesheetException = async (data) => interactWithAPI({
+  method: "POST",
+  url: `${API()}/Timesheet/Exceptions`,
+  data: data,
+});
 
 export const exportPeriod = async (period, department, employeeId) => {
   let criteriaParams = department ? `department=${department}` : "";
@@ -283,56 +133,21 @@ export const exportPeriodAfterFinalize = async (period) => {
         reject(err);
       });
   });
-
 };
 
-export const review = async (period) => {
-  var config = {
-    method: "GET",
-    url: `${API()}/Timesheet/Review?payrollPeriod=${period}&itemsPerpage=100000`,
-  };
+export const review = async (period) => interactWithAPI({
+  method: "GET",
+  url: `${API()}/Timesheet/Review?payrollPeriod=${period}&itemsPerpage=100000`,
+});
 
-  return await instance(config)
-    .then((res) => {
-      return res.data;
-    })
-    .catch((err) => {
-      return err;
-    });
-};
+export const deleteTimesheet = async (data) => interactWithAPI({
+  method: "DELETE",
+  url: `${API()}/Timesheet/Entries`,
+  data: data,
+});
 
-export const deleteTimesheet = async (data) => {
-  var config = {
-    method: "DELETE",
-    url: `${API()}/Timesheet/Entries`,
-    data: data,
-  };
-
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
-
-export const updateComment = async (data) => {
-  var config = {
-    method: "PUT",
-    url: `${API()}/Employee/timesheet/AddComment`,
-    data: data,
-  };
-
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
+export const updateComment = async (data) => interactWithAPI({
+  method: "PUT",
+  url: `${API()}/Employee/timesheet/AddComment`,
+  data: data,
+});

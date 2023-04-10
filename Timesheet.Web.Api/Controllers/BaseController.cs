@@ -50,7 +50,7 @@ namespace Timesheet.Web.Api.Controllers
 
         public string Manager()
         {
-            return !CurrentUser.IsAdministrator ? null : CurrentUser.Id;
+            return CurrentUser.IsAdministrator ? null : CurrentUser.Id;
         }
     }
 }

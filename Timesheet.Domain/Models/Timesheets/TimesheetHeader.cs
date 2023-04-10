@@ -1,8 +1,6 @@
-﻿using System.Xml.Linq;
-using Timesheet.Domain.DomainEvents;
+﻿using Timesheet.Domain.DomainEvents;
 using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Models.Employees;
-using Timesheet.Domain.ReadModels.Timesheets;
 using Timesheet.DomainEvents.Timesheets;
 using Timesheet.Models.Referential;
 
@@ -37,10 +35,7 @@ namespace Timesheet.Domain.Models.Timesheets
 
 
         public virtual ICollection<TimesheetEntry> TimesheetEntries { get; private set; } = new List<TimesheetEntry>();
-        public IEnumerable<TimesheetEntry> TimesheetEntriesWithoutTimeoffs => TimesheetEntries
-        ?.Where(t => t.PayrollCodeId == (int) TimesheetFixedPayrollCodeEnum.REGULAR
-
-            || t.PayrollCodeId == (int) TimesheetFixedPayrollCodeEnum.OVERTIME) ?? new List<TimesheetEntry>();
+        public IEnumerable<TimesheetEntry> TimesheetEntriesWithoutTimeoffs => TimesheetEntries?.Where(t => !t.IsTimeoff) ?? new List<TimesheetEntry>();
         public virtual ICollection<TimesheetHoliday> TimesheetHolidays { get; private set; } = new List<TimesheetHoliday>();
         public virtual ICollection<TimesheetComment> TimesheetComments { get; private set; } = new List<TimesheetComment>();
 
@@ -140,10 +135,10 @@ namespace Timesheet.Domain.Models.Timesheets
                 throw new CannotFinalizeTImesheetException(PayrollPeriod);
             }
 
-            TimesheetEntries
-                .Where(entry => entry.Status != TimesheetEntryStatus.REJECTED)
-                .ToList()
-                .ForEach(entry => entry.Status = TimesheetEntryStatus.APPROVED);
+            //TimesheetEntries
+            //    .Where(entry => entry.Status != TimesheetEntryStatus.REJECTED)
+            //    .ToList()
+            //    .ForEach(entry => entry.Status = TimesheetEntryStatus.APPROVED);
 
             this.Status = TimesheetStatus.FINALIZED;
 

@@ -138,6 +138,24 @@ namespace Timesheet.Web.Api.Controllers
             return Ok(Paginate(page, itemsPerPage, timesheets.TotalItems, timesheetWithHabilitations));
         }
 
+        [HttpGet("Timesheet/Orphan")]
+        public async Task<ActionResult<IEnumerable<WithHabilitations<EmployeeTimesheetWhithHoursPerStatus>>>> GetTeamOrphanTimesheets(bool directReport, int page = 1, int itemsPerPage = 10000)
+        {
+            string managerId = Manager();
+            LogInformation($"Getting Employee ({managerId}) Orphan timesheets");
+
+            var timesheets = await _employeeQuery.GetEmployeesOrphanTimesheets(page, itemsPerPage, managerId, directReport);
+
+            var timesheetWithHabilitations = new List<WithHabilitations<EmployeeTimesheetWhithHoursPerStatus>>();
+            foreach (var timeoff in timesheets.Items)
+            {
+                var timesheetWithHabilitation = await SetAuthorizedTransitions(timeoff, typeof(TimesheetHeader), timeoff.Status, CurrentUser, timeoff.EmployeeId);
+                timesheetWithHabilitations.Add(timesheetWithHabilitation);
+            }
+
+            return Ok(Paginate(page, itemsPerPage, timesheets.TotalItems, timesheetWithHabilitations));
+        }
+
 
         [HttpPut("{employeeId}/Benefits")]
         public async Task<IActionResult> SetBenefits([FromBody] ModifyEmployeeBenefits modifyEmployeeBenefits, CancellationToken token)

@@ -111,7 +111,8 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             ELSE ptdesc.PayrollCode END AS {nameof(EmployeeTimesheetEntry.Description)}, 
             te.OutOffCountry  as {nameof(EmployeeTimesheetEntry.OutOffCountry)},
             te.Status  as {nameof(EmployeeTimesheetEntry.Status)},
-            te.IsDeletable  as {nameof(EmployeeTimesheetEntry.IsDeletable)}
+            te.IsDeletable  as {nameof(EmployeeTimesheetEntry.IsDeletable)},
+            te.IsTimeoff  as {nameof(EmployeeTimesheetEntry.IsTimeoff)}
             FROM timesheetEntry te
             JOIN payrollTypes pt on pt.numId = te.PayrollCodeId
             JOIN payrollTypes ptdesc on ptdesc.numId = CAST(te.PayrollCodeId AS INT)  
@@ -322,6 +323,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
         private const string AllEmployeeTimesheetByPayrollPeriodQueryMonthlyTimesheetParam = "@monthlyTimesheet";
         private const string AllEmployeeTimesheetByPayrollPeriodQueryHolidayPayrollCodeIdParam = "@holidayPayrollCodeId";
         private const string AllEmployeeTimesheetByPayrollPeriodQueryUnpaidPayrollCodeIdParam = "@unpaidPayrollCodeId";
+        private const string AllEmployeeTimesheetByPayrollPeriodQueryApprovedEntryStatus = "@approvedStatus";
 
 
         public const string AllEmployeeTimesheetByPayrollPeriodQuery = $@"
@@ -351,7 +353,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             JOIN employees e on e.Id = te.EmployeeId
             JOIN PayrollTypes pt on pt.numId = te.PayrollCodeId
             LEFT JOIN TimesheetException tex ON tex.TimesheetEntryId = te.Id And tex.EmployeeId = e.Id
-            WHERE tex.Id is null AND 
+            WHERE tex.Id is null AND te.Status = {AllEmployeeTimesheetByPayrollPeriodQueryApprovedEntryStatus} AND
             t.payrollPeriod = {AllEmployeeTimesheetByPayrollPeriodQueryPayrollPeriodParam}
             AND pt.numId != {AllEmployeeTimesheetByPayrollPeriodQueryUnpaidPayrollCodeIdParam}
         ";
@@ -709,7 +711,8 @@ namespace Timesheet.Infrastructure.Persistence.Queries
                 weeklyTimesheet = TimesheetType.WEEKLY,
                 monthlyTimesheet = TimesheetType.SALARLY,
                 holidayPayrollCodeId = (int)TimesheetFixedPayrollCodeEnum.HOLIDAY,
-                unpaidPayrollCodeId = (int)TimesheetFixedPayrollCodeEnum.UNPAID
+                unpaidPayrollCodeId = (int)TimesheetFixedPayrollCodeEnum.UNPAID,
+                approvedStatus = TimesheetEntryStatus.APPROVED
             });
             timesheet.Entries = entries;
 

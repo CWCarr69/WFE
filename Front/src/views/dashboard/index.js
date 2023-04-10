@@ -38,6 +38,9 @@ const Home = () => {
             <div className="col-xl-6">
               <Timesheet />
             </div>
+            <div className="col-12">
+              <OrphanTimesheet />
+            </div>
           </div>
         </div>
       </div>

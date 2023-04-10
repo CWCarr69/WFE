@@ -14,7 +14,7 @@ internal class SettingRepository: ISettingRepository
 
     SMTPSettings ISettingRepository.GetSMTPParameters()
     {
-        var query = "SELECT Name, Value FROM Settings WHERE name LIKE 'SMTP_%'";
+        var query = "SELECT Name, Value FROM Settings WHERE name LIKE 'SMTP_%' OR name LIKE 'NOTIFICATION%'";
         var settings = _dbServices.Query<(string Name, string Value)>(query);
 
         if(settings is null)

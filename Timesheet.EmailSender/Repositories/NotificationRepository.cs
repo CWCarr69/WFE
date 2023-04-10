@@ -38,7 +38,7 @@ namespace Timesheet.EmailSender.Repositories
                 t.ApproverComment AS {nameof(TimeoffNotificationTemplate.SupervisorComment)},
                 n.Action AS {nameof(TimeoffNotificationTemplate.Status)}
                 FROM notificationItems n
-                JOIN employees e on e.Id = n.EmployeeId
+                JOIN employees e on e.Id = n.RelatedEmployeeId
                 JOIN employees m on e.PrimaryApproverId = m.Id
                 JOIN timeoffHeader t on t.Id = n.ObjectId
                 WHERE Sent = {sentParam}
@@ -50,13 +50,9 @@ namespace Timesheet.EmailSender.Repositories
                 te.RequestDate AS {nameof(TimeoffEntryRowTemplate.Date)},
                 te.Hours AS {nameof(TimeoffEntryRowTemplate.Hours)},
                 pt.PayrollCode AS {nameof(TimeoffEntryRowTemplate.VacationType)}
-                FROM notificationItems n
-                JOIN employees e on e.Id = n.EmployeeId
-                JOIN employees m on e.PrimaryApproverId = m.Id
-                JOIN timeoffHeader t on t.Id = n.ObjectId
-                JOIN timeoffEntry te on te.timeoffHeaderId = t.Id
+                FROM timeoffEntry te
                 JOIN payrollTypes pt on pt.NumId = te.TypeId
-                WHERE t.Id = {timeoffIdParam}
+                WHERE te.timeoffHeaderId = {timeoffIdParam}
             ";
 
             foreach (var timeoff in timeoffs)
@@ -88,7 +84,7 @@ namespace Timesheet.EmailSender.Repositories
                 t.EndDate AS {nameof(TimesheetNotificationTemplate.PayrollEndDate)},
                 n.Action AS {nameof(TimesheetNotificationTemplate.Status)}
                 FROM notificationItems n
-                JOIN employees e on e.Id = n.EmployeeId
+                JOIN employees e on e.Id = n.RelatedEmployeeId
                 JOIN employees m on e.PrimaryApproverId = m.Id
                 JOIN timesheets t on t.Id = n.ObjectId
                 JOIN timesheetComment c on c.EmployeeId = e.Id and c.TimesheetId = t.Id
@@ -105,22 +101,30 @@ namespace Timesheet.EmailSender.Repositories
                 te.WorkDate AS {nameof(TimesheetEntryRowTemplate.WorkDate)},
                 COALESCE(te.ProfitCenter, e.DefaultProfitCenter) AS {nameof(TimesheetEntryRowTemplate.ProfitCenter)},
                 te.LaborCode AS {nameof(TimesheetEntryRowTemplate.LaborCode)},
-                te.JobTaskNumber AS {nameof(TimesheetEntryRowTemplate.JobTaskNo)}
+                te.JobTaskNumber AS {nameof(TimesheetEntryRowTemplate.JobTaskNo)},
+                n.RelatedEmployeeId AS {nameof(TimesheetEntryRowTemplate.RelatedEmployeeId)}
                 FROM notificationItems n
-                JOIN employees e on e.Id = n.EmployeeId
+                JOIN employees e on e.Id = n.RelatedEmployeeId
                 JOIN timesheets t on t.Id = n.ObjectId
-                JOIN timesheetEntry te on te.timesheetHeaderId = t.Id
+                JOIN timesheetEntry te on te.timesheetHeaderId = t.Id and te.EmployeeId = n.RelatedEmployeeId
+                LEFT JOIN TimesheetException tex ON tex.TimesheetEntryId = te.Id And tex.EmployeeId = e.Id
                 JOIN payrollTypes pt on pt.NumId = te.PayrollCodeId
-                WHERE t.Id = {timesheetIdParam}
+                WHERE t.Id = {timesheetIdParam} AND tex.Id is null
             ";
 
-            foreach (var timesheet in timesheets)
+
+            return timesheets == null ? null : timesheets.SelectMany(timesheet =>
             {
                 var entries = _dbServices.Query<TimesheetEntryRowTemplate>(query, new { timesheetId = timesheet.ItemId });
-                timesheet.TimesheetEntries = entries;
-            }
 
-            return timesheets;
+                return entries.GroupBy(e => e.RelatedEmployeeId).Select(g =>
+                {
+                    var relatedEmployeeTimesheet = new TimesheetNotificationTemplate(timesheet);
+                    relatedEmployeeTimesheet.TimesheetEntries = g.ToList();
+
+                    return relatedEmployeeTimesheet;
+                });
+            });
         }
     }
 }

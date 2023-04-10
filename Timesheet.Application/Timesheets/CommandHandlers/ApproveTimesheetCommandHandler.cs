@@ -34,13 +34,17 @@ namespace Timesheet.Application.Timesheets.CommandHandlers
             var timesheet = await RequireTimesheet(command.TimesheetId, employee?.Id);
             this.RelatedAuditableEntity = timesheet;
 
-            var timesheetEntryRef = GetTimesheetFirstData(timesheet);
-
-            EmployeeRoleOnData currentEmployeeRoleOnData = GetCurrentEmployeeRoleOnData(command, employee);
-            _workflowService.AuthorizeTransition(timesheet, TimesheetTransitions.APPROVE, timesheet.Status, currentEmployeeRoleOnData);
-            if (timesheetEntryRef is not null)
+            //Validate workflow authorization only if timesheet is not finalized yet otherwise this is a regulation
+            if (timesheet.Status != TimesheetStatus.FINALIZED)
             {
-                _workflowService.AuthorizeTransition(timesheetEntryRef, TimesheetEntryTransitions.APPROVE, timesheetEntryRef.Status, currentEmployeeRoleOnData);
+                var timesheetEntryRef = GetTimesheetFirstData(timesheet);
+
+                EmployeeRoleOnData currentEmployeeRoleOnData = GetCurrentEmployeeRoleOnData(command, employee);
+                _workflowService.AuthorizeTransition(timesheet, TimesheetTransitions.APPROVE, timesheet.Status, currentEmployeeRoleOnData);
+                if (timesheetEntryRef is not null)
+                {
+                    _workflowService.AuthorizeTransition(timesheetEntryRef, TimesheetEntryTransitions.APPROVE, timesheetEntryRef.Status, currentEmployeeRoleOnData);
+                }
             }
 
             timesheet.Approve(employee, command.Comment);
