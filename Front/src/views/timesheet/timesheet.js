@@ -647,15 +647,16 @@ const Timesheet = ({ match, history }) => {
                             </span>
                           </span>
                           &nbsp;&nbsp;&nbsp;
-                          <button
-                            className={`btn btn-xs  ${
-                              data?.data?.statusName !== "FINALIZED"
-                                ? "btn-outline-danger"
-                                : "btn-outline-success"
-                            }`}
-                          >
+                          {data?.data?.statusName === "FINALIZED" &&
+                          <button className='btn btn-xs btn-outline-success'>
                             {data?.data?.statusName?.replace("_", " ")}
                           </button>
+                          }
+                          {data?.data?.statusName !== "FINALIZED" &&
+                            <button className='btn btn-xs btn-outline-danger'>
+                              {data?.data?.partialStatusName?.replace("_", " ")}
+                            </button>
+                          }
                         </Col>
                       )}
                       {displayCalendar && (

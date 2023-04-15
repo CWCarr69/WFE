@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
   approveTimesheet,
-  getOrphansTimessheets,
+  getOrphanTimesheets,
   rejectTimesheet,
 } from "../../redux/actions/timesheets";
 
@@ -21,7 +21,7 @@ const OrphanTimesheet = () => {
   const [direct, setDirect] = useState(true);
 
   const fetchData = async () => {
-    await getOrphansTimessheets(direct, page)
+    await getOrphanTimesheets(direct, page)
       .then((resp) => {
         setData(resp);
         setItems(resp.items);

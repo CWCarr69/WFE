@@ -8,20 +8,22 @@ import React, {
 } from "react";
 import { Button, Pagination } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
 import { ThemeContext } from "../../context/themeContext";
 import { getMyTeam } from "../../redux/actions/employees";
 import {
   getTimeoffStatuses,
   getTimeoffTypes,
   getTimesheetStatuses,
+  getTimesheetEntryStatuses,
 } from "../../redux/actions/referentials";
 import SpinnerComponent from "../../components/spinner/spinner";
 import { useSelector } from "react-redux";
 import NewTimeOff from "../timeoff/newTimeOff";
 import { enumerateDaysBetweenDates } from "../../services/util";
+import { displayError, displaySuccess } from "../../services/toast";
 import moment from "moment";
 import { addTimeoff } from "../../redux/actions/timesoffs";
+
 
 const EmployeeList = () => {
   const { setTitle } = useContext(ThemeContext);
@@ -41,7 +43,7 @@ const EmployeeList = () => {
   const employeeData = useRef([]);
   const [filter, setFilter] = useState("");
   const [direct, setDirect] = useState(true);
-  const [status, setStatus] = useState([]);
+  const [timesheetStatus, setTimesheetStatus] = useState([]);
   const [timeoffStatus, setTimeoffStatus] = useState([]);
 
   const [types, setTypes] = useState([]);
@@ -50,41 +52,22 @@ const EmployeeList = () => {
   const [setselectedEmployeeId, setSetselectedEmployeeId] = useState(null);
 
   const fetchStatus = async () => {
-    await getTimesheetStatuses()
-      .then((resp) => {
-        setStatus(
-          resp.map((e) => {
-            return {
-              ...e,
-              active: false,
-            };
-          })
-        );
-      })
-      .catch((err) => {
-        toast.error(
-          err.response.data.message ? err.response.data.message : "Error"
-        );
-      });
+    let statuses = [];
+    await getTimesheetStatuses(true)
+      .then((resp) => resp.forEach((e) => statuses.push({ ...e, active: false})))
+      .catch((err) => displayError(err, "Error while retrieving timesheet statuses"));
+
+    await getTimesheetEntryStatuses()
+      .then((resp) => resp.forEach((e) => statuses.push({ ...e, active: false})))
+      .catch((err) => displayError(err, "Error while retrieving timesheet entry statuses"));
+
+    setTimesheetStatus(statuses);
   };
 
   const fetchTimeOffStatus = async () => {
     await getTimeoffStatuses()
-      .then((resp) => {
-        setTimeoffStatus(
-          resp.map((e) => {
-            return {
-              ...e,
-              active: false,
-            };
-          })
-        );
-      })
-      .catch((err) => {
-        toast.error(
-          err.response.data.message ? err.response.data.message : "Error"
-        );
-      });
+      .then((resp) => setTimeoffStatus(resp.map((e) => { return {...e, active: false} })))
+      .catch((err) => displayError(err, "Error while retrieving timeoff statuses"));
   };
 
   const fetchData = useCallback(async () => {
@@ -93,11 +76,7 @@ const EmployeeList = () => {
         setData(resp);
         setItems(resp.items);
       })
-      .catch((err) => {
-        toast.error(
-          err.response.data.message ? err.response.data.message : "Error"
-        );
-      });
+      .catch((err) => displayError(err, "Error while retrieving fetching team data"))
   }, [direct]);
 
   useEffect(() => {
@@ -112,7 +91,7 @@ const EmployeeList = () => {
 
   const onFilterUpdate = useCallback(() => {
     let timeoffStat = timeoffStatus.filter((s) => s.active).map((s) => s.name);
-    let timesheetStat = status.filter((s) => s.active).map((s) => s.name);
+    let timesheetStat = timesheetStatus.filter((s) => s.active).map((s) => s.name);
 
     var statusFiltered = items.filter(
       (d) =>
@@ -127,7 +106,7 @@ const EmployeeList = () => {
       : items.filter((d) =>
           d.fullName.toLowerCase().concat(d.employeeId).includes(filter.toLowerCase())
         );
-  }, [filter, items, status, timeoffStatus]);
+  }, [filter, items, timesheetStatus, timeoffStatus]);
 
   // useEffect(() => {
     // if (data.totalItems) {
@@ -159,22 +138,7 @@ const EmployeeList = () => {
       .then((resp) => {
         setTypes(resp);
       })
-      .catch((err) => {
-        toast.error(
-          err.response.data.message
-            ? err.response.data.message
-            : "API connexion denied",
-          {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          }
-        );
-      });
+      .catch((err) => displayError(err, "Erro while getting Time off types"))
   };
 
   const createTimeOff = async () => {
@@ -202,21 +166,10 @@ const EmployeeList = () => {
     await addTimeoff(dataToSave)
       .then((res) => {
         setOpenAddTimeOff(false);
-        toast.success("Successful submit", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
+        displaySuccess("Successful submit");
         fetchData();
       })
-      .catch((err) => {
-        toast.error(
-          err.response.data.message ? err.response.data.message : "Error"
-        );
-      });
+      .catch((err) => displayError(err, "Error while adding a new timeoff"));
   };
 
   return loading ? (
@@ -288,7 +241,16 @@ const EmployeeList = () => {
                   </svg>
                   <div className="media-body">
                     <h3 className="mb-0 font-w600 fs-22">
-                      {data.length} Employees
+                      {data.length} Employees 
+                      <Button
+                        className="me-2 btn-xxs"
+                        variant={direct ? "danger" : "outline-primary"}
+                        onClick={() => {
+                          setDirect(!direct);
+                        }}
+                      >
+                        {direct ? "Show all" : "Direct Report"}
+                      </Button>
                     </h3>
                   </div>
                 </div>
@@ -302,30 +264,22 @@ const EmployeeList = () => {
           <div className="d-sm-flex  d-block align-items-center">
             <div className="d-flex align-items-center">
               <div className="media-body">
-                <Button
-                  className="me-2 btn-xxs"
-                  variant={direct ? "danger" : "outline-primary"}
-                  onClick={() => {
-                    setDirect(!direct);
-                  }}
-                >
-                  {direct ? "Show all" : "Direct Report"}
-                </Button>
                 <label className="me-3">Timesheet Status : </label>
-                {status.map((s, index) => (
+                {timesheetStatus.map((s, index) => (
                   <Button
                     key={index}
                     className="me-2 btn-xxs"
                     variant={s.active ? "danger" : "outline-danger"}
                     onClick={() => {
-                      let array = [...status];
+                      let array = [...timesheetStatus];
                       array[index].active = !array[index].active;
-                      setStatus(array);
+                      setTimesheetStatus(array);
                     }}
                   >
                     {s.name.replace("_", " ")}
                   </Button>
                 ))}
+                <br/>
                 <label className="me-3">Timeoff Status : </label>
                 {timeoffStatus.map((s, index) => (
                   <Button

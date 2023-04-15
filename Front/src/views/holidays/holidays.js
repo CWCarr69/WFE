@@ -32,6 +32,8 @@ const Holidays = () => {
 
   const calendarRef = useRef({});
 
+  const user = useSelector((state) => state.auth.auth);
+
   const sort = 15;
   const [data, setData] = useState([]);
   const [paggination, setPagginnation] = useState([]);
@@ -152,7 +154,22 @@ const Holidays = () => {
           });
           fetchData();
         })
-        .cath((err) => {});
+        .cath((err) => {
+          toast.error(
+            err.response?.data?.message
+              ? err.response.data.message
+              : "Creatin error",
+            {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            }
+          );
+        });
     }
   };
 
@@ -174,7 +191,7 @@ const Holidays = () => {
       })
       .catch((err) => {
         toast.error(
-          err.response.data.message
+          err.response?.data?.message
             ? err.response.data.message
             : "Deletion error",
           {
@@ -246,9 +263,11 @@ const Holidays = () => {
                     editable={true}
                     plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                     dateClick={(info) => {
-                      setAction("New Holiday");
-                      setIsOpen(true);
-                      setHoliday({ ...holiday, date: new Date(info.dateStr) });
+                      if(user.isAdministrator){
+                        setAction("New Holiday");
+                        setIsOpen(true);
+                        setHoliday({ ...holiday, date: new Date(info.dateStr) });
+                      }
                     }}
                     events={data.map((d, i) => {
                       return {
@@ -277,7 +296,8 @@ const Holidays = () => {
                       </div>
                     </Col>
                     <Col>
-                      <div className="input-group d-sx-inline-block">
+                    { user.isAdministrator && 
+                      (<div className="input-group d-sx-inline-block">
                         <Button
                           onClick={() => {
                             setAction("New Holiday");
@@ -286,7 +306,8 @@ const Holidays = () => {
                         >
                           Add
                         </Button>
-                      </div>
+                      </div>)
+                    }
                     </Col>
                   </Row>
                   <Table responsive striped>
@@ -305,6 +326,8 @@ const Holidays = () => {
                           <td>{d.description}</td>
                           <td>{d.notes}</td>
                           <td style={{ cursor: "pointer" }}>
+                          { user.isAdministrator && (
+                            <>
                             <i
                               className="flaticon-381-id-card-3 text-primary me-2"
                               onClick={() => {
@@ -326,6 +349,8 @@ const Holidays = () => {
                                 setOpenConfirm(true);
                               }}
                             ></i>
+                            </>)
+                          }
                           </td>
                         </tr>
                       ))}

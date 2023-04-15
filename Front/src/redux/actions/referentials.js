@@ -86,10 +86,10 @@ export const getPayrollCodes = async () => {
   });
 };
 
-export const getTimesheetStatuses = async () => {
+export const getTimesheetStatuses = async (withoutInProgress) => {
   var config = {
     method: "GET",
-    url: `${API()}/Referential/TimesheetStatuses`,
+    url: `${API()}/Referential/TimesheetStatuses?withoutInProgress=${withoutInProgress}`,
   };
 
   return new Promise(async (resolve, reject) => {

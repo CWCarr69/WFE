@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Button, Nav, Pagination, Table } from "react-bootstrap";
+import React, { useEffect, useRef, useState } from "react";
+import { Button, Pagination } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { HashLink } from 'react-router-hash-link';
 import {
   approveTimesheet,
-  getPendingTimessheets,
+  getPendingTimesheets,
   rejectTimesheet,
 } from "../../redux/actions/timesheets";
 
@@ -21,7 +22,7 @@ const Timesheet = () => {
   const [direct, setDirect] = useState(true);
 
   const fetchData = async () => {
-    await getPendingTimessheets(direct, page)
+    await getPendingTimesheets(direct, page)
       .then((resp) => {
         setData(resp);
         setItems(resp.items);
@@ -126,7 +127,7 @@ const Timesheet = () => {
   return (
     <div className="card">
       <div className="card-header border-0 pb-0 flex-wrap justify-content-center">
-        <h4 className="fs-20 font-w500">Timesheet</h4>
+        <h4 className="fs-20 font-w500">Timesheet (<a href="#orphan-timesheets">View Orphans Timesheet</a>)</h4>
       </div>
       <div className="card-body pt-2">
         <div className="d-sm-flex d-block align-items-center justify-content-center">

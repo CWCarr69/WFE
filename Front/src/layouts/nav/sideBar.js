@@ -100,14 +100,13 @@ const SideBar = () => {
               <span className="nav-text">Shop & Unpaid</span>
             </Link>
           </li> */}
-          {user.isAdministrator && (<li className={`${path.includes("holidays") ? "mm-active" : ""}`}>
+          <li className={`${path.includes("holidays") ? "mm-active" : ""}`}>
             <Link to="/holidays" className="ai-icon">
               <i className="fa fa-calendar-times"></i>
               <span className="nav-text">Holidays</span>
             </Link>
-          </li>)
-          }
-          <li className={`${path.includes("holidays") ? "mm-active" : ""}`}>
+          </li>
+          <li className={`${path.includes("times-sheets") ? "mm-active" : ""}`}>
             <Link to="/payroll/times-sheets" className="ai-icon">
               <i className="fa fa-cash-register"></i>
               <span className="nav-text">Review Timesheet</span>

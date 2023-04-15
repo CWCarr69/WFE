@@ -151,7 +151,7 @@ const TimesSheet = () => {
   };
 
   const fetchStatus = async () => {
-    await getTimesheetStatuses()
+    await getTimesheetStatuses(false)
       .then((resp) => {
         setStatus(
           resp.map((e) => {
@@ -369,10 +369,10 @@ const TimesSheet = () => {
 
   const createTimesheetException = async (entry) => {
     await addTimesheetException({
-        employeeId: entry.id,
-        timesheetEntryId: entry.entryId,
+        employeeId: entry.employeeId,
+        timesheetEntryId: entry.id,
         timesheetId: entry.timesheetId,
-        isHoliday: entry.payrollCod == "HOLIDAY"
+        isHoliday: entry.payrollCode == "HOLIDAY"
       })
       .then((res) => {
         toast.success("Successful add of timesheet Exception", {
