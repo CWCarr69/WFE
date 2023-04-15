@@ -30,7 +30,7 @@ namespace Timesheet.Application.Employees.CommandHandlers
             var timeoff = RequireTimeoff(employee, command.TimeoffId);
             this.RelatedAuditableEntity = timeoff;
 
-            EmployeeRoleOnData currentEmployeeRoleOnData = GetCurrentEmployeeRoleOnData(command, employee);
+            EmployeeRoleOnData currentEmployeeRoleOnData = await GetCurrentEmployeeRoleOnData(command, employee);
             _workflowService.AuthorizeTransition(timeoff, TimeoffTransitions.APPROVE, timeoff.Status, currentEmployeeRoleOnData);
 
             employee.ApproveTimeoff(timeoff, command.Comment);

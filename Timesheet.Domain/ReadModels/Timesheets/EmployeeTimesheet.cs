@@ -22,6 +22,8 @@ namespace Timesheet.Domain.ReadModels.Timesheets
         public string EmployeeComment { get; set; }
         public TimesheetStatus Status { get; set; }
         public string StatusName => Status.ToString();
+        public TimesheetEntryStatus PartialStatus { get; set; }
+        public string PartialStatusName => PartialStatus.ToString();
         public string PayrollCode { get; set; }
         public double TotalHours { get; set; }
         public TimesheetType Type { get; set; }

@@ -15,7 +15,7 @@ namespace Timesheet.Domain.ReadModels.Timesheets
 
     public class TimesheetEntryDetails
     {
-        public string TimesheetId { get; set; }
+        public string TimesheetHeaderId { get; set; }
         public string EmployeeId { get; set; }
         public string Fullname { get; set; }
         public string DefaultProfitCenter { get; set; }
@@ -26,6 +26,8 @@ namespace Timesheet.Domain.ReadModels.Timesheets
         public double Overtime { get; set; }
         public TimesheetStatus Status { get; set; }
         public string StatusName => Status.ToString();
+        public TimesheetEntryStatus PartialStatus { get; set; }
+        public string PartialStatusName => PartialStatus.ToString();
         public string TimesheetEntryId { get; set; }
         public DateTime WorkDate { get; set; }
         public int PayrollCodeId { get; set; }

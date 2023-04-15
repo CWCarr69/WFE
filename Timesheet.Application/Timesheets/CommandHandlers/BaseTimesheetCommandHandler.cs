@@ -30,7 +30,9 @@ namespace Timesheet.Application.TImesheets.CommandHandlers
 
         protected TimesheetEntry GetTimesheetFirstData(TimesheetHeader timesheet)
         {
-            return timesheet.TimesheetEntriesWithoutTimeoffs.FirstOrDefault(t => t.Status != TimesheetEntryStatus.APPROVED);
+            return timesheet.TimesheetEntriesWithoutTimeoffs
+                .OrderBy(te => (int)te.Status)
+                .FirstOrDefault(t => t.Status != TimesheetEntryStatus.APPROVED);
         }
 
         protected async Task<TimesheetHeader> RequireTimesheet(string timesheetId, string? employeeId=null)

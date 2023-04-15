@@ -154,23 +154,28 @@ namespace Timesheet.Infrastruture.ReadModel.Queries
             };
         }
 
-        public IEnumerable<EnumReadModel<TimesheetStatus>> GetTimesheetStatuses()
+        public IEnumerable<EnumReadModel<TimesheetStatus>> GetTimesheetStatuses(bool withoutInProgress = false)
         {
-            return new List<EnumReadModel<TimesheetStatus>>
-            {
-                (EnumReadModel<TimesheetStatus>) TimesheetStatus.IN_PROGRESS,
-                (EnumReadModel<TimesheetStatus>) TimesheetStatus.FINALIZED,
+            var list = new List<EnumReadModel<TimesheetStatus>>() {
+                (EnumReadModel<TimesheetStatus>)TimesheetStatus.FINALIZED
             };
+
+            if (!withoutInProgress)
+            {
+                list.Add((EnumReadModel<TimesheetStatus>)TimesheetStatus.IN_PROGRESS);
+            }
+
+            return list;
         }
 
         public IEnumerable<EnumReadModel<TimesheetEntryStatus>> GetTimesheetEntryStatuses()
         {
             return new List<EnumReadModel<TimesheetEntryStatus>>
             {
+                (EnumReadModel<TimesheetEntryStatus>) TimesheetEntryStatus.IN_PROGRESS,
+                (EnumReadModel<TimesheetEntryStatus>) TimesheetEntryStatus.SUBMITTED,
                 (EnumReadModel<TimesheetEntryStatus>) TimesheetEntryStatus.APPROVED,
                 (EnumReadModel<TimesheetEntryStatus>) TimesheetEntryStatus.REJECTED,
-                (EnumReadModel<TimesheetEntryStatus>) TimesheetEntryStatus.IN_PROGRESS,
-                (EnumReadModel<TimesheetEntryStatus>) TimesheetEntryStatus.SUBMITTED
             };
         }
 

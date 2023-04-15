@@ -29,6 +29,8 @@ namespace Timesheet.Infrastructure.Persistence
 
             .AddScoped<IReadRepository<Audit>, ReadRepository<Audit>>()
 
+            .AddScoped<IHierarchyRepository, HierarchyRepository>()
+
             .AddScoped<IWriteRepository<Holiday>, WriteRepository<Holiday>>()
             .AddScoped<IWriteRepository<Employee>, WriteRepository<Employee>>()
             .AddScoped<IWriteRepository<TimesheetHeader>, WriteRepository<TimesheetHeader>>()

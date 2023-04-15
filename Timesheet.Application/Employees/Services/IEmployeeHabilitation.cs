@@ -5,11 +5,6 @@ namespace Timesheet.Application.Employees.Services
 {
     public interface IEmployeeHabilitation
     {
-        EmployeeRoleOnData GetEmployeeRoleOnData(
-            string authorId,
-            bool isAdministrator,
-            string dataOwnerId,
-            string? dataOwnerPrimaryApprover,
-            string? dataOwnerSecondaryAPprover);
+        Task<EmployeeRoleOnData> GetEmployeeRoleOnData(string author, string dataOwner, bool isAdministrator);
     }
 }

@@ -93,8 +93,8 @@ namespace Timesheet.Infrastructure.Persistence
         {
             return new PayrollTypes[]
             {
-                PayrollTypes.Create((int) TimesheetFixedPayrollCodeEnum.REGULAR, "REGULAR", PayrollTypesCategory.ALL, "REG", true),
-                PayrollTypes.Create((int) TimesheetFixedPayrollCodeEnum.OVERTIME, "OVERTIME", PayrollTypesCategory.ALL, "OT", true),
+                PayrollTypes.Create((int) TimesheetFixedPayrollCodeEnum.REGULAR, "REGULAR", PayrollTypesCategory.BILLABLE, "REG", true),
+                PayrollTypes.Create((int) TimesheetFixedPayrollCodeEnum.OVERTIME, "OVERTIME", PayrollTypesCategory.BILLABLE, "OT", true),
                 PayrollTypes.Create((int) TimesheetFixedPayrollCodeEnum.HOLIDAY, "HOLIDAY", PayrollTypesCategory.TIMEOFF, "", true),
                 PayrollTypes.Create((int) TimesheetFixedPayrollCodeEnum.PERSONAL, "PERSONAL", PayrollTypesCategory.TIMEOFF, "VAC", true),
                 PayrollTypes.Create((int) TimesheetFixedPayrollCodeEnum.VACATION, "VACATION", PayrollTypesCategory.TIMEOFF, "VAC", true),

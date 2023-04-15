@@ -25,6 +25,7 @@ namespace Timesheet.Infrastructure.Persistence
         public DbSet<Setting> Settings { get; set; }
         public DbSet<PayrollTypes> PayrollTypes { get; set; }
         public DbSet<TimesheetException> TImesheetException { get; set; }
+        public DbSet<EmployeeHierarchy> EmployeeHierarchy { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -62,6 +63,10 @@ namespace Timesheet.Infrastructure.Persistence
             employee.HasOne(e => e.Manager);
 
             builder.Entity<TimesheetHeader>().Ignore(e => e.TimesheetEntriesWithoutTimeoffs);
+
+            builder.Entity<EmployeeHierarchy>()
+                .ToView(nameof(EmployeeHierarchy))
+                .HasNoKey();
         }
 
     }

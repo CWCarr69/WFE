@@ -1,6 +1,10 @@
-﻿using Timesheet.Domain.Models.Timesheets;
+﻿using Timesheet.Application.Holidays.Commands;
+using Timesheet.Domain.Exceptions;
+using Timesheet.Domain.Models.Timesheets;
+using Timesheet.Domain.ReadModels.Referential;
 using Timesheet.Domain.Repositories;
 using Timesheet.DomainEvents.Employees;
+using Timesheet.Models.Referential;
 
 namespace Timesheet.Application.Timesheets.EventHandlers
 {
@@ -8,14 +12,16 @@ namespace Timesheet.Application.Timesheets.EventHandlers
     {
         private readonly ITimesheetReadRepository _readRepository;
         private readonly IWriteRepository<TimesheetHeader> _writeRepository;
-
+        private readonly IHolidayReadRepository _holidayRepository;
 
         public TimesheetHandleTimeoffApproved(
             ITimesheetReadRepository readRepository,
-            IWriteRepository<TimesheetHeader> writeRepository)
+            IWriteRepository<TimesheetHeader> writeRepository,
+            IHolidayReadRepository holidayRepository)
         {
             this._readRepository = readRepository;
             this._writeRepository = writeRepository;
+            _holidayRepository = holidayRepository;
         }
 
         public async Task Handle(TimeoffApproved @event)
@@ -30,6 +36,11 @@ namespace Timesheet.Application.Timesheets.EventHandlers
                     return;
                 }
 
+                if(entry.TypeId == (int)TimesheetFixedPayrollCodeEnum.HOLIDAY)
+                {
+                    CheckHolidayDoesntExist(entry);
+                }
+
                 var timesheetEntry = TimesheetEntry.CreateFromApprovedTimeOff(
                     entry.Id,
                     entry.EmployeeId,
@@ -40,8 +51,8 @@ namespace Timesheet.Application.Timesheets.EventHandlers
                     TimesheetEntryStatus.APPROVED);
 
                 var timesheet = entry.IsSalaried
-                        ? TimesheetHeader.CreateWeeklyTimesheet(entry.RequestDate)
-                        : TimesheetHeader.CreateMonthlyTimesheet(entry.RequestDate);
+                        ? TimesheetHeader.CreateMonthlyTimesheet(entry.RequestDate)
+                        : TimesheetHeader.CreateWeeklyTimesheet(entry.RequestDate);
 
                 var alreadyAddedtimesheet = await _readRepository.GetTimesheet(timesheet.Id);
 
@@ -52,6 +63,14 @@ namespace Timesheet.Application.Timesheets.EventHandlers
                 }
 
                 alreadyAddedtimesheet.AddTimesheetEntry(timesheetEntry);
+            }
+        }
+
+        private void CheckHolidayDoesntExist(TimeoffApprovedEntry entry)
+        {
+            if (_holidayRepository.GetByDate(entry.RequestDate) is not null)
+            {
+                throw new HolidayAlreadyExistException(entry.RequestDate);
             }
         }
     }

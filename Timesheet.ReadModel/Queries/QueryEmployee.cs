@@ -64,6 +64,7 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
                 JOIN timeoffHeader t on e.Id = t.EmployeeId AND t.status = {PendingTimeoffsQueryStatusParam}
                 JOIN timeoffEntry te on t.id = te.TimeoffHeaderId
                 JOIN payrollTypes pt on pt.numId = te.typeId
+                JOIN timeoffHours thours on thours.id = t.id and thours.employeeId = e.id
         ";
 
         public const string TotalPendingTimeoffsQuery = $@"SELECT
@@ -71,7 +72,7 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             {PendingTimeoffsQueryFromClause}
         ";
 
-        public const string PendingTimeoffsQuery = $@"SELECT
+        public const string PendingTimeoffsQuery = $@"SELECT DISTINCT
             e.Id as {nameof(EmployeeTimeoff.EmployeeId)},
             e.Fullname as {nameof(EmployeeTimeoff.FullName)},
             e.BenefitsSnapshot_VacationBalance as {nameof(EmployeeTimeoff.VacationSnapshot)}, 
@@ -85,54 +86,48 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             t.RequestStartDate  as {nameof(EmployeeTimeoff.RequestStartDate)},
             t.RequestEndDate  as {nameof(EmployeeTimeoff.RequestEndDate)},
             t.Status  as {nameof(EmployeeTimeoff.Status)},
-            SUM(te.Hours) as {nameof(EmployeeTimeoff.TotalHours)}
+            thours.totalHours as {nameof(EmployeeTimeoff.TotalHours)}
             {PendingTimeoffsQueryFromClause}
         ";
-
-        public const string PendingTimeoffsQueryGroupByClause = $@"GROUP BY e.Id, e.Fullname, 
-            e.BenefitsSnapshot_VacationBalance, e.VacationHours, e.RolloverHours, e.BenefitsSnapshot_PersonalBalance, e.PersonalHours,
-            t.Id, pt.PayrollCode, t.CreatedDate, t.ModifiedDate, t.RequestStartDate, t.RequestEndDate, t.status";
 
         public const string PendingTimeoffsQueryOrderByClause = $@"t.{ nameof(EmployeeTimeoff.RequestStartDate)}, e.{nameof(EmployeeTimesheet.FullName)}";
 
         #endregion
 
         #region PendingTimesheets
-        private const string PendingTimesheetsQueryStatusParam = "@timesheetFinalizedStatus";
-        private const string PendingTimesheetsQueryEntryApprovedStatusParam = "@timesheetEntryApprovedStatus";
+        private const string PendingTimesheetsQueryFinalizedStatusParam = "@timesheetFinalizedStatus";
+        private const string PendingTimesheetsQueryEntrySubmittedStatusParam = "@timesheetEntrySubmittedStatus";
         private const string PendingTimesheetsQueryEntryRejectedStatusParam = "@timesheetEntryRejectedStatus";
-        private const string PendingTimesheetsQueryRegularPayrollCodeParam = "@regularPayrollCode";
-        private const string PendingTimesheetsQueryOvertimePayrollCodeParam = "@overtimePayrollCode";
+        private const string PendingTimesheetsQueryEntryApprovedStatusParam = "@timesheetEntryApprovedStatus";
+        private const string PendingTimesheetsQueryPayrollCategoryParam = "@payrollCategory";
 
         #region PendingTimesheets Not Finalized
         private const string PendingTimesheetsQueryFromClause = $@"
-            FROM employees e
-            JOIN timesheetEntry te on e.id = te.EmployeeId 
-                AND te.PayrollCodeId  IN ({PendingTimesheetsQueryRegularPayrollCodeParam}, {PendingTimesheetsQueryOvertimePayrollCodeParam}) 
-            JOIN timesheets t on t.Id = te.TimesheetHeaderId AND t.status != {PendingTimesheetsQueryStatusParam}
+            FROM timesheetHours
+            WHERE PartialStatus = {PendingTimesheetsQueryEntrySubmittedStatusParam}
+            AND Status != {PendingTimesheetsQueryFinalizedStatusParam}
         ";
 
         public const string TotalPendingTimesheetsQuery = $@"SELECT 
-            COUNT(DISTINCT CONCAT(t.Id, e.Id)) AS totalItems
+            COUNT(DISTINCT CONCAT(Id, EmployeeId)) AS totalItems
             {PendingTimesheetsQueryFromClause}
         ";
 
-        public const string PendingTimesheetsQuery = $@"SELECT
-            e.Id as {nameof(EmployeeTimesheet.EmployeeId)},
-            e.Fullname as {nameof(EmployeeTimesheet.FullName)},
-            t.Id as {nameof(EmployeeTimesheet.TimesheetId)},
-            t.CreatedDate  as {nameof(EmployeeTimesheet.CreatedDate)},
-            t.ModifiedDate  as {nameof(EmployeeTimesheet.ModifiedDate)},
-            t.StartDate  as {nameof(EmployeeTimesheet.StartDate)},
-            t.EndDate  as {nameof(EmployeeTimesheet.EndDate)},
-            t.PayrollPeriod  as {nameof(EmployeeTimesheet.PayrollPeriod)},
-            max(t.Status)  as {nameof(EmployeeTimesheet.Status)},
-            SUM(te.Hours) as {nameof(EmployeeTimesheet.TotalHours)}
+        public const string PendingTimesheetsQuery = $@"SELECT DISTINCT
+            EmployeeId as {nameof(EmployeeTimesheet.EmployeeId)},
+            Fullname as {nameof(EmployeeTimesheet.FullName)},
+            Id as {nameof(EmployeeTimesheet.TimesheetId)},
+            CreatedDate  as {nameof(EmployeeTimesheet.CreatedDate)},
+            ModifiedDate  as {nameof(EmployeeTimesheet.ModifiedDate)},
+            StartDate  as {nameof(EmployeeTimesheet.StartDate)},
+            EndDate  as {nameof(EmployeeTimesheet.EndDate)},
+            PayrollPeriod  as {nameof(EmployeeTimesheet.PayrollPeriod)},
+            Status  as {nameof(EmployeeTimesheet.Status)},
+            TotalHours as {nameof(EmployeeTimesheet.TotalHours)}
             {PendingTimesheetsQueryFromClause}
         ";
 
-        public const string PendingTimesheetsQueryGroupByClause = $@"GROUP BY e.Id, e.Fullname, t.Id, t.CreatedDate, t.ModifiedDate, t.StartDate, t.EndDate, t.PayrollPeriod";
-        public const string PendingTimesheetsQueryOrderByClause = $@"t.{ nameof(EmployeeTimesheet.StartDate)}, e.{nameof(EmployeeTimesheet.FullName)}";
+        public const string PendingTimesheetsQueryOrderByClause = $@"StartDate, Fullname";
 
         #endregion
 
@@ -140,8 +135,8 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
         private const string OrphanTimesheetsQueryFromClause = $@"
             FROM employees e
             JOIN timesheetEntry te on e.id = te.EmployeeId AND te.Status NOT IN ({PendingTimesheetsQueryEntryApprovedStatusParam}, {PendingTimesheetsQueryEntryRejectedStatusParam})
-                AND te.PayrollCodeId  IN ({PendingTimesheetsQueryRegularPayrollCodeParam}, {PendingTimesheetsQueryOvertimePayrollCodeParam}) 
-            JOIN timesheets t on t.Id = te.TimesheetHeaderId AND t.status != {PendingTimesheetsQueryStatusParam}
+            JOIN PayrollTypes pt on pt.numId = te.PayrollCodeId and pt.category = {PendingTimesheetsQueryPayrollCategoryParam}
+            JOIN timesheets t on t.Id = te.TimesheetHeaderId AND t.status = {PendingTimesheetsQueryFinalizedStatusParam}
         ";
 
         public const string TotalOrphanTimesheetsQuery = $@"SELECT 
@@ -175,11 +170,10 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
 
         private const string EmployeeTeamQueryLastTimesheetStatusPerEmployee = $@"WITH LastTimesheets
             AS(
-                SELECT employeeId, status, id, payrollPeriod, workDate
+                SELECT EmployeeId, Status, PartialStatus, TimesheetHeaderId, PayrollPeriod, WorkDate
                 FROM (
-                    SELECT ROW_NUMBER() OVER (PARTITION BY fte.employeeId ORDER by t.status ASC, t.StartDate ASC) AS rowNum, fte.employeeId, t.status, t.id, t.PayrollPeriod, fte.Workdate
-                    FROM timesheets t
-                    JOIN FirstTimesheetEntryOfLastTimesheet fte on fte.TimesheetHeaderId = t.Id
+                    SELECT ROW_NUMBER() OVER (PARTITION BY EmployeeId ORDER by PartialStatus ASC, StartDate ASC) AS rowNum, EmployeeId, Status, TimesheetHeaderId, PayrollPeriod, Workdate, PartialStatus
+                    FROM FirstTimesheetEntryOfLastTimesheet
                 ) T
                 WHERE rowNum = 1
             ),
@@ -187,12 +181,10 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
 
         private const string EmployeeTeamQueryLastTimeOffStatusPerEmployee = $@"LastTimeoffs
             AS(
-                SELECT employeeId, status, id, requireApproval, timeoffEntryId, requestDate
+                SELECT employeeId, status, timeoffHeaderId, requireApproval, requestDate
                 FROM (
-                    SELECT ROW_NUMBER() OVER (PARTITION BY employeeId ORDER by CreatedDate DESC) AS rowNum, employeeId, status, id, requireApproval, TimeoffEntryId, requestDate
-                    FROM TimeoffHeader th
-                    JOIN TimeoffHeaderRequireApproval thr on thr.TimeoffHeaderId = th.Id
-                    JOIN FirstTimeoffEntryOfLastTimeoff fte on fte.TimeoffHeaderId = th.Id
+                    SELECT ROW_NUMBER() OVER (PARTITION BY employeeId ORDER by RequestStartDate DESC) AS rowNum, employeeId, status, TimeoffHeaderId, requireApproval, requestDate
+                    FROM FirstTimeoffEntryOfLastTimeoff
                 ) T
                 WHERE rowNum = 1
             )
@@ -204,7 +196,7 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             LEFT JOIN LastTimeoffs tos ON e.Id = tos.employeeId
             LEFT JOIN LastTimesheets ts ON e.Id = ts.EmployeeId
             WHERE e.Id = {EmployeeTeamQueryEmployeeIdParam} OR (
-                (e.employmentDate is not null or (e.employmentDate is null and ts.id is not null)) AND (e.usesTimesheet = {EmployeeTeamQueryUsesTimesheetParam})
+                (e.employmentDate is not null or (e.employmentDate is null and ts.TimesheetHeaderId is not null)) AND (e.usesTimesheet = {EmployeeTeamQueryUsesTimesheetParam})
                 @clauseForDirectReport
             )
         ";
@@ -226,13 +218,14 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             e.VacationHours + e.RolloverHours as {nameof(EmployeeWithTimeStatus.VacationVariation)}, 
             e.BenefitsSnapshot_PersonalBalance as {nameof(EmployeeWithTimeStatus.PersonalSnapshot)}, 
             e.PersonalHours as {nameof(EmployeeWithTimeStatus.PersonalVariation)}, 
-            tos.Id as {nameof(EmployeeWithTimeStatus.TimeoffId)},
+            tos.TimeoffHeaderId as {nameof(EmployeeWithTimeStatus.TimeoffId)},
             tos.Status as {nameof(EmployeeWithTimeStatus.LastTimeoffStatus)},
-            tos.timeoffEntryId as {nameof(EmployeeWithTimeStatus.LastTimeoffEntryId)},
+            --tos.timeoffEntryId as {nameof(EmployeeWithTimeStatus.LastTimeoffEntryId)},
             tos.requestDate as {nameof(EmployeeWithTimeStatus.LastTimeoffRequestDate)},
             tos.RequireApproval as  {nameof(EmployeeWithTimeStatus.IsLastTimeoffRequireApproval)},
-            ts.Id as {nameof(EmployeeWithTimeStatus.TimesheetId)},
-            ts.Status as {nameof(EmployeeWithTimeStatus.LastTimesheetStatus)},
+            ts.TimesheetHeaderId as {nameof(EmployeeWithTimeStatus.TimesheetId)},
+            ts.PartialStatus as {nameof(EmployeeWithTimeStatus.LastTimesheetPartialStatus)},
+            ts.status as {nameof(EmployeeWithTimeStatus.LastTimesheetStatus)},
             ts.payrollPeriod as {nameof(EmployeeWithTimeStatus.LastTimesheetPayrollPeriod)},
             ts.workDate as {nameof(EmployeeWithTimeStatus.LastTimesheetWorkDate)}
             {EmployeeTeamQueryFromClause}
@@ -370,7 +363,6 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
 
             var query = QueryEmployeeConstants.PendingTimeoffsQuery;
             query = AddWhereClauseForDirectReports(approverId, directReports, query);
-            query = $"{query} {QueryEmployeeConstants.PendingTimeoffsQueryGroupByClause}";
             query = Paginate(page, itemsPerPage, query, QueryEmployeeConstants.PendingTimeoffsQueryOrderByClause);
 
             var queryParams = new { submittedStatus, approverId };
@@ -384,18 +376,16 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
 
             var timesheetEntrySubmittedStatus = TimesheetEntryStatus.SUBMITTED;
             var timesheetFinalizedStatus = TimesheetStatus.FINALIZED;
-            var regularPayrollCode = (int) TimesheetFixedPayrollCodeEnum.REGULAR;
-            var overtimePayrollCode = (int)TimesheetFixedPayrollCodeEnum.OVERTIME;
+            var payrollCategory = (int)PayrollTypesCategory.BILLABLE;
 
             var totalQuery = QueryEmployeeConstants.TotalPendingTimesheetsQuery;
             totalQuery = AddWhereClauseForDirectReports(approverId, directReports, totalQuery);
 
             var query = QueryEmployeeConstants.PendingTimesheetsQuery;
             query = AddWhereClauseForDirectReports(approverId, directReports, query);
-            query = $"{query} {QueryEmployeeConstants.PendingTimesheetsQueryGroupByClause}";
             query = Paginate(page, itemsPerPage, query, QueryEmployeeConstants.PendingTimesheetsQueryOrderByClause);
 
-            var queryParams = new { approverId, timesheetEntrySubmittedStatus, timesheetFinalizedStatus, regularPayrollCode, overtimePayrollCode };
+            var queryParams = new { approverId, timesheetEntrySubmittedStatus, timesheetFinalizedStatus, payrollCategory };
             var employeePendingTimesheets = await QueryWithTotal<EmployeePendingTimesheets, EmployeeTimesheet>(queryParams, totalQuery, query);
 
             return employeePendingTimesheets;
@@ -406,8 +396,8 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             var timesheetEntryApprovedStatus = TimesheetEntryStatus.APPROVED;
             var timesheetEntryRejectedStatus = TimesheetEntryStatus.REJECTED;
             var timesheetFinalizedStatus = TimesheetStatus.FINALIZED;
-            var regularPayrollCode = (int)TimesheetFixedPayrollCodeEnum.REGULAR;
-            var overtimePayrollCode = (int)TimesheetFixedPayrollCodeEnum.OVERTIME;
+            var payrollCategory = (int)PayrollTypesCategory.BILLABLE;
+
 
             var totalQuery = QueryEmployeeConstants.TotalOrphanTimesheetsQuery;
             totalQuery = AddWhereClauseForDirectReports(approverId, directReports, totalQuery);
@@ -417,7 +407,7 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             query = $"{query} {QueryEmployeeConstants.OrphanTimesheetsQueryGroupByClause}";
             query = Paginate(page, itemsPerPage, query, QueryEmployeeConstants.OrphanTimesheetsQueryOrderByClause);
 
-            var queryParams = new { approverId, timesheetEntryApprovedStatus, timesheetEntryRejectedStatus, timesheetFinalizedStatus, regularPayrollCode, overtimePayrollCode };
+            var queryParams = new { approverId, timesheetEntryApprovedStatus, timesheetEntryRejectedStatus, timesheetFinalizedStatus, payrollCategory };
             var employeeOrphanTimesheets = await QueryWithTotal<EmployeeOrphanTimesheets, EmployeeTimesheetWhithHoursPerStatus>(queryParams, totalQuery, query);
 
             return employeeOrphanTimesheets;

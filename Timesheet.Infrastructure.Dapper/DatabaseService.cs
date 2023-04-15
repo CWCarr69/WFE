@@ -17,22 +17,24 @@ namespace Timesheet.Infrastructure.Dapper
         {
             var data = new List<T>();
             using var _dbConnection = new SqlConnection(_dbConnectionString);
+            await _dbConnection.OpenAsync();
+            using (var trans = _dbConnection.BeginTransaction(System.Data.IsolationLevel.Snapshot))
             try
             {
-                if(@params is null)
+                if (@params is null)
                 {
-                    data = (await _dbConnection.QueryAsync<T>(query)).AsList();
+                    data = (await _dbConnection.QueryAsync<T>(query, transaction: trans, commandTimeout: 60)).AsList();
                 }
                 else
                 {
-                    data = (await _dbConnection.QueryAsync<T>(query, @params)).AsList();
+                    data = (await _dbConnection.QueryAsync<T>(query, @params, transaction: trans, commandTimeout: 60)).AsList();
                 }
             }
             catch (Exception ex)
             {
                 throw new Exception(query + System.Environment.NewLine + ex.Message);
             }
-            
+
             return data;
         }
 
@@ -40,15 +42,17 @@ namespace Timesheet.Infrastructure.Dapper
         {
             var data = new List<T>();
             using var _dbConnection = new SqlConnection(_dbConnectionString);
+            _dbConnection.Open();
+            using var trans = _dbConnection.BeginTransaction(System.Data.IsolationLevel.Snapshot);
             try
             {
                 if (@params is null)
                 {
-                    data = (_dbConnection.Query<T>(query)).AsList();
+                    data = (_dbConnection.Query<T>(query, transaction: trans, commandTimeout: 60)).AsList();
                 }
                 else
                 {
-                    data = (_dbConnection.Query<T>(query, @params)).AsList();
+                    data = (_dbConnection.Query<T>(query, @params, transaction: trans, commandTimeout: 60)).AsList();
                 }
             }
             catch (Exception ex)

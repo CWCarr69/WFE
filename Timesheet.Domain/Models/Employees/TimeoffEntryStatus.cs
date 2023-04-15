@@ -2,6 +2,6 @@
 {
     public enum TimeoffEntryStatus
     {
-        NOT_PROCESSED, PROCESSED
+        NOT_PROCESSED, PROCESSED, REJECTED
     }
 }

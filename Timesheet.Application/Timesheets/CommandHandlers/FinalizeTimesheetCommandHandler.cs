@@ -33,7 +33,7 @@ namespace Timesheet.Application.Timesheets.CommandHandlers
             var timesheet = await RequireTimesheet(command.TimesheetId);
             this.RelatedAuditableEntity = timesheet;
 
-            EmployeeRoleOnData currentEmployeeRoleOnData = GetCurrentEmployeeRoleOnData(command, null);
+            EmployeeRoleOnData currentEmployeeRoleOnData = await GetCurrentEmployeeRoleOnData(command, null);
             _workflowService.AuthorizeTransition(timesheet, TimesheetTransitions.FINALIZE, timesheet.Status, currentEmployeeRoleOnData);
 
             timesheet.FinalizeTimesheet();

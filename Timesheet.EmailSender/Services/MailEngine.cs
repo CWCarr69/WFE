@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using Timesheet.EmailSender.Models;
 
 namespace Timesheet.EmailSender.Services
@@ -13,8 +14,8 @@ namespace Timesheet.EmailSender.Services
 
         private readonly string _timeheetTemplatePath =  @"TTimesheetEmailTemplate.html";
         private readonly string _timeoffTemplatePath = @"TimeoffEmailTemplate.html";
-        private const string _timesheetViewLink = "/Timesheet/{0}/Employee/{1}";
-        private const string _timeoffViewLink = "/Employee/{0}/Timeoff/{1}/";
+        private const string _timesheetViewLink = "timesheets/{0}/employee/{1}/{2}";
+        private const string _timeoffViewLink = "timeoffs/{0}/employee/{1}/{2}";
 
         internal MailEngine(ITemplateProcessor templateProcessor, IMailSender mailSender, IDictionary<string, string> employeeEmails)
         {
@@ -31,16 +32,18 @@ namespace Timesheet.EmailSender.Services
             if(notificationItem is TimeoffNotificationTemplate)
             {
                 var linkFormat = new Uri(_host, _timeoffViewLink).ToString();
-                notificationItem.Link = string.Format(linkFormat, notificationItem.EmployeeId, notificationItem.ItemId); ;
+                notificationItem.Link = string.Format(linkFormat, notificationItem.ItemId, notificationItem.RelatedEmployeeId, ToTicks(notificationItem.ReferenceDate));
                 SendEmail(notificationItem, _timeoffTemplatePath);
             }
             else
             {
                 var linkFormat = new Uri(_host, _timesheetViewLink).ToString();
-                notificationItem.Link = string.Format(linkFormat, notificationItem.EmployeeId, notificationItem.ItemId);
+                notificationItem.Link = string.Format(linkFormat, notificationItem.ItemId, notificationItem.RelatedEmployeeId, ToTicks(notificationItem.ReferenceDate));
                 SendEmail(notificationItem, _timeheetTemplatePath);
             }
         }
+
+        private long ToTicks(DateTime referenceDate) => new DateTimeOffset(referenceDate).ToUnixTimeSeconds();
 
         private void SendEmail<T>(T notificationItem, string template)
             where T: BaseNotificationTemplate

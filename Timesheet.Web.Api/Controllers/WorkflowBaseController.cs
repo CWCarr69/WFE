@@ -32,12 +32,7 @@ namespace Timesheet.Web.Api.Controllers
                 return dataWithHabilitations;
             }
 
-            var employee = await _employeeQuery.GetEmployeeApprovers(employeeId);
-            var authorRole = _habilitations.GetEmployeeRoleOnData(currentUser.Id, 
-                currentUser.IsAdministrator,
-                employeeId,
-                employee.PrimaryApproverId,
-                employee.SecondaryApproverId);
+            var authorRole = await _habilitations.GetEmployeeRoleOnData(currentUser.Id, employeeId, currentUser.IsAdministrator);
 
             var authorizedTransitions = _workflowService.NextTranstitions(entityType, status, authorRole);
 

@@ -35,7 +35,7 @@ namespace Timesheet.Application.Timesheets.CommandHandlers
 
             var timesheetEntryRef = GetTimesheetFirstData(timesheet);
 
-            EmployeeRoleOnData currentEmployeeRoleOnData = GetCurrentEmployeeRoleOnData(command, employee);
+            EmployeeRoleOnData currentEmployeeRoleOnData = await GetCurrentEmployeeRoleOnData(command, employee);
             _workflowService.AuthorizeTransition(timesheet, TimesheetTransitions.SUBMIT, timesheet.Status, currentEmployeeRoleOnData);
             if(timesheetEntryRef is not null)
             {

@@ -32,6 +32,12 @@ namespace Timesheet.Domain.Models.Employees
             this.UpdateMetadata();
         }
 
+        internal void Reject()
+        {
+            this.Status = TimeoffEntryStatus.REJECTED;
+            this.UpdateMetadata();
+        }
+
         internal void Update(int typeId, double hours, string label)
         {
             this.TypeId = typeId;

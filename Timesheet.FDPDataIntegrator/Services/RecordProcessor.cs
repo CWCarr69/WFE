@@ -59,10 +59,12 @@ namespace Timesheet.FDPDataIntegrator.Services
             {
                 foreach (var entry in MayBeDeletedTimesheetEntries)
                 {
+                    _logger.LogInformation($"CHECKING DELETE OF {entry.Id}");
                     if(!entries.Any(e => e == entry.Id))
                     {
                         try
                         {
+                            _logger.LogInformation($"TRY DELETE ENTRY {entry.Id}");
                             await _repository.Delete(entry.Id);
                         }catch(Exception ex)
                         {

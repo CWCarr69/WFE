@@ -10,7 +10,7 @@ namespace Timesheet.Models.Referential
   
     public enum PayrollTypesCategory
     {
-        TIMEOFF=1, ALL = 2
+        TIMEOFF=1, BILLABLE = 2
     }
 
     public class PayrollTypes : Entity

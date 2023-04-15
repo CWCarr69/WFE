@@ -23,10 +23,15 @@ namespace Timesheet.Domain.ReadModels.Employees
         public DateTime LastTimeoffRequestDate { get; set; }
         public string LastTimeoffStatusString => ((TimeoffStatus)LastTimeoffStatus).ToString();
         public bool IsLastTimeoffRequireApproval { get; set;  }
+        public int LastTimesheetPartialStatus { get; set; }
         public int LastTimesheetStatus { get; set; }
+        private bool IsFinalized => LastTimeoffStatus == (int)TimesheetStatus.FINALIZED;
         public string LastTimesheetPayrollPeriod { get; set; }
         public DateTime LastTimesheetWorkDate { get; set; }
-        public string LastTimesheetStatusString => ((TimesheetStatus)LastTimesheetStatus).ToString();
+        public string LastTimesheetStatusString 
+            => IsFinalized 
+                ? ((TimesheetStatus)LastTimesheetStatus).ToString()
+                : ((TimesheetEntryStatus)LastTimesheetPartialStatus).ToString();
 
     }
 }

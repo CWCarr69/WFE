@@ -27,10 +27,10 @@
         private static string _employeeTransfertName = "WilsonFire-Resource-InExport";
         private static string _payrollTransfertName = "WilsonFire-TimesheetDetails-InExport";
 
-        internal static (string transfertName, string inboundData) GetIntegrationParams(IntegrationType type, DateTime? from = null)
+        internal static (string transfertName, string inboundData) GetIntegrationParams(IntegrationType type, int days)
         {
-            //var fromDate = from ?? DateTime.Now.AddDays(-360);
-            var fromDate = from ?? DateTime.Now.AddYears(-5);
+            var fromDate = DateTime.Now.AddDays(-days);
+            //var fromDate = from ?? DateTime.Now.AddYears(-5);
 
             var inboundData = _defaultInboudDataTemplate.Replace(ModificationDateParam, fromDate.ToString("dd MMM yyy HH':'mm':'ss"));
             inboundData = inboundData.Replace(PageNumberParam, "1");

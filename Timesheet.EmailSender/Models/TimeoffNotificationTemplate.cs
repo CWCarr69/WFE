@@ -11,13 +11,12 @@ namespace Timesheet.EmailSender.Models
 
     public class TimeoffNotificationTemplate : BaseNotificationTemplate
     {
-        public string EmployeeName { get; set; }
         public string DateCreated { get; set; }
         public string Status { get; set; }
-        public string ManagerName { get; set; }
         public string EmployeeComment { get; set; }
         public string SupervisorComment { get; set; }
         public IEnumerable<TimeoffEntryRowTemplate> Rows { get; set; }
+        public override DateTime ReferenceDate => DateTime.Parse(Rows?.OrderBy(r => r.Date).FirstOrDefault().Date); 
         public double Total => Rows.Sum(r => r.Hours);
     }
 }

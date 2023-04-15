@@ -14,7 +14,7 @@ namespace Timesheet.Application.Referential.Queries
     {
         Task<IEnumerable<PayrollPeriod>> GetPayrollPeriods();
         Task<IEnumerable<Department>> GetDepartments();
-        IEnumerable<EnumReadModel<TimesheetStatus>> GetTimesheetStatuses();
+        IEnumerable<EnumReadModel<TimesheetStatus>> GetTimesheetStatuses(bool withoutInProgress);
         IEnumerable<EnumReadModel<TimesheetEntryStatus>> GetTimesheetEntryStatuses();
         IEnumerable<EnumReadModel<TimeoffStatus>> GetTimeoffStatuses();
         Task<IEnumerable<PayrollType>> GetTimeoffTypes(bool requireApproval = true);

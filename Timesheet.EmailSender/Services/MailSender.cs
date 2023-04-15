@@ -36,7 +36,7 @@ namespace Timesheet.EmailSender.Services
                 client.UseDefaultCredentials = false;
                 client.Credentials = new NetworkCredential(_settings.SMTP_Username, _settings.SMTP_Password);
                 client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                client.Send(mail);
+                //client.Send(mail);
             }
             catch (Exception) { }
         }

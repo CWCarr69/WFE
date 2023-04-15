@@ -71,198 +71,78 @@ namespace Timesheet.Infrastructure.Persistence.Queries
         private const string TimesheetDetailsQueryEmployeeIdParam = "@employeeId";
         private const string TimesheetDetailsQueryTimesheetIdParam = "@timesheetId";
 
+
         public const string TimesheetDetailsQuery = $@"SELECT
-            e.Id as {nameof(EmployeeTimesheet.EmployeeId)},
-            e.Fullname as {nameof(EmployeeTimesheet.FullName)},
+            t.EmployeeId as {nameof(EmployeeTimesheet.EmployeeId)},
+            t.Fullname as {nameof(EmployeeTimesheet.FullName)},
             t.Id as {nameof(EmployeeTimesheet.TimesheetId)},
             t.PayrollPeriod as {nameof(EmployeeTimesheet.PayrollPeriod)},
-            t.CreatedDate  as {nameof(EmployeeTimesheet.CreatedDate)},
-            t.ModifiedDate  as {nameof(EmployeeTimesheet.ModifiedDate)},
-            t.StartDate  as {nameof(EmployeeTimesheet.StartDate)},
-            t.EndDate  as {nameof(EmployeeTimesheet.EndDate)},
-            t.Status  as {nameof(EmployeeTimesheet.Status)},
+            t.CreatedDate as {nameof(EmployeeTimesheet.CreatedDate)},
+            t.ModifiedDate as {nameof(EmployeeTimesheet.ModifiedDate)},
+            t.StartDate as {nameof(EmployeeTimesheet.StartDate)},
+            t.EndDate as {nameof(EmployeeTimesheet.EndDate)},
+            t.Status as {nameof(EmployeeTimesheet.Status)},
+            t.PartialStatus as {nameof(EmployeeTimesheet.PartialStatus)},
             c.EmployeeComment as {nameof(EmployeeTimesheet.EmployeeComment)},
             c.ApproverComment as {nameof(EmployeeTimesheet.ApproverComment)},
-            SUM(te.Hours) as {nameof(EmployeeTimesheet.TotalHours)}
-            FROM employees e
-            JOIN timesheetEntry te on e.Id = te.EmployeeId
-            JOIN timesheets t on t.id = te.TimesheetHeaderId
-            LEFT JOIN timesheetComment c ON c.TimesheetId = t.Id AND c.EmployeeId = e.Id
-            Where e.Id = {TimesheetDetailsQueryEmployeeIdParam} AND t.Id = {TimesheetDetailsQueryTimesheetIdParam}
-            GROUP BY e.Id, e.Fullname, t.Id, t.PayrollPeriod, t.CreatedDate, t.ModifiedDate,
-            t.StartDate, t.EndDate, t.status, c.EmployeeComment, c.ApproverComment
+            t.totalHours as {nameof(EmployeeTimesheet.TotalHours)}
+            FROM TimesheetHours t
+            LEFT JOIN timesheetComment c ON c.TimesheetId = t.Id AND c.EmployeeId = t.EmployeeId
+            Where t.EmployeeId = {TimesheetDetailsQueryEmployeeIdParam} AND t.Id = {TimesheetDetailsQueryTimesheetIdParam}
         ";
 
         public const string TimesheetDetailsEntriesQuery = $@"SELECT
-            te.Id AS {nameof(EmployeeTimesheetEntry.Id)},
-            te.CreatedDate  as {nameof(EmployeeTimesheetEntry.CreatedDate)},
-            te.ModifiedDate  as {nameof(EmployeeTimesheetEntry.ModifiedDate)},
-            te.WorkDate  as {nameof(EmployeeTimesheetEntry.WorkDate)},
-            te.PayrollCodeId  as {nameof(EmployeeTimesheetEntry.PayrollCodeId)},
-            pt.PayrollCode  as {nameof(EmployeeTimesheetEntry.PayrollCode)},
-            te.Hours  as {nameof(EmployeeTimesheetEntry.Quantity)},
-            te.JobNumber  as {nameof(EmployeeTimesheetEntry.JobNumber)},
-            te.JobDescription  as {nameof(EmployeeTimesheetEntry.JobDescription)},
-            te.LaborCode  as {nameof(EmployeeTimesheetEntry.LaborCode)},
-            te.ServiceOrderNumber  as {nameof(EmployeeTimesheetEntry.ServiceOrderNumber)},
-            COALESCE(te.ProfitCenterNumber, e.DefaultProfitCenter)  as {nameof(EmployeeTimesheetEntry.ProfitCenterNumber)},
-            e.Department  as {nameof(EmployeeTimesheetEntry.Department)},
-            CASE WHEN pt.Category = 2 THEN te.Description 
-            ELSE ptdesc.PayrollCode END AS {nameof(EmployeeTimesheetEntry.Description)}, 
-            te.OutOffCountry  as {nameof(EmployeeTimesheetEntry.OutOffCountry)},
-            te.Status  as {nameof(EmployeeTimesheetEntry.Status)},
+            te.TimesheetEntryId AS {nameof(EmployeeTimesheetEntry.Id)},
+            te.CreatedDate AS {nameof(EmployeeTimesheetEntry.CreatedDate)},
+            te.ModifiedDate AS {nameof(EmployeeTimesheetEntry.ModifiedDate)},
+            te.WorkDate AS {nameof(EmployeeTimesheetEntry.WorkDate)},
+            te.PayrollCodeId AS {nameof(EmployeeTimesheetEntry.PayrollCodeId)},
+            te.PayrollCode AS {nameof(EmployeeTimesheetEntry.PayrollCode)},
+            te.Quantity AS {nameof(EmployeeTimesheetEntry.Quantity)},
+            te.JobNumber AS {nameof(EmployeeTimesheetEntry.JobNumber)},
+            te.JobDescription AS {nameof(EmployeeTimesheetEntry.JobDescription)},
+            te.LaborCode AS {nameof(EmployeeTimesheetEntry.LaborCode)},
+            te.ServiceOrderNumber AS {nameof(EmployeeTimesheetEntry.ServiceOrderNumber)},
+            te.ProfitCenterNumber AS {nameof(EmployeeTimesheetEntry.ProfitCenterNumber)},
+            te.Department AS {nameof(EmployeeTimesheetEntry.Department)},
+            te.Description AS {nameof(EmployeeTimesheetEntry.Description)},
+            te.OutOffCountry As {nameof(EmployeeTimesheetEntry.OutOffCountry)},
+            te.TimesheetEntryStatus AS {nameof(EmployeeTimesheetEntry.Status)},
             te.IsDeletable  as {nameof(EmployeeTimesheetEntry.IsDeletable)},
             te.IsTimeoff  as {nameof(EmployeeTimesheetEntry.IsTimeoff)}
-            FROM timesheetEntry te
+            FROM AllEmployeeTimesheetEntriesAndHolidays te
             JOIN payrollTypes pt on pt.numId = te.PayrollCodeId
-            JOIN payrollTypes ptdesc on ptdesc.numId = CAST(te.PayrollCodeId AS INT)  
-            JOIN employees e on e.id = te.employeeId
-            WHERE employeeId = {TimesheetDetailsQueryEmployeeIdParam} AND timesheetHeaderId = {TimesheetDetailsQueryTimesheetIdParam}
+            WHERE employeeId = {TimesheetDetailsQueryEmployeeIdParam} AND te.timesheetHeaderId = {TimesheetDetailsQueryTimesheetIdParam}
             ORDER BY te.WorkDate
         ";
         #endregion
 
         #region TimesheetReview
-        private const string TimesheetReviewQueryIsSalariedParam = "@isSalaried";
-        private const string TimesheetReviewQueryWeeklyTimesheetParam = "@weeklyTimesheet";
-        private const string TimesheetReviewQueryMonthlyTimesheetParam = "@monthlyTimesheet";
-        private const string TimesheetReviewQueryHolidayPayrollCodeIdParam = "@holidayPayrollCodeId";
-        private const string TimesheetReviewQueryOvertimePayrollCodeIdParam = "@overtimePayrollCodeId";
-
         public const string TimesheetReviewQuerySearchFilterPlaceholder = "@searchFilter";
         public const string TimesheetReviewQueryPaginatePlaceholder = "@paginate";
 
         public const string TimesheetReviewTotalQuery = $@"SELECT
-                SUM(tsr.Hours) AS {nameof(TimesheetReview.TotalQuantity)},
-                COUNT(DISTINCT CONCAT(tsr.{nameof(TimesheetEntryDetails.EmployeeId)}, tsr.{nameof(TimesheetEntryDetails.TimesheetId)})) AS {nameof(TimesheetReview.TotalItems)}
-                FROM 
-                ( SELECT *
-                    FROM 
-                    (
-                        SELECT e.id AS {nameof(TimesheetEntryDetails.EmployeeId)}, 
-                        t.id AS {nameof(TimesheetEntryDetails.TimesheetId)}, 
-                        te.Hours 
-                        FROM employees e
-                        JOIN timesheetEntry te on e.Id = te.EmployeeId
-                        JOIN timesheets t on t.id = te.TimesheetHeaderId
-                        LEFT JOIN TimesheetException tex ON tex.TimesheetEntryId = te.Id And tex.EmployeeId = e.Id
-                        WHERE @teamClause tex.Id is null  
-                        { TimesheetReviewQuerySearchFilterPlaceholder }
-                    ) t
-                    UNION ALL(
-                        SELECT e.id AS {nameof(TimesheetEntryDetails.EmployeeId)}, 
-                        t.id AS {nameof(TimesheetEntryDetails.TimesheetId)}, 
-                        tho.Hours 
-                        FROM timesheetHoliday tho
-                        JOIN timesheets t ON t.id = tho.TimesheetHeaderId
-                        JOIN employees e ON (
-                            (e.IsSalaried = {TimesheetReviewQueryIsSalariedParam} AND t.type = {TimesheetReviewQueryWeeklyTimesheetParam}) 
-                            OR 
-                            (e.IsSalaried != {TimesheetReviewQueryIsSalariedParam} AND t.type = {TimesheetReviewQueryMonthlyTimesheetParam}))
-                        LEFT JOIN TimesheetException ho ON ho.TimesheetEntryId = tho.Id And ho.EmployeeId = e.Id
-                        WHERE @teamClause ho.Id is null
-                        { TimesheetReviewQuerySearchFilterPlaceholder }
-                    )  
-                ) tsr
+                SUM(te.Quantity) AS {nameof(TimesheetReview.TotalQuantity)},
+                COUNT(DISTINCT CONCAT(te.EmployeeId, te.TimesheetHeaderId)) AS {nameof(TimesheetReview.TotalItems)}
+                FROM AllEmployeeTimesheetEntriesAndHolidays te
+                WHERE @teamClause 1=1 { TimesheetReviewQuerySearchFilterPlaceholder }
             ";
-
-        public const string TimesheetReviewQueryEmployeeTimesheetEntries = $@"employeeTimesheetEntries AS
-            (SELECT * FROM 
-                (SELECT 
-                    te.Id AS {nameof(TimesheetEntryDetails.TimesheetEntryId)},
-                    te.EmployeeId AS EmployeeId,
-                    te.TimesheetHeaderId AS TimesheetHeaderId,
-                    te.WorkDate  as {nameof(TimesheetEntryDetails.WorkDate)},
-                    te.PayrollCodeId  as {nameof(TimesheetEntryDetails.PayrollCodeId)},
-                    pt.PayrollCode  as {nameof(TimesheetEntryDetails.PayrollCode)},
-                    te.Hours  as {nameof(TimesheetEntryDetails.Quantity)},
-                    te.CustomerNumber  as {nameof(TimesheetEntryDetails.CustomerNumber)},
-                    te.JobNumber  as {nameof(TimesheetEntryDetails.JobNumber)},
-                    te.JobDescription  as {nameof(TimesheetEntryDetails.JobDescription)},
-                    te.LaborCode  as {nameof(TimesheetEntryDetails.LaborCode)},
-                    te.ServiceOrderNumber  as {nameof(TimesheetEntryDetails.ServiceOrderNumber)},
-                    COALESCE(te.ProfitCenterNumber, e.DefaultProfitCenter)  as {nameof(TimesheetEntryDetails.ProfitCenterNumber)},
-                    e.Department  as {nameof(TimesheetEntryDetails.Department)},
-                    te.Description  as {nameof(TimesheetEntryDetails.Description)},
-                    te.OutOffCountry  as {nameof(TimesheetEntryDetails.OutOffCountry)},
-                    te.Status  as {nameof(TimesheetEntryDetails.TimesheetEntryStatus)}
-                    FROM timesheetEntry te
-                    JOIN timesheets t on t.id = te.TimesheetHeaderId
-                    JOIN employees e on e.Id = te.EmployeeId
-                    JOIN payrollTypes pt on pt.numId = te.PayrollCodeId
-                    LEFT JOIN TimesheetException tex ON tex.TimesheetEntryId = te.Id And tex.EmployeeId = e.Id
-                    WHERE @teamClause tex.Id is null 
-                    { TimesheetReviewQuerySearchFilterPlaceholder }
-                ) entries
-                UNION ALL
-                (SELECT 
-                    tho.Id AS {nameof(TimesheetEntryDetails.TimesheetEntryId)},
-                    e.Id as EmployeeId,
-                    tho.TimesheetHeaderId AS TimesheetHeaderId,
-                    tho.WorkDate  as {nameof(TimesheetEntryDetails.WorkDate)},
-                    {TimesheetReviewQueryHolidayPayrollCodeIdParam} as {nameof(TimesheetEntryDetails.PayrollCodeId)},
-                    pt.PayrollCode  as {nameof(TimesheetEntryDetails.PayrollCode)},
-                    tho.Hours  as {nameof(TimesheetEntryDetails.Quantity)},
-                    null  as {nameof(TimesheetEntryDetails.CustomerNumber)},
-                    null  as {nameof(TimesheetEntryDetails.JobNumber)},
-                    null  as {nameof(TimesheetEntryDetails.JobDescription)},
-                    null  as {nameof(TimesheetEntryDetails.LaborCode)},
-                    null  as {nameof(TimesheetEntryDetails.ServiceOrderNumber)},
-                    e.defaultProfitCenter  as {nameof(TimesheetEntryDetails.ProfitCenterNumber)},
-                    e.Department  as {nameof(TimesheetEntryDetails.Department)},
-                    tho.Description  as {nameof(TimesheetEntryDetails.Description)},
-                    null  as {nameof(TimesheetEntryDetails.OutOffCountry)},
-                    tho.Status  as {nameof(TimesheetEntryDetails.TimesheetEntryStatus)}
-                    FROM timesheetHoliday tho
-                    JOIN timesheets t on t.id = tho.TimesheetHeaderId
-                    JOIN payrollTypes pt on pt.numId = {TimesheetReviewQueryHolidayPayrollCodeIdParam}
-                    JOIN employees e on (
-                        (e.IsSalaried = {TimesheetReviewQueryIsSalariedParam} AND t.type = {TimesheetReviewQueryWeeklyTimesheetParam}) 
-                        OR 
-                        (e.IsSalaried != {TimesheetReviewQueryIsSalariedParam} AND t.type = {TimesheetReviewQueryMonthlyTimesheetParam}))
-                    LEFT JOIN TimesheetException ho ON ho.TimesheetEntryId = tho.Id And ho.EmployeeId = e.Id
-                    WHERE @teamClause ho.Id is null
-                    { TimesheetReviewQuerySearchFilterPlaceholder }
-                )
-            )";
 
         public const string TimesheetReviewQueryEmployeeTimesheetOrderByClause = $@"e.{nameof(TimesheetEntryDetails.Fullname)}";
 
-        public const string TimesheetReviewQueryEmployeeTimesheet = $@"employeeTimesheet AS
-            (SELECT
-                e.Id AS {nameof(TimesheetEntryDetails.EmployeeId)},
-                e.Fullname AS {nameof(TimesheetEntryDetails.Fullname)},
-                e.DefaultProfitCenter AS {nameof(TimesheetEntryDetails.DefaultProfitCenter)},
-                t.Id AS {nameof(TimesheetEntryDetails.TimesheetId)},
-                t.PayrollPeriod AS {nameof(TimesheetEntryDetails.PayrollPeriod)},
-                SUM(CASE WHEN te.{nameof(TimesheetEntryDetails.PayrollCodeId)} = {TimesheetReviewQueryOvertimePayrollCodeIdParam} 
-                    THEN te.{nameof(TimesheetEntryDetails.Quantity)} else 0 END)
-                    AS {nameof(TimesheetEntryDetails.Overtime)},
-                SUM(te.{nameof(TimesheetEntryDetails.Quantity)}) AS {nameof(TimesheetEntryDetails.Total)},
-                t.StartDate AS {nameof(TimesheetEntryDetails.StartDate)},
-                t.EndDate AS {nameof(TimesheetEntryDetails.EndDate)},
-                t.Status AS {nameof(TimesheetEntryDetails.Status)}
-                FROM employees e
-                JOIN employeeTimesheetEntries te on e.Id = te.EmployeeId
-                JOIN timesheets t on t.id = te.TimesheetHeaderId
-                WHERE @teamClause 1=1 
-                { TimesheetReviewQuerySearchFilterPlaceholder }
-                GROUP BY e.Id, e.Fullname, t.Id, t.PayrollPeriod, t.StartDate, t.EndDate, t.Status, e.DefaultProfitCenter
-                {TimesheetReviewQueryPaginatePlaceholder}
-            )
-        ";
-
         public const string TimesheetReviewQuery = $@"SELECT 
-            et.{nameof(TimesheetEntryDetails.EmployeeId)},
-            et.{nameof(TimesheetEntryDetails.Fullname)},
-            et.{nameof(TimesheetEntryDetails.DefaultProfitCenter)},
-            et.{nameof(TimesheetEntryDetails.TimesheetId)},
-            et.{nameof(TimesheetEntryDetails.PayrollPeriod)},
-            et.{nameof(TimesheetEntryDetails.Overtime)},
-            et.{nameof(TimesheetEntryDetails.Total)},
-            et.{nameof(TimesheetEntryDetails.StartDate)},
-            et.{nameof(TimesheetEntryDetails.EndDate)},
-            et.{nameof(TimesheetEntryDetails.Status)},
+            t.Id AS {nameof(TimesheetEntryDetails.TimesheetHeaderId)},
+            te.EmployeeId AS {nameof(TimesheetEntryDetails.EmployeeId)},
+            t.{nameof(TimesheetEntryDetails.PayrollPeriod)},
+            t.{nameof(TimesheetEntryDetails.Overtime)},
+            t.TotalHours AS {nameof(TimesheetEntryDetails.Total)},
+            t.{nameof(TimesheetEntryDetails.StartDate)},
+            t.{nameof(TimesheetEntryDetails.EndDate)},
+            t.{nameof(TimesheetEntryDetails.Status)},
+            t.{nameof(TimesheetEntryDetails.PartialStatus)},
+            te.{nameof(TimesheetEntryDetails.EmployeeId)},
+            te.{nameof(TimesheetEntryDetails.Fullname)},
+            te.{nameof(TimesheetEntryDetails.DefaultProfitCenter)},
             te.{nameof(TimesheetEntryDetails.TimesheetEntryId)},
             te.{nameof(TimesheetEntryDetails.WorkDate)},
             te.{nameof(TimesheetEntryDetails.PayrollCodeId)},
@@ -278,9 +158,10 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             te.{nameof(TimesheetEntryDetails.Description)},
             te.{nameof(TimesheetEntryDetails.OutOffCountry)},
             te.{nameof(TimesheetEntryDetails.TimesheetEntryStatus)}
-            FROM employeeTimesheet et
-            JOIN employeeTimesheetEntries te on te.EmployeeId = et.employeeId AND te.TimesheetHeaderId = et.TimesheetId
-            ORDER BY et.{nameof(TimesheetEntryDetails.Fullname)}, te.{nameof(TimesheetEntryDetails.WorkDate)}
+            FROM timesheetHours t
+            JOIN AllEmployeeTimesheetEntriesAndHolidays te on te.EmployeeId = t.employeeId AND te.TimesheetHeaderId = t.Id
+            where @teamClause 1=1 {TimesheetReviewQuerySearchFilterPlaceholder}
+            ORDER BY te.{nameof(TimesheetEntryDetails.Fullname)}, te.{nameof(TimesheetEntryDetails.WorkDate)}
         ";
 
         #endregion
@@ -411,7 +292,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
                 te.Id AS {nameof(TimesheetEntryDetails.TimesheetEntryId)},
                 te.EmployeeId as {nameof(TimesheetEntryDetails.EmployeeId)},
                 e.Fullname as {nameof(TimesheetEntryDetails.Fullname)},
-                te.TimesheetHeaderId AS TimesheetHeaderId,
+                te.TimesheetHeaderId AS {nameof(TimesheetEntryDetails.TimesheetHeaderId)},
                 te.WorkDate  as {nameof(TimesheetEntryDetails.WorkDate)},
                 te.PayrollCodeId  as {nameof(TimesheetEntryDetails.PayrollCodeId)},
                 pt.PayrollCode  as {nameof(TimesheetEntryDetails.PayrollCode)},
@@ -486,7 +367,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
         private const string TimesheetEntriesInPeriodEndParam = "@end";
 
         public const string TimesheetEntriesInPeriod = $@"SELECT
-            th.Id as {nameof(EmployeeTimesheetEntry.TimesheetHeaderId)},
+            th.Id as TimesheetHeaderId,
             te.Id as {nameof(EmployeeTimesheetEntry.Id)},
             te.WorkDate AS {nameof(EmployeeTimesheetEntry.WorkDate)},
             te.PayrollCodeId AS {nameof(EmployeeTimesheetEntry.PayrollCodeId)},
@@ -580,7 +461,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             var departmentParam = "@department";
 
             var searchFilter = $@"
-                { (string.IsNullOrEmpty(payrollPeriod) ? string.Empty : $"AND t.PayrollPeriod = {payrollPeriodParam}") }
+                { (string.IsNullOrEmpty(payrollPeriod) ? string.Empty : $"AND te.TimesheetHeaderId = {payrollPeriodParam}") }
                 { (string.IsNullOrEmpty(employeeId) ? string.Empty : $"AND e.Id = {employeeIdParam}") }
                 { (string.IsNullOrEmpty(department) ? string.Empty : $"AND e.Department = {departmentParam}") }
             ";
@@ -588,7 +469,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             var query = QueryTimesheetConstants.TimesheetReviewTotalQuery;
             query = query.Replace(QueryTimesheetConstants.TimesheetReviewQuerySearchFilterPlaceholder, searchFilter);
 
-            query = AddWhereClauseForDirectReports(managerId, false, query, "e.id", whereKey: "", "@teamClause", addAnd: ADD_AND.AND_AFTER);
+            query = AddWhereClauseForDirectReports(managerId, false, query, "te.EmployeeId", whereKey: "", "@teamClause", addAnd: ADD_AND.AND_AFTER);
 
             var timesheetReview = (await _dbService.QueryAsync<TimesheetReview>(
                 query,
@@ -610,17 +491,12 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             }
 
             var paginate = Paginate(page, itemsPerPage, string.Empty, QueryTimesheetConstants.TimesheetReviewQueryEmployeeTimesheetOrderByClause);
-            //query = query.Replace(QueryTimesheetConstants.TimesheetReviewQuerySearchFilterPlaceholder, searchFilter);
 
-            query = $@"WITH 
-            {QueryTimesheetConstants.TimesheetReviewQueryEmployeeTimesheetEntries},
-            {QueryTimesheetConstants.TimesheetReviewQueryEmployeeTimesheet}
-            {QueryTimesheetConstants.TimesheetReviewQuery}
-            ";
+            query = QueryTimesheetConstants.TimesheetReviewQuery;
             query = query.Replace(QueryTimesheetConstants.TimesheetReviewQuerySearchFilterPlaceholder, searchFilter);
             query = query.Replace(QueryTimesheetConstants.TimesheetReviewQueryPaginatePlaceholder, paginate);
 
-            query = AddWhereClauseForDirectReports(managerId, false, query, "e.id", whereKey: "", "@teamClause", addAnd: ADD_AND.AND_AFTER);
+            query = AddWhereClauseForDirectReports(managerId, false, query, "te.EmployeeId", whereKey: "", "@teamClause", addAnd: ADD_AND.AND_AFTER);
 
             var entries = await _dbService.QueryAsync<TimesheetEntryDetails>(
                 query,
@@ -722,22 +598,25 @@ namespace Timesheet.Infrastructure.Persistence.Queries
         private static List<EmployeeTimesheetWithTotals> GroupEntriesByTimesheetAndEmployee(List<TimesheetEntryDetails> entries)
         {
             return entries
-                .GroupBy(e => new { e.EmployeeId, e.Fullname, e.DefaultProfitCenter, e.TimesheetId, e.PayrollPeriod, e.Total, e.Overtime, e.StartDate, e.EndDate, e.Status })
+                .GroupBy(e => new { e.EmployeeId, e.Fullname, e.DefaultProfitCenter, e.TimesheetHeaderId, e.PayrollPeriod, e.Total, e.Overtime, e.StartDate, e.EndDate, e.Status, e.PartialStatus })
                 .Select(g => new EmployeeTimesheetWithTotals
                 {
                     EmployeeId = g.Key.EmployeeId,
                     Fullname = g.Key.Fullname,
                     DefaultProfitCenter = g.Key.DefaultProfitCenter,
-                    TimesheetId = g.Key.TimesheetId,
+                    TimesheetId = g.Key.TimesheetHeaderId,
                     PayrollPeriod = g.Key.PayrollPeriod,
                     Total = g.Key.Total,
                     Overtime = g.Key.Overtime,
                     StartDate = g.Key.StartDate,
                     EndDate = g.Key.EndDate,
                     Status = g.Key.Status,
+                    PartialStatus = g.Key.PartialStatus,
                     Entries = g.Select(e => new EmployeeTimesheetEntry
                     {
                         Id = e.TimesheetEntryId,
+                        EmployeeId = e.EmployeeId,
+                        TimesheetId = e.TimesheetHeaderId,
                         WorkDate = e.WorkDate,
                         PayrollCode = e.PayrollCode,
                         Quantity = e.Quantity,

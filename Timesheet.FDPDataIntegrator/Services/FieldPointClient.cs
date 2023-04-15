@@ -27,7 +27,8 @@ namespace Timesheet.FDPDataIntegrator.Services
                 {
                     var fieldPointClient = new ServiceReference1.FPDTSWSSoapClient(EndpointConfiguration.FPDTSWSSoap12, _settings.FDP_Url);
 
-                    (var transfertName, var inboundData) = FDPInboundDataTemplate.GetIntegrationParams(type);
+                    int.TryParse(_configuration.GetSection("FPUpload:MaxHistory").Value, out var historyDays);
+                    (var transfertName, var inboundData) = FDPInboundDataTemplate.GetIntegrationParams(type, historyDays == 0 ? 15 : historyDays);
                     Response = await fieldPointClient.TransferAsync(transfertName, inboundData, _settings.FDP_Username, _settings.FDP_Password);
                     if (_settings.FDP_RetainFiles?.ToUpper() == FDPSettings.FDP_RetainFilesTrue)
                     {

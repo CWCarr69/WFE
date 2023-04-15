@@ -29,8 +29,12 @@ namespace Timesheet.Web.Api.Controllers
         {
             LogInformation($"Listing Timeoff types");
 
-            var timeoffs = await _referentialQuery.GetTimeoffTypes();
-            return Ok(timeoffs);
+            var types = await _referentialQuery.GetTimeoffTypes();
+            if (!CurrentUser.IsAdministrator)
+            {
+                types = types.Where(t => t.NumId != (int)TimesheetFixedPayrollCodeEnum.HOLIDAY);
+            }
+            return Ok(types);
         }
 
         [HttpGet("AllTimeoffTypes")]
@@ -38,8 +42,12 @@ namespace Timesheet.Web.Api.Controllers
         {
             LogInformation($"Listing All Timeoff types");
 
-            var timeoffs = await _referentialQuery.GetAllTimeoffTypes();
-            return Ok(timeoffs);
+            var types = await _referentialQuery.GetAllTimeoffTypes();
+            if(!CurrentUser.IsAdministrator)
+            {
+                types = types.Where(t => t.NumId != (int)TimesheetFixedPayrollCodeEnum.HOLIDAY);
+            }
+            return Ok(types);
         }
 
         [HttpGet("NonRegularTimeoffTypes")]
@@ -79,11 +87,11 @@ namespace Timesheet.Web.Api.Controllers
         }
 
         [HttpGet("TimesheetStatuses")]
-        public async Task<ActionResult<IEnumerable<EnumReadModel<TimesheetStatus>>>> GetTimesheetStatuses()
+        public async Task<ActionResult<IEnumerable<EnumReadModel<TimesheetStatus>>>> GetTimesheetStatuses(bool withoutInProgress)
         {
             LogInformation($"Listing Timesheet statuses");
             
-            var statuses = _referentialQuery.GetTimesheetStatuses();
+            var statuses = _referentialQuery.GetTimesheetStatuses(withoutInProgress);
             return Ok(statuses);
         }
 

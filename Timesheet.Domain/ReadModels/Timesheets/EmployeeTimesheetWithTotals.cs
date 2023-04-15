@@ -17,7 +17,9 @@ namespace Timesheet.Domain.ReadModels.Timesheets
 
         public double Regular { get; set; }
         public TimesheetStatus Status { get; set; }
+        public TimesheetEntryStatus PartialStatus { get; set; }
         public string StatusName => Status.ToString();
+        public string PartialStatusName => PartialStatus.ToString();
         public IEnumerable<EmployeeTimesheetEntry> Entries { get; set; } = new List<EmployeeTimesheetEntry>();
         public IEnumerable<EmployeeTimesheetEntry> EntriesWithoutTimeoffs => Entries?.Where(t => !t.IsTimeoff) ?? new List<EmployeeTimesheetEntry>();
     }

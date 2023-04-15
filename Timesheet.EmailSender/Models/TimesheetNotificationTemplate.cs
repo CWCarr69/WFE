@@ -32,12 +32,11 @@
         public string PayrollStartDate { get; set; }
         public string PayrollEndDate { get; set; }
         public string Status { get; set; }
-        public string EmployeeName { get; set; }
-        public string ManagerName { get; set; }
         public string EmployeeComment { get; set; }
         public string SupervisorComment { get; set; }
         public string Link { get; set; }
         public IEnumerable<TimesheetEntryRowTemplate> TimesheetEntries { get; set; }
+        public override DateTime ReferenceDate => DateTime.Parse(TimesheetEntries?.OrderBy(r => r.WorkDate).FirstOrDefault().WorkDate);
         public decimal Total => TimesheetEntries.Sum(t => t.Quantity);
     }
 }

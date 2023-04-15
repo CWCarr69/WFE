@@ -70,7 +70,7 @@
         internal void Reject(string comment)
         {
             Transition(TimeoffStatus.REJECTED, () => this.ApproverComment = comment ?? this.ApproverComment);
-            ValidateAllEntries();
+            RejectAllEntries();
             this.UpdateMetadata();
         }
 
@@ -98,6 +98,14 @@
             foreach (var entry in TimeoffEntries)
             {
                 entry.Validate();
+            }
+        }
+
+        private void RejectAllEntries()
+        {
+            foreach (var entry in TimeoffEntries)
+            {
+                entry.Reject();
             }
         }
 

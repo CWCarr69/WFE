@@ -29,6 +29,7 @@ namespace Timesheet.EmailSender.Repositories
                 SELECT DISTINCT TOP(100)
                 n.Id AS {nameof(TimeoffNotificationTemplate.NotificationId)},
                 t.Id AS {nameof(TimeoffNotificationTemplate.ItemId)},
+                n.RelatedEmployeeId AS {nameof(TimeoffNotificationTemplate.RelatedEmployeeId)},
                 n.EmployeeId AS {nameof(TimeoffNotificationTemplate.EmployeeId)},
                 n.Subject AS {nameof(TimeoffNotificationTemplate.Subject)},
                 e.Fullname AS {nameof(TimeoffNotificationTemplate.EmployeeName)},
@@ -73,6 +74,7 @@ namespace Timesheet.EmailSender.Repositories
                 SELECT DISTINCT TOP(100)
                 n.Id AS {nameof(TimeoffNotificationTemplate.NotificationId)},
                 t.Id AS {nameof(TimesheetNotificationTemplate.ItemId)},
+                n.RelatedEmployeeId AS {nameof(TimeoffNotificationTemplate.RelatedEmployeeId)},
                 n.EmployeeId AS {nameof(TimesheetNotificationTemplate.EmployeeId)},
                 n.Subject AS {nameof(TimesheetNotificationTemplate.Subject)},
                 e.Fullname AS {nameof(TimesheetNotificationTemplate.EmployeeName)},

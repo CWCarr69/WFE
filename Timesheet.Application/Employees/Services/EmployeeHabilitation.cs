@@ -1,30 +1,41 @@
 ﻿using Timesheet.Domain.Models.Employees;
+using Timesheet.Domain.Repositories;
 
 namespace Timesheet.Application.Employees.Services
 {
     public class EmployeeHabilitation : IEmployeeHabilitation
     {
-        public EmployeeRoleOnData GetEmployeeRoleOnData(string author, bool isAdministrator, string dataOwner, string? dataOwnerPrimaryApprover, string? dataOwnerSecondaryApprover)
+        private readonly IHierarchyRepository _hierarchy;
+
+        public EmployeeHabilitation(IHierarchyRepository hierarchy)
         {
-            var employeeRoleOnData = EmployeeRoleOnData.NONE;
-            if (isAdministrator)
+            this._hierarchy = hierarchy;
+        }
+
+        public async Task<EmployeeRoleOnData> GetEmployeeRoleOnData(string author, string dataOwner, bool isAdministrator)
+        {
+            if(author is null)
             {
-                employeeRoleOnData = EmployeeRoleOnData.ADMINISTRATOR;
-            }
-            else if (author is not null && author == dataOwner)
-            {
-                employeeRoleOnData = EmployeeRoleOnData.CREATOR;
-            }
-            else if (author is not null && author == dataOwnerPrimaryApprover)
-            {
-                employeeRoleOnData = EmployeeRoleOnData.APPROVER;
-            }
-            else if (author is not null && author == dataOwnerSecondaryApprover)
-            {
-                employeeRoleOnData = EmployeeRoleOnData.APPROVER;
+                return EmployeeRoleOnData.NONE;
             }
 
-            return employeeRoleOnData;
+
+            if (isAdministrator)
+            {
+                return EmployeeRoleOnData.ADMINISTRATOR;
+            }
+
+            if (author == dataOwner)
+            {
+                return EmployeeRoleOnData.CREATOR;
+            }
+
+            if (await _hierarchy.IsEmployeeManager(dataOwner, author))
+            {
+                return EmployeeRoleOnData.APPROVER;
+            }
+
+            return EmployeeRoleOnData.NONE;
         }
     }
 }

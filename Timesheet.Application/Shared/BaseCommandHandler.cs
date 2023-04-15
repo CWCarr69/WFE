@@ -85,14 +85,9 @@ namespace Timesheet.Application
 
         private async Task PublishEvents() => await this._eventDispatcher.Publish(Events);
 
-        protected EmployeeRoleOnData GetCurrentEmployeeRoleOnData(BaseCommand command, Employee? employee)
+        protected async Task<EmployeeRoleOnData> GetCurrentEmployeeRoleOnData(BaseCommand command, Employee? employee)
         {
-            return _employeeHabilitation.GetEmployeeRoleOnData(
-                command.Author?.Id,
-                command.Author?.IsAdministrator ?? false,
-                employee?.Id,
-                employee?.PrimaryApprover?.Id,
-                employee?.SecondaryApprover?.Id);
+            return await _employeeHabilitation.GetEmployeeRoleOnData( command.Author?.Id, employee?.Id, command.Author?.IsAdministrator ?? false);
         }
     }
 }

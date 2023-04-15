@@ -5,7 +5,8 @@ namespace Timesheet.Domain.ReadModels.Timesheets
     public class EmployeeTimesheetEntry
     {
         public string Id { get; set; }
-        public string TimesheetHeaderId { get; set; }
+        public string EmployeeId { get; set; }
+        public string TimesheetId { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime ModifiedDate { get; set; }
         public DateTime WorkDate { get; set; }
