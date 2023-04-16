@@ -199,13 +199,6 @@ namespace Timesheet.Infrastructure.Persistence.Queries
 
         #region Export
         private const string AllEmployeeTimesheetByPayrollPeriodQueryPayrollPeriodParam = "@payrollPeriod";
-        private const string AllEmployeeTimesheetByPayrollPeriodQueryIsSalariedParam = "@isSalaried";
-        private const string AllEmployeeTimesheetByPayrollPeriodQueryWeeklyTimesheetParam = "@weeklyTimesheet";
-        private const string AllEmployeeTimesheetByPayrollPeriodQueryMonthlyTimesheetParam = "@monthlyTimesheet";
-        private const string AllEmployeeTimesheetByPayrollPeriodQueryHolidayPayrollCodeIdParam = "@holidayPayrollCodeId";
-        private const string AllEmployeeTimesheetByPayrollPeriodQueryUnpaidPayrollCodeIdParam = "@unpaidPayrollCodeId";
-        private const string AllEmployeeTimesheetByPayrollPeriodQueryApprovedEntryStatus = "@approvedStatus";
-
 
         public const string AllEmployeeTimesheetByPayrollPeriodQuery = $@"
             SELECT 
@@ -216,60 +209,17 @@ namespace Timesheet.Infrastructure.Persistence.Queries
         ";
 
         #region External Export
-        private const string ExternalAllEmployeeTimesheetEntriesByPayrollPeriodQuery = $@"
-            SELECT 
-                ('""""""' +  RIGHT('0000' + CAST(te.EmployeeId AS varchar(4)), 4 )+ '""""""') AS {nameof(ExternalTimesheetEntryDetails.No)},
-                pt.ExternalCode AS {nameof(ExternalTimesheetEntryDetails.PayrollCodeId)},
-                te.Hours  as {nameof(ExternalTimesheetEntryDetails.Hours)},
-                ('""""""'+ cast((coalesce(te.ProfitCenterNumber, e.defaultProfitCenter)) as varchar)+'""""""') as {nameof(ExternalTimesheetEntryDetails.CC1)},
-                IIF(COALESCE(JobNumber, ServiceOrderNumber) is null or LEN(COALESCE(JobNumber, ServiceOrderNumber)) = 0, '', ('""""""'+ Left(coalesce(te.JobNumber, te.ServiceOrderNumber),10) +'""""""')) AS {nameof(ExternalTimesheetEntryDetails.Job_Code)},
-                ('""""""'+Convert(varchar,WorkDate,1)+'""""""') AS {nameof(ExternalTimesheetEntryDetails.Begin_Date)},
-                ('""""""'+Convert(varchar,WorkDate,1)+'""""""') AS {nameof(ExternalTimesheetEntryDetails.End_Date)}
-
-                --concat(replace(convert(varchar, te.WorkDate, 10),'-','/'), ' 1:01am') AS {nameof(ExternalTimesheetEntryDetails.Begin_Date)},
-                --concat(replace(convert(varchar, te.WorkDate, 10),'-','/'), ' 23:49:59') AS {nameof(ExternalTimesheetEntryDetails.End_Date)},
-
-            FROM timesheetEntry te
-            JOIN timesheets t on t.id = te.TimesheetHeaderId
-            JOIN employees e on e.Id = te.EmployeeId
-            JOIN PayrollTypes pt on pt.numId = te.PayrollCodeId
-            LEFT JOIN TimesheetException tex ON tex.TimesheetEntryId = te.Id And tex.EmployeeId = e.Id
-            WHERE tex.Id is null AND te.Status = {AllEmployeeTimesheetByPayrollPeriodQueryApprovedEntryStatus} AND
-            t.payrollPeriod = {AllEmployeeTimesheetByPayrollPeriodQueryPayrollPeriodParam}
-            AND pt.numId != {AllEmployeeTimesheetByPayrollPeriodQueryUnpaidPayrollCodeIdParam}
-        ";
-
-        private const string ExternalAllEmployeeTimesheetHolidaysByPayrollPeriodQuery = $@"
-            SELECT 
-                ('""""""' +  RIGHT('0000' + CAST(e.Id AS varchar(4)), 4 )+ '""""""') AS {nameof(ExternalTimesheetEntryDetails.No)},
-                pt.ExternalCode AS {nameof(ExternalTimesheetEntryDetails.PayrollCodeId)},
-                tho.Hours  as {nameof(ExternalTimesheetEntryDetails.Hours)},
-                (e.defaultProfitCenter) as {nameof(ExternalTimesheetEntryDetails.CC1)},
-                ('') as {nameof(ExternalTimesheetEntryDetails.Job_Code)},
-                (''+Convert(varchar,tho.WorkDate,1)+'""""""') AS {nameof(ExternalTimesheetEntryDetails.Begin_Date)},
-                (''+Convert(varchar,tho.WorkDate,1)+'""""""') AS {nameof(ExternalTimesheetEntryDetails.End_Date)}
-            FROM timesheetHoliday tho
-            JOIN timesheets t on t.id = tho.TimesheetHeaderId
-            JOIN PayrollTypes pt on pt.numId = {AllEmployeeTimesheetByPayrollPeriodQueryHolidayPayrollCodeIdParam}
-            JOIN employees e on (
-                (e.IsSalaried = {AllEmployeeTimesheetByPayrollPeriodQueryIsSalariedParam} AND t.type = {AllEmployeeTimesheetByPayrollPeriodQueryWeeklyTimesheetParam}) 
-                OR 
-                (e.IsSalaried != {AllEmployeeTimesheetByPayrollPeriodQueryIsSalariedParam} AND t.type = {AllEmployeeTimesheetByPayrollPeriodQueryMonthlyTimesheetParam}))
-            LEFT JOIN TimesheetException ho ON ho.TimesheetEntryId = tho.Id And ho.EmployeeId = e.Id
-            WHERE ho.Id is null
-            AND t.payrollPeriod = {AllEmployeeTimesheetByPayrollPeriodQueryPayrollPeriodParam}
-        ";
-
         public const string ExternalAllEmployeeTimesheetAllEntriesByPayrollPeriodQuery = $@"
-            SELECT * 
-            FROM ({ExternalAllEmployeeTimesheetEntriesByPayrollPeriodQuery}) entries
-            UNION ALL ({ExternalAllEmployeeTimesheetHolidaysByPayrollPeriodQuery})
-            ORDER BY 2
-        ";
-
-        public const string ExternalAllEmployeeTimesheetEntriesWithoutHolidaysByPayrollPeriodQuery = $@"
-            SELECT * 
-            FROM ({ExternalAllEmployeeTimesheetEntriesByPayrollPeriodQuery}) entries
+            SELECT 
+                {nameof(ExternalTimesheetEntryDetails.No)},
+                {nameof(ExternalTimesheetEntryDetails.PayrollCodeId)},
+                {nameof(ExternalTimesheetEntryDetails.Hours)},
+                {nameof(ExternalTimesheetEntryDetails.CC1)},
+                {nameof(ExternalTimesheetEntryDetails.Job_Code)},
+                {nameof(ExternalTimesheetEntryDetails.Begin_Date)},
+                {nameof(ExternalTimesheetEntryDetails.End_Date)}
+            FROM ExternalEmployeeTimesheetEntries
+            WHERE payrollPeriod = {AllEmployeeTimesheetByPayrollPeriodQueryPayrollPeriodParam}
             ORDER BY 2
         ";
         #endregion
@@ -280,82 +230,37 @@ namespace Timesheet.Infrastructure.Persistence.Queries
         private const string AllTimesheetEntriesBySearchCriteriaQueryEmployeeIdParam = "@employeeId";
 
         public const string AllTimesheetEntriesBySearchCriteriaQueryDepartmentWhereClause = $@"
-            AND e.Department = {AllTimesheetEntriesBySearchCriteriaQueryDepartmentParam}
+            AND te.Department = {AllTimesheetEntriesBySearchCriteriaQueryDepartmentParam}
         ";
 
         public const string AllTimesheetEntriesBySearchCriteriaQueryEmployeeWhereClause = $@"
-            AND e.Id = {AllTimesheetEntriesBySearchCriteriaQueryEmployeeIdParam}
+            AND te.Id = {AllTimesheetEntriesBySearchCriteriaQueryEmployeeIdParam}
         ";
 
-        private const string AllTimesheetEntriesBySearchCriteriaQuery = $@"
+        public const string AllEmployeeTimesheetAllEntriesByPayrollPeriodQuery = $@"
             SELECT 
-                te.Id AS {nameof(TimesheetEntryDetails.TimesheetEntryId)},
+                te.TimesheetEntryId AS {nameof(TimesheetEntryDetails.TimesheetEntryId)},
                 te.EmployeeId as {nameof(TimesheetEntryDetails.EmployeeId)},
-                e.Fullname as {nameof(TimesheetEntryDetails.Fullname)},
+                te.Fullname as {nameof(TimesheetEntryDetails.Fullname)},
                 te.TimesheetHeaderId AS {nameof(TimesheetEntryDetails.TimesheetHeaderId)},
                 te.WorkDate  as {nameof(TimesheetEntryDetails.WorkDate)},
                 te.PayrollCodeId  as {nameof(TimesheetEntryDetails.PayrollCodeId)},
-                pt.PayrollCode  as {nameof(TimesheetEntryDetails.PayrollCode)},
-                te.Hours  as {nameof(TimesheetEntryDetails.Quantity)},
+                te.PayrollCode  as {nameof(TimesheetEntryDetails.PayrollCode)},
+                te.Quantity  as {nameof(TimesheetEntryDetails.Quantity)},
                 te.CustomerNumber  as {nameof(TimesheetEntryDetails.CustomerNumber)},
                 te.JobNumber  as {nameof(TimesheetEntryDetails.JobNumber)},
                 te.JobDescription  as {nameof(TimesheetEntryDetails.JobDescription)},
                 te.LaborCode  as {nameof(TimesheetEntryDetails.LaborCode)},
                 te.ServiceOrderNumber  as {nameof(TimesheetEntryDetails.ServiceOrderNumber)},
-                coalesce(te.ProfitCenterNumber, e.defaultProfitCenter)  as {nameof(TimesheetEntryDetails.ProfitCenterNumber)},
-                e.Department  as {nameof(TimesheetEntryDetails.Department)},
+                te.ProfitCenterNumber as {nameof(TimesheetEntryDetails.ProfitCenterNumber)},
+                te.Department  as {nameof(TimesheetEntryDetails.Department)},
                 te.Description  as {nameof(TimesheetEntryDetails.Description)},
                 te.OutOffCountry  as {nameof(TimesheetEntryDetails.OutOffCountry)},
-                te.Status  as {nameof(TimesheetEntryDetails.TimesheetEntryStatus)}
-            FROM timesheetEntry te
-            JOIN timesheets t on t.id = te.TimesheetHeaderId
-            JOIN employees e on e.Id = te.EmployeeId
-            JOIN payrollTypes pt on pt.numId =  te.PayrollCodeId
-            LEFT JOIN TimesheetException tex ON tex.TimesheetEntryId = te.Id And tex.EmployeeId = e.Id
-            WHERE tex.Id is null AND 
-            t.payrollPeriod = {AllTimesheetEntriesBySearchCriteriaQueryPayrollPeriodParam}
+                te.TimesheetEntryStatus  as {nameof(TimesheetEntryDetails.TimesheetEntryStatus)}
+            FROM AllEmployeeTimesheetEntriesAndHolidays te
+            WHERE te.TimesheetHeaderId = {AllTimesheetEntriesBySearchCriteriaQueryPayrollPeriodParam}
             @AllTimesheetEntriesBySearchCriteriaQueryDepartmentWhereClause
             @AllTimesheetEntriesBySearchCriteriaQueryEmployeeWhereClause
-        ";
-
-        private const string AllEmployeeTimesheetHolidaysBySearchCriteriaQuery = $@"
-            SELECT 
-                tho.Id AS {nameof(TimesheetEntryDetails.TimesheetEntryId)},
-                e.Id as {nameof(TimesheetEntryDetails.EmployeeId)},
-                e.Fullname as {nameof(TimesheetEntryDetails.Fullname)},
-                tho.TimesheetHeaderId AS TimesheetHeaderId,
-                tho.WorkDate  as {nameof(TimesheetEntryDetails.WorkDate)},
-                3  as {nameof(TimesheetEntryDetails.PayrollCodeId)},
-                pt.PayrollCode  as {nameof(TimesheetEntryDetails.PayrollCode)},
-                tho.Hours  as {nameof(TimesheetEntryDetails.Quantity)},
-                null  as {nameof(TimesheetEntryDetails.CustomerNumber)},
-                null  as {nameof(TimesheetEntryDetails.JobNumber)},
-                null  as {nameof(TimesheetEntryDetails.JobDescription)},
-                null  as {nameof(TimesheetEntryDetails.LaborCode)},
-                null  as {nameof(TimesheetEntryDetails.ServiceOrderNumber)},
-                e.defaultProfitCenter  as {nameof(TimesheetEntryDetails.ProfitCenterNumber)},
-                e.Department  as {nameof(TimesheetEntryDetails.Department)},
-                tho.Description  as {nameof(TimesheetEntryDetails.Description)},
-                null  as {nameof(TimesheetEntryDetails.OutOffCountry)},
-                tho.Status  as {nameof(TimesheetEntryDetails.TimesheetEntryStatus)}
-            FROM timesheetHoliday tho
-            JOIN timesheets t on t.id = tho.TimesheetHeaderId
-            JOIN payrollTypes pt on pt.numId =  {AllEmployeeTimesheetByPayrollPeriodQueryHolidayPayrollCodeIdParam}
-            JOIN employees e on (
-                (e.IsSalaried = {AllEmployeeTimesheetByPayrollPeriodQueryIsSalariedParam} AND t.type = {AllEmployeeTimesheetByPayrollPeriodQueryWeeklyTimesheetParam}) 
-                OR 
-                (e.IsSalaried != {AllEmployeeTimesheetByPayrollPeriodQueryIsSalariedParam} AND t.type = {AllEmployeeTimesheetByPayrollPeriodQueryMonthlyTimesheetParam}))
-            LEFT JOIN TimesheetException ho ON ho.TimesheetEntryId = tho.Id And ho.EmployeeId = e.Id
-            WHERE ho.Id is null AND t.payrollPeriod = {AllEmployeeTimesheetByPayrollPeriodQueryPayrollPeriodParam}
-            @{nameof(AllTimesheetEntriesBySearchCriteriaQueryDepartmentWhereClause)}
-            @{nameof(AllTimesheetEntriesBySearchCriteriaQueryEmployeeWhereClause)}
-        ";
-
-        public const string AllEmployeeTimesheetAllEntriesByPayrollPeriodQuery = $@"
-            SELECT * 
-            FROM ({AllTimesheetEntriesBySearchCriteriaQuery}) entries
-            UNION ALL ({AllEmployeeTimesheetHolidaysBySearchCriteriaQuery})
-            ORDER BY 2
         ";
         #endregion
 
@@ -555,10 +460,6 @@ namespace Timesheet.Infrastructure.Persistence.Queries
                 payrollPeriod,
                 department,
                 employeeId,
-                isSalaried = true,
-                weeklyTimesheet = TimesheetType.WEEKLY,
-                monthlyTimesheet = TimesheetType.SALARLY,
-                holidayPayrollCodeId = (int) TimesheetFixedPayrollCodeEnum.HOLIDAY
             });
 
             timesheet.Entries = entries;
@@ -566,7 +467,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             return timesheet;
         }
 
-        public async Task<AllEmployeesTimesheet<ExternalTimesheetEntryDetails>> GetAllTimesheetEntriesByPayrollPeriod(string payrollPeriod, bool ignoreHolidays)
+        public async Task<AllEmployeesTimesheet<ExternalTimesheetEntryDetails>> GetAllTimesheetEntriesByPayrollPeriod(string payrollPeriod)
         {
             var query = QueryTimesheetConstants.AllEmployeeTimesheetByPayrollPeriodQuery;
             var timesheet = (await _dbService.QueryAsync<AllEmployeesTimesheet<ExternalTimesheetEntryDetails>>(query, new { payrollPeriod }))?.FirstOrDefault();
@@ -576,19 +477,11 @@ namespace Timesheet.Infrastructure.Persistence.Queries
                 return null;
             }
 
-            query = ignoreHolidays
-                ? QueryTimesheetConstants.ExternalAllEmployeeTimesheetEntriesWithoutHolidaysByPayrollPeriodQuery
-                : QueryTimesheetConstants.ExternalAllEmployeeTimesheetAllEntriesByPayrollPeriodQuery;
+            query = QueryTimesheetConstants.ExternalAllEmployeeTimesheetAllEntriesByPayrollPeriodQuery;
 
             var entries = await _dbService.QueryAsync<ExternalTimesheetEntryDetails>(query, new
             {
                 payrollPeriod,
-                isSalaried = true,
-                weeklyTimesheet = TimesheetType.WEEKLY,
-                monthlyTimesheet = TimesheetType.SALARLY,
-                holidayPayrollCodeId = (int)TimesheetFixedPayrollCodeEnum.HOLIDAY,
-                unpaidPayrollCodeId = (int)TimesheetFixedPayrollCodeEnum.UNPAID,
-                approvedStatus = TimesheetEntryStatus.APPROVED
             });
             timesheet.Entries = entries;
 
@@ -628,7 +521,8 @@ namespace Timesheet.Infrastructure.Persistence.Queries
                         Department = e.Department,
                         Description = e.Description,
                         OutOffCountry = e.OutOffCountry,
-                        Status = e.TimesheetEntryStatus
+                        Status = e.TimesheetEntryStatus,
+                        IsOrphan = e.IsOrphan
                     })
                 }).ToList();
         }

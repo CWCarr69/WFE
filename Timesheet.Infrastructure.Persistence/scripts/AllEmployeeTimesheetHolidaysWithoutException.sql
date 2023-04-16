@@ -1,4 +1,4 @@
-﻿CREATE VIEW AllEmployeeTimesheetHolidaysWithoutException  
+﻿ALTER VIEW AllEmployeeTimesheetHolidaysWithoutException  
 AS SELECT
     tho.Id AS TimesheetEntryId,
     e.Id as EmployeeId,
@@ -27,5 +27,6 @@ AS SELECT
     JOIN timesheets t on t.id = tho.TimesheetHeaderId
     JOIN payrollTypes pt on pt.payrollCode = 'HOLIDAY'
     JOIN employees e on ((e.IsSalaried = 1 AND t.type = 1) OR (e.IsSalaried = 0 AND t.type = 0)) AND e.UsesTimesheet=1
-    LEFT JOIN TimesheetException ho ON ho.TimesheetEntryId = tho.Id And ho.EmployeeId = e.Id
+    JOIN AllEmployeeTimesheetPeriods etp on etp.employeeId = e.id AND etp.timesheetHeaderId = tho.TimesheetHeaderId
+	LEFT JOIN TimesheetException ho ON ho.TimesheetEntryId = tho.Id And ho.EmployeeId = e.Id
     WHERE ho.Id is null

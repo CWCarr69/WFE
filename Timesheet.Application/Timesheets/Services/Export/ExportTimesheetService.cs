@@ -40,26 +40,26 @@ namespace Timesheet.Application.Timesheets.Services.Export
 
         public async Task ExportAdaptedReviewToExternal(string payrollPeriod)
         {
-            string csv = await GetTimesheetAsCsv(payrollPeriod, _externalAdapter, true);
+            string csv = await GetTimesheetAsCsv(payrollPeriod, _externalAdapter);
             string outpuPath = Path.Combine(_externalDestinationBasePath, $"{_paylocityFileName}{payrollPeriod}");
             _csvWriter.SetPath(outpuPath);
             await _csvWriter.Write(csv);
         }
 
         public async Task<string> ExportAdaptedReviewToWeb(string payrollPeriod)
-        => await GetTimesheetAsCsv(payrollPeriod, _externalAdapter, true);
+        => await GetTimesheetAsCsv(payrollPeriod, _externalAdapter);
 
         public async Task<string> ExportRawReviewToWeb(string payrollPeriod, string? department, string? employeeId)
             => await GetTimesheetAsCsv(payrollPeriod, department, employeeId, _webAdapter);
 
-        private async Task<string> GetTimesheetAsCsv(string payrollPeriod, ITimesheetToCSVModelAdapter<ExternalTimesheetEntryDetails, ExternalTimesheetCSVEntryModel> adapter, bool ignoreHolidays)
+        private async Task<string> GetTimesheetAsCsv(string payrollPeriod, ITimesheetToCSVModelAdapter<ExternalTimesheetEntryDetails, ExternalTimesheetCSVEntryModel> adapter)
         {
             if (payrollPeriod is null)
             {
                 return string.Empty;
             }
 
-            var timesheet = await _timesheets.GetAllTimesheetEntriesByPayrollPeriod(payrollPeriod, ignoreHolidays);
+            var timesheet = await _timesheets.GetAllTimesheetEntriesByPayrollPeriod(payrollPeriod);
 
             if (timesheet is null)
             {

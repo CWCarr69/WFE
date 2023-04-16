@@ -47,6 +47,8 @@ namespace Timesheet.Domain.ReadModels.Timesheets
         public bool OutOffCountry { get; private set; }
         public string WorkArea => OutOffCountry ? "Out of country" : "In state";
         public TimesheetEntryStatus TimesheetEntryStatus { get; set; }
+        public bool IsOrphan => Status == TimesheetStatus.FINALIZED
+    && TimesheetEntryStatus != TimesheetEntryStatus.APPROVED && TimesheetEntryStatus != TimesheetEntryStatus.REJECTED;
         public string TimesheetEntryStatusName => TimesheetEntryStatus.ToString();
     }
 }

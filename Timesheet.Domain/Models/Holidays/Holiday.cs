@@ -41,7 +41,10 @@ namespace Timesheet.Domain.Models.Holidays
 
         public void Delete()
         {
-            RaiseDomainEvent(new HolidayDeleted(Id));
+            if(Date > DateTime.Now)
+            {
+                RaiseDomainEvent(new HolidayDeleted(Id));
+            }
         }
 
         public override string ToString() => $"{Date} - {Description}";
