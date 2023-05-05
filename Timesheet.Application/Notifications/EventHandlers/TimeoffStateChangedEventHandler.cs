@@ -6,17 +6,18 @@ using Timesheet.DomainEvents.Employees;
 
 namespace Timesheet.Application.Notifications.EventHandlers
 {
-    public class TimeoffStateChangedEventHandler : BaseTimeStateChangedEventHandler, IEventHandler<TimeoffStateChanged>
+    public class TimeoffStateChangedEventHandler : BaseTimeStateChangedEventHandler<TimeoffStateChanged>
     {
         public TimeoffStateChangedEventHandler(
             INotificationPopulationServices populationServices,
             INotificationReadRepository readRepository,
-            IWriteRepository<NotificationItem> writeRepository)
-            : base(populationServices, readRepository, writeRepository)
+            IWriteRepository<NotificationItem> writeRepository,
+            IUnitOfWork unitOfWork)
+            : base(populationServices, readRepository, writeRepository, unitOfWork)
         {
         }
 
-        public async Task Handle(TimeoffStateChanged @event)
+        public override async Task HandleEvent(TimeoffStateChanged @event)
         {
             await Handle(NotificationType.TIMEOFF,
                 @event.EmployeeId,

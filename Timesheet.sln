@@ -35,7 +35,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sharedlibs", "sharedlibs", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timesheet.Tools.IdGenerator", "Timesheet.Tools.IdGenerator\Timesheet.Tools.IdGenerator.csproj", "{DFBD2900-15AD-47C0-8E28-50F3FC0D8754}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timesheet.EmailService", "Timesheet.EmailService\Timesheet.EmailService.csproj", "{AC263320-578F-4C73-88D4-7C92E2563F86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timesheet.EmailService", "Timesheet.EmailService\Timesheet.EmailService.csproj", "{AC263320-578F-4C73-88D4-7C92E2563F86}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{FE14FD57-8537-4179-94E1-7660F84976AA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timesheet.TimesheetCreator", "Timesheet.TimesheetCreator\Timesheet.TimesheetCreator.csproj", "{470CA385-96B2-4739-9C12-5659414C5ED4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Regulations", "Regulations", "{9B5C5D80-9371-4E09-925C-21289A302C2E}"
+	ProjectSection(SolutionItems) = preProject
+		Pay codes regul - 5-5-2023--10-15.sql = Pay codes regul - 5-5-2023--10-15.sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -95,6 +104,10 @@ Global
 		{AC263320-578F-4C73-88D4-7C92E2563F86}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC263320-578F-4C73-88D4-7C92E2563F86}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC263320-578F-4C73-88D4-7C92E2563F86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{470CA385-96B2-4739-9C12-5659414C5ED4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{470CA385-96B2-4739-9C12-5659414C5ED4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{470CA385-96B2-4739-9C12-5659414C5ED4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{470CA385-96B2-4739-9C12-5659414C5ED4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -114,6 +127,7 @@ Global
 		{54B60E0A-FCF1-4C7C-A402-6D6332B74916} = {0F49CFD8-0D3C-4D80-9F2E-06C66D564FAF}
 		{DFBD2900-15AD-47C0-8E28-50F3FC0D8754} = {54B60E0A-FCF1-4C7C-A402-6D6332B74916}
 		{AC263320-578F-4C73-88D4-7C92E2563F86} = {1BBC0F75-F28F-4C1C-8AFE-B336066515E6}
+		{470CA385-96B2-4739-9C12-5659414C5ED4} = {FE14FD57-8537-4179-94E1-7660F84976AA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50FBDF77-109D-4686-A2D9-F50A5139020D}

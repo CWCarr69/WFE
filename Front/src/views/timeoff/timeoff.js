@@ -1,18 +1,11 @@
 import React, {
-  createRef,
-  Fragment,
   useCallback,
   useContext,
   useEffect,
   useRef,
 } from "react";
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import timeGridPlugin from "@fullcalendar/timegrid";
-import interactionPlugin, { Draggable } from "@fullcalendar/interaction";
 import {
   Accordion,
-  Badge,
   Button,
   Card,
   Col,
@@ -50,7 +43,6 @@ import {
   getTimeoffLabels,
   getTimeoffTypes,
 } from "../../redux/actions/referentials";
-import { DefaultGlobalDateFormat } from "../../services/util";
 import SpinnerComponent from "../../components/spinner/spinner";
 import { useSelector } from "react-redux";
 
@@ -60,18 +52,12 @@ const TimeOff = ({ match, history }) => {
   const loading = useSelector((state) => state.auth.showLoading);
 
   const [accordionTable, setAccordionTable] = useState(false);
-  const [accordionTableCalendar, setAccordionTableCalendar] = useState(false);
-  const [accordionCalendar, setAccordionCalendar] = useState(false);
   const [summary, setSummary] = useState([]);
   const [employee, setEmployee] = useState({});
   const [employeeComment, setEmployeeComment] = useState("");
   const [supervisorComment, setSupervisorComment] = useState("");
 
   const user = useSelector((state) => state.auth.auth);
-
-  const calendarRef = useRef({});
-  const [displayCalendar, setDisplayCalendar] = useState(false);
-  const [calendarFocusDate, setCalendarFocusDate] = useState("");
 
   const sort = 15;
   const [data, setData] = useState({
@@ -94,15 +80,9 @@ const TimeOff = ({ match, history }) => {
   const [types, setTypes] = useState([]);
   const [labels, setLabels] = useState([]);
 
-  const [currentPeriod, setCurrentPeriod] = useState({});
-
   useEffect(() => {
     setTitle(`${employee.fullName ? employee.fullName : ""} - Non-Billable`);
   }, [setTitle, employee]);
-
-  useEffect(() => {
-    zoomCalendarOndateIfRequired();
-  }, [displayCalendar, calendarFocusDate]);
 
   const getColor = (e) => {
     switch (e) {
@@ -205,8 +185,6 @@ const TimeOff = ({ match, history }) => {
         setData(resp);
         setEmployeeComment(resp.data.employeeComment);
         setSupervisorComment(resp.data.approverComment);
-        setDisplayCalendar(true);
-        setCalendarFocusDate(firstEntry.requestDate);
       })
       .catch((err) => {
         console.log(err);
@@ -229,26 +207,13 @@ const TimeOff = ({ match, history }) => {
       });
   }, [match.params.id, match.params.employee]);
 
-  const fetchCurrentPeriod = useCallback(async () => {
-    await getCurrentEmployeeTimesheetPeriod(match.params.employee)
-      .then((resp) => {
-        setCurrentPeriod(resp);
-      })
-      .catch((err) => {
-        toast.error(
-          err.response.data.message ? err.response.data.message : "Error"
-        );
-      });
-  }, [match.params.employee]);
-
   useEffect(() => {
     fetchData();
     fetchEmployee();
     fetchTypes();
     fetchLabels();
     fetchEmployee();
-    fetchCurrentPeriod();
-  }, [fetchData, fetchEmployee, fetchTypes, fetchEmployee, fetchCurrentPeriod]);
+  }, [fetchData, fetchEmployee, fetchTypes, fetchEmployee]);
 
   useEffect(() => {
     if (data.data && data.data.entries) {
@@ -265,14 +230,6 @@ const TimeOff = ({ match, history }) => {
   }, [data, timeoffData]);
 
   const activePag = useRef(0);
-
-  const zoomCalendarOndateIfRequired = () => {
-    if (displayCalendar && (match.params.date || calendarFocusDate)) {
-      let calendarApi = calendarRef.current.getApi();
-      let zoomDate = Number(match.params.date) || calendarFocusDate;
-      calendarApi.gotoDate(new Date(zoomDate));
-    }
-  };
 
   const onClick = (i) => {
     activePag.current = i;
@@ -603,6 +560,7 @@ const TimeOff = ({ match, history }) => {
         types={types}
         labels={labels}
       />
+      <Link to={`/timeoffs/${employee.id}`}>View all Timeoff</Link>
       <div className="card">
         <div className="card-body">
           <div className="custom-tab-1">
@@ -615,6 +573,9 @@ const TimeOff = ({ match, history }) => {
                   justifyContent: "flex-end",
                 }}
               >
+                <div className="d-inline-block me-3">
+                  <Link to={`/timeoffs/${employee.id}`}>All Requests</Link>
+                </div>
                 {data.authorizedActions.find((a) => a.name === "ADD_ENTRY") && (
                   <div className="d-inline-block me-3">
                     <Button
@@ -627,7 +588,13 @@ const TimeOff = ({ match, history }) => {
                 )}
                 {data.authorizedActions.find((a) => a.name === "SUBMIT") && (
                   <div className="d-inline-block me-3">
-                    <Button variant="warning" onClick={() => submit()}>
+                    <Button 
+                      style={{
+                        color: "black",
+                        backgroundColor: "#e7fdf9",
+                        borderColor: "#e7fdf9",
+                      }} 
+                      onClick={() => submit()}>
                       Submit
                     </Button>
                   </div>
@@ -660,19 +627,8 @@ const TimeOff = ({ match, history }) => {
                 )}
               </Col>
             </Row>
-            <Tab.Container animation={false} defaultActiveKey={"calendar"}>
+            <Tab.Container animation={false} defaultActiveKey={"table"}>
               <Nav as="ul" className="nav-pills mb-4 justify-content-start">
-                <Nav.Item as="li">
-                  <Nav.Link
-                    onClick={() => {
-                      calendarRef.current.getApi().changeView("dayGridMonth");
-                    }}
-                    eventKey={"calendar"}
-                  >
-                    <i className={`la la-calendar me-2`} />
-                    Calendar View
-                  </Nav.Link>
-                </Nav.Item>
                 <Nav.Item as="li">
                   <Nav.Link eventKey={"table"}>
                     <i className={`la la-list me-2`} />
@@ -681,245 +637,6 @@ const TimeOff = ({ match, history }) => {
                 </Nav.Item>
               </Nav>
               <Tab.Content className="pt-4">
-                <Tab.Pane eventKey={"calendar"}>
-                  <Row>
-                    <Col lg={12}>
-                      <Accordion
-                        className="accordion accordion-primary"
-                        defaultActiveKey="3"
-                      >
-                        <div className="accordion-item">
-                          <Accordion.Toggle
-                            as={Card.Text}
-                            eventKey="0"
-                            className={`accordion-header rounded-lg ${
-                              accordionCalendar ? "" : "collapsed"
-                            }`}
-                            onClick={() =>
-                              setAccordionCalendar(!accordionCalendar)
-                            }
-                          >
-                            <span className="accordion-header-text">
-                              Calendar legend
-                            </span>
-                            <span className="accordion-header-indicator"></span>
-                          </Accordion.Toggle>
-                          <Accordion.Collapse eventKey="0">
-                            <div className="accordion-body-text">
-                              <div className="mx-4 mt-4">
-                                <dl>
-                                  {types.map((t) => (
-                                    <dt
-                                      className="mt-2"
-                                      style={{
-                                        display: "flex",
-                                      }}
-                                    >
-                                      • {t.payrollCode.replace("_", " ")}{" "}
-                                      <div
-                                        className="mx-2 rounded"
-                                        style={{
-                                          backgroundColor: t.color,
-                                          width: 50,
-                                        }}
-                                      />
-                                    </dt>
-                                  ))}
-                                </dl>
-                              </div>
-                            </div>
-                          </Accordion.Collapse>
-                        </div>
-                      </Accordion>
-                      {data.data !== null && (
-                        <Col>
-                          <span>
-                            Timeoff period :{" "}
-                            <span class="font-w600">{moment(data.data.requestStartDate).format(DefaultGlobalDateFormat)}</span>
-                            &nbsp;-&nbsp;
-                            <span class="font-w600">{moment(data.data.requestEndDate).format(DefaultGlobalDateFormat)}</span>
-                          </span>
-                          &nbsp;&nbsp;&nbsp;
-                          <button
-                            className={`btn btn-xs  ${
-                              data.data.statusName !== "APPROVED"
-                                ? "btn-outline-danger"
-                                : "btn-outline-success"
-                            }`}
-                          >
-                            {data.data.statusName}
-                          </button>
-                        </Col>
-                      )}
-                      {displayCalendar && (
-                        <FullCalendar
-                          ref={calendarRef}
-                          defaultView="dayGridMonth"
-                          header={{
-                            left: "prev,next today",
-                            center: "title",
-                            right:
-                              "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
-                          }}
-                          height={600}
-                          rerenderDelay={10}
-                          eventDurationEditable={false}
-                          editable={true}
-                          plugins={[
-                            dayGridPlugin,
-                            timeGridPlugin,
-                            interactionPlugin,
-                          ]}
-                          events={timeoffData.current.map((d, i) => {
-                            return {
-                              id: i,
-                              title: d.hours,
-                              start: moment(d.requestDate).format("YYYY-MM-DD"),
-                              end: moment(d.requestDate).format("YYYY-MM-DD"),
-                              backgroundColor: getColor(d.payrollCode),
-                            };
-                          })}
-                          dayCellClassNames = {
-                            ({date}) => {
-                              let currentDate = new Date(date);
-                              if(currentPeriod &&  currentDate >= new Date(currentPeriod.start) && currentDate <= new Date(currentPeriod.end)){
-                                return ['bg-light-danger'] 
-                              }
-                            }
-                          }
-                        />
-                      )}
-                    </Col>
-                    <Col lg={12} className="mt-lg-4">
-                      <Accordion
-                        className="accordion accordion-primary"
-                        defaultActiveKey="16"
-                      >
-                        <div className="accordion-item">
-                          <Accordion.Toggle
-                            as={Card.Text}
-                            eventKey="13"
-                            className={`accordion-header rounded-lg ${
-                              accordionTableCalendar ? "" : "collapsed"
-                            }`}
-                            onClick={() =>
-                              setAccordionTableCalendar(!accordionTableCalendar)
-                            }
-                          >
-                            <span className="accordion-header-text">
-                              Total Hours : {data.data.totalHours}
-                            </span>
-                            <span className="accordion-header-indicator"></span>
-                          </Accordion.Toggle>
-                          <Accordion.Collapse eventKey="13">
-                            <div className="accordion-body-text">
-                              <div className="mx-4">
-                                <dl>
-                                  {summary.map((s) => (
-                                    <>
-                                      <dt>
-                                        •{" "}
-                                        {moment(s.requestDate).format(
-                                          "MMM DD, YYYY"
-                                        )}{" "}
-                                        - total hours : {s.hours}
-                                      </dt>
-                                      <dd
-                                        className="mx-3"
-                                        style={{
-                                          display: "flex",
-                                        }}
-                                      >
-                                        <div
-                                          className="mx-2 rounded"
-                                          style={{
-                                            backgroundColor: getColor(
-                                              s.payrollCode
-                                                ? s.payrollCode
-                                                : "OTHER"
-                                            ),
-                                            width: 50,
-                                          }}
-                                        />
-                                        {s.payrollCode} : {s.hours}
-                                      </dd>
-                                    </>
-                                  ))}
-                                </dl>
-                              </div>
-                            </div>
-                          </Accordion.Collapse>
-                        </div>
-                      </Accordion>
-                    </Col>
-                    <Row className="mt-lg-4">
-                      <Col lg={6} className="mt-lg-2">
-                        <label>Employee Comment</label>
-                        <textarea
-                          className="form-control"
-                          rows="4"
-                          id="comment"
-                          value={employeeComment || ""}
-                          disabled={
-                            !isOwner() && data.data.statusName !== "APPROVED"
-                          }
-                          onChange={(e) => setEmployeeComment(e.target.value)}
-                        ></textarea>
-                        {isOwner() && data.data.statusName !== "APPROVED" && (
-                          <div
-                            className="col-xl-12 col-lg-12 mt-4"
-                            style={{
-                              display: "flex",
-                              alignItems: "flex-end",
-                              justifyContent: "flex-end",
-                            }}
-                          >
-                            <Button
-                              variant="danger"
-                              size="sm"
-                              onClick={() => updateTimeoffComment()}
-                            >
-                              Update
-                            </Button>
-                          </div>
-                        )}
-                      </Col>
-                      <Col lg={6} className="mt-lg-2">
-                        <label>Supervisor Comment</label>
-                        <textarea
-                          className="form-control"
-                          rows="4"
-                          id="comment"
-                          disabled={
-                            !isSupervisor() &&
-                            data.data.statusName !== "APPROVED"
-                          }
-                          value={supervisorComment || ""}
-                          onChange={(e) => setSupervisorComment(e.target.value)}
-                        ></textarea>
-                        {isSupervisor() &&
-                          data.data.statusName !== "APPROVED" && (
-                            <div
-                              className="col-xl-12 col-lg-12 mt-4"
-                              style={{
-                                display: "flex",
-                                alignItems: "flex-end",
-                                justifyContent: "flex-end",
-                              }}
-                            >
-                              <Button
-                                variant="danger"
-                                size="sm"
-                                onClick={() => updateTimeoffComment()}
-                              >
-                                Update
-                              </Button>
-                            </div>
-                          )}
-                      </Col>
-                    </Row>
-                  </Row>
-                </Tab.Pane>
                 <Tab.Pane eventKey={"table"}>
                   <Table responsive striped className="mt-3">
                     <thead>
@@ -933,7 +650,10 @@ const TimeOff = ({ match, history }) => {
                     </thead>
                     <tbody>
                       {timeoffData.current.map((d, i) => (
-                        <tr key={i}>
+                        <tr key={i} style={{ 
+                            textDecoration: d.isRejected ? "line-through" : "none",
+                            fontWeight: d.isApproved ? "bold" : "normal"
+                          }}>
                           {data.authorizedActions.length > 0 ? (
                             <td
                               style={{

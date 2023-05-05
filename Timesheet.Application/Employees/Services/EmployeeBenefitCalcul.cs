@@ -1,6 +1,7 @@
 ﻿
 using Timesheet.Application.Employees.Queries;
 using Timesheet.Application.Employees.Services;
+using Timesheet.Application.Timesheets;
 using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Models.Employees;
 using Timesheet.Domain.ReadModels.Employees;
@@ -51,7 +52,7 @@ namespace Timesheet.Domain.Employees.Services
             this._queryEmployee = queryEmployee;
         }
 
-        public async Task<EmployeeCalculatedBenefits> GetBenefits(string employeeId, DateTime employmentDate)
+        public async Task<EmployeeCalculatedBenefits> GetBenefits(string employeeId, DateTime employmentDate, int cumulatedPreviousWorkPeriod)
         {
             var employeeProfile = await _queryEmployee.GetEmployeeProfile(employeeId);
             if(employeeProfile is null)
@@ -66,11 +67,11 @@ namespace Timesheet.Domain.Employees.Services
             var scheduledVacations = await GetScheduledVacationTimes(employeeId);
             var usedVacations = await GetUsedVacationTimes(employeeId, DateTime.Now);
             var rollover = await GetTotalRollOverTimes(employeeId, employmentDate);
-            var totalVacations = GetTotalCurrentVacationsTime(employmentDate, DateTime.Now);
+            var totalVacations = GetTotalCurrentVacationsTime(employmentDate, DateTime.Now, cumulatedPreviousWorkPeriod);
 
             var scheduledPersonals = await GetScheduledPersonalTimes(employeeId);
             var usedPersonals = await GetUsedPersonalTimes(employeeId);
-            var totalPersonals = GetTotalCurrentPersonalTimes();
+            var totalPersonals = GetTotalCurrentPersonalTimes(employmentDate);
 
             var personalHours = new HourInformation
             {
@@ -118,20 +119,29 @@ namespace Timesheet.Domain.Employees.Services
             }
 
             var decembre31LastYear = new DateTime(now.Year - 1, 12, 31);
-            var totalEligibleVaccationsLastYear = GetTotalCurrentVacationsTime(employmentDate, decembre31LastYear);
+            var totalEligibleVaccationsLastYear = GetTotalCurrentVacationsTime(employmentDate, decembre31LastYear, 0);
             var totalUsedVaccationsLastYear = await GetUsedVacationTimes(employeeId, decembre31LastYear);
 
             var rollover = totalEligibleVaccationsLastYear - totalUsedVaccationsLastYear;
             return rollover > 0 ? rollover : 0;
         }
 
-        private double GetTotalCurrentPersonalTimes()
+        private double GetTotalCurrentPersonalTimes(DateTime employmentDate)
         {
-            var months = DateTime.Now.Month - 1;
+            var now = DateTime.Now;
+            var months = 0;
+            if (employmentDate.Year == now.Year && now.Month > employmentDate.Month)
+            {
+                months = now.Month - employmentDate.Month - 1;
+            }
+            else if(employmentDate.Year < now.Year)
+            {
+                months = now.Month - 1;
+            }
             return months * PERSONAL_TIME_UNITY;
         }
 
-        private double GetTotalCurrentVacationsTime(DateTime employmentDate, DateTime now)
+        private double GetTotalCurrentVacationsTime(DateTime employmentDate, DateTime now, int  cumulatedPeviousWorkPeriod)
         {
             var oneYearAfterEmploymentDate = employmentDate.Date.AddYears(1);
             if (now < oneYearAfterEmploymentDate)
@@ -142,7 +152,7 @@ namespace Timesheet.Domain.Employees.Services
             var vacations = 0;
 
             var anniversaryDate = new DateTime(now.Year, employmentDate.Month, employmentDate.Day);
-            var yearsDifferencesSinceEmploymenDate = now.Year - employmentDate.Year;
+            var yearsDifferencesSinceEmploymenDate = now.YearsBetween(employmentDate.AddMonths(-cumulatedPeviousWorkPeriod));
             
             var isAnniversaryBenefitDate = PeriodIsSufficentForBonusVacations(yearsDifferencesSinceEmploymenDate)
                 && anniversaryDate <= now;

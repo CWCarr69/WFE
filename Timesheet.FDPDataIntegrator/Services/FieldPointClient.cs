@@ -17,7 +17,7 @@ namespace Timesheet.FDPDataIntegrator.Services
             this._configuration = configuration;
         }
 
-        public async Task LoadDataAsync(IntegrationType type)
+        public async Task LoadDataAsync(IntegrationType type, bool all=false)
         {
             long retryTime = 1;
             while (true)
@@ -28,8 +28,11 @@ namespace Timesheet.FDPDataIntegrator.Services
                     var fieldPointClient = new ServiceReference1.FPDTSWSSoapClient(EndpointConfiguration.FPDTSWSSoap12, _settings.FDP_Url);
 
                     int.TryParse(_configuration.GetSection("FPUpload:MaxHistory").Value, out var historyDays);
+                    historyDays = all ? 5 * 365 : historyDays;
                     (var transfertName, var inboundData) = FDPInboundDataTemplate.GetIntegrationParams(type, historyDays == 0 ? 15 : historyDays);
+                    
                     Response = await fieldPointClient.TransferAsync(transfertName, inboundData, _settings.FDP_Username, _settings.FDP_Password);
+                    
                     if (_settings.FDP_RetainFiles?.ToUpper() == FDPSettings.FDP_RetainFilesTrue)
                     {
                         var basePath = _configuration.GetSection("FPUpload:BaseDir").Value;

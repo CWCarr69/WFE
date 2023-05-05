@@ -43,8 +43,10 @@ namespace Timesheet.Application
             .AddScoped<TimeoffStateChangedEventHandler, TimeoffStateChangedEventHandler>()
             .AddScoped<TimesheetStateChangedEventHandler, TimesheetStateChangedEventHandler>()
             
-            .AddScoped<TimesheetHandleTimeoffApproved, TimesheetHandleTimeoffApproved>()
+            .AddScoped<EmployeeHandleTimesheetRejected, EmployeeHandleTimesheetRejected>()
+
             .AddScoped<TimehsheetHandleTimesheetFinalized, TimehsheetHandleTimesheetFinalized>()
+            .AddScoped<TimesheetHandleTimeoffApproved, TimesheetHandleTimeoffApproved>()
 
             .AddScoped<IAuditHandler, AuditHandler>();
         }

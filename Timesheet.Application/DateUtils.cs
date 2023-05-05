@@ -64,5 +64,19 @@
         }
 
         public static bool IsInSecondHalfOfMonth(this DateTime referenceDate) => referenceDate.Day > 15;
+
+        public static int YearsBetween(this DateTime referenceDate, DateTime anotherDate) 
+        {
+            var years = 0;
+            var cursorDate = referenceDate > anotherDate ? anotherDate : referenceDate;
+            var targetDate = referenceDate > anotherDate ? referenceDate : anotherDate;
+
+            while ((cursorDate = cursorDate.AddYears(1)) < targetDate)
+            {
+                years++;
+            }
+
+            return years;
+        }
     }
 }

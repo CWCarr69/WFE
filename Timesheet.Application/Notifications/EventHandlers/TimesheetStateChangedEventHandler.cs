@@ -7,17 +7,18 @@ using Timesheet.DomainEvents.Timesheets;
 
 namespace Timesheet.Application.Notifications.EventHandlers
 {
-    public class TimesheetStateChangedEventHandler : BaseTimeStateChangedEventHandler, IEventHandler<TimesheetStateChanged>
+    public class TimesheetStateChangedEventHandler : BaseTimeStateChangedEventHandler<TimesheetStateChanged>
     {
         public TimesheetStateChangedEventHandler(
             INotificationPopulationServices populationServices,
             INotificationReadRepository readRepository,
-            IWriteRepository<NotificationItem> writeRepository) 
-            : base(populationServices, readRepository, writeRepository)
+            IWriteRepository<NotificationItem> writeRepository,
+            IUnitOfWork unitOfWork) 
+            : base(populationServices, readRepository, writeRepository, unitOfWork)
         {
         }
 
-        public async Task Handle(TimesheetStateChanged @event)
+        public override async Task HandleEvent(TimesheetStateChanged @event)
         {
             await Handle(NotificationType.TIMEOFF,
                 @event.EmployeeId,

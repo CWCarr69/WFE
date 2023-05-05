@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { Button, Toast } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import { toast } from "react-toastify";
 //** Import Image */
 import SpinnerComponent from "../../components/spinner/spinner";
@@ -104,6 +104,7 @@ const Profile = ({ match }) => {
       personalHours: Number(upBenefits.personalHours),
       rolloverHours: Number(upBenefits.rolloverHours),
       considerFixedBenefits: upBenefits.considerFixedBenefits,
+      cumulatedPreviousWorkPeriod: upBenefits.cumulatedPreviousWorkPeriod,
     };
 
     await updateBenefits(data)
@@ -243,7 +244,19 @@ const Profile = ({ match }) => {
                       </dl>
                     </div>
                     {editBenefit && user.isAdministrator && (
-                      <div className="col-lg-6">
+                      <div className="col-lg-8">
+                        <div className="row mt-4" style={{ alignItems: "center" }}>
+                          <div className="col-sm-3"><label>Previous Work Period </label></div>
+                          <div className="col-sm-3 mt-2 mt-sm-0">
+                            <input
+                              type="text"
+                              className="form-control"
+                              value={upBenefits.cumulatedPreviousWorkPeriod}
+                              onChange={(e) => setUpBenefits({ ...upBenefits, cumulatedPreviousWorkPeriod: e.target.value, })}
+                            />
+                          </div>
+                        </div>
+                        <hr />
                         <div className="row" style={{ alignItems: "baseline" }}>
                           <div className="col-sm-1 mt-2 mt-sm-0">
                             <input
@@ -252,11 +265,7 @@ const Profile = ({ match }) => {
                               id="checkbox5"
                               defaultChecked={upBenefits.considerFixedBenefits}
                               onChange={(e) => {
-                                setUpBenefits({
-                                  ...upBenefits,
-                                  considerFixedBenefits:
-                                    !upBenefits.considerFixedBenefits,
-                                });
+                                setUpBenefits({ ...upBenefits, considerFixedBenefits: !upBenefits.considerFixedBenefits, });
                               }}
                             />
                           </div>

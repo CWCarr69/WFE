@@ -7,7 +7,6 @@ using Timesheet.Domain.Models.Notifications;
 using Timesheet.Domain.Models.Settings;
 using Timesheet.Domain.Models.Timesheets;
 using Timesheet.Domain.Repositories;
-using Timesheet.Domain.Timesheets;
 using Timesheet.Infrastructure.Persistence.Repositories;
 
 namespace Timesheet.Infrastructure.Persistence

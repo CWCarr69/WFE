@@ -21,6 +21,7 @@ import _ from "lodash";
 import moment from "moment";
 import { DefaultGlobalDateFormat } from "../../services/util";
 import TimesheetDatatable from "./timesheetDatatable";
+import OrphanTimesheet from "./orphanTimesheet";
 
 
 const TimesSheet = () => {
@@ -67,6 +68,8 @@ const TimesSheet = () => {
         delete: entry.payrollCode != "REGULAR" && entry.payrollCode != "OVERTIME",
         deleteAction: () => createTimesheetException(entry),
         isOrphan: entry.isOrphan,
+        isRejected: entry.isRejected,
+        isApproved: entry.isApproved,
         urlToTimesheet: `/timesheets/${selectedPeriod}/employee/${item.data.employeeId}/${new Date(entry.workDate).getTime()}`,
         urlToEmployee: `/profile/${item.data.employeeId}`,
         subRows: undefined,
@@ -123,7 +126,7 @@ const TimesSheet = () => {
         employeeId: entry.employeeId,
         timesheetEntryId: entry.id,
         timesheetId: entry.timesheetId,
-        isHoliday: entry.payrollCode == "HOLIDAY"
+        isHoliday: entry.isGlobalHoliday
       })
       .then((res) => {
         displaySuccess("Successful add of timesheet Exception");
@@ -175,6 +178,11 @@ const TimesSheet = () => {
               />
             </div>
           </div>
+        </div>
+      </div>
+      <div className="row">
+        <div id="orphan-timesheets" className="col-12">
+          <OrphanTimesheet />
         </div>
       </div>
     </>

@@ -10,7 +10,7 @@
             var where = string.Empty;
             if (directReports && approverId is not null)
             {
-                where = $"{whereKey} (primaryApproverId = {approverIdParam} or secondaryApproverId = {approverIdParam})";
+                where = $"{whereKey} (primaryApproverId = {approverIdParam})";
             }
 
             else if (approverId is not null)

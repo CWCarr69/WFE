@@ -1,6 +1,4 @@
-﻿using Timesheet.Domain.Models.Employees;
-using Timesheet.Domain.ReadModels.Employees;
-using Timesheet.Domain.ReadModels.Timesheets;
+﻿using Timesheet.Domain.ReadModels.Employees;
 using EmployeeBenefits = Timesheet.Domain.ReadModels.Employees.EmployeeBenefits;
 
 namespace Timesheet.Application.Employees.Queries

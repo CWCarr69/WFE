@@ -28,8 +28,8 @@ namespace Timesheet.FDPDataIntegrator.Employees
                 department: record.Department,
                 employmentDate: record.EmploymentDate,
                 terminationDate: null,
-                isSalaried: record.TimesheetPeriod.ToLower() == "hourly",
-                isAdministrator: /*record.JobRole == "ADMIN"*/ _administrators is not null && _administrators
+                isSalaried: record.TimesheetPeriod.Trim().ToLower() != "hourly",
+                isAdministrator: _administrators is not null && _administrators
                     .Any(a => record.ADLogin is not null 
                         && record.ADLogin.ToLower().StartsWith(a.ToLower()))
             );

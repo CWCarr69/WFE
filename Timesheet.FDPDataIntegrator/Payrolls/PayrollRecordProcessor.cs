@@ -16,23 +16,10 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
     internal class PayrollRecordProcessor
     : RecordProcessor<IAdapter<PayrollRecord, TimesheetHeader>, IRepository<TimesheetHeader>, PayrollRecord, TimesheetHeader>, IPayrollRecordProcessor
     {
-        private List<TimesheetEntry> _maybeDeletedTimesheetEntries;
-
-        protected override List<TimesheetEntry> MayBeDeletedTimesheetEntries 
-        {
-            get
-            {
-                if(_maybeDeletedTimesheetEntries is null)
-                {
-                    _maybeDeletedTimesheetEntries = _repository
-                        .GetRecents()
-                        .Select(t => t.TimesheetEntries.First())
-                        .ToList();
-                }
-
-                return _maybeDeletedTimesheetEntries;
-            }   
-        }
+        protected override List<TimesheetEntry> MayBeDeletedTimesheetEntries => _repository
+            .GetRecents()
+            .Select(t => t.TimesheetEntries.First())
+            .ToList();
 
         public PayrollRecordProcessor(IRepository<TimesheetHeader> repository, IAdapter<PayrollRecord, TimesheetHeader> adapter, ILogger<PayrollRecordProcessor> logger)
             : base(repository, adapter, logger)

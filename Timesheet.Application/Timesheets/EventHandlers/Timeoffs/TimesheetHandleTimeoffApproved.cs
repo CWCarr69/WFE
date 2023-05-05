@@ -1,14 +1,13 @@
-﻿using Timesheet.Application.Holidays.Commands;
+﻿using Timesheet.Application.Shared;
 using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Models.Timesheets;
-using Timesheet.Domain.ReadModels.Referential;
 using Timesheet.Domain.Repositories;
 using Timesheet.DomainEvents.Employees;
 using Timesheet.Models.Referential;
 
 namespace Timesheet.Application.Timesheets.EventHandlers
 {
-    internal class TimesheetHandleTimeoffApproved : IEventHandler<TimeoffApproved>
+    internal class TimesheetHandleTimeoffApproved : BaseEventHandler<TimeoffApproved>
     {
         private readonly ITimesheetReadRepository _readRepository;
         private readonly IWriteRepository<TimesheetHeader> _writeRepository;
@@ -17,14 +16,15 @@ namespace Timesheet.Application.Timesheets.EventHandlers
         public TimesheetHandleTimeoffApproved(
             ITimesheetReadRepository readRepository,
             IWriteRepository<TimesheetHeader> writeRepository,
-            IHolidayReadRepository holidayRepository)
+            IHolidayReadRepository holidayRepository,
+            IUnitOfWork unitOfWork): base(unitOfWork)
         {
             this._readRepository = readRepository;
             this._writeRepository = writeRepository;
             _holidayRepository = holidayRepository;
         }
 
-        public async Task Handle(TimeoffApproved @event)
+        public override async Task HandleEvent(TimeoffApproved @event)
         {
             //var @type = EventTypeToTimesheetPayrollCode(@event.Type);
             foreach (var entry in @event.TimeoffEntries)

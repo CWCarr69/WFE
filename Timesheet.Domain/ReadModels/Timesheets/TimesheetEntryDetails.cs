@@ -45,6 +45,7 @@ namespace Timesheet.Domain.ReadModels.Timesheets
         public string Department { get; private set; }
         public string Description { get; private set; }
         public bool OutOffCountry { get; private set; }
+        public bool IsGlobalHoliday { get; private set; }
         public string WorkArea => OutOffCountry ? "Out of country" : "In state";
         public TimesheetEntryStatus TimesheetEntryStatus { get; set; }
         public bool IsOrphan => Status == TimesheetStatus.FINALIZED

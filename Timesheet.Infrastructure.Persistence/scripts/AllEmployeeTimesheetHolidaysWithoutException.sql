@@ -3,6 +3,8 @@ AS SELECT
     tho.Id AS TimesheetEntryId,
     e.Id as EmployeeId,
     e.Fullname as Fullname,
+    e.PrimaryApproverId as PrimaryApproverId,
+	e.SecondaryApproverId as SecondaryApproverId,
     e.DefaultProfitCenter AS DefaultProfitCenter,
     tho.TimesheetHeaderId AS TimesheetHeaderId,
     tho.WorkDate  as WorkDate,
@@ -22,7 +24,8 @@ AS SELECT
 	tho.CreatedDate as CreatedDate,
 	tho.ModifiedDate as ModifiedDate,
 	0 as IsDeletable,
-	1 as isTimeoff
+	1 as isTimeoff,
+    1 as isGlobalHoliday
     FROM timesheetHoliday tho
     JOIN timesheets t on t.id = tho.TimesheetHeaderId
     JOIN payrollTypes pt on pt.payrollCode = 'HOLIDAY'

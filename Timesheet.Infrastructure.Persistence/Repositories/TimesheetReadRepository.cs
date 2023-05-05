@@ -61,6 +61,14 @@ namespace Timesheet.Infrastructure.Persistence.Repositories
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<IEnumerable<TimesheetHeader?>> GetTimesheetByEntry(string entryId)
+        {
+            return await _context.Timesheets
+                .Where(t => t.TimesheetEntries.Any(t => t.Id == entryId))
+                .Include(t => t.TimesheetEntries)
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<TimesheetHeader?>> GetTimesheetByHoliday(string holidayId)
         {
             return await _context.Timesheets

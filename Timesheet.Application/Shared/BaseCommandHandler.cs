@@ -1,4 +1,5 @@
-﻿using Timesheet.Application.Employees.Services;
+﻿using Newtonsoft.Json.Linq;
+using Timesheet.Application.Employees.Services;
 using Timesheet.Application.Shared;
 using Timesheet.Domain;
 using Timesheet.Domain.Exceptions;
@@ -73,7 +74,7 @@ namespace Timesheet.Application
                 if (this.Events.Any() && _eventDispatcher is not null)
                 {
                     //This call eventHandler. the eventHandlers are not supposed to complete the transaction
-                    await this.PublishEvents();
+                    await this.PublishEvents(token);
                 }
 
                 await _transaction.CompleteAsync(token);
@@ -83,7 +84,7 @@ namespace Timesheet.Application
             }
         }
 
-        private async Task PublishEvents() => await this._eventDispatcher.Publish(Events);
+        private async Task PublishEvents(CancellationToken token) => await this._eventDispatcher.Publish(Events, token);
 
         protected async Task<EmployeeRoleOnData> GetCurrentEmployeeRoleOnData(BaseCommand command, Employee? employee)
         {

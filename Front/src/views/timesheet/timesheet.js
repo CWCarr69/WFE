@@ -693,6 +693,8 @@ const Timesheet = ({ match, history }) => {
                           events={data.data.entries.map((d, i) => {
                             return {
                               id: i,
+                              isRejected: d.isRejected,
+                              isApproved: d.isApproved,
                               title: `${d.quantity} h.`,
                               start: moment(d.workDate).format("YYYY-MM-DD"),
                               end: moment(d.workDate).format("YYYY-MM-DD"),
@@ -704,6 +706,17 @@ const Timesheet = ({ match, history }) => {
                               let currentDate = new Date(date);
                               if(currentPeriod &&  currentDate >= new Date(currentPeriod.start) && currentDate <= new Date(currentPeriod.end)){
                                 return ['bg-light-danger'] 
+                              }
+                            }
+                          }
+                          eventRender = {
+                            (info) => {
+                              const event = info.event;
+                              if (event.isRejected) {
+                                info.el.querySelector('.fc-event-title').style.textDecoration = 'line-through';
+                              }
+                              if (event.isApproved) {
+                                info.el.querySelector('.fc-event-title').style.fontWeight = 'bold';
                               }
                             }
                           }
@@ -885,7 +898,10 @@ const Timesheet = ({ match, history }) => {
                     </thead>
                     <tbody>
                       {timesheetData.current.map((t, i) => (
-                        <tr key={t.id}>
+                        <tr key={t.id} style={{ 
+                          textDecoration: t.isRejected ? "line-through" : "none",
+                          fontWeight: t.isApproved ? "bold" : "normal"
+                        }}>
                           <td>
                             {t.isDeletable && (
                               <i

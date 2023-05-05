@@ -148,6 +148,6 @@ export const deleteTimesheet = async (data) => interactWithAPI({
 
 export const updateComment = async (data) => interactWithAPI({
   method: "PUT",
-  url: `${API()}/Employee/timesheet/AddComment`,
+  url: `${API()}/Timesheet/AddComment`,
   data: data,
 });

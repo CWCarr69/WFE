@@ -80,6 +80,9 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("CumulatedPreviousWorkPeriod")
+                        .HasColumnType("int");
+
                     b.Property<string>("DefaultProfitCenter")
                         .HasColumnType("nvarchar(max)");
 
@@ -130,6 +133,19 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
                     b.HasIndex("SecondaryApproverId");
 
                     b.ToTable("Employees");
+                });
+
+            modelBuilder.Entity("Timesheet.Domain.Models.Employees.EmployeeHierarchy", b =>
+                {
+                    b.Property<string>("EmployeeId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ManagerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToView("EmployeeHierarchy");
                 });
 
             modelBuilder.Entity("Timesheet.Domain.Models.Employees.Image", b =>
@@ -485,6 +501,43 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
                     b.ToTable("TimesheetEntry");
                 });
 
+            modelBuilder.Entity("Timesheet.Domain.Models.Timesheets.TimesheetException", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EmployeeId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("TimesheetEntryId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TimesheetHeaderId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TimesheetHeaderId");
+
+                    b.ToTable("TImesheetException");
+                });
+
             modelBuilder.Entity("Timesheet.Domain.Models.Timesheets.TimesheetHeader", b =>
                 {
                     b.Property<string>("Id")
@@ -560,38 +613,6 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
                     b.HasIndex("TimesheetHeaderId");
 
                     b.ToTable("TimesheetHoliday");
-                });
-
-            modelBuilder.Entity("Timesheet.Domain.Timesheets.TimesheetException", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("EmployeeId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("TimesheetEntryId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TImesheetException");
                 });
 
             modelBuilder.Entity("Timesheet.Models.Referential.PayrollTypes", b =>
@@ -826,6 +847,13 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
                         .HasForeignKey("TimesheetHeaderId");
                 });
 
+            modelBuilder.Entity("Timesheet.Domain.Models.Timesheets.TimesheetException", b =>
+                {
+                    b.HasOne("Timesheet.Domain.Models.Timesheets.TimesheetHeader", null)
+                        .WithMany("TimesheetExceptions")
+                        .HasForeignKey("TimesheetHeaderId");
+                });
+
             modelBuilder.Entity("Timesheet.Domain.Models.Timesheets.TimesheetHoliday", b =>
                 {
                     b.HasOne("Timesheet.Domain.Models.Timesheets.TimesheetHeader", null)
@@ -848,6 +876,8 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
                     b.Navigation("TimesheetComments");
 
                     b.Navigation("TimesheetEntries");
+
+                    b.Navigation("TimesheetExceptions");
 
                     b.Navigation("TimesheetHolidays");
                 });

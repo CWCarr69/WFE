@@ -5,6 +5,6 @@ namespace Timesheet.Application.Employees.Services
 {
     public interface IEmployeeBenefitCalculator
     {
-        Task<EmployeeCalculatedBenefits> GetBenefits(string employeeId, DateTime employmentDate);
+        Task<EmployeeCalculatedBenefits> GetBenefits(string employeeId, DateTime employmentDate, int cumulatedPreviousWorkPeriod);
     } 
 }

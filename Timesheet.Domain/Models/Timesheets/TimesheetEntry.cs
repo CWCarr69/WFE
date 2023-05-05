@@ -23,6 +23,7 @@ namespace Timesheet.Domain.Models.Timesheets
             OutOffCountry = outOffCountry;
             IsDeletable = isDeletable;
             JobTaskNumber = jobTaskNumber;
+            Status = TimesheetEntryStatus.IN_PROGRESS;
         }
 
         public static TimesheetEntry CreateFromApprovedTimeOff (string id, string employeeId, DateTime workDate, int payrollCodeId, double hours,

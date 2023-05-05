@@ -73,7 +73,7 @@ namespace Timesheet.Web.Api.Controllers
             {
                 return BadRequest("Employee not found");
             }
-            var employeeBenefits = await _benefitsServcies.GetBenefits(employeeId, employee.EmploymentDate.Value);
+            var employeeBenefits = await _benefitsServcies.GetBenefits(employeeId, employee.EmploymentDate.Value, employee.CumulatedPreviousWorkPeriod);
             return Ok(employeeBenefits);
         }
 

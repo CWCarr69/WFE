@@ -8,9 +8,13 @@ namespace Timesheet.Infrastructure.Dapper
     {
         private string _dbConnectionString;
 
-        public DatabaseService(ISqlConnectionString connectionString)
+        public DatabaseService(ISqlConnectionString connectionString) : this(connectionString.Value)
         {
-            _dbConnectionString = connectionString.Value;
+        }
+
+        public DatabaseService(string connectionString)
+        {
+            _dbConnectionString = connectionString;
         }
 
         public async Task<List<T>> QueryAsync<T>(string query, object? @params = null)

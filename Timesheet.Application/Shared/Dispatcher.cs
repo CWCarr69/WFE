@@ -15,7 +15,7 @@ namespace Timesheet.Application
             _service = service;
         }
 
-        public async Task Publish<TDomainEvent>(TDomainEvent @event) where TDomainEvent : IDomainEvent
+        public async Task Publish<TDomainEvent>(TDomainEvent @event, CancellationToken token) where TDomainEvent : IDomainEvent
         {
             if (@event is null)
             {
@@ -30,18 +30,18 @@ namespace Timesheet.Application
                 $"Event {nameof(@event)} is not registered.",
                 $"Event handler for {nameof(@event)} is not registered.");
 
-                await handler.Handle(@event as dynamic);
+                await handler.Handle(@event as dynamic, token);
             }catch(Exception ex)
             {
 
             }
         }
 
-        public async Task Publish<TDomainEvent>(IEnumerable<TDomainEvent> events) where TDomainEvent : IDomainEvent
+        public async Task Publish<TDomainEvent>(IEnumerable<TDomainEvent> events, CancellationToken token) where TDomainEvent : IDomainEvent
         {
             foreach(var @event in events)
             {
-                await Publish(@event);
+                await Publish(@event, token);
             }
         }
 

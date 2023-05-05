@@ -208,7 +208,7 @@ namespace Timesheet.Web.Api.Controllers
             return Ok();
         }
 
-        [Authorize(Roles = "SUPERVISOR, MANAGER, ADMINISTRATOR")]
+        [Authorize(Roles = "MANAGER, ADMINISTRATOR")]
         [HttpPut("Approve")]
         public async Task<IActionResult> Approve([FromBody] ApproveTimesheet command, CancellationToken token)
         {
@@ -221,7 +221,7 @@ namespace Timesheet.Web.Api.Controllers
         }
 
 
-        [Authorize(Roles = "SUPERVISOR, MANAGER, ADMINISTRATOR")]
+        [Authorize(Roles = "MANAGER, ADMINISTRATOR")]
         [HttpPut("Reject")]
         public async Task<IActionResult> Reject([FromBody] RejectTimesheet command, CancellationToken token)
         {
@@ -258,14 +258,14 @@ namespace Timesheet.Web.Api.Controllers
 
         private async Task<WithHabilitations<EmployeeTimesheet>> SetAuthorizedTransitions(string employeeId, EmployeeTimesheet? timesheet)
         {
-            var timesheetEntry = timesheet?.EntriesWithoutTimeoffs?.FirstOrDefault(t => t.Status != TimesheetEntryStatus.APPROVED);
+            var timesheetEntry = timesheet?.EntriesWithoutTimeoffs?.OrderBy(t => t.Status).ToList().FirstOrDefault(t => t.Status != TimesheetEntryStatus.APPROVED);
            
             return await SetAuthorizedTransitions(employeeId, timesheet, timesheetEntry);
         }
 
         private async Task<WithHabilitations<EmployeeTimesheetWithTotals>> SetAuthorizedTransitions(string employeeId, EmployeeTimesheetWithTotals? timesheet)
         {
-            var timesheetEntry = timesheet?.Entries?.FirstOrDefault();
+            var timesheetEntry = timesheet?.Entries?.OrderBy(t => t.Status).ToList().FirstOrDefault();
             return await SetAuthorizedTransitions(employeeId, timesheet, timesheetEntry);
         }
 

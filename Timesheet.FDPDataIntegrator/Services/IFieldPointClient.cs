@@ -6,6 +6,6 @@ namespace Timesheet.FDPDataIntegrator.Services
     {
         public string Response { get; }
 
-        public Task LoadDataAsync(IntegrationType type);
+        public Task LoadDataAsync(IntegrationType type, bool all=false);
     }
 }

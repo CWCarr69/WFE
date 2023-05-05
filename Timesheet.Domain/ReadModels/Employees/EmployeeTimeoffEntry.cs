@@ -12,5 +12,8 @@ namespace Timesheet.Domain.ReadModels.Employees
         public double Hours { get; set; }
         public string Label { get; set; }
         public string TimeoffHeaderId { get; set; }
+        public TimeoffEntryStatus Status { get; set; }
+        public bool IsRejected => Status == TimeoffEntryStatus.REJECTED;
+        public bool IsApproved => Status == TimeoffEntryStatus.PROCESSED;
     }
 }

@@ -32,8 +32,6 @@ import TimesSheet from "./comptabilite/timesSheet";
 import Timesheets from "./timesheet/timesheets";
 import TimeOffs from "./timeoff/timeOffs";
 import TimeOff from "./timeoff/timeoff";
-import ShopUnpaids from "./shopUnpaid/timeOffs";
-import ShopUnpaid from "./shopUnpaid/timeoff";
 import Timesheet from "./timesheet/timesheet";
 import { ToastContainer } from "react-toastify";
 import NewEntry from "./timesheet/newEntry";
@@ -63,10 +61,6 @@ const Markup = () => {
     /// TIMEOFF
     { url: "timeoffs/:id", component: TimeOffs },
     { url: "timeoffs/:id/employee/:employee/:date?", component: TimeOff },
-
-    /// SHOP & UNPAID
-    { url: "shop&unpaid/:id", component: ShopUnpaids },
-    { url: "shop&unpaid/:id/employee/:employee/:date?", component: ShopUnpaid },
 
     /// COMPTABILITE
     { url: "payroll/times-sheets", component: TimesSheet },

@@ -2,7 +2,6 @@
 using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Models.Employees;
 using Timesheet.DomainEvents.Timesheets;
-using Timesheet.Models.Referential;
 
 namespace Timesheet.Domain.Models.Timesheets
 {
@@ -38,6 +37,7 @@ namespace Timesheet.Domain.Models.Timesheets
         public IEnumerable<TimesheetEntry> TimesheetEntriesWithoutTimeoffs => TimesheetEntries?.Where(t => !t.IsTimeoff) ?? new List<TimesheetEntry>();
         public virtual ICollection<TimesheetHoliday> TimesheetHolidays { get; private set; } = new List<TimesheetHoliday>();
         public virtual ICollection<TimesheetComment> TimesheetComments { get; private set; } = new List<TimesheetComment>();
+        public virtual ICollection<TimesheetException> TimesheetExceptions { get; private set; } = new List<TimesheetException>();
 
         public bool IsFinalizable => DateTime.Now >= EndDate;
 
@@ -45,7 +45,7 @@ namespace Timesheet.Domain.Models.Timesheets
         {
             var now = workDate;
             var isInSecondHalf = now.IsInSecondHalfOfMonth();
-            var periodNumber = now.Month * 2 + (isInSecondHalf ? 2 : 1);
+            var periodNumber = (now.Month - 1) * 2 + (isInSecondHalf ? 2 : 1);
 
             var payrollPeriod = BiWeeklyPayrollPeriod(now, periodNumber);
             var start = isInSecondHalf ? now.HalfDayOfMonth().AddDays(1) : now.FirstDayOfMonth();
@@ -60,24 +60,22 @@ namespace Timesheet.Domain.Models.Timesheets
             var oneYearBefore = workDate.AddYears(-1);
             var oneYearAfter = workDate.AddYears(1);
 
-            //var currentPayrollPeriodStartDate = oneYearBefore.LastDayOfYear(DayOfWeek.Thursday).SevenDaysBefore();
-            var currentPayrollPeriodStartDate = oneYearBefore.LastDayOfYear(DayOfWeek.Friday);
-            //var nextPayrollPeriodStartDate = now.LastDayOfYear(DayOfWeek.Thursday).SevenDaysBefore();
-            var nextPayrollPeriodStartDate = now.LastDayOfYear(DayOfWeek.Friday);
+            var fridayBeforeLastThursdayOfPreviousYear = oneYearBefore.LastDayOfYear(DayOfWeek.Thursday).Previous(DayOfWeek.Friday);
+            var fridayBeforeLastThursdayOfCurrentYear = now.LastDayOfYear(DayOfWeek.Thursday).Previous(DayOfWeek.Friday);
 
-            var firstPayrollStartDate = now >= nextPayrollPeriodStartDate
-                ? nextPayrollPeriodStartDate
-                : currentPayrollPeriodStartDate;
+            var firstPayrollStartDateOfYear = now >= fridayBeforeLastThursdayOfCurrentYear
+                ? fridayBeforeLastThursdayOfCurrentYear
+                : fridayBeforeLastThursdayOfPreviousYear;
 
-            var nextThursday = now.Next(DayOfWeek.Thursday);
-            var numberOfWeeks = nextThursday.WeeksBetweenDays(firstPayrollStartDate);
+            var nextThursdayFromNow = now.Next(DayOfWeek.Thursday);
+            var numberOfWeeks = nextThursdayFromNow.WeeksBetweenDays(firstPayrollStartDateOfYear);
 
-            var payrollPeriod = now >= nextPayrollPeriodStartDate
-                ? WeeklyPayrollPeriod(oneYearAfter, numberOfWeeks)
-                : WeeklyPayrollPeriod(now, numberOfWeeks);
+            var payrollPeriod = now >= fridayBeforeLastThursdayOfCurrentYear
+                ? WeeklyPayrollPeriod(oneYearAfter.Year, numberOfWeeks)
+                : WeeklyPayrollPeriod(now.Year, numberOfWeeks);
 
             var start = now.Previous(DayOfWeek.Friday);
-            var end = nextThursday;
+            var end = nextThursdayFromNow;
 
             return new TimesheetHeader(payrollPeriod, payrollPeriod, start, end, TimesheetType.WEEKLY, TimesheetStatus.IN_PROGRESS);
         }
@@ -126,6 +124,16 @@ namespace Timesheet.Domain.Models.Timesheets
             this.UpdateMetadata();
             
             RaiseTimesheetWorkflowChangedEvent(employee, TimesheetEntryStatus.REJECTED.ToString());
+
+            var timeoffEntries = TimesheetEntries.Where(t => t.IsTimeoff);
+            if (timeoffEntries.Any())
+            {
+                RaiseDomainEvent(new TimesheetRejected
+                (
+                    EmployeeId: employee.Id,
+                    Dates: timeoffEntries.Select(e => e.WorkDate).ToList())
+                );
+            }
         }
 
         public void FinalizeTimesheet()
@@ -195,6 +203,30 @@ namespace Timesheet.Domain.Models.Timesheets
             this.UpdateMetadata();
         }
 
+
+        public void AddTimesheetException(string entryId, string employeeId, bool isHoliday)
+        {
+            var entry = TimesheetEntries.FirstOrDefault(t => t.Id == entryId);
+            var holiday = TimesheetHolidays.FirstOrDefault(h => h.Id == entryId);
+
+            if (!isHoliday && entry is null)
+            {
+                throw new EntityNotFoundException<TimesheetEntry>(nameof(TimesheetEntry));
+            }
+
+            if (isHoliday && holiday is null)
+            {
+                throw new EntityNotFoundException<TimesheetEntry>(nameof(TimesheetHoliday));
+            }
+
+            var timesheetException = new TimesheetException(entryId, employeeId, isHoliday ? nameof(TimesheetHoliday) : nameof(TimesheetEntry));
+
+            this.TimesheetExceptions.Add(timesheetException);
+            this.UpdateMetadata();
+
+            RaiseDomainEvent(new TimesheetRejected(employeeId, new List<DateTime>() { entry.WorkDate }));
+        }
+
         private void TransitionEntries(Employee employee, Action<TimesheetEntry> doTransition)
         {
             var entries = TimesheetEntries.Where(e => e.EmployeeId == employee?.Id);
@@ -228,7 +260,7 @@ namespace Timesheet.Domain.Models.Timesheets
             RaiseDomainEvent(new TimesheetStateChanged(employee.Id, employee.PrimaryApprover?.Id, employee.SecondaryApprover?.Id, status, this.Id));
         }
 
-        private static string WeeklyPayrollPeriod(DateTime date, int periodNumber) => $"{date.Year}-{periodNumber}H";
+        private static string WeeklyPayrollPeriod(int year, int periodNumber) => $"{year}-{periodNumber}H";
 
         private static string BiWeeklyPayrollPeriod(DateTime date, int periodNumber) => $"{date.Year}-{periodNumber}SS";
 

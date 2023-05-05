@@ -48,7 +48,10 @@ namespace Timesheet.Application.Timesheets.CommandHandlers
 
             timesheet.Reject(employee, command.Comment);
 
-            return Enumerable.Empty<IDomainEvent>();
+            var events = timesheet.GetDomainEvents();
+            timesheet.ClearDomainEvents();
+
+            return events;
         }
     }
 }

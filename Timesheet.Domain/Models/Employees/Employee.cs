@@ -39,6 +39,7 @@ namespace Timesheet.Domain.Models.Employees
         public Employee? PrimaryApprover { get; private set; }
         public Employee? SecondaryApprover { get; private set; }
         public EmployeeEmploymentData EmploymentData { get; private set; }
+        public int CumulatedPreviousWorkPeriod { get; private set; }
         public EmployeeContactData Contacts { get; private set; }
         public EmployeeBenefits BenefitsVariation { get; private set; } //Represent Benefit variation!
         public EmployeeBenefitsSnapshop BenefitsSnapshot { get; private set; }
@@ -141,11 +142,13 @@ namespace Timesheet.Domain.Models.Employees
 
         public void AddTimeoffEntry(DateTime requestDate, int typeId, double hours, TimeoffHeader timeoff, string label)
         {
-            var timeoffEntriesOnSameDate = _timeoffs.SelectMany(t => t.TimeoffEntries)
-                .Where(e => e.RequestDate.ToShortDateString() == requestDate.ToShortDateString())
+            var timeoffEntriesOnSameDate = _timeoffs
+                .Where(t => t.Status != TimeoffStatus.REJECTED)
+                .SelectMany(t => t.TimeoffEntries)
+                .Where(e => e.RequestDate.ToShortDateString() == requestDate.ToShortDateString() && e.Status != TimeoffEntryStatus.REJECTED)
                 .ToList();
 
-            var totalHoursOnSameDateExceedLimit = timeoffEntriesOnSameDate.Sum(e => /*e.Status != TimeoffEntryStatus.PROCESSED ? 0 : */e.Hours) + hours > EMPLOYEE_REGULAR_HOURS;
+            var totalHoursOnSameDateExceedLimit = timeoffEntriesOnSameDate.Sum(e => e.Hours) + hours > EMPLOYEE_REGULAR_HOURS;
 
             if (totalHoursOnSameDateExceedLimit)
             {
@@ -175,10 +178,19 @@ namespace Timesheet.Domain.Models.Employees
             timeoff.Update();
         }
 
+        public void RejectEntries(DateTime date)
+        {
+            GetTimeoffs(date).ToList().ForEach(t => t.RejectEntries(date));
+        }
+
         public void UpdateTimeoffEntry(TimeoffHeader timeoff, TimeoffEntry timeoffEntry, int typeId, double hours, string label)
         {
-            var timeoffEntriesOnSameDate = _timeoffs.SelectMany(t => t.TimeoffEntries)
-                .Where(e => e != timeoffEntry && e.RequestDate.ToShortDateString() == timeoffEntry.RequestDate.ToShortDateString())
+            var timeoffEntriesOnSameDate = _timeoffs
+                .Where(t => t.Status != TimeoffStatus.REJECTED)
+                .SelectMany(t => t.TimeoffEntries)
+                .Where(e => e != timeoffEntry 
+                        && e.RequestDate.ToShortDateString() == timeoffEntry.RequestDate.ToShortDateString()
+                        && e.Status != TimeoffEntryStatus.REJECTED)
                 .ToList();
 
             var totalHoursOnSameDateExceedLimit = timeoffEntriesOnSameDate.Sum(e => e.Hours) + hours > EMPLOYEE_REGULAR_HOURS;
@@ -252,6 +264,14 @@ namespace Timesheet.Domain.Models.Employees
         {
             var timeoff = GetTimeoff(timeoffId);
             return timeoff?.GetTimeoffEntry(timeoffEntryId);
+        }
+
+        public IEnumerable<TimeoffHeader> GetTimeoffs(DateTime date) =>
+            _timeoffs.Where(t => t.Status == TimeoffStatus.APPROVED && t.TimeoffEntries.Any(e => e.RequestDate == date));
+
+        public void SetPreviousWorkPeriod(int cumulatedPreviousWorkPeriod)
+        {
+            this.CumulatedPreviousWorkPeriod = cumulatedPreviousWorkPeriod;
         }
     }
 }

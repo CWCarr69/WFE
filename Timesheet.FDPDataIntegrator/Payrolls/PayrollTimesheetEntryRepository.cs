@@ -67,6 +67,7 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
             var timesheetCreatedDate = "@timesheetCreatedDate";
             var timesheetModifiedDate = "@timesheetModifiedDate";
             var timesheetUpdatedBy = "@timesheetUpdatedBy";
+            var timesheetStatus = "@timesheetStatus";
 
             var updates = $@"
             {nameof(TimesheetEntry.EmployeeId)} = {timesheetEmployeeId},
@@ -97,7 +98,8 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
             {nameof(TimesheetEntry.ProfitCenterNumber)},
             {nameof(TimesheetEntry.CreatedDate)},
             {nameof(TimesheetEntry.ModifiedDate)},
-            {nameof(TimesheetEntry.UpdatedBy)}
+            {nameof(TimesheetEntry.UpdatedBy)},
+            {nameof(TimesheetEntry.Status)}
             ";
 
             var insertValues = $@"
@@ -114,7 +116,9 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
             {timesheetProfitCenter},
             {timesheetCreatedDate},
             {timesheetModifiedDate},
-            {timesheetUpdatedBy}
+            {timesheetUpdatedBy},            
+            {timesheetStatus}
+
             ";
 
             var query = $@"IF EXISTS (SELECT * FROM {TimesheetEntryTable} WHERE {nameof(TimesheetEntry.Id)} = {timesheetId})
@@ -147,7 +151,8 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
                     timesheetProfitCenter = entry.ProfitCenterNumber,
                     timesheetCreatedDate = entry.CreatedDate,
                     timesheetModifiedDate = entry.ModifiedDate,
-                    timesheetUpdatedBy = entry.UpdatedBy
+                    timesheetUpdatedBy = entry.UpdatedBy,
+                    timesheetStatus = entry.Status
                 }).Wait();
             }
         }

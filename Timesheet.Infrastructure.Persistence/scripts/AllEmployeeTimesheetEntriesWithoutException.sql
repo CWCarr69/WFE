@@ -1,7 +1,9 @@
-﻿CREATE VIEW AllEmployeeTimesheetEntriesWithoutException AS SELECT 
+﻿ALTER VIEW AllEmployeeTimesheetEntriesWithoutException AS SELECT 
     te.Id AS TimesheetEntryId,
     te.EmployeeId AS EmployeeId,
     e.Fullname as Fullname,
+	e.PrimaryApproverId as PrimaryApproverId,
+	e.SecondaryApproverId as SecondaryApproverId,
     e.DefaultProfitCenter AS DefaultProfitCenter,
     te.TimesheetHeaderId AS TimesheetHeaderId,
     te.WorkDate  as WorkDate,
@@ -21,7 +23,8 @@
 	te.CreatedDate as CreatedDate,
 	te.ModifiedDate as ModifiedDate,
 	te.IsDeletable as IsDeletable,
-	te.IsTimeoff as isTimeoff
+	te.IsTimeoff as isTimeoff,
+    0 isGlobalHoliday
     FROM timesheetEntry te
     JOIN employees e on e.Id = te.EmployeeId AND e.UsesTimesheet=1
     JOIN payrollTypes pt on pt.numId = te.PayrollCodeId

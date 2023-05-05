@@ -1,23 +1,25 @@
-﻿using Timesheet.Domain.DomainEvents;
+﻿using Timesheet.Application.Shared;
+using Timesheet.Domain.DomainEvents;
 using Timesheet.Domain.Models.Timesheets;
 using Timesheet.Domain.Repositories;
 
 namespace Timesheet.Application.Timesheets.EventHandlers.Holidays
 {
-    internal sealed class TimesheetHandleHolidayAdded : IEventHandler<HolidayAdded>
+    internal sealed class TimesheetHandleHolidayAdded : BaseEventHandler<HolidayAdded>
     {
         private readonly ITimesheetReadRepository _readRepository;
         private readonly IWriteRepository<TimesheetHeader> _writeRepository;
 
         public TimesheetHandleHolidayAdded(
             ITimesheetReadRepository readRepository,
-            IWriteRepository<TimesheetHeader> writeRepository)
+            IWriteRepository<TimesheetHeader> writeRepository,
+            IUnitOfWork unitOfWork) : base(unitOfWork)
         {
             this._readRepository = readRepository;
             this._writeRepository = writeRepository;
         }
 
-        public async Task Handle(HolidayAdded @event)
+        public override async Task HandleEvent(HolidayAdded @event)
         {
             var timesheetHoliday = new TimesheetHoliday(@event.Id, @event.Date, @event.Description);
 

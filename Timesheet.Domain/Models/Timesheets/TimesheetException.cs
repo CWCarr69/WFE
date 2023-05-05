@@ -1,4 +1,4 @@
-﻿namespace Timesheet.Domain.Timesheets
+﻿namespace Timesheet.Domain.Models.Timesheets
 {
     public class TimesheetException : Entity
     {

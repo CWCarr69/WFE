@@ -25,7 +25,7 @@ namespace Timesheet.Domain.ReadModels.Employees
         public bool IsLastTimeoffRequireApproval { get; set;  }
         public int LastTimesheetPartialStatus { get; set; }
         public int LastTimesheetStatus { get; set; }
-        private bool IsFinalized => LastTimeoffStatus == (int)TimesheetStatus.FINALIZED;
+        private bool IsFinalized => LastTimesheetStatus == (int)TimesheetStatus.FINALIZED;
         public string LastTimesheetPayrollPeriod { get; set; }
         public DateTime LastTimesheetWorkDate { get; set; }
         public string LastTimesheetStatusString 

@@ -31,5 +31,10 @@ namespace Timesheet.Domain.ReadModels.Timesheets
         public string StatusName => Status.ToString();
         public bool IsDeletable { get; set; }
         public bool IsTimeoff { get; set; }
+        public bool IsGlobalHoliday { get; set; }
+        public bool IsRejected => Status == TimesheetEntryStatus.REJECTED;
+        public bool IsApproved => Status == TimesheetEntryStatus.APPROVED;
+
+
     }
 }

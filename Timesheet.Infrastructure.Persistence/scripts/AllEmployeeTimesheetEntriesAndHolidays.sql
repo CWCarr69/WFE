@@ -1,7 +1,9 @@
-﻿CREATE VIEW AllEmployeeTimesheetEntriesAndHolidays AS 
+﻿ALTER VIEW AllEmployeeTimesheetEntriesAndHolidays AS 
 select TimesheetEntryId,
     EmployeeId,
     Fullname,
+	PrimaryApproverId,
+	SecondaryApproverId,
     DefaultProfitCenter,
     TimesheetHeaderId,
     WorkDate,
@@ -21,12 +23,15 @@ select TimesheetEntryId,
 	CreatedDate,
 	ModifiedDate,
 	IsDeletable,
-	IsTimeoff
+	IsTimeoff,
+    isGlobalHoliday
 from AllEmployeeTimesheetEntriesWithoutException
 UNION
 select TimesheetEntryId,
     EmployeeId,
     Fullname,
+	PrimaryApproverId,
+	SecondaryApproverId,
     DefaultProfitCenter,
     TimesheetHeaderId,
     WorkDate,
@@ -46,5 +51,6 @@ select TimesheetEntryId,
 	CreatedDate,
 	ModifiedDate,
 	IsDeletable,
-	IsTimeoff
+	IsTimeoff,
+    isGlobalHoliday
 from AllEmployeeTimesheetHolidaysWithoutException

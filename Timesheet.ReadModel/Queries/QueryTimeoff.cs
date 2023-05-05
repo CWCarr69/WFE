@@ -38,7 +38,8 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             te.TypeId AS {nameof(EmployeeTimeoffEntry.TypeId)},
             pt.PayrollCode AS {nameof(EmployeeTimeoffEntry.PayrollCode)},
             te.Hours AS {nameof(EmployeeTimeoffEntry.Hours)},
-            te.Label AS {nameof(EmployeeTimeoffEntry.Label)}
+            te.Label AS {nameof(EmployeeTimeoffEntry.Label)},
+            te.Status AS {nameof(EmployeeTimeoffEntry.Status)}
             FROM timeoffEntry te
             JOIN payrollTypes pt on pt.numId = te.typeId
             WHERE timeoffHeaderId = {TimeoffDetailsQueryTimeoffIdParam}

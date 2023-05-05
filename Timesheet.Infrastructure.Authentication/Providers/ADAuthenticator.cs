@@ -1,5 +1,4 @@
-﻿using System.Data.SqlTypes;
-using System.DirectoryServices.Protocols;
+﻿using System.DirectoryServices.Protocols;
 using System.Net;
 using Timesheet.Application.Employees.Queries;
 using Timesheet.Application.Settings.Queries;
@@ -50,10 +49,17 @@ namespace Timesheet.Infrastructure.Authentication.Providers
                 employee = _queryEmployee.GetEmployeeProfile("0078").Result;
             }
 
-            if(employee is null)
+            if (employee is null && credentials.Login == "UTest1")
+            {
+                employee = _queryEmployee.GetEmployeeProfile("1183").Result;
+            }
+
+            if (employee is null)
             {
                 return null;
             }
+
+
 
             var user = new User
             {
@@ -61,7 +67,11 @@ namespace Timesheet.Infrastructure.Authentication.Providers
                 Fullname = employee.FullName,
                 Login = employee.Login,
                 IsAdministrator = employee.IsAdministrator,
-                Role = employee.IsAdministrator ? EmployeeRole.ADMINISTRATOR : EmployeeRole.EMPLOYEE
+                Role = employee.IsAdministrator
+                ? EmployeeRole.ADMINISTRATOR
+                : employee.IsManager
+                    ? EmployeeRole.MANAGER
+                    : EmployeeRole.EMPLOYEE
             };
             return user;
         }

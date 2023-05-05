@@ -1,18 +1,11 @@
 import React, {
-  Fragment,
   useCallback,
   useContext,
   useEffect,
   useRef,
 } from "react";
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import timeGridPlugin from "@fullcalendar/timegrid";
-import interactionPlugin from "@fullcalendar/interaction";
 import {
-  Accordion,
   Button,
-  Card,
   Col,
   Nav,
   Pagination,
@@ -29,13 +22,10 @@ import NewTimeOff from "./newTimeOff";
 import {
   addTimeoff,
   deleteTimeoff,
-  getTimeoffsEmployeeEntriesHistory,
-  getTimeoffsEmployeeHistory,
-  getTimeoffsEmployeeMonthStatistics,
 } from "../../redux/actions/timesoffs";
 import {
-  getCurrentEmployeeTimesheetPeriod,
-} from "../../redux/actions/timesheets";
+  getTimeoffsEmployeeHistory,
+} from "../../redux/actions/timesoffs";
 import { enumerateDaysBetweenDates } from "../../services/util";
 import { toast } from "react-toastify";
 import ConfirmModal from "./confirmModal";
@@ -55,27 +45,19 @@ const TimeOffs = ({ history, match }) => {
     setTitle(`${employee.fullName ? employee.fullName : ""} - Non-Billable History`);
   }, [setTitle, employee]);
 
-  const calendarRef = useRef({});
-
   const [data, setData] = useState({});
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
-  const [statistics, setStatistics] = useState([]);
   const [paggination, setPagginnation] = useState([]);
   const timeoffsData = useRef([]);
 
   const [isOpen, setIsOpen] = useState(false);
   const [timeOff, setTimeOff] = useState({});
 
-  const [accordionCalendar, setAccordionCalendar] = useState(false);
-  const [legendAccordion, setLegendAccordion] = useState(false);
-
   const [selectedTimeOff, setSelectedTimeOff] = useState({});
   const [openModal, setOpenModal] = useState(false);
 
   const [types, setTypes] = useState([]);
-
-  const [currentPeriod, setCurrentPeriod] = useState({});
 
   const [filter, setFilter] = useState("");
 
@@ -149,56 +131,6 @@ const TimeOffs = ({ history, match }) => {
     return array;
   }, [items, filter]);
 
-  const fetchCalendarData = useCallback(
-    async (fetchInfo, successCallback, failureCallback) => {
-      try {
-        let date = moment(new Date()).format("MM/DD/YYYY");
-
-        if (fetchInfo) {
-          date = moment(fetchInfo.start).add(7, "d").format("MM/DD/YYYY");
-        }
-
-        const response = await getTimeoffsEmployeeEntriesHistory(
-          match.params.id,
-          true,
-          date
-        );
-
-        successCallback(
-          response
-            ? response.map((d) => {
-                return {
-                  id: d.id,
-                  title: `${d.hours}h.`,
-                  start: moment(d.requestDate).format("YYYY-MM-DD"),
-                  end: moment(d.requestDate).format("YYYY-MM-DD"),
-                  url: `/timeoffs/${d.timeoffHeaderId}/employee/${
-                    match.params.id
-                  }/${new Date(d.requestDate).getTime()}`,
-                  backgroundColor: getColor(d.payrollCode),
-                };
-              })
-            : []
-        );
-      } catch (err) {
-        toast.error(err);
-      }
-    },
-    [match.params.id]
-  );
-
-  const fetchStatistics = useCallback(async () => {
-    await getTimeoffsEmployeeMonthStatistics(match.params.id)
-      .then((resp) => {
-        setStatistics(resp);
-      })
-      .catch((err) => {
-        toast.error(
-          err.response.data.message ? err.response.data.message : "Error"
-        );
-      });
-  }, [match.params.id]);
-
   const fetchTypes = async () => {
     await getTimeoffTypes(true)
       .then((resp) => {
@@ -229,32 +161,14 @@ const TimeOffs = ({ history, match }) => {
       });
   };
 
-  const fetchCurrentPeriod = useCallback(async () => {
-    await getCurrentEmployeeTimesheetPeriod(match.params.id)
-      .then((resp) => {
-        setCurrentPeriod(resp);
-      })
-      .catch((err) => {
-        toast.error(
-          err.response.data.message ? err.response.data.message : "Error"
-        );
-      });
-  }, [match.params.id]);
-
   useEffect(() => {
     fetchEmployee();
   }, [fetchEmployee]);
 
   useEffect(() => {
     fetchData();
-    fetchStatistics();
     fetchTypes();
-    fetchCurrentPeriod();
-  }, [fetchData, fetchStatistics, fetchCurrentPeriod]);
-
-  useEffect(() => {
-    fetchCalendarData();
-  }, [fetchCalendarData]);
+  }, [fetchData]);
 
   useEffect(() => {
     if (data.totalItems) {
@@ -387,19 +301,8 @@ const TimeOffs = ({ history, match }) => {
       <div className="card">
         <div className="card-body">
           <div className="custom-tab-1">
-            <Tab.Container animation={false} defaultActiveKey={"calendar"}>
+            <Tab.Container animation={false} defaultActiveKey={"table"}>
               <Nav as="ul" className="nav-pills mb-4 justify-content-start">
-                <Nav.Item as="li">
-                  <Nav.Link
-                    onClick={() => {
-                      calendarRef.current.getApi().changeView("dayGridMonth");
-                    }}
-                    eventKey={"calendar"}
-                  >
-                    <i className={`la la-calendar me-2`} />
-                    Calendar View
-                  </Nav.Link>
-                </Nav.Item>
                 <Nav.Item as="li">
                   <Nav.Link eventKey={"table"}>
                     <i className={`la la-list me-2`} />
@@ -408,145 +311,6 @@ const TimeOffs = ({ history, match }) => {
                 </Nav.Item>
               </Nav>
               <Tab.Content className="pt-4">
-                <Tab.Pane eventKey={"calendar"}>
-                  <Row>
-                    <Col lg={12}>
-                      <Accordion
-                        className="accordion accordion-primary"
-                        defaultActiveKey="30"
-                      >
-                        <div className="accordion-item">
-                          <Accordion.Toggle
-                            as={Card.Text}
-                            eventKey="0"
-                            className={`accordion-header rounded-lg ${
-                              legendAccordion ? "" : "collapsed"
-                            }`}
-                            onClick={() => setLegendAccordion(!legendAccordion)}
-                          >
-                            <span className="accordion-header-text">
-                              Calendar legend
-                            </span>
-                            <span className="accordion-header-indicator"></span>
-                          </Accordion.Toggle>
-                          <Accordion.Collapse eventKey="0">
-                            <div className="accordion-body-text">
-                              <div className="mx-4 mt-4">
-                                <dl>
-                                  {types.map((t, index) => (
-                                    <dt
-                                      key={index}
-                                      className="mt-2"
-                                      style={{
-                                        display: "flex",
-                                      }}
-                                    >
-                                      • {t.payrollCode.replace("_", " ")}{" "}
-                                      <div
-                                        className="mx-2 rounded"
-                                        style={{
-                                          backgroundColor: t.color,
-                                          width: 50,
-                                        }}
-                                      />
-                                    </dt>
-                                  ))}
-                                </dl>
-                              </div>
-                            </div>
-                          </Accordion.Collapse>
-                        </div>
-                      </Accordion>
-                      <FullCalendar
-                        ref={calendarRef}
-                        height={600}
-                        selectable={true}
-                        select={(e) => {
-                          setTimeOff({
-                            ...timeOff,
-                            start: moment(e.startStr),
-                            end: moment(e.endStr).subtract(1, "d"),
-                          });
-                          setIsOpen(true);
-                        }}
-                        rerenderDelay={10}
-                        eventDurationEditable={false}
-                        editable={true}
-                        plugins={[
-                          dayGridPlugin,
-                          timeGridPlugin,
-                          interactionPlugin,
-                        ]}
-                        events={(fetchInfo, successCallback, failureCallback) =>
-                          fetchCalendarData(
-                            fetchInfo,
-                            successCallback,
-                            failureCallback
-                          )
-                        }
-                        eventClick={(e) => {}}
-                        dayCellClassNames = {
-                          ({date}) => {
-                            let currentDate = new Date(date);
-                            if(currentPeriod &&  currentDate >= new Date(currentPeriod.start) && currentDate <= new Date(currentPeriod.end)){
-                              return ['bg-light-danger'] 
-                            }
-                          }
-                        }
-                      />
-                    </Col>
-                    <Col lg={12} className="mt-lg-4">
-                      <Accordion
-                        className="accordion accordion-primary"
-                        defaultActiveKey="3"
-                      >
-                        <div className="accordion-item">
-                          <Accordion.Toggle
-                            as={Card.Text}
-                            eventKey="1"
-                            className={`accordion-header rounded-lg ${
-                              accordionCalendar ? "" : "collapsed"
-                            }`}
-                            onClick={() =>
-                              setAccordionCalendar(!accordionCalendar)
-                            }
-                          >
-                            <span className="accordion-header-text">
-                              Months statics
-                            </span>
-                            <span className="accordion-header-indicator"></span>
-                          </Accordion.Toggle>
-                          <Accordion.Collapse eventKey="1">
-                            <div className="accordion-body-text">
-                              <div className="mx-4">
-                                <dl>
-                                  {statistics.map((s, index) => (
-                                    <Fragment key={index}>
-                                      <dt>
-                                        • {moment(s.month).format("MMMM YYYY")}{" "}
-                                        -{" "}
-                                        {s.monthStatistics.reduce((x, i) => {
-                                          return x + i.hours;
-                                        }, 0)}{" "}
-                                        h.
-                                      </dt>
-                                      {s.monthStatistics.map((m, index) => (
-                                        <dd className="mx-3" key={index}>
-                                          - {m.statusName.replaceAll("_", " ")}{" "}
-                                          - {m.hours} h.
-                                        </dd>
-                                      ))}
-                                    </Fragment>
-                                  ))}
-                                </dl>
-                              </div>
-                            </div>
-                          </Accordion.Collapse>
-                        </div>
-                      </Accordion>
-                    </Col>
-                  </Row>
-                </Tab.Pane>
                 <Tab.Pane eventKey={"table"}>
                   <Row>
                     <Col lg={10}>

@@ -2,6 +2,6 @@
 {
     public enum EmployeeRole
     {
-        EMPLOYEE, SUPERVISOR, MANAGER, ADMINISTRATOR
+        EMPLOYEE, MANAGER, ADMINISTRATOR
     }
 }

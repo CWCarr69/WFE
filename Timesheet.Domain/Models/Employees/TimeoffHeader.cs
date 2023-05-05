@@ -43,6 +43,12 @@
         {
             var entry = TimeoffEntry.Create(requestDate, TypeId, hours, label);
             TimeoffEntries.Add(entry);
+
+            var timeoffAlreadyProcessed = this.Status == TimeoffStatus.REJECTED || Status == TimeoffStatus.APPROVED;
+            if (timeoffAlreadyProcessed)
+            {
+                this.Status = TimeoffStatus.SUBMITTED;
+            }
             this.UpdateMetadata();
 
             return entry;
@@ -71,6 +77,20 @@
         {
             Transition(TimeoffStatus.REJECTED, () => this.ApproverComment = comment ?? this.ApproverComment);
             RejectAllEntries();
+            this.UpdateMetadata();
+        }
+
+        internal void RejectEntries(DateTime date)
+        {
+            TimeoffEntries.Where(e => e.RequestDate == date)
+                .ToList()
+                .ForEach(e => e.Reject());
+
+            if(TimeoffEntries.All(e => e.Status == TimeoffEntryStatus.REJECTED))
+            {
+                this.Reject("Timesheet Rejected");
+            }
+
             this.UpdateMetadata();
         }
 
@@ -122,5 +142,6 @@
             this.ApproverComment = comment;
             this.UpdateMetadata();
         }
+
     }
 }

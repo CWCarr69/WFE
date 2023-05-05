@@ -22,11 +22,14 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
         private const string EmployeeProfileQueryParam = "@id";
         private const string EmployeeProfileQueryEmailParam = "@email";
         private const string EmployeeProfileQueryLoginParam = "@userId";
-        private const string BaseEmployeeProfileQuery = $@"SELECT * FROM employees ";
+        private const string WithManagerRoleBaseEmployeeProfileQuery = $@"SELECT DISTINCT e.*, 
+            case when exists (select distinct 1 from employeeHierarchy h where h.managerid = e.id) then 1 else 0 end  as isManager 
+            FROM employees e 
+            ";
 
-        public const string EmployeeProfileQuery = $@"{BaseEmployeeProfileQuery} WHERE id = {EmployeeProfileQueryParam}";
-        public const string EmployeeProfileQueryByEmail = $@"{BaseEmployeeProfileQuery} WHERE email = {EmployeeProfileQueryEmailParam}";
-        public const string EmployeeProfileQueryByLogin = $@"{BaseEmployeeProfileQuery} WHERE lower(userId) = lower({EmployeeProfileQueryLoginParam}) or replace(lower(userId), '@wilsonfire', '') = lower({EmployeeProfileQueryLoginParam})";
+        public const string EmployeeProfileQuery = $@"{WithManagerRoleBaseEmployeeProfileQuery} WHERE id = {EmployeeProfileQueryParam}";
+        public const string EmployeeProfileQueryByEmail = $@"{WithManagerRoleBaseEmployeeProfileQuery} WHERE email = {EmployeeProfileQueryEmailParam}";
+        public const string EmployeeProfileQueryByLogin = $@"{WithManagerRoleBaseEmployeeProfileQuery} WHERE lower(userId) = lower({EmployeeProfileQueryLoginParam}) or replace(lower(userId), '@wilsonfire', '') = lower({EmployeeProfileQueryLoginParam})";
         #endregion
 
         #region EmployeeApprovers
@@ -47,6 +50,7 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
         private const string EmployeeBenefitsParam = "@id";
         public const string EmployeeBenefitsQuery = $@"
             SELECT 
+            CumulatedPreviousWorkPeriod as {nameof(EmployeeBenefits.CumulatedPreviousWorkPeriod)},
             ConsiderFixedBenefits as {nameof(EmployeeBenefits.ConsiderFixedBenefits)},
             VacationHours as  {nameof(EmployeeBenefits.VacationHours)},
             PersonalHours as {nameof(EmployeeBenefits.PersonalHours)},
@@ -96,6 +100,7 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
 
         #region PendingTimesheets
         private const string PendingTimesheetsQueryFinalizedStatusParam = "@timesheetFinalizedStatus";
+        private const string PendingTimesheetsQueryEntryInProgressStatusParam = "@timesheetEntryInProgressStatus";
         private const string PendingTimesheetsQueryEntrySubmittedStatusParam = "@timesheetEntrySubmittedStatus";
         private const string PendingTimesheetsQueryEntryRejectedStatusParam = "@timesheetEntryRejectedStatus";
         private const string PendingTimesheetsQueryEntryApprovedStatusParam = "@timesheetEntryApprovedStatus";
@@ -154,7 +159,9 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             t.EndDate  as {nameof(EmployeeTimesheet.EndDate)},
             t.PayrollPeriod  as {nameof(EmployeeTimesheet.PayrollPeriod)},
             max(t.Status)  as {nameof(EmployeeTimesheet.Status)},
-            SUM(te.Hours) as {nameof(EmployeeTimesheet.TotalHours)}
+            SUM(te.Hours) as {nameof(EmployeeTimesheet.TotalHours)},
+            SUM(CASE WHEN te.status = {PendingTimesheetsQueryEntrySubmittedStatusParam} THEN te.Hours ELSE 0 END) AS {nameof(EmployeeTimesheetWhithHoursPerStatus.TotalSubmitted)},
+            SUM(CASE WHEN te.status = {PendingTimesheetsQueryEntryInProgressStatusParam} THEN te.Hours ELSE 0 END) AS {nameof(EmployeeTimesheetWhithHoursPerStatus.TotalInProgress)}
             {OrphanTimesheetsQueryFromClause}
         ";
 
@@ -183,7 +190,7 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             AS(
                 SELECT employeeId, status, timeoffHeaderId, requireApproval, requestDate
                 FROM (
-                    SELECT ROW_NUMBER() OVER (PARTITION BY employeeId ORDER by RequestStartDate DESC) AS rowNum, employeeId, status, TimeoffHeaderId, requireApproval, requestDate
+                    SELECT ROW_NUMBER() OVER (PARTITION BY employeeId ORDER by status ASC, RequestStartDate DESC) AS rowNum, employeeId, status, TimeoffHeaderId, requireApproval, requestDate
                     FROM FirstTimeoffEntryOfLastTimeoff
                 ) T
                 WHERE rowNum = 1
@@ -379,10 +386,10 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             var payrollCategory = (int)PayrollTypesCategory.BILLABLE;
 
             var totalQuery = QueryEmployeeConstants.TotalPendingTimesheetsQuery;
-            totalQuery = AddWhereClauseForDirectReports(approverId, directReports, totalQuery);
+            totalQuery = AddWhereClauseForDirectReports(approverId, directReports, totalQuery, whereKey:"", employeeIdKey:"employeeId", addAnd:ADD_AND.AND_BEFORE);
 
             var query = QueryEmployeeConstants.PendingTimesheetsQuery;
-            query = AddWhereClauseForDirectReports(approverId, directReports, query);
+            query = AddWhereClauseForDirectReports(approverId, directReports, query, whereKey: "", employeeIdKey: "employeeId", addAnd: ADD_AND.AND_BEFORE);
             query = Paginate(page, itemsPerPage, query, QueryEmployeeConstants.PendingTimesheetsQueryOrderByClause);
 
             var queryParams = new { approverId, timesheetEntrySubmittedStatus, timesheetFinalizedStatus, payrollCategory };
@@ -393,9 +400,12 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
 
         public async Task<EmployeeOrphanTimesheets> GetEmployeesOrphanTimesheets(int page, int itemsPerPage, string? approverId = null, bool directReports = false)
         {
+            var timesheetEntryInProgressStatus = TimesheetEntryStatus.IN_PROGRESS;
+            var timesheetEntrySubmittedStatus = TimesheetEntryStatus.SUBMITTED;
             var timesheetEntryApprovedStatus = TimesheetEntryStatus.APPROVED;
             var timesheetEntryRejectedStatus = TimesheetEntryStatus.REJECTED;
             var timesheetFinalizedStatus = TimesheetStatus.FINALIZED;
+
             var payrollCategory = (int)PayrollTypesCategory.BILLABLE;
 
 
@@ -407,12 +417,20 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             query = $"{query} {QueryEmployeeConstants.OrphanTimesheetsQueryGroupByClause}";
             query = Paginate(page, itemsPerPage, query, QueryEmployeeConstants.OrphanTimesheetsQueryOrderByClause);
 
-            var queryParams = new { approverId, timesheetEntryApprovedStatus, timesheetEntryRejectedStatus, timesheetFinalizedStatus, payrollCategory };
+            var queryParams = new { approverId, 
+                timesheetEntryApprovedStatus, 
+                timesheetEntryRejectedStatus, 
+                timesheetFinalizedStatus, 
+                payrollCategory,
+                timesheetEntryInProgressStatus,
+                timesheetEntrySubmittedStatus
+            };
+
             var employeeOrphanTimesheets = await QueryWithTotal<EmployeeOrphanTimesheets, EmployeeTimesheetWhithHoursPerStatus>(queryParams, totalQuery, query);
 
             return employeeOrphanTimesheets;
         }
-        
+
         public async Task<double> CalculateUsedBenefits(string employeeId, int type, DateTime start, DateTime end)
         {
             var query = QueryEmployeeConstants.CalculateUsedBenefitsQuery;

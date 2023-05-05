@@ -47,7 +47,7 @@ namespace Timesheet.Benefits
             }
 
             DateTime employmentDate = (DateTime)employee.EmploymentData?.EmploymentDate;
-            var benefits = await _benefitCalculator.GetBenefits(employee.Id, employmentDate);
+            var benefits = await _benefitCalculator.GetBenefits(employee.Id, employmentDate, employee.CumulatedPreviousWorkPeriod);
             var vacationDetails = benefits.Details.FirstOrDefault(x => x.Type == "Vacation");
             var personalDetails = benefits.Details.FirstOrDefault(x => x.Type == "Personal");
 

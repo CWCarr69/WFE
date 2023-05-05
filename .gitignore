@@ -192,3 +192,9 @@
 /Timesheet.Web.Api/wwwroot/static/js/main.fbb18cc7.js.LICENSE.txt
 /Timesheet.Web.Api/wwwroot/static/js/main.fbb18cc7.js.map
 /Timesheet.Web.Api/wwwroot/index.html
+/Timesheet.TimesheetCreator/obj/publish/win-x86
+/Timesheet.TimesheetCreator/obj/publish/win-x86
+/Timesheet.TimesheetCreator/bin
+/Timesheet.TimesheetCreator/obj
+*.pdb
+/Timesheet.Tools.IdGenerator/bin/Release/net6.0

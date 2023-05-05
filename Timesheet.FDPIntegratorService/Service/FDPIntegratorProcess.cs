@@ -56,7 +56,7 @@ namespace Timesheet.FDPIntegratorService.Service
         public async Task ProcessEmployees()
         {
             _logger.LogInformation("Employees data processing started");
-            await _client.LoadDataAsync(IntegrationType.EMPLOYEE);
+            await _client.LoadDataAsync(IntegrationType.EMPLOYEE, true);
 
             var response = _client.Response;
             if (response is null)

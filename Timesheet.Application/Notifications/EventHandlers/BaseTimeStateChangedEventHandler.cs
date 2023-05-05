@@ -1,21 +1,25 @@
 ﻿using Timesheet.Application.Notifications.Services;
+using Timesheet.Application.Shared;
+using Timesheet.Domain;
 using Timesheet.Domain.Models.Notifications;
 using Timesheet.Domain.Repositories;
 
 namespace Timesheet.Application.Notifications.EventHandlers
 {
-    public abstract class BaseTimeStateChangedEventHandler
+    public abstract class BaseTimeStateChangedEventHandler<TEvent> : BaseEventHandler<TEvent>
+        where TEvent : IDomainEvent
     {
         private readonly INotificationReadRepository _readRepository;
         private readonly IWriteRepository<NotificationItem> _writeRepository;
-
         private readonly INotificationPopulationServices _populationServices;
 
 
         protected BaseTimeStateChangedEventHandler(
             INotificationPopulationServices populationServices,
             INotificationReadRepository readRepository,
-            IWriteRepository<NotificationItem> writeRepository)
+            IWriteRepository<NotificationItem> writeRepository,
+            IUnitOfWork unitOfWork)
+            : base(unitOfWork)
         {
             this._readRepository = readRepository;
             this._writeRepository = writeRepository;

@@ -28,6 +28,7 @@ namespace Timesheet.Application.Employees.CommandHandlers
 
             employee.ChangeBenefitsCalculationMode(command.ConsiderFixedBenefits);
             employee.SetBenefits(command.VacationHours, command.PersonalHours, command.RolloverHours);
+            employee.SetPreviousWorkPeriod(command.CumulatedPreviousWorkPeriod);
 
             employee.UpdateMetadataOnModification(command.Author?.Id);
 

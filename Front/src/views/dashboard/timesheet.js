@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { Button, Pagination } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { HashLink } from 'react-router-hash-link';
 import {
   approveTimesheet,
   getPendingTimesheets,
@@ -127,7 +126,7 @@ const Timesheet = () => {
   return (
     <div className="card">
       <div className="card-header border-0 pb-0 flex-wrap justify-content-center">
-        <h4 className="fs-20 font-w500">Timesheet (<a href="#orphan-timesheets">View Orphans Timesheet</a>)</h4>
+        <h4 className="fs-20 font-w500">Timesheet (<Link to="/payroll/times-sheets#orphan-timesheets">View Orphans Timesheet</Link>)</h4>
       </div>
       <div className="card-body pt-2">
         <div className="d-sm-flex d-block align-items-center justify-content-center">

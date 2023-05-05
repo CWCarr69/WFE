@@ -34,8 +34,7 @@ namespace Timesheet.Domain.ReadModels.Timesheets
 
     public class EmployeeTimesheetWhithHoursPerStatus : EmployeeTimesheet
     {
-        public Dictionary<string, double> HoursPerStatus => Entries
-            .GroupBy(e => e.Status)
-            .ToDictionary(g => g.Key.ToString(), g => g.Sum(e => e.Quantity));
+        public double TotalInProgress { get; set; }
+        public double TotalSubmitted { get; set; }
     }
 }

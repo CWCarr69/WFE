@@ -49,8 +49,9 @@ namespace Timesheet.Application.Timesheets.CommandHandlers
                 true);
 
             var timesheet = employee.EmploymentData.IsSalaried
-                    ? TimesheetHeader.CreateWeeklyTimesheet(command.WorkDate)
-                    : TimesheetHeader.CreateMonthlyTimesheet(command.WorkDate);
+                ? TimesheetHeader.CreateMonthlyTimesheet(command.WorkDate)
+                : TimesheetHeader.CreateWeeklyTimesheet(command.WorkDate);
+                    
 
             var alreadyAddedtimesheet = await _readRepository.GetTimesheet(timesheet.Id);
 

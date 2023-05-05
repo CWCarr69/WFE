@@ -5,7 +5,6 @@ import SpinnerComponent from "../../components/spinner/spinner";
 import { ThemeContext } from "../../context/themeContext";
 import Timeoff from "./timeoff";
 import Timesheet from "./timesheet";
-import OrphanTimesheet from "./orphanTimesheet";
 import { useSelector } from "react-redux";
 
 const Home = () => {
@@ -36,11 +35,6 @@ const Home = () => {
         </div>
         <div className="col-xl-6">
           <Timesheet />
-        </div>
-      </div>
-      <div className="row">
-        <div id="orphan-timesheets" className="col-12">
-          <OrphanTimesheet />
         </div>
       </div>
     </>

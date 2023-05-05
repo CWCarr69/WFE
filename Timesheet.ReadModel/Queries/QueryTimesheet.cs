@@ -15,12 +15,14 @@ namespace Timesheet.Infrastructure.Persistence.Queries
         private const string TimesheetSummaryQueryTimesheetIdParam = "@timesheetId";
 
         private const string TimesheetSummaryByQuery = $@"
-            SUM(te.Hours) as {nameof(EmployeeTimesheetDetailSummary.Hours)}
-            FROM employees e
-            JOIN timesheetEntry te on e.Id = te.EmployeeId
-            JOIN timesheets t on t.id = te.TimesheetHeaderId
+            SUM(te.Quantity) as {nameof(EmployeeTimesheetDetailSummary.Hours)}
+            --FROM employees e
+            --JOIN timesheetEntry te on e.Id = te.EmployeeId
+            --JOIN timesheets t on t.id = te.TimesheetHeaderId
+            --JOIN payrollTypes pt on pt.numId = te.PayrollCodeId
+            FROM AllEmployeeTimesheetEntriesAndHolidays te
             JOIN payrollTypes pt on pt.numId = te.PayrollCodeId
-            Where e.Id = {TimesheetSummaryQueryEmployeeIdParam} AND t.Id = {TimesheetSummaryQueryTimesheetIdParam}
+            Where te.EmployeeId = {TimesheetSummaryQueryEmployeeIdParam} AND te.TimesheetHeaderId = {TimesheetSummaryQueryTimesheetIdParam}
         ";
 
         public const string TimesheetSummaryByPayrollCodeQuery = $@"SELECT
@@ -157,7 +159,8 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             te.{nameof(TimesheetEntryDetails.Department)},
             te.{nameof(TimesheetEntryDetails.Description)},
             te.{nameof(TimesheetEntryDetails.OutOffCountry)},
-            te.{nameof(TimesheetEntryDetails.TimesheetEntryStatus)}
+            te.{nameof(TimesheetEntryDetails.TimesheetEntryStatus)},
+            te.{nameof(TimesheetEntryDetails.IsGlobalHoliday)}
             FROM timesheetHours t
             JOIN AllEmployeeTimesheetEntriesAndHolidays te on te.EmployeeId = t.employeeId AND te.TimesheetHeaderId = t.Id
             where @teamClause 1=1 {TimesheetReviewQuerySearchFilterPlaceholder}
@@ -272,14 +275,16 @@ namespace Timesheet.Infrastructure.Persistence.Queries
         private const string TimesheetEntriesInPeriodEndParam = "@end";
 
         public const string TimesheetEntriesInPeriod = $@"SELECT
-            th.Id as TimesheetHeaderId,
-            te.Id as {nameof(EmployeeTimesheetEntry.Id)},
+            te.TimesheetHeaderId as TimesheetHeaderId,
+            te.TimesheetEntryId as {nameof(EmployeeTimesheetEntry.Id)},
             te.WorkDate AS {nameof(EmployeeTimesheetEntry.WorkDate)},
             te.PayrollCodeId AS {nameof(EmployeeTimesheetEntry.PayrollCodeId)},
             pt.PayrollCode AS {nameof(EmployeeTimesheetEntry.PayrollCode)},
-            te.Hours AS {nameof(EmployeeTimesheetEntry.Quantity)}
-            FROM timesheetEntry te 
-            JOIN timesheets th on th.Id = te.TimesheetHeaderId
+            te.Quantity AS {nameof(EmployeeTimesheetEntry.Quantity)}
+            --FROM timesheetEntry te 
+            --JOIN timesheets th on th.Id = te.TimesheetHeaderId
+            --JOIN payrollTypes pt on pt.numId = te.PayrollCodeId
+            FROM AllEmployeeTimesheetEntriesAndHolidays te
             JOIN payrollTypes pt on pt.numId = te.PayrollCodeId
             WHERE te.EmployeeId = {TimesheetEntriesInPeriodEmployeeIdParam}
             AND WorkDate BETWEEN {TimesheetEntriesInPeriodStartParam} AND {TimesheetEntriesInPeriodEndParam}
@@ -522,7 +527,8 @@ namespace Timesheet.Infrastructure.Persistence.Queries
                         Description = e.Description,
                         OutOffCountry = e.OutOffCountry,
                         Status = e.TimesheetEntryStatus,
-                        IsOrphan = e.IsOrphan
+                        IsOrphan = e.IsOrphan,
+                        IsGlobalHoliday = e.IsGlobalHoliday,
                     })
                 }).ToList();
         }
