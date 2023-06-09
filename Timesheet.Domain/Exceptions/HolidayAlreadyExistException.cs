@@ -1,5 +1,4 @@
-﻿using Timesheet.Domain.Models;
-using Timesheet.Domain.Models.Holidays;
+﻿using Timesheet.Domain.Models.Holidays;
 
 namespace Timesheet.Domain.Exceptions
 {

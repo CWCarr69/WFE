@@ -12,6 +12,7 @@
     te.Hours  as Quantity,
     CAST(te.CustomerNumber as nvarchar) as CustomerNumber,
     CAST(te.JobNumber as nvarchar)  as JobNumber,
+    CAST(te.JobTaskNumber as nvarchar)  as JobTaskNumber,
     te.JobDescription  as JobDescription,
     te.LaborCode  as LaborCode,
     CAST(te.ServiceOrderNumber as nvarchar)  as ServiceOrderNumber,

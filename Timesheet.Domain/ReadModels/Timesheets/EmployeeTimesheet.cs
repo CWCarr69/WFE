@@ -1,6 +1,4 @@
-﻿using System.Security;
-using Timesheet.Domain.Models.Timesheets;
-using Timesheet.Models.Referential;
+﻿using Timesheet.Domain.Models.Timesheets;
 
 namespace Timesheet.Domain.ReadModels.Timesheets
 {
@@ -22,6 +20,8 @@ namespace Timesheet.Domain.ReadModels.Timesheets
         public string EmployeeComment { get; set; }
         public TimesheetStatus Status { get; set; }
         public string StatusName => Status.ToString();
+        public bool IsFinalized => Status == TimesheetStatus.FINALIZED;
+
         public TimesheetEntryStatus PartialStatus { get; set; }
         public string PartialStatusName => PartialStatus.ToString();
         public string PayrollCode { get; set; }

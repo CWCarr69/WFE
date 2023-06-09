@@ -2,12 +2,6 @@ import { ColumnFilter } from "../../components/table/filteringTable/columnFilter
 import { Link } from "react-router-dom";
 
 export const COLUMNS = [
-  // {
-  //   Header: "Id",
-  //   accessor: "id",
-  //   Filter: ColumnFilter,
-  //   //disableFilters: true,
-  // },
   {
     Header: "First Name",
     accessor: "employee",
@@ -63,11 +57,6 @@ export const COLUMNS = [
     accessor: "task",
     Filter: ColumnFilter,
   },
-  /* {
-  //   Header: "Labor Code",
-  //   accessor: "labor",
-  //   Filter: ColumnFilter,
-  },*/
   {
     Header: "Profit Center",
     accessor: "center",
@@ -78,7 +67,7 @@ export const COLUMNS = [
     accessor: "delete",
     Filter: ColumnFilter,
     Cell: ({ original }) => (
-      original.delete && <a><i className="flaticon-381-multiply-1 text-danger" onClick={original.deleteAction}></i></a>
+      original.delete && <a><i style={{ cursor: "pointer" }} className="flaticon-381-multiply-1 text-danger" onClick={original.deleteAction}></i></a>
     )
   },
 ];

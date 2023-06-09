@@ -40,7 +40,7 @@ namespace Timesheet.Application.Timesheets.CommandHandlers
             if (timesheetEntry is not null)
             {
                 this.RelatedAuditableEntity = timesheet;
-                timesheet.DeleteTimesheet(timesheetEntry);
+                timesheet.DeleteTimesheetEntry(timesheetEntry);
             }
 
             var events = timesheet.GetDomainEvents();

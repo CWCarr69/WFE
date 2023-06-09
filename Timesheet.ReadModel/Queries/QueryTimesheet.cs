@@ -172,11 +172,10 @@ namespace Timesheet.Infrastructure.Persistence.Queries
         #region EmployeeTimesheets
         private const string EmployeeTimesheetsQueryEmployeeIdParam = "@employeeId";
 
-        private const string EmployeeTimesheetsQueryFromClause = $@"FROM employees e
-            JOIN timesheetEntry te on e.Id = te.EmployeeId
-            JOIN timesheets t on t.id = te.TimesheetHeaderId
-            Where e.Id = {EmployeeTimesheetsQueryEmployeeIdParam}
-            GROUP BY e.Id, e.Fullname, t.Id, t.PayrollPeriod, t.CreatedDate, t.ModifiedDate, t.StartDate, t.EndDate, t.status";
+        private const string EmployeeTimesheetsQueryFromClause = $@"
+            FROM timesheetHours t
+            Where t.EmployeeId = {EmployeeTimesheetsQueryEmployeeIdParam}
+            GROUP BY t.EmployeeId, t.Fullname, t.Id, t.PayrollPeriod, t.StartDate, t.CreatedDate, t.ModifiedDate, t.EndDate, t.status, t.PartialStatus";
 
         public const string EmployeeTimesheetsQueryOrderByClause = $@"t.{nameof(EmployeeTimesheet.StartDate)} DESC";
 
@@ -185,9 +184,9 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             {EmployeeTimesheetsQueryFromClause}
         ";
 
-        public const string EmployeeTimesheetsQuery = $@"SELECT
-            e.Id as {nameof(EmployeeTimesheet.EmployeeId)},
-            e.Fullname as {nameof(EmployeeTimesheet.FullName)},
+        public const string EmployeeTimesheetsQuery = $@"SELECT DISTINCT
+            t.EmployeeId as {nameof(EmployeeTimesheet.EmployeeId)},
+            t.Fullname as {nameof(EmployeeTimesheet.FullName)},
             t.Id as {nameof(EmployeeTimesheet.TimesheetId)},
             t.PayrollPeriod as {nameof(EmployeeTimesheet.PayrollPeriod)},
             t.CreatedDate  as {nameof(EmployeeTimesheet.CreatedDate)},
@@ -195,7 +194,8 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             t.StartDate  as {nameof(EmployeeTimesheet.StartDate)},
             t.EndDate  as {nameof(EmployeeTimesheet.EndDate)},
             t.Status  as {nameof(EmployeeTimesheet.Status)},
-            SUM(te.Hours) as {nameof(EmployeeTimesheet.TotalHours)}
+            t.PartialStatus  as {nameof(EmployeeTimesheet.PartialStatus)},
+            SUM(t.TotalHours) as {nameof(EmployeeTimesheet.TotalHours)}
             {EmployeeTimesheetsQueryFromClause}
         ";
         #endregion
@@ -237,7 +237,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
         ";
 
         public const string AllTimesheetEntriesBySearchCriteriaQueryEmployeeWhereClause = $@"
-            AND te.Id = {AllTimesheetEntriesBySearchCriteriaQueryEmployeeIdParam}
+            AND te.EmployeeId = {AllTimesheetEntriesBySearchCriteriaQueryEmployeeIdParam}
         ";
 
         public const string AllEmployeeTimesheetAllEntriesByPayrollPeriodQuery = $@"
@@ -281,9 +281,6 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             te.PayrollCodeId AS {nameof(EmployeeTimesheetEntry.PayrollCodeId)},
             pt.PayrollCode AS {nameof(EmployeeTimesheetEntry.PayrollCode)},
             te.Quantity AS {nameof(EmployeeTimesheetEntry.Quantity)}
-            --FROM timesheetEntry te 
-            --JOIN timesheets th on th.Id = te.TimesheetHeaderId
-            --JOIN payrollTypes pt on pt.numId = te.PayrollCodeId
             FROM AllEmployeeTimesheetEntriesAndHolidays te
             JOIN payrollTypes pt on pt.numId = te.PayrollCodeId
             WHERE te.EmployeeId = {TimesheetEntriesInPeriodEmployeeIdParam}

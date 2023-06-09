@@ -445,6 +445,9 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
                     b.Property<bool>("IsDeletable")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsFinalized")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsTimeoff")
                         .HasColumnType("bit");
 
@@ -583,6 +586,10 @@ namespace Timesheet.Infrastructure.Persistence.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HolidayId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

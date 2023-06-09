@@ -68,6 +68,8 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
             var timesheetModifiedDate = "@timesheetModifiedDate";
             var timesheetUpdatedBy = "@timesheetUpdatedBy";
             var timesheetStatus = "@timesheetStatus";
+            var timesheetIsTimeoff = "@timesheetIsTimeoff";
+            var timesheetIsDeletable = "@timesheetIsDeletable";
 
             var updates = $@"
             {nameof(TimesheetEntry.EmployeeId)} = {timesheetEmployeeId},
@@ -99,7 +101,10 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
             {nameof(TimesheetEntry.CreatedDate)},
             {nameof(TimesheetEntry.ModifiedDate)},
             {nameof(TimesheetEntry.UpdatedBy)},
-            {nameof(TimesheetEntry.Status)}
+            {nameof(TimesheetEntry.Status)},
+            {nameof(TimesheetEntry.IsTimeoff)},            
+            {nameof(TimesheetEntry.IsDeletable)}
+
             ";
 
             var insertValues = $@"
@@ -117,8 +122,9 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
             {timesheetCreatedDate},
             {timesheetModifiedDate},
             {timesheetUpdatedBy},            
-            {timesheetStatus}
-
+            {timesheetStatus},
+            {timesheetIsTimeoff},
+            {timesheetIsDeletable}
             ";
 
             var query = $@"IF EXISTS (SELECT * FROM {TimesheetEntryTable} WHERE {nameof(TimesheetEntry.Id)} = {timesheetId})
@@ -152,7 +158,9 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
                     timesheetCreatedDate = entry.CreatedDate,
                     timesheetModifiedDate = entry.ModifiedDate,
                     timesheetUpdatedBy = entry.UpdatedBy,
-                    timesheetStatus = entry.Status
+                    timesheetStatus = entry.Status,
+                    timesheetIsTimeoff = false,
+                    timesheetIsDeletable = false
                 }).Wait();
             }
         }

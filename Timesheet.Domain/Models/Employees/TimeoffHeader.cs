@@ -80,6 +80,20 @@
             this.UpdateMetadata();
         }
 
+        internal void RejectEntries(params string[] ids)
+        {
+            TimeoffEntries.Where(e => ids.Contains(e.Id))
+                .ToList()
+                .ForEach(e => e.Reject());
+
+            if (TimeoffEntries.All(e => e.Status == TimeoffEntryStatus.REJECTED))
+            {
+                this.Reject("Timesheet Rejected");
+            }
+
+            this.UpdateMetadata();
+        }
+
         internal void RejectEntries(DateTime date)
         {
             TimeoffEntries.Where(e => e.RequestDate == date)
@@ -87,6 +101,20 @@
                 .ForEach(e => e.Reject());
 
             if(TimeoffEntries.All(e => e.Status == TimeoffEntryStatus.REJECTED))
+            {
+                this.Reject("Timesheet Rejected");
+            }
+
+            this.UpdateMetadata();
+        }
+
+        internal void RejectEntries(DateTime startDate, DateTime endDate)
+        {
+            TimeoffEntries.Where(e => e.RequestDate >= startDate && e.RequestDate <= endDate)
+            .ToList()
+            .ForEach(e => e.Reject());
+
+            if (TimeoffEntries.All(e => e.Status == TimeoffEntryStatus.REJECTED))
             {
                 this.Reject("Timesheet Rejected");
             }
@@ -142,6 +170,5 @@
             this.ApproverComment = comment;
             this.UpdateMetadata();
         }
-
     }
 }

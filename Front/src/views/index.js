@@ -30,8 +30,8 @@ import Connexions from "./configs/connexions";
 import Notifications from "./configs/notifications";
 import TimesSheet from "./comptabilite/timesSheet";
 import Timesheets from "./timesheet/timesheets";
-import TimeOffs from "./timeoff/timeOffs";
-import TimeOff from "./timeoff/timeoff";
+import Timeoffs from "./timeoff/timeoffs";
+import Timeoff from "./timeoff/timeoff";
 import Timesheet from "./timesheet/timesheet";
 import { ToastContainer } from "react-toastify";
 import NewEntry from "./timesheet/newEntry";
@@ -59,8 +59,8 @@ const Markup = () => {
     { url: "timesheets/:id/employee/:employee/:date?", component: Timesheet },
 
     /// TIMEOFF
-    { url: "timeoffs/:id", component: TimeOffs },
-    { url: "timeoffs/:id/employee/:employee/:date?", component: TimeOff },
+    { url: "timeoffs/:id", component: Timeoffs },
+    { url: "timeoffs/:id/employee/:employee/:date?", component: Timeoff },
 
     /// COMPTABILITE
     { url: "payroll/times-sheets", component: TimesSheet },

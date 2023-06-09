@@ -32,7 +32,7 @@ namespace Timesheet.EmailService
             var templatesBasePath = context.Configuration["templatesBasePath"];
 
             services.AddLogging()
-            .AddServices(connectionString, webAppUri, templatesBasePath)
+            .AddEmailServices(sp => new NotificationSqlConnection( connectionString ), webAppUri, templatesBasePath)
             .AddHostedService<EmailWorker>();
         }
     }

@@ -2,11 +2,6 @@
 {
     public abstract class Entity : IEquatable<Entity>
     {
-        //public Entity()
-        //{
-        //    Id = GenerateId();
-        //}
-
         public Entity(string id)
         {
             Id = id;

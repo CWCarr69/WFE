@@ -44,7 +44,10 @@ namespace Timesheet.Application.Timesheets.CommandHandlers
 
             timesheet.Submit(employee, command.Comment);
 
-            return Enumerable.Empty<IDomainEvent>();
+            var events = timesheet.GetDomainEvents();
+            timesheet.ClearDomainEvents();
+
+            return events;
         }
     }
 }

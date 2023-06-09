@@ -135,5 +135,14 @@ namespace Timesheet.Infrastructure.Dapper
                 transactionScope.Complete();
             }
         }
+
+        public void ExecuteTransaction(Action doTransaction)
+        {
+            using (var transactionScope = new TransactionScope())
+            {
+                doTransaction();
+                transactionScope.Complete();
+            }
+        }
     }
 }

@@ -3,10 +3,9 @@ import { Table } from "react-bootstrap";
 import { toast } from "react-toastify";
 import SpinnerComponent from "../../components/spinner/spinner";
 import { ThemeContext } from "../../context/themeContext";
-import {
-  getNotificationsSettings,
-  updateNotificationsSetting,
-} from "../../redux/actions/settings";
+import { getNotificationsSettings, updateNotificationsSetting } from "../../redux/actions/settings";
+import { sendTestNotification } from "../../redux/actions/notifications";
+import { displayError, displaySuccess } from "../../services/toast";
 import { useSelector } from "react-redux";
 
 const Notifications = () => {
@@ -22,12 +21,25 @@ const Notifications = () => {
   const fetchSettings = async () => {
     await getNotificationsSettings()
       .then((resp) => setSettings(resp))
-      .catch((err) => toast.error( err.response.data.message ? err.response.data.message : "Error while fetching Settings" ));
+      .catch((err) => displayError(err, "Error while fetching Settings" ));
   };
 
   useEffect(() => {
     fetchSettings();
   }, []);
+
+  const triggerTestNotification = async () => {
+    await sendTestNotification()
+      .then((sent) => {
+        if(sent === false){
+          displayError(sent, "Sending Test email failed");
+        }else{
+          displaySuccess("Test email Sent succesfully");
+        }
+      })
+      .catch((err) => displayError("Sending Test email failed"));
+  }
+  
 
   const getCheckbox = (populations, name, id) => {
     var population = populations.find((p) => p.name === name);
@@ -93,6 +105,11 @@ const Notifications = () => {
     </div>
   ) : (
     <>
+      <div className="card">
+        <div className="card-body">
+        <button className="btn btn-danger" type="button" onClick={() => triggerTestNotification()}>Send Test notification</button>
+        </div>
+      </div>          
       <div className="card">
         <div className="card-body">
           <div className="w-100 table-responsive">

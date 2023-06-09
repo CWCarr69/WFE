@@ -22,19 +22,13 @@ namespace Timesheet.Application
                 throw new ArgumentNullException(nameof(@event));
             }
 
-            try
-            {
-                dynamic handler = GetHandler(
-                @event.GetType(),
-                _configuration.EventHandlerRegistry,
-                $"Event {nameof(@event)} is not registered.",
-                $"Event handler for {nameof(@event)} is not registered.");
+            dynamic handler = GetHandler(
+            @event.GetType(),
+            _configuration.EventHandlerRegistry,
+            $"Event {nameof(@event)} is not registered.",
+            $"Event handler for {nameof(@event)} is not registered.");
 
-                await handler.Handle(@event as dynamic, token);
-            }catch(Exception ex)
-            {
-
-            }
+            await handler.Handle(@event as dynamic, token);
         }
 
         public async Task Publish<TDomainEvent>(IEnumerable<TDomainEvent> events, CancellationToken token) where TDomainEvent : IDomainEvent

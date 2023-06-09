@@ -27,7 +27,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Timesheet.Application\Timesheet.Application.csproj" />
-    <ProjectReference Include="..\Timesheet.Domain\Timesheet.Domain.csproj" />
     <ProjectReference Include="..\Timesheet.Infrastructure.Dapper\Timesheet.Infrastructure.Dapper.csproj" />
   </ItemGroup>
 

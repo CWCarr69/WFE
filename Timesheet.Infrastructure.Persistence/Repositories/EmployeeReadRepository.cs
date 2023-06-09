@@ -17,9 +17,9 @@ namespace Timesheet.Infrastructure.Persistence.Repositories
                 .ToListAsync();
         }
 
-        public Task<Employee?> GetEmployee(string id)
+        public async Task<Employee?> GetEmployee(string id)
         {
-            return _context.Employees
+            return await _context.Employees
                 .Include(e => e.PrimaryApprover)
                 .Include(e => e.SecondaryApprover)
                 .Include(e => e.Manager)
@@ -33,6 +33,16 @@ namespace Timesheet.Infrastructure.Persistence.Repositories
         {
             return await _context.Employees
                 .ToDictionaryAsync(e => e.Id, e => e.FullName);
+        }
+
+        public async Task<IEnumerable<Employee>> GetEmployeeWithTimeoffsInPeriod(DateTime startDate, DateTime endDate)
+        {
+            return await _context.Employees
+                .Where(e => e.Timeoffs.Any(
+                    t => t.TimeoffEntries.Any(e => e.RequestDate >= startDate && e.RequestDate <= endDate)))
+                .Include(e => e.Timeoffs)
+                .ThenInclude(t => t.TimeoffEntries)
+                .ToListAsync();
         }
     }
 }

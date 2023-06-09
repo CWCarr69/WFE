@@ -102,6 +102,18 @@ namespace Timesheet.Web.Api.Controllers
             return Ok(Paginate(page, itemsPerPage, employeeTeam));
         }
 
+        [HttpGet("LightTeam")]
+        public async Task<ActionResult<IEnumerable<EmployeeLight>>> GetLightTeam(bool directReport)
+        {
+            string managerId = Manager();
+
+            LogInformation($"Getting Employee ({managerId}) Team");
+
+            var employeeTeam = await _employeeQuery.GetLightEmployeeTeam(managerId, directReport);
+
+            return Ok(employeeTeam);
+        }
+
         [HttpGet("Timeoff/Pending")]
         public async Task<ActionResult<PaginatedResult<WithHabilitations<EmployeeTimeoff>>>> GetTeamPendingTimeoffs(bool directReport, int page = 1, int itemsPerPage = 10000)
         {

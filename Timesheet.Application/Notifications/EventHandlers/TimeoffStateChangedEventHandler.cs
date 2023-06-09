@@ -1,8 +1,8 @@
 ﻿using Timesheet.Application.Notifications.Services;
+using Timesheet.Domain.DomainEvents.Employees;
 using Timesheet.Domain.Models.Employees;
 using Timesheet.Domain.Models.Notifications;
 using Timesheet.Domain.Repositories;
-using Timesheet.DomainEvents.Employees;
 
 namespace Timesheet.Application.Notifications.EventHandlers
 {

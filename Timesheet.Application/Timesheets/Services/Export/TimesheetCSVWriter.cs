@@ -21,7 +21,7 @@ namespace Timesheet.Application.Timesheets.Services.Export
             byte[] encodedText = Encoding.Unicode.GetBytes(csv);
 
             using (FileStream sourceStream = new FileStream(_path,
-                FileMode.Truncate, FileAccess.Write, FileShare.None,
+                FileMode.Create, FileAccess.Write, FileShare.None,
                 bufferSize: 4096, useAsync: true))
             {
                 await sourceStream.WriteAsync(encodedText, 0, encodedText.Length);

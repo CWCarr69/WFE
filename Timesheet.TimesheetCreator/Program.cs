@@ -1,7 +1,6 @@
-﻿using System.Globalization;
-using Timesheet.Domain.Models.Timesheets;
-using Timesheet.Infrastructure.Dapper;
+﻿using Timesheet.Infrastructure.Dapper;
 using Microsoft.Extensions.Configuration;
+using Timesheet.Domain.Models.Timesheets;
 
 namespace Timesheet.TimesheetCreator
 {

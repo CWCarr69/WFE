@@ -1,9 +1,9 @@
 ﻿using Timesheet.Application.Notifications.Services;
+using Timesheet.Domain.DomainEvents.Timesheets;
 using Timesheet.Domain.Models.Employees;
 using Timesheet.Domain.Models.Notifications;
 using Timesheet.Domain.Models.Timesheets;
 using Timesheet.Domain.Repositories;
-using Timesheet.DomainEvents.Timesheets;
 
 namespace Timesheet.Application.Notifications.EventHandlers
 {
@@ -20,7 +20,7 @@ namespace Timesheet.Application.Notifications.EventHandlers
 
         public override async Task HandleEvent(TimesheetStateChanged @event)
         {
-            await Handle(NotificationType.TIMEOFF,
+            await Handle(NotificationType.TIMESHEET,
                 @event.EmployeeId,
                 @event.PrimaryApproverId,
                 @event.SecondaryApproverId,

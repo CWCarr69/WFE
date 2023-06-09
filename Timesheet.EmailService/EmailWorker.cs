@@ -6,7 +6,10 @@ namespace Timesheet.EmailService
     {
         private readonly ILogger<EmailWorker> _logger;
         private readonly INotificationService _notificationService;
-        private const long DEFAULT_EMAIL_PROCESSING_FREQUENCY = 30000;
+        private const int DEFAULT_EMAIL_PROCESSING_FREQUENCY = 300000;
+
+        private readonly object lockObject = new object();
+        private bool isRunning = false;
 
         public EmailWorker(ILogger<EmailWorker> logger, INotificationService notificationService)
         {
@@ -16,22 +19,39 @@ namespace Timesheet.EmailService
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            _logger.LogInformation("Started at: {time}", DateTimeOffset.Now);
+
             while (!stoppingToken.IsCancellationRequested)
             {
-                _logger.LogInformation("Email worker running at: {time}", DateTimeOffset.Now);
-                _notificationService.SendNotifications();
+                if (!isRunning)
+                {
+                    _logger.LogInformation("Worker started at: {time}", DateTimeOffset.Now);
+                    isRunning = true;
+                    await Task.Run(WorkerMethod);
+                }
 
-                await Delay(DEFAULT_EMAIL_PROCESSING_FREQUENCY, stoppingToken);
+                await Task.Delay(DEFAULT_EMAIL_PROCESSING_FREQUENCY);
             }
         }
 
-        static async Task Delay(long delay, CancellationToken stoppingToken)
+        private void WorkerMethod()
         {
-            while (delay > 0)
+            try
             {
-                var currentDelay = delay > int.MaxValue ? int.MaxValue : (int)delay;
-                await Task.Delay(currentDelay, stoppingToken);
-                delay -= currentDelay;
+
+                _logger.LogInformation("Email worker running at: {time}", DateTimeOffset.Now);
+                _notificationService.SendNotifications();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Email worker encounter an error: {ex}");
+            }
+            finally
+            {
+                lock (lockObject)
+                {
+                    isRunning = false;
+                }
             }
         }
     }

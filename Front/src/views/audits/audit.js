@@ -72,7 +72,8 @@ const Audit = () => {
         ) &&
         e.type.toLowerCase().includes(selectedType.toLowerCase()) &&
         (e.authorId.toLowerCase().includes(filtre.toLowerCase()) ||
-          e.action.toLowerCase().includes(filtre.toLowerCase()))
+          e.action.toLowerCase().includes(filtre.toLowerCase()) ||
+          e.data.includes(filtre.toLowerCase()))
     );
     return array;
   }, [filtre, logs, selectedType, timesession]);

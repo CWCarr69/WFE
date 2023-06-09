@@ -1,6 +1,4 @@
-﻿using Timesheet.Domain.Models.Timesheets;
-
-namespace Timesheet.Domain.Exceptions
+﻿namespace Timesheet.Domain.Exceptions
 {
     public sealed class CannotExecuteCommandWithoutAuthorException : DomainException
     {

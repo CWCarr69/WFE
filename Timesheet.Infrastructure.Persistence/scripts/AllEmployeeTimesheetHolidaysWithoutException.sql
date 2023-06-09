@@ -13,6 +13,7 @@ AS SELECT
     tho.Hours as Quantity,
     CAST(null as nvarchar) as CustomerNumber,
     CAST(null as nvarchar) as JobNumber,
+    CAST(null as nvarchar) as JobTaskNumber,
     CAST(null as nvarchar) as JobDescription,
     CAST(null as nvarchar) as LaborCode,
     CAST(null as nvarchar) as ServiceOrderNumber,

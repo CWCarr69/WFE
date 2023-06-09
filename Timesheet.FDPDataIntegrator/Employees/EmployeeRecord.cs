@@ -27,6 +27,7 @@ namespace Timesheet.FDPDataIntegrator.Employees
         public string Department { get; set; }
         [XmlElement("EmploymentDate")]
         public DateTime EmploymentDate { get; set; }
+        [XmlElement("email")]
         public string Email { get; set; }
         [XmlElement("Phone1")]
         public string Phone { get; set; }

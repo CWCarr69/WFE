@@ -50,7 +50,10 @@ namespace Timesheet.Application.Timesheets.CommandHandlers
                 timesheet.AddComment(employee, command.EmployeeComment);
             }
 
-            return Enumerable.Empty<IDomainEvent>();
+            var events = timesheet.GetDomainEvents();
+            timesheet.ClearDomainEvents();
+
+            return events;
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿
-using Timesheet.Domain.DomainEvents;
+using Timesheet.Domain.DomainEvents.Holidays;
 
 namespace Timesheet.Domain.Models.Holidays
 {

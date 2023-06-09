@@ -1,6 +1,6 @@
 ﻿using Timesheet.Application.Shared;
 using Timesheet.Application.Timesheets.Services.Export;
-using Timesheet.Domain.DomainEvents;
+using Timesheet.Domain.DomainEvents.Timesheets;
 using Timesheet.Domain.Repositories;
 
 namespace Timesheet.Application.Timesheets.EventHandlers.Export

@@ -1,19 +1,10 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { ThemeContext } from "../../context/themeContext";
 import { getMyTeam } from "../../redux/actions/employees";
-import { getTimeoffTypes } from "../../redux/actions/referentials";
 import SpinnerComponent from "../../components/spinner/spinner";
 import { useSelector } from "react-redux";
-import NewTimeOff from "../timeoff/newTimeOff";
-import { enumerateDaysBetweenDates } from "../../services/util";
-import { displayError, displaySuccess } from "../../services/toast";
-import moment from "moment";
-import { addTimeoff } from "../../redux/actions/timesoffs";
+import NewTimeoff from "../shared/newTimeoff";
+import { displayError } from "../../services/toast";
 import EmployeeListFilter from "./employeeListFilter";
 import EmployeeListHeader from "./employeeListHeader";
 import EmployeeListDatatable from "./employeeListDatatable";
@@ -28,79 +19,33 @@ const EmployeeList = () => {
     setTitle("Timesheets");
   }, [setTitle]);
 
-  const [data, setData] = useState({});
-  const [items, setItems] = useState([]);
+  const [employees, setEmployees] = useState([]);
 
   const [filter, setFilter] = useState("");
   const [direct, setDirect] = useState(true);
   const [timesheetActiveStatusesFilter, setTimesheetActiveStatusesFilter] = useState([]);
   const [timeoffActiveStatusesFilter, setTimeoffActiveStatusesFilter] = useState([]);
+  const [isAddTimeoffOpen, setIsAddTimeoffOpen] = useState(false);
 
-  const [types, setTypes] = useState([]);
-  const [openAddTimeOff, setOpenAddTimeOff] = useState(false);
-  const [timeoff, setTimeoff] = useState({});
   const [selectedEmployeeId, setSelectedEmployeeId] = useState(null);
 
-  const fetchData = useCallback(async () => {
+  const fetchTeamEmployees = useCallback(async () => {
     await getMyTeam(direct)
-      .then((resp) => {
-        setData(resp);
-        setItems(resp.items);
-      })
+      .then((resp) => setEmployees(resp.items))
       .catch((err) => displayError(err, "Error while retrieving fetching team data"))
   }, [direct]);
 
-  const fetchTypes = async () => {
-    await getTimeoffTypes(true)
-      .then((resp) => setTypes(resp))
-      .catch((err) => displayError(err, "Error while getting Time off types"))
-  };
-
-  const createTimeOff = async () => {
-    var dates = enumerateDaysBetweenDates(
-      moment(timeoff.start),
-      moment(timeoff.end)
-    );
-
-    var dataToSave = {
-      requestStartDate: timeoff.start,
-      requestEndDate: timeoff.end,
-      employeeId: selectedEmployeeId,
-      employeeComment: timeoff.employeeComment,
-      entries: dates.map((d) => {
-        return {
-          employeeId: selectedEmployeeId,
-          requestDate: new Date(d),
-          type: timeoff.type.value,
-          hours: timeoff.hours,
-          label: timeoff.label && timeoff.label.value,
-        };
-      }),
-    };
-
-    await addTimeoff(dataToSave)
-      .then((res) => {
-        setOpenAddTimeOff(false);
-        displaySuccess("Successful submit");
-        fetchData();
-      })
-      .catch((err) => displayError(err, "Error while adding a new timeoff"));
-  };
-
   const onFilterUpdate = useCallback(() => {
-    var FilteredByStatuses = items.filter(
+    var FilteredByStatuses = employees.filter(
       (d) => timeoffActiveStatusesFilter.includes(d.lastTimeoffStatusString) || timesheetActiveStatusesFilter.includes(d.lastTimesheetStatusString)
     );
 
     var itemFilter = (employees) => employees.filter((d) => d.fullName.toLowerCase().concat(d.employeeId).includes(filter.toLowerCase()));
 
-    return timeoffActiveStatusesFilter.length + timesheetActiveStatusesFilter.length > 0 ? itemFilter(FilteredByStatuses) : itemFilter(items);
-  }, [filter, items, timesheetActiveStatusesFilter, timeoffActiveStatusesFilter]);
+    return timeoffActiveStatusesFilter.length + timesheetActiveStatusesFilter.length > 0 ? itemFilter(FilteredByStatuses) : itemFilter(employees);
+  }, [filter, employees, timesheetActiveStatusesFilter, timeoffActiveStatusesFilter]);
 
-  useEffect(() => {
-    fetchData();
-    fetchTypes();
-  }, [fetchData]);
+  useEffect(() => fetchTeamEmployees(), [fetchTeamEmployees, isAddTimeoffOpen]);
 
   return loading ? (
     <div
@@ -116,30 +61,21 @@ const EmployeeList = () => {
     </div>
   ) : (
     <>
-      <NewTimeOff
-        isOpen={openAddTimeOff}
-        close={() => {
-          setTimeoff({});
-          setOpenAddTimeOff(false);
-        }}
-        data={timeoff}
-        updateData={setTimeoff}
-        save={createTimeOff}
-        types={types}
-      />
+      <NewTimeoff isOpen={isAddTimeoffOpen} selectedEmployeeId={selectedEmployeeId} onClose={() => setIsAddTimeoffOpen(false)}/>
       <EmployeeListFilter onChange={(filter) => setFilter(filter)} />
-      <EmployeeListHeader onClickDirectOrAllFilter={() => setDirect(!direct)} count={data.length} loadDirectEmployees={direct} />
+      <EmployeeListHeader onClickDirectOrAllFilter={() => setDirect(!direct)} count={employees.length} loadDirectEmployees={direct} />
       <EmployeeListStatusFilter 
         onTimeoffStatusesFilterChanged={(statuses) => setTimeoffActiveStatusesFilter(statuses)}
         onTimesheetStatusesFilterChanged={(statuses) => setTimesheetActiveStatusesFilter(statuses)}
         />
       <EmployeeListDatatable 
         onAddClick={(employeeId) => {
+          console.log(JSON.stringify(employeeId));
           setSelectedEmployeeId(employeeId);
-          setOpenAddTimeOff(true);
+          setIsAddTimeoffOpen(true);
         }}
         onFilterUpdate={onFilterUpdate}
-        />
+      />
     </>
   );
 };

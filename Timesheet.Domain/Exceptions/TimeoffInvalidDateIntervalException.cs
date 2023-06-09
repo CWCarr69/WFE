@@ -1,6 +1,4 @@
-﻿using Timesheet.Domain.Models;
-
-namespace Timesheet.Domain.Exceptions
+﻿namespace Timesheet.Domain.Exceptions
 {
     public sealed class TimeoffInvalidDateIntervalException : DomainException
     {

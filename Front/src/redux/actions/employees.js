@@ -7,6 +7,10 @@ export const getMyTeam = async (direct) => interactWithAPI({
   url: `${API()}/Employee/Team?directReport=${direct}`,
 });
 
+export const getMyLightTeam = async (direct) => interactWithAPI({
+  method: "GET",
+  url: `${API()}/Employee/LightTeam?directReport=${direct}`,
+});
 
 export const getEmployee = async () => interactWithAPI({
   method: "GET",

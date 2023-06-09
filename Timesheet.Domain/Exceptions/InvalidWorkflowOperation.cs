@@ -1,7 +1,4 @@
-﻿using Timesheet.Domain;
-using Timesheet.Domain.Exceptions;
-
-namespace Timesheet.Exceptions
+﻿namespace Timesheet.Domain.Exceptions
 {
     public class InvalidWorkflowOperation<TEntity> : DomainException where TEntity : Entity
     {

@@ -74,16 +74,16 @@ namespace Timesheet.Application
             TryRegisterHandlers(type, commandHandler, typeof(ICommandHandler<>), typeof(ICommand), _commandHandlerRegistry);
         }
 
-        private void TryRegisterHandlers(Type handledType, Type hander, Type genericBaseType, Type handledBaseType, IDictionary<Type, Type> registry)
+        private void TryRegisterHandlers(Type handledType, Type handler, Type genericBaseType, Type handledBaseType, IDictionary<Type, Type> registry)
         {
-            var isHandler = hander
+            var isHandler = handler
                             .GetInterfaces()
                             .Any(i => i.IsGenericType &&
                                     i.GetGenericTypeDefinition().Equals(genericBaseType));
 
             if (isHandler && handledType.IsAssignableTo(handledBaseType))
             {
-                registry.TryAdd(handledType, hander);
+                registry.TryAdd(handledType, handler);
             }
         }
     }

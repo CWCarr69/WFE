@@ -8,5 +8,6 @@
         void Execute(string query, object? @params=null);
         Task<T> ExecuteScalarAsync<T>(string query, object? @params=null);
         Task ExecuteTransactionAsync(Action transaction);
+        void ExecuteTransaction(Action transaction);
     }
 }

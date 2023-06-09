@@ -1,5 +1,5 @@
 ﻿using Timesheet.Application.Shared;
-using Timesheet.Domain.DomainEvents;
+using Timesheet.Domain.DomainEvents.Holidays;
 using Timesheet.Domain.Repositories;
 
 namespace Timesheet.Application.Timesheets.EventHandlers.Holidays

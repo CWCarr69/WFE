@@ -175,12 +175,25 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
         #region EmployeeTeam
         private const string EmployeeTeamQueryEmployeeIdParam = "@approverId";
 
-        private const string EmployeeTeamQueryLastTimesheetStatusPerEmployee = $@"WITH LastTimesheets
+        private const string EmployeeTeamQueryEmployeeTimesheetIsFinalized = $@"WITH employeeTimesheetIsFinalized 
+            AS (
+                SELECT e.id, CASE WHEN MIN(CAST(te.isFinalized AS INT)) IS NULL THEN 0 ELSE MIN(CAST(te.isFinalized as int)) END AS isFinalized
+                FROM Employees e 
+                LEFT JOIN timesheetEntry te ON te.EmployeeId = e.id
+                GROUP BY e.id
+            ),";
+
+        private const string EmployeeTeamQueryLastTimesheetStatusPerEmployee = $@"LastTimesheets
             AS(
                 SELECT EmployeeId, Status, PartialStatus, TimesheetHeaderId, PayrollPeriod, WorkDate
                 FROM (
-                    SELECT ROW_NUMBER() OVER (PARTITION BY EmployeeId ORDER by PartialStatus ASC, StartDate ASC) AS rowNum, EmployeeId, Status, TimesheetHeaderId, PayrollPeriod, Workdate, PartialStatus
-                    FROM FirstTimesheetEntryOfLastTimesheet
+                    SELECT ROW_NUMBER() OVER (PARTITION BY EmployeeId ORDER by Status ASC, PartialStatus ASC, StartDate ASC) AS rowNum, EmployeeId, Status, TimesheetHeaderId, PayrollPeriod, Workdate, PartialStatus
+                    FROM FirstTimesheetEntryOfLastTimesheet f
+                    JOIN employeeTimesheetIsFinalized e on e.id = f.EmployeeId and e.isFinalized = 0
+                    UNION ALL
+                    SELECT ROW_NUMBER() OVER (PARTITION BY EmployeeId ORDER by Status ASC, PartialStatus ASC, StartDate DESC) AS rowNum, EmployeeId, Status, TimesheetHeaderId, PayrollPeriod, Workdate, PartialStatus
+                    FROM FirstTimesheetEntryOfLastTimesheet f
+                    JOIN employeeTimesheetIsFinalized e on e.id = f.EmployeeId and e.isFinalized = 1
                 ) T
                 WHERE rowNum = 1
             ),
@@ -209,6 +222,7 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
         ";
 
         public const string TotalEmployeeTeamQuery = $@"
+            {EmployeeTeamQueryEmployeeTimesheetIsFinalized}
             {EmployeeTeamQueryLastTimesheetStatusPerEmployee}
             {EmployeeTeamQueryLastTimeOffStatusPerEmployee} 
             SELECT Count(DISTINCT e.Id) AS {nameof(EmployeeTeam.TotalItems)}
@@ -216,6 +230,7 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
         ";
 
         public const string EmployeeTeamQuery = $@"
+            {EmployeeTeamQueryEmployeeTimesheetIsFinalized}
             {EmployeeTeamQueryLastTimesheetStatusPerEmployee}
             {EmployeeTeamQueryLastTimeOffStatusPerEmployee} 
             SELECT 
@@ -240,6 +255,27 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
 
         public const string EmployeeTeamQueryOrderByClause = $@"e.{nameof(EmployeeWithTimeStatus.FullName)}";
 
+        #endregion
+
+        #region LightEmployeeTeam
+        private const string LightEmployeeTeamQueryEmployeeIdParam = "@approverId";
+
+        private const string LightEmployeeTeamQueryUsesTimesheetParam = "@usesTimesheet";
+        private const string LightEmployeeTeamQueryFromClause = $@"
+            FROM employees e
+            WHERE e.Id = {LightEmployeeTeamQueryEmployeeIdParam} OR (
+                (e.employmentDate is not null) AND (e.usesTimesheet = {LightEmployeeTeamQueryUsesTimesheetParam})
+                @clauseForDirectReport
+            )
+            ORDER BY e.{nameof(EmployeeLight.FullName)}
+        ";
+
+        public const string LightEmployeeTeamQuery = $@"
+            SELECT 
+            e.Id as {nameof(EmployeeLight.EmployeeId)},
+            e.FullName  as {nameof(EmployeeLight.FullName)}
+            {LightEmployeeTeamQueryFromClause}
+        ";
         #endregion
 
         #region UsedBenefits
@@ -358,6 +394,17 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             var queryParams = new { approverId, usesTimesheet = true };
             var employeeTeam = await QueryWithTotal<EmployeeTeam, EmployeeWithTimeStatus>(queryParams, totalQuery, query);
                 
+            return employeeTeam;
+        }
+
+        public async Task<IEnumerable<EmployeeLight>> GetLightEmployeeTeam(string approverId = null, bool directReports = false)
+        {
+            var query = QueryEmployeeConstants.LightEmployeeTeamQuery;
+            query = AddWhereClauseForDirectReports(approverId, directReports, query, whereKey: "", replace: "@clauseForDirectReport", addAnd: ADD_AND.AND_BEFORE);
+
+            var queryParams = new { approverId, usesTimesheet = true };
+            var employeeTeam = await _dbService.QueryAsync<EmployeeLight>(query, queryParams);
+
             return employeeTeam;
         }
 

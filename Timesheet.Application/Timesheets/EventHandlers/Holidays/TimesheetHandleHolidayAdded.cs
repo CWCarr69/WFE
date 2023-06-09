@@ -1,5 +1,5 @@
 ﻿using Timesheet.Application.Shared;
-using Timesheet.Domain.DomainEvents;
+using Timesheet.Domain.DomainEvents.Holidays;
 using Timesheet.Domain.Models.Timesheets;
 using Timesheet.Domain.Repositories;
 
@@ -21,8 +21,6 @@ namespace Timesheet.Application.Timesheets.EventHandlers.Holidays
 
         public override async Task HandleEvent(HolidayAdded @event)
         {
-            var timesheetHoliday = new TimesheetHoliday(@event.Id, @event.Date, @event.Description);
-
             var timesheets = (await _readRepository.GetTimesheetByDate(@event.Date))
                 ?.ToList() ?? new List<TimesheetHeader>();
 
@@ -42,7 +40,8 @@ namespace Timesheet.Application.Timesheets.EventHandlers.Holidays
 
             foreach (var timesheet in timesheets)
             {
-                timesheet.AddHoliday(timesheetHoliday);
+                var existingTimesheet = await _readRepository.Get(timesheet.Id);
+                existingTimesheet.AddHoliday(TimesheetHoliday.Create(@event.Id, @event.Date, @event.Description));
             }
         }
     }

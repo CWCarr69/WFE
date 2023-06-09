@@ -41,7 +41,10 @@ namespace Timesheet.Application.Employees.CommandHandlers
 
             employee.UpdateMetadataOnModification(command.Author?.Id);
 
-            return Enumerable.Empty<IDomainEvent>();
+            var events = employee.GetDomainEvents();
+            employee.ClearDomainEvents();
+
+            return events;
         }
     }
 }

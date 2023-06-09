@@ -44,9 +44,12 @@ namespace Timesheet.Application
             .AddScoped<TimesheetStateChangedEventHandler, TimesheetStateChangedEventHandler>()
             
             .AddScoped<EmployeeHandleTimesheetRejected, EmployeeHandleTimesheetRejected>()
+            .AddScoped<EmployeeHandleTimesheetExceptionAdded, EmployeeHandleTimesheetExceptionAdded>()
+            .AddScoped<EmployeeHandleTimesheetFinalized, EmployeeHandleTimesheetFinalized>()
 
             .AddScoped<TimehsheetHandleTimesheetFinalized, TimehsheetHandleTimesheetFinalized>()
             .AddScoped<TimesheetHandleTimeoffApproved, TimesheetHandleTimeoffApproved>()
+            .AddScoped<TimesheetHandleTimeoffEntryAdded, TimesheetHandleTimeoffEntryAdded>()
 
             .AddScoped<IAuditHandler, AuditHandler>();
         }

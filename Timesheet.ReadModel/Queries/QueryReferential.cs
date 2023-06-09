@@ -35,27 +35,25 @@ namespace Timesheet.Infrastruture.ReadModel.Queries
         public async Task<IEnumerable<PayrollPeriod>> GetPayrollPeriods()
         {
             var query = $@"SELECT distinct payrollPeriod as Code, StartDate, EndDate, Type
-                            FROM timesheets order by payrollPeriod desc";
+                            FROM timesheets order by StartDate desc";
                             
             var payrollPeriods = await _dbService.QueryAsync<PayrollPeriod>(query);
 
             var now = DateTime.Now;
             var currentPeriodWeekly = payrollPeriods.FirstOrDefault(p => p.StartDate <= now && now <= p.EndDate && p.Type == TimesheetType.WEEKLY);
-            var beforeCurrentPeriodWeekly = payrollPeriods.FirstOrDefault(p => p.EndDate <= currentPeriodWeekly?.EndDate && p.Type == TimesheetType.WEEKLY);
 
             var currentPeriodSalarly = payrollPeriods.FirstOrDefault(p => p.StartDate <= now && now <= p.EndDate && p.Type == TimesheetType.SALARLY);
-            var beforeCurrentPeriodSalarly = payrollPeriods.FirstOrDefault(p => p.EndDate <= currentPeriodSalarly?.EndDate && p.Type == TimesheetType.SALARLY);
 
-            if (beforeCurrentPeriodSalarly != null)
+            if (currentPeriodSalarly != null)
             {
-                payrollPeriods.Remove(beforeCurrentPeriodSalarly);
-                payrollPeriods.Insert(0, beforeCurrentPeriodSalarly);
+                payrollPeriods.Remove(currentPeriodSalarly);
+                payrollPeriods.Insert(0, currentPeriodSalarly);
             }
 
-            if (beforeCurrentPeriodWeekly != null)
+            if (currentPeriodWeekly != null)
             {
-                payrollPeriods.Remove(beforeCurrentPeriodWeekly);
-                payrollPeriods.Insert(0, beforeCurrentPeriodWeekly);
+                payrollPeriods.Remove(currentPeriodWeekly);
+                payrollPeriods.Insert(0, currentPeriodWeekly);
             }
 
             return payrollPeriods;
@@ -147,10 +145,10 @@ namespace Timesheet.Infrastruture.ReadModel.Queries
         {
             return new List<EnumReadModel<TimeoffStatus>>
             {
-                (EnumReadModel<TimeoffStatus>) TimeoffStatus.IN_PROGRESS,
+                //(EnumReadModel<TimeoffStatus>) TimeoffStatus.IN_PROGRESS,
+                (EnumReadModel<TimeoffStatus>) TimeoffStatus.SUBMITTED,
                 (EnumReadModel<TimeoffStatus>) TimeoffStatus.APPROVED,
                 (EnumReadModel<TimeoffStatus>) TimeoffStatus.REJECTED,
-                (EnumReadModel<TimeoffStatus>) TimeoffStatus.SUBMITTED,
             };
         }
 

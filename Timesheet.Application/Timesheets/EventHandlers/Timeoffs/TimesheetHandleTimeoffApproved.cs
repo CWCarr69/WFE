@@ -1,8 +1,8 @@
 ﻿using Timesheet.Application.Shared;
+using Timesheet.Domain.DomainEvents.Employees;
 using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Models.Timesheets;
 using Timesheet.Domain.Repositories;
-using Timesheet.DomainEvents.Employees;
 using Timesheet.Models.Referential;
 
 namespace Timesheet.Application.Timesheets.EventHandlers

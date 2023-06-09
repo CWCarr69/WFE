@@ -40,9 +40,6 @@ export const exportAudit = async () => {
         // Performing a download with click
         a.click();
       })
-      .catch((err) => {
-        console.log(err);
-        return err;
-      });
+      .catch((err) => { return err; });
   });
 };

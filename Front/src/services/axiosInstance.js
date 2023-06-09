@@ -1,8 +1,6 @@
 import axios from "axios";
 import TokenService from "./tokenService";
 import { API } from "../constants";
-import { LOADING_TOGGLE_ACTION } from "../redux/actions/auth";
-import { store } from "../redux/store";
 
 const instance = axios.create({
   baseURL: API(),

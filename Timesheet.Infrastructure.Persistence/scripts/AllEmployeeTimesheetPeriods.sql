@@ -1,6 +1,7 @@
-﻿CREATE VIEW AllEmployeeTimesheetPeriods 
+﻿CREATE VIEW [dbo].[AllEmployeeTimesheetPeriods] 
 AS
-SELECT employeeId, max(timesheetHeaderId) AS timesheetHeaderId
-FROM timesheetEntry
-where status = 3
-GROUP BY employeeId
+SELECT distinct te.employeeId, te.timesheetHeaderId
+FROM timesheetEntry te
+LEFT JOIN TimesheetException tex ON tex.TimesheetEntryId = te.Id And tex.EmployeeId = te.EmployeeId
+WHERE tex.Id is null 
+

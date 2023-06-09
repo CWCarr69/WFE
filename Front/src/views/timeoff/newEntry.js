@@ -1,10 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Col, Modal, Row } from "react-bootstrap";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { getTimeoffTypes } from "../../redux/actions/referentials";
+import { displayError, displaySuccess } from "../../services/toast";
 
-const NewEntry = ({ isOpen, close, data, updateData, save, types, labels }) => {
+const NewEntry = ({ isOpen, close, data, updateData, save }) => {
+
+  const [types, setTypes] = useState([]);
+
+  const fetchTypes = async () => {
+    await getTimeoffTypes(true)
+    .then((resp) => setTypes(resp))
+    .catch((err) => displayError(err, "Error while getting Time off types"))
+  };
+
+  useEffect(() => fetchTypes(), []);
+
   const getTypes = () => {
     return types.filter(
       (t) =>
@@ -76,25 +89,6 @@ const NewEntry = ({ isOpen, close, data, updateData, save, types, labels }) => {
                   </div>
                 </div>
               </Col>
-              {/* <Col lg={12}>
-                <div
-                  className="row mt-4 form-group"
-                  style={{ textAlign: "right", alignItems: "center" }}
-                >
-                  <div className="col-sm-4 align-content-md-between">
-                    <label>Label</label>
-                  </div>
-                  <div className="col-sm-8 mt-2 mt-sm-0">
-                    <CreatableSelect
-                      isClearable
-                      options={labels}
-                      onChange={(e) => {
-                        updateData({ ...data, label: e });
-                      }}
-                    />
-                  </div>
-                </div>
-              </Col> */}
               <Col lg={12}>
                 <div
                   className="row mt-4 form-group"

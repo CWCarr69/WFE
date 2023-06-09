@@ -42,7 +42,13 @@ namespace Timesheet.Application.Employees.CommandHandlers
             employee.UpdateTimeoffEntry(timeoff, timeoffEntry, command.Type, command.Hours, command.Label);
             timeoffEntry.UpdateMetadataOnModification(command.Author?.Id);
 
-            return LaunchedAsSubCommand ? Enumerable.Empty<IDomainEvent>() : employee.GetDomainEvents();
+            var events = employee.GetDomainEvents();
+            if (!LaunchedAsSubCommand)
+            {
+                employee.ClearDomainEvents();
+            }
+
+            return events;
         }
 
         private async Task<Employee> GetEmployee(AddEntryToTimeoff command)

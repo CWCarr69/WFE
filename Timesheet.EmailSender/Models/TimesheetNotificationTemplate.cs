@@ -11,22 +11,13 @@
         public string LaborCode { get; set; }
         public string JobTaskNo { get; set; }
         public string RelatedEmployeeId { get; set; }
+        public string TimesheetHeaderId { get; set; }
+
     } 
 
-    public class TimesheetNotificationTemplate : BaseNotificationTemplate
+    public record TimesheetNotificationTemplate : BaseNotificationTemplate
     {
         public TimesheetNotificationTemplate() { }
-        public TimesheetNotificationTemplate(TimesheetNotificationTemplate timesheet) 
-        {
-            this.PayrollPeriod = timesheet.PayrollPeriod;
-            this.PayrollStartDate = timesheet.PayrollStartDate;
-            this.PayrollEndDate = timesheet.PayrollEndDate;
-            this.EmployeeName = timesheet.EmployeeName;
-            this.ManagerName= timesheet.ManagerName;
-            this.EmployeeComment = timesheet.EmployeeComment;
-            this.SupervisorComment = timesheet.SupervisorComment;
-            this.Link = timesheet.Link;
-        }
 
         public string PayrollPeriod { get; set; }
         public string PayrollStartDate { get; set; }
@@ -36,7 +27,7 @@
         public string SupervisorComment { get; set; }
         public string Link { get; set; }
         public IEnumerable<TimesheetEntryRowTemplate> TimesheetEntries { get; set; }
-        public override DateTime ReferenceDate => DateTime.Parse(TimesheetEntries?.OrderBy(r => r.WorkDate).FirstOrDefault().WorkDate);
+        public override DateTime? ReferenceDate => TimesheetEntries is not null && TimesheetEntries.Any() ? DateTime.Parse(TimesheetEntries.OrderBy(r => r.WorkDate).FirstOrDefault().WorkDate) : null;
         public decimal Total => TimesheetEntries.Sum(t => t.Quantity);
     }
 }

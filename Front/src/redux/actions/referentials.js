@@ -1,257 +1,77 @@
 import { API } from "../../constants";
-import instance from "../../services/axiosInstance";
+import { interactWithAPI } from "./base";
 
-export const getTimeoffTypes = async (_all=false) => {
-  var config = {
-    method: "GET",
-    url: _all ? `${API()}/Referential/AllTimeoffTypes` : `${API()}/Referential/TimeoffTypes`,
-  };
+export const getTimeoffTypes = async (_all=false) => interactWithAPI({
+  method: "GET",
+  url: _all ? `${API()}/Referential/AllTimeoffTypes` : `${API()}/Referential/TimeoffTypes`,
+});
 
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
+export const getNonRegularTimeoffTypes = async () => interactWithAPI({
+  method: "GET",
+  url: `${API()}/Referential/NonRegularTimeoffTypes`,
+});
 
-export const getNonRegularTimeoffTypes = async () => {
-  var config = {
-    method: "GET",
-    url: `${API()}/Referential/NonRegularTimeoffTypes`,
-  };
+export const getDepartments = async () => interactWithAPI({
+  method: "GET",
+  url: `${API()}/Referential/Departments`,
+});
 
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
+export const getPayrollPeriods = async () => interactWithAPI({
+  method: "GET",
+  url: `${API()}/Referential/PayrollPeriods`,
+});
 
-export const getDepartments = async () => {
-  var config = {
-    method: "GET",
-    url: `${API()}/Referential/Departments`,
-  };
+export const getPayrollCodes = async () => interactWithAPI({
+  method: "GET",
+  url: `${API()}/Referential/PayrollCodes`,
+});
 
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
+export const getTimesheetStatuses = async (withoutInProgress) => interactWithAPI({
+  method: "GET",
+  url: `${API()}/Referential/TimesheetStatuses?withoutInProgress=${withoutInProgress}`,
+});
 
-export const getPayrollPeriods = async () => {
-  var config = {
-    method: "GET",
-    url: `${API()}/Referential/PayrollPeriods`,
-  };
+export const getTimesheetEntryStatuses = async () => interactWithAPI({
+  method: "GET",
+  url: `${API()}/Referential/TimesheetEntryStatuses`,
+});
 
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
+export const getTimeoffStatuses = async () => interactWithAPI({
+  method: "GET",
+  url: `${API()}/Referential/TimeoffStatuses`,
+});
 
-export const getPayrollCodes = async () => {
-  var config = {
-    method: "GET",
-    url: `${API()}/Referential/PayrollCodes`,
-  };
+export const getTimeoffLabels = async () => interactWithAPI({
+  method: "GET",
+  url: `${API()}/Referential/TimeoffLabels`,
+});
 
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
+export const getServiceOrders = async () => interactWithAPI({
+  method: "GET",
+  url: `${API()}/Referential/ServiceOrders`,
+});
 
-export const getTimesheetStatuses = async (withoutInProgress) => {
-  var config = {
-    method: "GET",
-    url: `${API()}/Referential/TimesheetStatuses?withoutInProgress=${withoutInProgress}`,
-  };
+export const getJobs = async () => interactWithAPI({
+  method: "GET",
+  url: `${API()}/Referential/Jobs`,
+});
 
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
+export const getJobTasks = async () => interactWithAPI({
+  method: "GET",
+  url: `${API()}/Referential/JobTasks`,
+});
 
-export const getTimesheetEntryStatuses = async () => {
-  var config = {
-    method: "GET",
-    url: `${API()}/Referential/TimesheetEntryStatuses`,
-  };
+export const getLaborCode = async () => interactWithAPI({
+  method: "GET",
+  url: `${API()}/Referential/LaborCodes`,
+});
 
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
+export const getCustomerNumbers = async () => interactWithAPI({
+  method: "GET",
+  url: `${API()}/Referential/CustomerNumber`,
+});
 
-export const getTimeoffStatuses = async () => {
-  var config = {
-    method: "GET",
-    url: `${API()}/Referential/TimeoffStatuses`,
-  };
-
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
-
-export const getTimeoffLabels = async () => {
-  var config = {
-    method: "GET",
-    url: `${API()}/Referential/TimeoffLabels`,
-  };
-
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
-
-export const getServiceOrders = async () => {
-  var config = {
-    method: "GET",
-    url: `${API()}/Referential/ServiceOrders`,
-  };
-
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
-
-export const getJobs = async () => {
-  var config = {
-    method: "GET",
-    url: `${API()}/Referential/Jobs`,
-  };
-
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
-
-export const getJobTasks = async () => {
-  var config = {
-    method: "GET",
-    url: `${API()}/Referential/JobTasks`,
-  };
-
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
-
-export const getLaborCode = async () => {
-  var config = {
-    method: "GET",
-    url: `${API()}/Referential/LaborCodes`,
-  };
-
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
-
-export const getCustomerNumbers = async () => {
-  var config = {
-    method: "GET",
-    url: `${API()}/Referential/CustomerNumber`,
-  };
-
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
-
-export const getProfitCenters = async () => {
-  var config = {
-    method: "GET",
-    url: `${API()}/Referential/ProfitCenters`,
-  };
-
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
+export const getProfitCenters = async () => interactWithAPI({
+  method: "GET",
+  url: `${API()}/Referential/ProfitCenters`,
+});

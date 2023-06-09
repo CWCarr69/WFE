@@ -1,10 +1,7 @@
-import { toast } from "react-toastify";
-import {
-  formatError,
-  login,
-  saveTokenInLocalStorage,
-} from "../../services/authService";
+import { formatError, login, saveTokenInLocalStorage,} from "../../services/authService";
 import TokenService from "../../services/tokenService";
+
+import { displayError } from "../../services/toast";
 
 export const LOGIN_CONFIRMED_ACTION = "[login action] confirmed login";
 export const LOGIN_FAILED_ACTION = "[login action] failed login";
@@ -14,9 +11,7 @@ export const LOGOUT_ACTION = "[Logout action] logout action";
 export function logout(history) {
   localStorage.removeItem("userDetails");
   history.push("/");
-  return {
-    type: LOGOUT_ACTION,
-  };
+  return { type: LOGOUT_ACTION };
 }
 
 export function loginAction(email, password, history) {
@@ -24,34 +19,15 @@ export function loginAction(email, password, history) {
     login(email, password)
       .then((response) => {
         let exp = TokenService.decode(response.data.token).exp;
-        saveTokenInLocalStorage({
-          token: response.data.token,
-          ...response.data.user,
-          expiresIn: exp,
-        });
-        // runLogoutTimer(dispatch, exp * 1000, history);
-        dispatch(
-          loginConfirmedAction({
-            token: response.data.token,
-            ...response.data.user,
-          })
-        );
+        saveTokenInLocalStorage({ token: response.data.token, ...response.data.user, expiresIn: exp });
+        dispatch( loginConfirmedAction({ token: response.data.token, ...response.data.user }));
         history.push("/dashboard");
       })
       .catch((error) => {
         console.log(error);
-        const errorMessage = formatError(error?.response?.data);
-        dispatch(loginFailedAction(errorMessage));
-        toast.error(`${error.response.data}`, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      });
+        dispatch(loginFailedAction(formatError(error?.response?.data)));
+        displayError(`${error.response.data}`, "Error while retrieving fetching team data")
+      })
   };
 }
 

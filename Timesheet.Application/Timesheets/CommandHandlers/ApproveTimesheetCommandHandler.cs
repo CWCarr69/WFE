@@ -49,7 +49,10 @@ namespace Timesheet.Application.Timesheets.CommandHandlers
 
             timesheet.Approve(employee, command.Comment);
 
-            return Enumerable.Empty<IDomainEvent>();
+            var events = timesheet.GetDomainEvents();
+            timesheet.ClearDomainEvents();
+
+            return events;
         }
     }
 }

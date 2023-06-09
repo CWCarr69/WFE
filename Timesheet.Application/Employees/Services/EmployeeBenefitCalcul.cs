@@ -47,6 +47,8 @@ namespace Timesheet.Domain.Employees.Services
         
         private readonly IQueryEmployee _queryEmployee;
 
+        //public EmployeeBenefitCalculator() { }
+
         public EmployeeBenefitCalculator(IQueryEmployee queryEmployee)
         {
             this._queryEmployee = queryEmployee;
@@ -159,7 +161,7 @@ namespace Timesheet.Domain.Employees.Services
 
             if (isAnniversaryBenefitDate)
             {
-                vacations += AtAnniversaryVacation(employmentDate, yearsDifferencesSinceEmploymenDate);
+                vacations += AtAnniversaryVacation(anniversaryDate, yearsDifferencesSinceEmploymenDate);
             }
 
             vacations += AdditionalVacations(yearsDifferencesSinceEmploymenDate);
@@ -177,13 +179,13 @@ namespace Timesheet.Domain.Employees.Services
         private async Task<double> GetScheduledVacationTimes(string employeeId)
             => await _queryEmployee.CalculateScheduledBenefits(employeeId, (int)TimesheetFixedPayrollCodeEnum.VACATION);
 
-        private int AtAnniversaryVacation(DateTime employmentDate, int yearsSinceEmployment)
+        private int AtAnniversaryVacation(DateTime anniversaryDate, int yearsSinceEmployment)
         {
             var schedule = yearsSinceEmployment == 1 ? ScheduleFirstYears : ScheduleOtherYears;
 
             foreach(var kvp in schedule)
             {
-                if (kvp.Key.start <= employmentDate && employmentDate <= kvp.Key.end)
+                if (kvp.Key.start <= anniversaryDate && anniversaryDate <= kvp.Key.end)
                 {
                     return kvp.Value;
                 }
@@ -195,9 +197,9 @@ namespace Timesheet.Domain.Employees.Services
         private int AdditionalVacations(int yearsConsidered)
         {
 
-            if(yearsConsidered > 15) { return 20; }
-            if (yearsConsidered > 5) { return 15; }
-            if (yearsConsidered > 1) { return 10; }
+            if(yearsConsidered >= 15) { return 20; }
+            if (yearsConsidered >= 5) { return 15; }
+            if (yearsConsidered >= 1) { return 10; }
 
             return 0;
         }

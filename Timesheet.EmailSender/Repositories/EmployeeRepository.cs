@@ -14,7 +14,7 @@ namespace Timesheet.EmailSender.Repositories
 
         public IDictionary<string, string> GetEmails()
         {
-            var query = "SELECT id, userId FROM employees WHERE userId LIKE '%@%.%'";
+            var query = "SELECT id, companyEmail FROM employees WHERE userId LIKE '%@%.%'";
             var emails = _dbServices.Query<(string Id, string Email)>(query).ToDictionary(r => r.Id, r=> r.Email);
             return emails;
         }

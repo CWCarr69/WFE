@@ -32,9 +32,9 @@ export const getCurrentEmployeeTimesheetPeriod = async (employee) => interactWit
   url: `${API()}/Timesheet/CurrentTimesheetPeriod/Employee/${employee}`,
 });
 
-export const getPendingTimesheets = async (direct, page) => interactWithAPI({
+export const getPendingTimesheets = async (direct) => interactWithAPI({
   method: "GET",
-  url: `${API()}/Employee/Timesheet/Pending?directReport=${direct}&page=${page}`,
+  url: `${API()}/Employee/Timesheet/Pending?directReport=${direct}`,
 });
 
 export const getOrphanTimesheets = async (direct, page) => interactWithAPI({

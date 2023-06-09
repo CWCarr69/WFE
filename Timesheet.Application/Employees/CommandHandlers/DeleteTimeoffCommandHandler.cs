@@ -29,6 +29,7 @@ namespace Timesheet.Application.Employees.CommandHandlers
             var employee = await RequireEmployee(command.EmployeeId);
 
             var timeoff = RequireTimeoff(employee, command.TimeoffId);
+
             this.RelatedAuditableEntity = timeoff;
 
             EmployeeRoleOnData currentEmployeeRoleOnData = await GetCurrentEmployeeRoleOnData(command, employee);

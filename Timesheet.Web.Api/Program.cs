@@ -12,6 +12,8 @@ using Timesheet.Web.Api.Middleware;
 using Timesheet.Web.Api.ServiceWorker;
 using Hangfire;
 using Timesheet.Benefits;
+using Timesheet.EmailSender;
+using Mustache;
 
 namespace Timesheet.Web.Api
 {
@@ -23,9 +25,12 @@ namespace Timesheet.Web.Api
             var builder = WebApplication.CreateBuilder(webApplicationOptions);
             builder.Host.UseWindowsService();
 
+            var timesheetConnectionString = builder.Configuration.GetConnectionString("Timesheet");
+            var webAppUri = builder.Configuration["WebAppUri"];
+            var templatesBasePath = builder.Configuration["templatesBasePath"];
             // Add services to the container.
-            builder.Services.AddTimesheetContext(builder.Configuration.GetConnectionString("Timesheet"))
-            .AddTimesheedReadModelDatabase(builder.Configuration.GetConnectionString("Timesheet"))
+            builder.Services.AddTimesheetContext(timesheetConnectionString)
+            .AddTimesheedReadModelDatabase(timesheetConnectionString)
 
             .AddWorkflowService()
             .RegisterEventDispatcher()
@@ -33,7 +38,8 @@ namespace Timesheet.Web.Api
             .RegisterCommandHandlers()
             .AddAuthenticationServices()
             .AddTimesheetExportServices(builder.Configuration.GetSection("TimesheetExport:Destination").Value)
-            .AddOtherApplicationServices();
+            .AddOtherApplicationServices()
+            .AddEmailServices(sp => new TimesheetSqlConnection(timesheetConnectionString), webAppUri, templatesBasePath);
 
             builder.Services.AddBenefitsServices();
 

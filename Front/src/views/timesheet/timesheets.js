@@ -165,10 +165,7 @@ const Timesheet = ({ history, match }) => {
           date = moment(fetchInfo.start).add(7, "d").format("MM/DD/YYYY");
         }
 
-        const response = await getTimesheetEmployeeEntriesHistory(
-          match.params.id,
-          date
-        );
+        const response = await getTimesheetEmployeeEntriesHistory(match.params.id, date);
 
         if (response && response.length > 0) {
           setInitialDate(response[0].workDate);
@@ -372,47 +369,6 @@ const Timesheet = ({ history, match }) => {
                         }
                       />
                     </Col>
-                    {/* <Col lg={12} className="mt-lg-4">
-                      <Accordion
-                        className="accordion accordion-primary"
-                        defaultActiveKey="3"
-                      >
-                        <div className="accordion-item">
-                          <Accordion.Toggle
-                            as={Card.Text}
-                            eventKey="1"
-                            className={`accordion-header rounded-lg ${
-                              accordionCalendar ? "" : "collapsed"
-                            }`}
-                            onClick={() =>
-                              setAccordionCalendar(!accordionCalendar)
-                            }
-                          >
-                            <span className="accordion-header-text">
-                              <h5>Months statics</h5>
-                            </span>
-                            <span className="accordion-header-indicator"></span>
-                          </Accordion.Toggle>
-                          <Accordion.Collapse eventKey="1">
-                            <div className="accordion-body-text">
-                              <div className="mx-4">
-                                <dl>
-                                  <dt>• September - 100 h.</dt>
-                                  <dd className="mx-3">- Submitted - 20 h.</dd>
-                                  <dd className="mx-3">
-                                    - In Progress - 80 h.
-                                  </dd>
-                                  <dt>• October - 20 h.</dt>
-                                  <dd className="mx-3">
-                                    - In Progress - 20 h.
-                                  </dd>
-                                </dl>
-                              </div>
-                            </div>
-                          </Accordion.Collapse>
-                        </div>
-                      </Accordion>
-                    </Col> */}
                   </Row>
                 </Tab.Pane>
                 <Tab.Pane eventKey={"table"}>
@@ -481,7 +437,7 @@ const Timesheet = ({ history, match }) => {
                               )
                             }
                           >
-                            {d.statusName.replace("_", " ")}
+                            { d.isFinalized ? d.statusName.replace("_", " ") : d.partialStatusName.replace("_", " ") }
                           </td>
                         </tr>
                       ))}

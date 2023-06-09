@@ -15,7 +15,7 @@ namespace Timesheet.Application.Workflow
             : base(new List<Transition>()
             {
                 new Transition(TimesheetTransitions.SUBMIT, TimesheetStatus.IN_PROGRESS)
-                    .AuthorizeRoles(EmployeeRoleOnData.CREATOR),
+                    .AuthorizeRoles(EmployeeRoleOnData.CREATOR, EmployeeRoleOnData.APPROVER),
                 new Transition(TimesheetTransitions.APPROVE, TimesheetStatus.IN_PROGRESS)
                     .AuthorizeRoles(EmployeeRoleOnData.APPROVER),
                 new Transition(TimesheetTransitions.REJECT, TimesheetStatus.IN_PROGRESS)

@@ -1,7 +1,7 @@
 ﻿using Timesheet.Domain.DomainEvents;
+using Timesheet.Domain.DomainEvents.Timesheets;
 using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Models.Employees;
-using Timesheet.DomainEvents.Timesheets;
 
 namespace Timesheet.Domain.Models.Timesheets
 {
@@ -40,6 +40,7 @@ namespace Timesheet.Domain.Models.Timesheets
         public virtual ICollection<TimesheetException> TimesheetExceptions { get; private set; } = new List<TimesheetException>();
 
         public bool IsFinalizable => DateTime.Now >= EndDate;
+        public bool IsFinalized => Status is TimesheetStatus.FINALIZED;
 
         public static TimesheetHeader CreateMonthlyTimesheet(DateTime workDate)
         {
@@ -82,13 +83,18 @@ namespace Timesheet.Domain.Models.Timesheets
 
         public void AddTimesheetEntry(TimesheetEntry timesheetEntry)
         {
-            if(timesheetEntry?.Id is null)
+            GuardAgainstIsFinalized();
+
+            if (timesheetEntry?.Id is null)
             {
                 throw new ArgumentNullException(nameof(timesheetEntry));
             }
+
             this.TimesheetEntries.Add(timesheetEntry);
             this.UpdateMetadata();
         }
+
+        #region Workflow actions
 
         public void Submit(Employee employee, string? comment)
         {
@@ -143,20 +149,21 @@ namespace Timesheet.Domain.Models.Timesheets
                 throw new CannotFinalizeTImesheetException(PayrollPeriod);
             }
 
-            //TimesheetEntries
-            //    .Where(entry => entry.Status != TimesheetEntryStatus.REJECTED)
-            //    .ToList()
-            //    .ForEach(entry => entry.Status = TimesheetEntryStatus.APPROVED);
-
             this.Status = TimesheetStatus.FINALIZED;
+            this.TimesheetEntries.ToList().ForEach(e => e.Finalize());
 
             this.UpdateMetadata();
             
-            RaiseDomainEvent(new TimesheetFinalized(this.PayrollPeriod));
+            RaiseDomainEvent(new TimesheetFinalized(this.PayrollPeriod, this.StartDate, this.EndDate));
         }
+
+        #endregion
+
 
         public void AddHoliday(TimesheetHoliday timesheetHoliday)
         {
+            GuardAgainstIsFinalized();
+
             if (timesheetHoliday?.Id is null)
             {
                 throw new ArgumentNullException(nameof(timesheetHoliday));
@@ -173,6 +180,8 @@ namespace Timesheet.Domain.Models.Timesheets
 
         public void UpdateHoliday(string id, string description)
         {
+            GuardAgainstIsFinalized();
+
             var holiday = this.TimesheetHolidays.FirstOrDefault(h => h.Id == Id);
             if(holiday is not null)
             {
@@ -184,6 +193,8 @@ namespace Timesheet.Domain.Models.Timesheets
 
         public void DeleteHoliday(string id)
         {
+            GuardAgainstIsFinalized();
+
             var holiday = this.TimesheetHolidays.FirstOrDefault(h => h.Id == Id);
             if (holiday is not null)
             {
@@ -193,8 +204,10 @@ namespace Timesheet.Domain.Models.Timesheets
             this.UpdateMetadata();
         }
 
-        public void DeleteTimesheet(TimesheetEntry timesheetEntry)
+        public void DeleteTimesheetEntry(TimesheetEntry timesheetEntry)
         {
+            GuardAgainstIsFinalized();
+
             if (timesheetEntry.IsDeletable)
             {
                 throw new TimesheetEntryIsNotDeletableException(timesheetEntry.Id);
@@ -206,17 +219,19 @@ namespace Timesheet.Domain.Models.Timesheets
 
         public void AddTimesheetException(string entryId, string employeeId, bool isHoliday)
         {
+            GuardAgainstIsFinalized();
+
             var entry = TimesheetEntries.FirstOrDefault(t => t.Id == entryId);
             var holiday = TimesheetHolidays.FirstOrDefault(h => h.Id == entryId);
 
             if (!isHoliday && entry is null)
             {
-                throw new EntityNotFoundException<TimesheetEntry>(nameof(TimesheetEntry));
+                throw new EntityNotFoundException<TimesheetEntry>(entryId);
             }
 
             if (isHoliday && holiday is null)
             {
-                throw new EntityNotFoundException<TimesheetEntry>(nameof(TimesheetHoliday));
+                throw new EntityNotFoundException<TimesheetEntry>(entryId);
             }
 
             var timesheetException = new TimesheetException(entryId, employeeId, isHoliday ? nameof(TimesheetHoliday) : nameof(TimesheetEntry));
@@ -224,7 +239,10 @@ namespace Timesheet.Domain.Models.Timesheets
             this.TimesheetExceptions.Add(timesheetException);
             this.UpdateMetadata();
 
-            RaiseDomainEvent(new TimesheetRejected(employeeId, new List<DateTime>() { entry.WorkDate }));
+            if (entry is not not null && !isHoliday && entry.IsTimeoff)
+            {
+                RaiseDomainEvent(new TimesheetExceptionAdded(employeeId, entryId));
+            }
         }
 
         private void TransitionEntries(Employee employee, Action<TimesheetEntry> doTransition)
@@ -236,8 +254,22 @@ namespace Timesheet.Domain.Models.Timesheets
             }
         }
 
+        public void AddApproverComment(Employee? employee, string comment)
+        {
+            GuardAgainstIsFinalized();
+            UpdateComment(employee, timesheetComment => timesheetComment.UpdateApproverComment(comment));
+        }
+
+        public void AddComment(Employee? employee, string comment)
+        {
+            GuardAgainstIsFinalized();
+            UpdateComment(employee, timesheetComment => timesheetComment.UpdateEmployeeComment(comment));
+        }
+
         private void UpdateComment(Employee employee, Action<TimesheetComment> UpdateComment)
         {
+            GuardAgainstIsFinalized();
+
             var timesheetComment = TimesheetComments
                 .Where(c => c.EmployeeId == employee.Id).FirstOrDefault();
             if (timesheetComment is null)
@@ -264,14 +296,12 @@ namespace Timesheet.Domain.Models.Timesheets
 
         private static string BiWeeklyPayrollPeriod(DateTime date, int periodNumber) => $"{date.Year}-{periodNumber}SS";
 
-        public void AddComment(Employee? employee, string comment)
+        private void GuardAgainstIsFinalized()
         {
-            UpdateComment(employee, timesheetComment => timesheetComment.UpdateEmployeeComment(comment));
-        }
-
-        public void AddApproverComment(Employee? employee, string comment)
-        {
-            UpdateComment(employee, timesheetComment => timesheetComment.UpdateApproverComment(comment));
+            if (IsFinalized)
+            {
+                throw new TimesheetAlreadyFinalized("Can't proceed", PayrollPeriod, StartDate.ToShortDateString(), EndDate.ToShortDateString());
+            }
         }
     }
 }

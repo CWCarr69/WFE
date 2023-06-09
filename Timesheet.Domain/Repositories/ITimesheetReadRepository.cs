@@ -6,11 +6,9 @@ namespace Timesheet.Domain.Repositories
     {
         Task<TimesheetHeader?> GetTimesheet(string timesheetId);
         Task<TimesheetHeader?> GetTimesheetWithEntries(string timesheetId, string? employeeId=null);
-        Task<TimesheetHeader?> GetTimesheetByPayrollPeriod(string payrollPeriod);
         Task<IEnumerable<TimesheetHeader?>> GetTimesheetByDate(DateTime date);
         Task<TimesheetHeader> GetTimesheetByDate(DateTime date, TimesheetType type);
         Task<IEnumerable<TimesheetHeader?>> GetTimesheetByHoliday(string holidayId);
-        Task<IEnumerable<TimesheetHeader?>> GetTimesheetByEntry(string entryId);
         Task<bool> DoesEntryExists(string entryId);
     }
 }

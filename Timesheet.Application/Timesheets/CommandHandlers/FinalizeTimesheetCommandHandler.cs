@@ -12,6 +12,7 @@ namespace Timesheet.Application.Timesheets.CommandHandlers
     internal class FinalizeTimesheetCommandHandler : BaseTimesheetCommandHandler<TimesheetHeader, FinalizeTimesheet>
     {
         private readonly IWorkflowService _workflowService;
+        private readonly IUnitOfWork _unitOfWork;
 
         public FinalizeTimesheetCommandHandler(
             IAuditHandler auditHandler,
@@ -25,6 +26,7 @@ namespace Timesheet.Application.Timesheets.CommandHandlers
             : base(auditHandler, employeeReadRepository, readRepository, dispatcher, unitOfWork, employeeHabilitations)
         {
             this._workflowService = workflowService;
+            this._unitOfWork = unitOfWork;
         }
 
         public async override Task<IEnumerable<IDomainEvent>> HandleCoreAsync(FinalizeTimesheet command, CancellationToken token)
@@ -37,6 +39,8 @@ namespace Timesheet.Application.Timesheets.CommandHandlers
             _workflowService.AuthorizeTransition(timesheet, TimesheetTransitions.FINALIZE, timesheet.Status, currentEmployeeRoleOnData);
 
             timesheet.FinalizeTimesheet();
+
+            await _unitOfWork.CompleteAsync(token); // COMPLETE TRANSACTION BEFORE PROCESSING EVENT AS FINALIZING TIMESHEET IS ATOMIC
 
             var events = timesheet.GetDomainEvents();
             timesheet.ClearDomainEvents();

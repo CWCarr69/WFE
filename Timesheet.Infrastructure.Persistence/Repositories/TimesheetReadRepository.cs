@@ -24,24 +24,16 @@ namespace Timesheet.Infrastructure.Persistence.Repositories
             {
                 return _context.Timesheets.Where(t => t.Id == timesheetId)
                     .Include(t => t.TimesheetEntries.Where(te => te.EmployeeId == employeeId))
+                    .Include(t => t.TimesheetHolidays)
                     .FirstOrDefaultAsync();
             }
             else
             {
                 return _context.Timesheets.Where(t => t.Id == timesheetId)
                      .Include(t => t.TimesheetEntries)
+                     .Include(t => t.TimesheetHolidays)
                      .FirstOrDefaultAsync();
             }
-        }
-
-        public Task<TimesheetHeader?> GetTimesheetByPayrollPeriod(string payrollPeriod)
-        {
-            var timesheet = _context.Timesheets.Where(t => t.PayrollPeriod == payrollPeriod)
-                .Include(t => t.TimesheetEntries.OrderBy(t => t.Id))
-                .Include(t => t.TimesheetHolidays)
-                .FirstOrDefaultAsync();
-
-            return timesheet;
         }
 
         public async Task<IEnumerable<TimesheetHeader?>> GetTimesheetByDate(DateTime date)
@@ -56,23 +48,13 @@ namespace Timesheet.Infrastructure.Persistence.Repositories
         {
             return await _context.Timesheets
                 .Where(t => t.StartDate <= date && date <= t.EndDate && t.Type == type)
-                .Include(t => t.TimesheetEntries)
-                .Include(t => t.TimesheetHolidays)
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<TimesheetHeader?>> GetTimesheetByEntry(string entryId)
+        public async Task<IEnumerable<TimesheetHeader?>> GetTimesheetByHoliday(string id)
         {
             return await _context.Timesheets
-                .Where(t => t.TimesheetEntries.Any(t => t.Id == entryId))
-                .Include(t => t.TimesheetEntries)
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<TimesheetHeader?>> GetTimesheetByHoliday(string holidayId)
-        {
-            return await _context.Timesheets
-                .Where(t => t.TimesheetHolidays.Any(h => h.Id == holidayId))
+                .Where(t => t.TimesheetHolidays.Any(h => h.Id == id))
                 .Include(t => t.TimesheetHolidays)
                 .ToListAsync();
         }

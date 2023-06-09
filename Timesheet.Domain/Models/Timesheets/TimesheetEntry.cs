@@ -59,7 +59,8 @@ namespace Timesheet.Domain.Models.Timesheets
         public string? WorkArea => (OutOffCountry ?? false) ? "Out of country" : "In state";
         public bool IsDeletable { get; set; }
 
-        public bool IsTimeoff { get; set; }
+        public bool IsTimeoff { get; set; } = false;
+        public bool IsFinalized { get; set; } = false;
 
         public TimesheetEntryStatus Status { get; set; }
 
@@ -78,6 +79,12 @@ namespace Timesheet.Domain.Models.Timesheets
         internal void Reject()
         {
             this.Status = TimesheetEntryStatus.REJECTED;
+            this.UpdateMetadata();
+        }
+
+        internal void Finalize()
+        {
+            this.IsFinalized = true;
             this.UpdateMetadata();
         }
     }

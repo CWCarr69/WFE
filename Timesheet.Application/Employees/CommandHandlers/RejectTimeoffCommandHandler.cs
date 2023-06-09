@@ -33,7 +33,10 @@ namespace Timesheet.Application.Employees.CommandHandlers
 
             employee.RejectTimeoff(timeoff, command.Comment);
 
-            return Enumerable.Empty<IDomainEvent>();
+            var events = employee.GetDomainEvents();
+            employee.ClearDomainEvents();
+
+            return events;
         }
     }
 }

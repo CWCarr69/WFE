@@ -44,7 +44,10 @@ namespace Timesheet.Application.Employees.CommandHandlers
                 employee.AddComment(timeoff, command.EmployeeComment);
             }
 
-            return employee.GetDomainEvents();
+            var events = employee.GetDomainEvents();
+            employee.ClearDomainEvents();
+
+            return events;
         }
     }
 }

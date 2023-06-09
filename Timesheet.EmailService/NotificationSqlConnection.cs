@@ -1,8 +1,6 @@
-﻿using System.Data.Common;
-using System.Data.SqlClient;
-using Timesheet.Infrastructure.Dapper;
+﻿using Timesheet.Infrastructure.Dapper;
 
-namespace Timesheet.EmailSender
+namespace Timesheet.EmailService
 {
     internal class NotificationSqlConnection : ISqlConnectionString
     {

@@ -35,7 +35,10 @@ namespace Timesheet.Application.Employees.CommandHandlers
 
             employee.SubmitTimeoff(timeoff, command.Comment);
 
-            return Enumerable.Empty<IDomainEvent>();
+            var events = employee.GetDomainEvents();
+            employee.ClearDomainEvents();
+
+            return events;
         }
     }
 }

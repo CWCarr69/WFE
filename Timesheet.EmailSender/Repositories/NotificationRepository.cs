@@ -12,14 +12,14 @@ namespace Timesheet.EmailSender.Repositories
             _dbServices = dbServices;
         }
 
-        public void CompleteSend(IEnumerable<string> ids)
+        public void CompleteSend(params string[] ids)
         {
             var sentParam = "@sent";
             _dbServices.Execute($"UPDATE notificationItems SET sent = {sentParam} Where id in ('{string.Join("','",ids)}')",
                 new {sent = true});
         }
 
-        public IEnumerable<TimeoffNotificationTemplate> GetTimeoffNotifications()
+        public IEnumerable<TimeoffNotificationTemplate> GetTimeoffNotifications(bool includeSent = false, bool takeFirst = false)
         {
 
             var sentParam = "@sent";
@@ -42,9 +42,15 @@ namespace Timesheet.EmailSender.Repositories
                 JOIN employees e on e.Id = n.RelatedEmployeeId
                 JOIN employees m on e.PrimaryApproverId = m.Id
                 JOIN timeoffHeader t on t.Id = n.ObjectId
-                WHERE Sent = {sentParam}
+                {(includeSent ? "" : $"WHERE Sent = {sentParam}")}
             ";
             var timeoffs = _dbServices.Query<TimeoffNotificationTemplate>(query, new {sent = false});
+
+
+            if (takeFirst && timeoffs.Any())
+            {
+                timeoffs = new List<TimeoffNotificationTemplate>() { timeoffs.FirstOrDefault() };
+            }
 
             query = $@"
                 SELECT DISTINCT te.Id,
@@ -65,16 +71,16 @@ namespace Timesheet.EmailSender.Repositories
             return timeoffs;
         }
 
-        public IEnumerable<TimesheetNotificationTemplate> GetTimesheetNotifications()
+        public IEnumerable<TimesheetNotificationTemplate> GetTimesheetNotifications(bool includeSent = false, bool takeFirst = false)
         {
             var sentParam = "@sent";
-            var timesheetIdParam = "@timeoffHeaderId";
+            var timesheetIdParam = "@timesheetId";
 
             string query = $@"
                 SELECT DISTINCT TOP(100)
-                n.Id AS {nameof(TimeoffNotificationTemplate.NotificationId)},
+                n.Id AS {nameof(TimesheetNotificationTemplate.NotificationId)},
                 t.Id AS {nameof(TimesheetNotificationTemplate.ItemId)},
-                n.RelatedEmployeeId AS {nameof(TimeoffNotificationTemplate.RelatedEmployeeId)},
+                n.RelatedEmployeeId AS {nameof(TimesheetNotificationTemplate.RelatedEmployeeId)},
                 n.EmployeeId AS {nameof(TimesheetNotificationTemplate.EmployeeId)},
                 n.Subject AS {nameof(TimesheetNotificationTemplate.Subject)},
                 e.Fullname AS {nameof(TimesheetNotificationTemplate.EmployeeName)},
@@ -89,44 +95,62 @@ namespace Timesheet.EmailSender.Repositories
                 JOIN employees e on e.Id = n.RelatedEmployeeId
                 JOIN employees m on e.PrimaryApproverId = m.Id
                 JOIN timesheets t on t.Id = n.ObjectId
-                JOIN timesheetComment c on c.EmployeeId = e.Id and c.TimesheetId = t.Id
-                WHERE Sent = {sentParam}
+                LEFT JOIN timesheetComment c on c.EmployeeId = e.Id and c.TimesheetId = t.Id
+                {(includeSent ? "" : $"WHERE Sent = {sentParam}")}
             ";
-            var timesheets = _dbServices.Query<TimesheetNotificationTemplate>(query, new {sent = false});
+            var timesheets = _dbServices.Query<TimesheetNotificationTemplate>(query, new { sent = false });
+
+            if (takeFirst && timesheets.Any())
+            {
+                timesheets = new List<TimesheetNotificationTemplate>() { timesheets.FirstOrDefault() };
+            }
 
             query = $@"
-                SELECT DISTINCt te.Id,
+                SELECT DISTINCt te.TimesheetEntryId,
                 pt.PayrollCode AS {nameof(TimesheetEntryRowTemplate.PayrollCode)},
-                te.Hours AS {nameof(TimesheetEntryRowTemplate.Quantity)},
+                te.TimesheetHeaderId AS {nameof(TimesheetEntryRowTemplate.TimesheetHeaderId)},
+                te.Quantity AS {nameof(TimesheetEntryRowTemplate.Quantity)},
                 te.ServiceOrderNumber AS {nameof(TimesheetEntryRowTemplate.ServiceOrderNo)},
                 te.CustomerNumber AS {nameof(TimesheetEntryRowTemplate.CustomerName)},
                 te.WorkDate AS {nameof(TimesheetEntryRowTemplate.WorkDate)},
-                COALESCE(te.ProfitCenter, e.DefaultProfitCenter) AS {nameof(TimesheetEntryRowTemplate.ProfitCenter)},
+                COALESCE(te.ProfitCenterNumber, e.DefaultProfitCenter) AS {nameof(TimesheetEntryRowTemplate.ProfitCenter)},
                 te.LaborCode AS {nameof(TimesheetEntryRowTemplate.LaborCode)},
                 te.JobTaskNumber AS {nameof(TimesheetEntryRowTemplate.JobTaskNo)},
                 n.RelatedEmployeeId AS {nameof(TimesheetEntryRowTemplate.RelatedEmployeeId)}
                 FROM notificationItems n
                 JOIN employees e on e.Id = n.RelatedEmployeeId
-                JOIN timesheets t on t.Id = n.ObjectId
-                JOIN timesheetEntry te on te.timesheetHeaderId = t.Id and te.EmployeeId = n.RelatedEmployeeId
-                LEFT JOIN TimesheetException tex ON tex.TimesheetEntryId = te.Id And tex.EmployeeId = e.Id
+                JOIN AllEmployeeTimesheetEntriesAndHolidays te on te.TimesheetHeaderId = n.ObjectId and te.EmployeeId = n.RelatedEmployeeId
+                LEFT JOIN TimesheetException tex ON tex.TimesheetEntryId = te.TimesheetEntryId And tex.EmployeeId = n.RelatedEmployeeId
                 JOIN payrollTypes pt on pt.NumId = te.PayrollCodeId
-                WHERE t.Id = {timesheetIdParam} AND tex.Id is null
+                WHERE tex.Id is null
             ";
 
+            var entries = _dbServices.Query<TimesheetEntryRowTemplate>(query);
+            var entriesPerTimesheetAndRelatedEmployee = entries.GroupBy(e => $"{e.RelatedEmployeeId}-{e.TimesheetHeaderId}")
+                .ToDictionary(g => g.Key);
 
-            return timesheets == null ? null : timesheets.SelectMany(timesheet =>
+            if(timesheets != null)
             {
-                var entries = _dbServices.Query<TimesheetEntryRowTemplate>(query, new { timesheetId = timesheet.ItemId });
-
-                return entries.GroupBy(e => e.RelatedEmployeeId).Select(g =>
+                timesheets.ForEach(timesheet =>
                 {
-                    var relatedEmployeeTimesheet = new TimesheetNotificationTemplate(timesheet);
-                    relatedEmployeeTimesheet.TimesheetEntries = g.ToList();
-
-                    return relatedEmployeeTimesheet;
+                    if (entriesPerTimesheetAndRelatedEmployee.TryGetValue($"{timesheet.RelatedEmployeeId}-{timesheet.ItemId}", out var relatedEmployeeEntries))
+                    {
+                        timesheet.TimesheetEntries = relatedEmployeeEntries.ToList();
+                    }
                 });
-            });
+            }
+
+            return timesheets;
+        }
+
+        public TimesheetNotificationTemplate? GetTestTimesheetNotification()
+        {
+            return GetTimesheetNotifications(true, true).FirstOrDefault();
+        }
+
+        public TimeoffNotificationTemplate? GetTestTimeoffNotification()
+        {
+            return GetTimeoffNotifications(true, true).FirstOrDefault();
         }
     }
 }

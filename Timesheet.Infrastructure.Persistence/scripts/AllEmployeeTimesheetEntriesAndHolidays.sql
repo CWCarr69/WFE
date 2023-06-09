@@ -1,4 +1,14 @@
-﻿ALTER VIEW AllEmployeeTimesheetEntriesAndHolidays AS 
+﻿USE [Timesheet]
+GO
+
+/****** Object: View [dbo].[AllEmployeeTimesheetEntriesAndHolidays] Script Date: 6/6/2023 12:05:23 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER VIEW AllEmployeeTimesheetEntriesAndHolidays AS 
 select TimesheetEntryId,
     EmployeeId,
     Fullname,
@@ -12,6 +22,7 @@ select TimesheetEntryId,
     Quantity,
     CustomerNumber,
     JobNumber,
+    JobTaskNumber,
     JobDescription,
     LaborCode,
     ServiceOrderNumber,
@@ -40,6 +51,7 @@ select TimesheetEntryId,
     Quantity,
     CustomerNumber,
     JobNumber,
+    JobTaskNumber,
     JobDescription,
     LaborCode,
     ServiceOrderNumber,

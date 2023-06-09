@@ -12,6 +12,7 @@ namespace Timesheet.Application.Employees.Queries
         Task<EmployeeApprovers?> GetEmployeeApprovers(string id);
         Task<EmployeeBenefits?> GetEmployeeBenefitsVariation(string id);
         Task<EmployeeTeam> GetEmployeeTeam(int page, int itemsPerPage, string? approverId = null, bool directReports = false);
+        Task<IEnumerable<EmployeeLight>> GetLightEmployeeTeam(string? approverId = null, bool directReports = false);
         Task<EmployeePendingTimeoffs> GetEmployeesPendingTimeoffs(int page, int itemsPerPage, string? approverId = null, bool directReports = false);
         Task<EmployeePendingTimesheets> GetEmployeesPendingTimesheets(int page, int itemsPerPage, string? approverId = null, bool directReports = false);
         Task<EmployeeOrphanTimesheets> GetEmployeesOrphanTimesheets(int page, int itemsPerPage, string? approverId = null, bool directReports = false);

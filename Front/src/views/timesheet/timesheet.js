@@ -3,6 +3,8 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import { displayError, displaySuccess } from "../../services/toast";
+
 import {
   getFirstDayOfNextMonth,
   getFirstDayOfPreviousMonth,
@@ -60,9 +62,7 @@ const Timesheet = ({ match, history }) => {
   const [summaryDate, setSummaryDate] = useState([]);
   const [summaryPayroll, setSummaryPayroll] = useState([]);
 
-  useEffect(() => {
-    setTitle(`${employee.fullName ? employee.fullName : ""} - Timesheet`);
-  }, [setTitle, employee]);
+  useEffect(() => { setTitle(`${employee.fullName ? employee.fullName : ""} - Timesheet`) }, [setTitle, employee]);
 
   const calendarRef = useRef({});
   const [displayCalendar, setDisplayCalendar] = useState(false);
@@ -114,32 +114,8 @@ const Timesheet = ({ match, history }) => {
 
   const fetchTypes = useCallback(async () => {
     await getPayrollCodes()
-      .then((resp) => {
-        setPayrollCodes(
-          resp.map((r) => {
-            return {
-              ...r,
-              color: getColor(r.payrollCode),
-            };
-          })
-        );
-      })
-      .catch((err) => {
-        toast.error(
-          err.response.data.message
-            ? err.response.data.message
-            : "API connexion denied",
-          {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          }
-        );
-      });
+    .then((resp) => setPayrollCodes(resp.map((r) => ({ ...r, color: getColor(r.payrollCode) }))))
+    .catch((err) => displayError(err, "Error while fetching payroll codes data"))
   }, []);
 
   const fetchData = useCallback(async () => {
@@ -155,66 +131,31 @@ const Timesheet = ({ match, history }) => {
           setCalendarFocusDate(firstEntry.workDate);
         }
       })
-      .catch((err) => {
-        console.log(err);
-        toast.error(
-          err.response.data.message ? err.response.data.message : "Error"
-        );
-      });
+      .catch((err) => displayError(err, "Error while fetching employee timesheet details"))
   }, [match.params.id, match.params.employee]);
 
   const fetchSummaryByDate = useCallback(async () => {
-    await getTimesheetEmployeeSummaryByDate(
-      match.params.id,
-      match.params.employee
-    )
-      .then((resp) => {
-        setSummaryDate(resp);
-      })
-      .catch((err) => {
-        toast.error(
-          err.response.data.message ? err.response.data.message : "Error"
-        );
-      });
+    await getTimesheetEmployeeSummaryByDate( match.params.id, match.params.employee)
+    .then((resp) => setSummaryDate(resp))
+    .catch((err) => displayError(err, "Error while fetching employee timesheet summary by date"))
   }, [match.params.id, match.params.employee]);
 
   const fetchSummaryByPayroll = useCallback(async () => {
-    await getTimesheetEmployeeSummaryByPayroll(
-      match.params.id,
-      match.params.employee
-    )
-      .then((resp) => {
-        setSummaryPayroll(resp);
-      })
-      .catch((err) => {
-        toast.error(
-          err.response.data.message ? err.response.data.message : "Error"
-        );
-      });
+    await getTimesheetEmployeeSummaryByPayroll( match.params.id, match.params.employee )
+    .then((resp) => setSummaryPayroll(resp))
+    .catch((err) => displayError(err, "Error while fetching employee timesheet summary by payroll"))
   }, [match.params.id, match.params.employee]);
 
   const fetchEmployee = useCallback(async () => {
     await getEmployeeById(match.params.employee)
-      .then((resp) => {
-        setEmployee(resp);
-      })
-      .catch((err) => {
-        toast.error(
-          err.response.data.message ? err.response.data.message : "Error"
-        );
-      });
+    .then((resp) => setEmployee(resp))
+    .catch((err) => displayError(err, "Error while fetching employee details"))
   }, [match.params.employee]);
 
   const fetchCurrentPeriod = useCallback(async () => {
     await getCurrentEmployeeTimesheetPeriod(match.params.employee)
-      .then((resp) => {
-        setCurrentPeriod(resp);
-      })
-      .catch((err) => {
-        toast.error(
-          err.response.data.message ? err.response.data.message : "Error"
-        );
-      });
+    .then((resp) => setCurrentPeriod(resp))
+    .catch((err) => displayError(err, "Error while fetching current period"))
   }, [match.params.employee]);
 
   useEffect(() => {
@@ -234,36 +175,20 @@ const Timesheet = ({ match, history }) => {
     fetchCurrentPeriod
   ]);
 
-  useEffect(() => {
-    zoomCalendarOndateIfRequired();
-  }, [displayCalendar, calendarFocusDate]);
+  useEffect(() => zoomCalendarOndateIfRequired(), [displayCalendar, calendarFocusDate]);
 
   useEffect(() => {
     if (data.data.entries) {
-      setPagginnation(
-        Array(Math.ceil(data.data.entries.length / sort))
-          .fill()
-          .map((_, i) => i + 1)
-      );
-      timesheetData.current = data.data.entries.slice(
-        activePag.current * sort,
-        (activePag.current + 1) * sort
-      );
+      setPagginnation(Array(Math.ceil(data.data.entries.length / sort)).fill().map((_, i) => i + 1));
+      timesheetData.current = data.data.entries.slice(activePag.current * sort, (activePag.current + 1) * sort);
     }
   }, [data, timesheetData]);
 
   const activePag = useRef(0);
 
-  const isSupervisor = () => {
-    return (
-      user.id === employee.primaryApproverId ||
-      user.id === employee.secondaryApproverId
-    );
-  };
+  const isSupervisor = () => user.id === employee.primaryApproverId || user.id === employee.secondaryApproverId;
 
-  const isOwner = () => {
-    return user.id === employee.id;
-  };
+  const isOwner = () => user.id === employee.id;
 
   const zoomCalendarOndateIfRequired = () => {
     if (displayCalendar && (match.params.date || calendarFocusDate)) {
@@ -275,11 +200,7 @@ const Timesheet = ({ match, history }) => {
 
   const onClick = (i) => {
     activePag.current = i;
-
-    timesheetData.current = data.data.entries.slice(
-      activePag.current * sort,
-      (activePag.current + 1) * sort
-    );
+    timesheetData.current = data.data.entries.slice(activePag.current * sort,(activePag.current + 1) * sort);
   };
 
   const submit = async () => {
@@ -288,32 +209,11 @@ const Timesheet = ({ match, history }) => {
       timesheetId: match.params.id,
       comment: employeeComment,
     })
-      .then((res) => {
-        toast.success("Successful submit", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
-        fetchData();
-      })
-      .catch((err) => {
-        toast.error(
-          err.response.data.message
-            ? err.response.data.message
-            : "Error reject",
-          {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-          }
-        );
-      });
+    .then((resp) => {
+      displaySuccess("Employee Timesheet submitted successfully");
+      fetchData();
+    })
+    .catch((err) => displayError(err, "Error while submitting employee timesheet"))
   };
 
   const approve = async () => {
@@ -322,32 +222,11 @@ const Timesheet = ({ match, history }) => {
       timesheetId: match.params.id,
       comment: supervisorComment,
     })
-      .then((res) => {
-        toast.success("Successful approve", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
-        fetchData();
-      })
-      .catch((err) => {
-        toast.error(
-          err.response.data.message
-            ? err.response.data.message
-            : "Error approve",
-          {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-          }
-        );
-      });
+    .then((resp) => {
+      displaySuccess("Employee Timesheet approved successfully");
+      fetchData();
+    })
+    .catch((err) => displayError(err, "Error while approving employee timesheet"))
   };
 
   const reject = async () => {
@@ -356,75 +235,43 @@ const Timesheet = ({ match, history }) => {
       timesheetId: match.params.id,
       comment: supervisorComment,
     })
-      .then((res) => {
-        toast.success("Successful reject", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
-        fetchData();
-      })
-      .catch((err) => {
-        toast.error(
-          err.response.data.message
-            ? err.response.data.message
-            : "Error reject",
-          {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-          }
-        );
-      });
+    .then((resp) => {
+      displaySuccess("Employee Timesheet rejected successfully");
+      fetchData();
+    })
+    .catch((err) => displayError(err, "Error while rejecting employee timesheet"))
   };
 
   const delTimesheet = async () => {
     setOpenModal(false);
     await deleteTimesheet()
-      .then((resp) => {
-        toast.success("Successful deletion", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
-        history.reload();
-      })
-      .catch((err) => {
-        toast.error(
-          err.response.data.message
-            ? err.response.data.message
-            : "Deletion error",
-          {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          }
-        );
-      });
+    .then((resp) => {
+      displaySuccess("Employee Timesheet deleted successfully");
+      history.reload();
+    })
+    .catch((err) => displayError(err, "Error while deleting employee timesheet"))
+  };
+
+  const updateTimesheetComment = async () => {
+    await updateComment({
+      employeeId: match.params.employee,
+      timesheetId: match.params.id,
+      employeeComment: employeeComment,
+      approverComment: supervisorComment,
+    })
+    .then((resp) => {
+      displaySuccess("Employee Timesheet comment updated successfully");
+      fetchData();
+    })
+    .catch((err) => displayError(err, "Error while updating employee timesheet comment"))
   };
 
   const nextButton = () => {
     let calendarApi = calendarRef.current.getApi();
-    let nextCalendarFirstDayOfMonth = getFirstDayOfNextMonth(
-      calendarApi.getDate()
-    );
+    let nextCalendarFirstDayOfMonth = getFirstDayOfNextMonth(calendarApi.getDate());
 
     var endDate = data?.data?.endDate;
-    var currentTimesheetHaveEntriesOnNextMonth =
-      endDate &&
+    var currentTimesheetHaveEntriesOnNextMonth =endDate &&
       new Date(endDate).getMonth() >= nextCalendarFirstDayOfMonth.getMonth() &&
       new Date(endDate).getYear() >= nextCalendarFirstDayOfMonth.getYear();
 
@@ -434,130 +281,54 @@ const Timesheet = ({ match, history }) => {
     }
 
     if (data.data.nextTimesheetId !== null) {
-      history.push(
-        `/timesheets/${data.data.nextTimesheetId}/employee/${match.params.employee}`
-      );
+      history.push(`/timesheets/${data.data.nextTimesheetId}/employee/${match.params.employee}`);
     }
   };
 
   const prevButton = () => {
     let calendarApi = calendarRef.current.getApi();
-    let previousCalendarFirstDayOfMonth = getFirstDayOfPreviousMonth(
-      calendarApi.getDate()
-    );
+    let previousCalendarFirstDayOfMonth = getFirstDayOfPreviousMonth(calendarApi.getDate());
 
     var startDate = data?.data?.endDate;
-    var currentTimesheetHaveEntriesOnPreviousMonth =
-      startDate &&
-      new Date(startDate).getMonth() <=
-        previousCalendarFirstDayOfMonth.getMonth() &&
-      new Date(startDate).getYear() <=
-        previousCalendarFirstDayOfMonth.getYear();
+    var currentTimesheetHaveEntriesOnPreviousMonth = startDate &&
+      new Date(startDate).getMonth() <= previousCalendarFirstDayOfMonth.getMonth() &&
+      new Date(startDate).getYear() <= previousCalendarFirstDayOfMonth.getYear();
 
     if (currentTimesheetHaveEntriesOnPreviousMonth) {
       calendarApi.next();
       return;
     }
     if (data.data.previousTimesheetId !== null) {
-      history.push(
-        `/timesheets/${data.data.previousTimesheetId}/employee/${match.params.employee}`
-      );
+      history.push(`/timesheets/${data.data.previousTimesheetId}/employee/${match.params.employee}`);
     }
   };
 
-  const updateTimesheetComment = async () => {
-    console.log("click");
-    await updateComment({
-      employeeId: match.params.employee,
-      timesheetId: match.params.id,
-      employeeComment: employeeComment,
-      approverComment: supervisorComment,
-    })
-      .then((res) => {
-        toast.success("Successful approve", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
-        fetchData();
-      })
-      .catch((err) => {
-        toast.error(
-          err.response.data.message
-            ? err.response.data.message
-            : "Error approve",
-          {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-          }
-        );
-      });
-  };
-
   return loading ? (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        alignContent: "center",
-        justifyContent: "center",
-        height: "100%",
-      }}
-    >
+    <div style={{ display: "flex", alignItems: "center", alignContent: "center", justifyContent: "center", height: "100%",}}>
       <SpinnerComponent />
     </div>
   ) : (
     <>
-      <ConfirmModal
-        action={delTimesheet}
-        close={() => setOpenModal(false)}
-        isOpen={openModal}
-      />
+      <ConfirmModal action={delTimesheet} close={() => setOpenModal(false)} isOpen={openModal} />
       <div className="card">
         <div className="card-body">
           <div className="custom-tab-1">
             <Row>
               <Col lg={10} />
-              <Col
-                style={{
-                  display: "flex",
-                  alignItems: "flex-end",
-                  justifyContent: "flex-end",
-                }}
-              >
+              <Col style={{ display: "flex", alignItems: "flex-end", justifyContent: "flex-end" }}>
                 {data.authorizedActions.find((a) => a.name === "SUBMIT") && (
                   <div className="d-sx-inline-block me-3">
-                    <Button
-                      style={{
-                        color: "black",
-                        backgroundColor: "#e7fdf9",
-                        borderColor: "#e7fdf9",
-                      }}
-                      onClick={() => submit()}
-                    >
-                      Submit
-                    </Button>
+                    <Button  variant="primary" onClick={() => submit()}> Submit </Button>
                   </div>
                 )}
                 {data.authorizedActions.find((a) => a.name === "APPROVE") && (
                   <div className="d-sx-inline-block me-3">
-                    <Button variant="primary" onClick={() => approve()}>
-                      Approve
-                    </Button>
+                    <Button variant="primary" onClick={() => approve()}> Approve </Button>
                   </div>
                 )}
                 {data.authorizedActions.find((a) => a.name === "REJECT") && (
                   <div className="d-sx-inline-block me-3">
-                    <Button variant="danger" onClick={() => reject()}>
-                      Reject
-                    </Button>
+                    <Button variant="danger" onClick={() => reject()}> Reject </Button>
                   </div>
                 )}
               </Col>
@@ -565,20 +336,13 @@ const Timesheet = ({ match, history }) => {
             <Tab.Container animation={false} defaultActiveKey={"calendar"}>
               <Nav as="ul" className="nav-pills mb-4 justify-content-start">
                 <Nav.Item as="li">
-                  <Nav.Link
-                    onClick={() => {
-                      calendarRef.current.getApi().changeView("dayGridMonth");
-                    }}
-                    eventKey={"calendar"}
-                  >
-                    <i className={`la la-calendar me-2`} />
-                    Calendar View
+                  <Nav.Link onClick={() => calendarRef.current.getApi().changeView("dayGridMonth")} eventKey={"calendar"}>
+                    <i className={`la la-calendar me-2`} /> Calendar View
                   </Nav.Link>
                 </Nav.Item>
                 <Nav.Item as="li">
                   <Nav.Link eventKey={"table"}>
-                    <i className={`la la-list me-2`} />
-                    Table View
+                    <i className={`la la-list me-2`} /> Table View
                   </Nav.Link>
                 </Nav.Item>
               </Nav>
@@ -586,24 +350,15 @@ const Timesheet = ({ match, history }) => {
                 <Tab.Pane eventKey={"calendar"}>
                   <Row>
                     <Col lg={12}>
-                      <Accordion
-                        className="accordion accordion-primary"
-                        defaultActiveKey="3"
-                      >
+                      <Accordion className="accordion accordion-primary">
                         <div className="accordion-item">
                           <Accordion.Toggle
                             as={Card.Text}
                             eventKey="0"
-                            className={`accordion-header rounded-lg ${
-                              accordionCalendar ? "" : "collapsed"
-                            }`}
-                            onClick={() =>
-                              setAccordionCalendar(!accordionCalendar)
-                            }
+                            className={`accordion-header rounded-lg ${accordionCalendar ? "" : "collapsed"}`}
+                            onClick={() => setAccordionCalendar(!accordionCalendar)}
                           >
-                            <span className="accordion-header-text">
-                              Calendar legend
-                            </span>
+                            <span className="accordion-header-text">Calendar legend</span>
                             <span className="accordion-header-indicator"></span>
                           </Accordion.Toggle>
                           <Accordion.Collapse eventKey="0">
@@ -611,21 +366,9 @@ const Timesheet = ({ match, history }) => {
                               <div className="mx-4 mt-4">
                                 <dl>
                                   {payrollCodes.map((t, i) => (
-                                    <dt
-                                      key={i}
-                                      className="mt-2"
-                                      style={{
-                                        display: "flex",
-                                      }}
-                                    >
+                                    <dt key={i} className="mt-2" style={{ display: "flex" }}>
                                       • {t.payrollCode.replace("_", " ")}{" "}
-                                      <div
-                                        className="mx-2 rounded"
-                                        style={{
-                                          backgroundColor: t.color,
-                                          width: 50,
-                                        }}
-                                      />
+                                      <div className="mx-2 rounded" style={{ backgroundColor: t.color, width: 50 }}/>
                                     </dt>
                                   ))}
                                 </dl>
@@ -638,25 +381,13 @@ const Timesheet = ({ match, history }) => {
                         <Col>
                           <span>
                             Payroll period ({data.data.payrollPeriod}) :{" "}
-                            <span className="font-w600">
-                              {moment(data.data.startDate).format(DefaultGlobalDateFormat)}
-                            </span>{" "}
-                            -{" "}
-                            <span className="font-w600">
-                              {moment(data.data.endDate).format(DefaultGlobalDateFormat)}
-                            </span>
+                            <span className="font-w600"> {moment(data.data.startDate).format(DefaultGlobalDateFormat)}</span>
+                            {" "}-{" "}
+                            <span className="font-w600">{moment(data.data.endDate).format(DefaultGlobalDateFormat)}</span>
                           </span>
                           &nbsp;&nbsp;&nbsp;
-                          {data?.data?.statusName === "FINALIZED" &&
-                          <button className='btn btn-xs btn-outline-success'>
-                            {data?.data?.statusName?.replace("_", " ")}
-                          </button>
-                          }
-                          {data?.data?.statusName !== "FINALIZED" &&
-                            <button className='btn btn-xs btn-outline-danger'>
-                              {data?.data?.partialStatusName?.replace("_", " ")}
-                            </button>
-                          }
+                          {data?.data?.isFinalized && <span className='text-success'>{data?.data?.statusName?.replace("_", " ")}</span>}
+                          {!data?.data?.isFinalized && <span className='text-danger'> {data?.data?.partialStatusName?.replace("_", " ")}</span>}
                         </Col>
                       )}
                       {displayCalendar && (
@@ -724,24 +455,13 @@ const Timesheet = ({ match, history }) => {
                       )}
                     </Col>
                     <Col lg={12} className="mt-lg-4">
-                      <Accordion
-                        className="accordion accordion-primary"
-                        defaultActiveKey="3"
-                      >
+                      <Accordion className="accordion accordion-primary" defaultActiveKey="3">
                         <div className="accordion-item">
-                          <Accordion.Toggle
-                            as={Card.Text}
-                            eventKey="1"
-                            className={`accordion-header rounded-lg ${
-                              accordionTableCalendar ? "" : "collapsed"
-                            }`}
-                            onClick={() =>
-                              setAccordionTableCalendar(!accordionTableCalendar)
-                            }
+                          <Accordion.Toggle as={Card.Text} eventKey="1"
+                            className={`accordion-header rounded-lg ${accordionTableCalendar ? "" : "collapsed"}`}
+                            onClick={() => setAccordionTableCalendar(!accordionTableCalendar)}
                           >
-                            <span className="accordion-header-text">
-                              Total Hours : {data.data.totalHours}
-                            </span>
+                            <span className="accordion-header-text">Total Hours : {data.data.totalHours}</span>
                             <span className="accordion-header-indicator"></span>
                           </Accordion.Toggle>
                           <Accordion.Collapse eventKey="1">
@@ -750,26 +470,9 @@ const Timesheet = ({ match, history }) => {
                                 <dl>
                                   <dt>By Payroll Code</dt>
                                   {summaryPayroll.map((s, i) => (
-                                    <dd
-                                      key={i}
-                                      className="mx-3"
-                                      style={{
-                                        display: "flex",
-                                      }}
-                                    >
+                                    <dd key={i} className="mx-3" style={{ display: "flex",}}>
                                       ◦{" "}
-                                      <div
-                                        className="mx-2 rounded"
-                                        style={{
-                                          backgroundColor: getColor(
-                                            s.payrollCode
-                                              ? s.payrollCode
-                                              : "OTHER"
-                                          ),
-                                          width: 100,
-                                          textAlign: "center",
-                                        }}
-                                      >
+                                      <div className="mx-2 rounded" style={{backgroundColor: getColor(s.payrollCode ? s.payrollCode : "OTHER"), width: 100,textAlign: "center" }}>
                                         {s.payrollCode}
                                       </div>
                                       - total hours: {s.hours}
@@ -777,29 +480,10 @@ const Timesheet = ({ match, history }) => {
                                   ))}
                                   <dt>By Date</dt>
                                   {summaryDate.map((s, i) => (
-                                    <dd
-                                      key={i}
-                                      className="mx-3"
-                                      style={{
-                                        display: "flex",
-                                      }}
-                                    >
+                                    <dd key={i} className="mx-3"style={{display: "flex" }}>
                                       •{" "}
-                                      <div
-                                        className="mx-2 rounded"
-                                        style={{
-                                          backgroundColor: getColor(
-                                            s.payrollCode
-                                              ? s.payrollCode
-                                              : "OTHER"
-                                          ),
-                                          width: 100,
-                                          textAlign: "center",
-                                        }}
-                                      >
-                                        {moment(s.workDate).format(
-                                          "DD/MM/YYYY"
-                                        )}
+                                      <div className="mx-2 rounded" style={{ backgroundColor: getColor(s.payrollCode? s.payrollCode: "OTHER"), width: 100, textAlign: "center", }}>
+                                        {moment(s.workDate).format("DD/MM/YYYY")}
                                       </div>
                                       - total hours: {s.hours}
                                     </dd>
@@ -818,28 +502,13 @@ const Timesheet = ({ match, history }) => {
                           className="form-control"
                           rows="4"
                           id="comment"
-                          disabled={
-                            !isOwner() && data.data.statusName !== "FINALIZED"
-                          }
+                          disabled={!(isOwner() && !data.data.isFinalized)}
                           value={employeeComment || ""}
                           onChange={(e) => setEmployeeComment(e.target.value)}
                         />
-                        {isOwner() && data.data.statusName !== "FINALIZED" && (
-                          <div
-                            className="col-xl-12 col-lg-12 mt-4"
-                            style={{
-                              display: "flex",
-                              alignItems: "flex-end",
-                              justifyContent: "flex-end",
-                            }}
-                          >
-                            <Button
-                              variant="danger"
-                              size="sm"
-                              onClick={() => updateTimesheetComment()}
-                            >
-                              Update
-                            </Button>
+                        {isOwner() && !data.data.isFinalized && (
+                          <div className="col-xl-12 col-lg-12 mt-4" style={{display: "flex",alignItems: "flex-end",justifyContent: "flex-end",}}>
+                            <Button variant="danger" size="sm" onClick={() => updateTimesheetComment()}>Update</Button>
                           </div>
                         )}
                       </Col>
@@ -851,28 +520,11 @@ const Timesheet = ({ match, history }) => {
                           id="comment"
                           value={supervisorComment || ""}
                           onChange={(e) => setSupervisorComment(e.target.value)}
-                          disabled={
-                            !isSupervisor() &&
-                            data.data.statusName !== "FINALIZED"
-                          }
+                          disabled={!(isSupervisor() && !data.data.isFinalized)}
                         />
-                        {isSupervisor() &&
-                          data.data.statusName !== "FINALIZED" && (
-                            <div
-                              className="col-xl-12 col-lg-12 mt-4"
-                              style={{
-                                display: "flex",
-                                alignItems: "flex-end",
-                                justifyContent: "flex-end",
-                              }}
-                            >
-                              <Button
-                                variant="danger"
-                                size="sm"
-                                onClick={() => updateTimesheetComment()}
-                              >
-                                Update
-                              </Button>
+                        {isSupervisor() && !data.data.isFinalized && (
+                            <div className="col-xl-12 col-lg-12 mt-4" style={{ display: "flex", alignItems: "flex-end", justifyContent: "flex-end", }}>
+                              <Button variant="danger" size="sm" onClick={() => updateTimesheetComment()}>Update</Button>
                             </div>
                           )}
                       </Col>
@@ -904,11 +556,7 @@ const Timesheet = ({ match, history }) => {
                         }}>
                           <td>
                             {t.isDeletable && (
-                              <i
-                                style={{
-                                  textAlign: "center",
-                                  cursor: "pointer",
-                                }}
+                              <i style={{ textAlign: "center", cursor: "pointer",}}
                                 onClick={() => {
                                   setSelectedTimesheet({
                                     employeeId: match.params.employee,
@@ -936,56 +584,29 @@ const Timesheet = ({ match, history }) => {
                   <div id="example_wrapper" className="dataTables_wrapper">
                     <div className="d-sm-flex text-center justify-content-between align-items-center mt-1">
                       <div className="dataTables_info" />
-                      <Pagination
-                        size={"sx"}
-                        className={`pagination-gutter pagination- pagination-circle`}
-                      >
+                      <Pagination size={"sx"} className={`pagination-gutter pagination- pagination-circle`}>
                         <li className="page-item page-indicator">
-                          <Link
-                            className="page-link"
-                            to="#"
-                            onClick={() =>
-                              activePag.current > 0 &&
-                              onClick(activePag.current - 1)
-                            }
-                          >
+                          <Link className="page-link" to="#" onClick={() => activePag.current > 0 && onClick(activePag.current - 1)}>
                             <i className="la la-angle-left" />
                           </Link>
                         </li>
                         {paggination.map((number, i) => (
-                          <Pagination.Item
-                            key={number}
-                            active={activePag.current === i}
-                          >
-                            {number}
-                          </Pagination.Item>
+                          <Pagination.Item key={number} active={activePag.current === i}>{number}</Pagination.Item>
                         ))}
                         <li className="page-item page-indicator">
-                          <Link
-                            className="page-link"
-                            to="#"
-                            onClick={() =>
-                              activePag.current + 1 < paggination.length &&
-                              onClick(activePag.current + 1)
-                            }
-                          >
+                          <Link className="page-link" to="#" onClick={() => activePag.current + 1 < paggination.length && onClick(activePag.current + 1)}>
                             <i className="la la-angle-right" />
                           </Link>
                         </li>
                       </Pagination>
                     </div>
                   </div>
-                  <Accordion
-                    className="accordion accordion-primary"
-                    defaultActiveKey="3"
-                  >
+                  <Accordion className="accordion accordion-primary" defaultActiveKey="3">
                     <div className="accordion-item">
                       <Accordion.Toggle
                         as={Card.Text}
                         eventKey="5"
-                        className={`accordion-header rounded-lg mt-3 ${
-                          accordionTable ? "" : "collapsed"
-                        }`}
+                        className={`accordion-header rounded-lg mt-3 ${accordionTable ? "" : "collapsed"}`}
                         onClick={() => setAccordionTable(!accordionTable)}
                       >
                         <span className="accordion-header-text">
@@ -999,20 +620,12 @@ const Timesheet = ({ match, history }) => {
                             <dl>
                               <dt>By Payroll Code</dt>
                               {summaryPayroll.map((s, i) => (
-                                <dd
-                                  key={i}
-                                  className="mx-3"
-                                  style={{
-                                    display: "flex",
-                                  }}
+                                <dd key={i} className="mx-3" style={{display: "flex",}}
                                 >
                                   ◦{" "}
-                                  <div
-                                    className="mx-2 rounded"
-                                    style={{
-                                      backgroundColor: getColor(
-                                        s.payrollCode ? s.payrollCode : "OTHER"
-                                      ),
+                                  <div className="mx-2 rounded"
+                                    style={{ 
+                                      backgroundColor: getColor( s.payrollCode ? s.payrollCode : "OTHER"),
                                       width: 100,
                                       textAlign: "center",
                                     }}
@@ -1024,20 +637,12 @@ const Timesheet = ({ match, history }) => {
                               ))}
                               <dt>By Date</dt>
                               {summaryDate.map((s, i) => (
-                                <dd
-                                  key={i}
-                                  className="mx-3"
-                                  style={{
-                                    display: "flex",
-                                  }}
-                                >
+                                <dd key={i} className="mx-3" style={{ display: "flex",}}>
                                   •{" "}
                                   <div
                                     className="mx-2 rounded"
-                                    style={{
-                                      backgroundColor: getColor(
-                                        s.payrollCode ? s.payrollCode : "OTHER"
-                                      ),
+                                    style={{ 
+                                      backgroundColor: getColor(s.payrollCode ? s.payrollCode : "OTHER"),
                                       width: 100,
                                       textAlign: "center",
                                     }}
@@ -1061,27 +666,15 @@ const Timesheet = ({ match, history }) => {
                         rows="4"
                         id="comment"
                         value={employeeComment || ""}
-                        disabled={
-                          !isOwner() && data.data.statusName !== "FINALIZED"
-                        }
+                        disabled={!(isOwner() && !data.data.isFinalized)}
                         onChange={(e) => setEmployeeComment(e.target.value)}
                       />
-                      {isOwner() && data.data.statusName !== "FINALIZED" && (
+                      {isOwner() && !data.data.isFinalized && (
                         <div
                           className="col-xl-12 col-lg-12 mt-4"
-                          style={{
-                            display: "flex",
-                            alignItems: "flex-end",
-                            justifyContent: "flex-end",
-                          }}
+                          style={{display: "flex", alignItems: "flex-end", justifyContent: "flex-end",}}
                         >
-                          <Button
-                            variant="danger"
-                            size="sm"
-                            onClick={() => updateTimesheetComment()}
-                          >
-                            Update
-                          </Button>
+                          <Button variant="danger" size="sm" onClick={() => updateTimesheetComment()}>Update</Button>
                         </div>
                       )}
                     </Col>
@@ -1092,31 +685,17 @@ const Timesheet = ({ match, history }) => {
                         rows="4"
                         id="comment"
                         value={supervisorComment || ""}
-                        disabled={
-                          !isSupervisor() &&
-                          data.data.statusName !== "FINALIZED"
-                        }
+                        disabled={ !(isSupervisor() && !data.data.isFinalized) }
                         onChange={(e) => setSupervisorComment(e.target.value)}
                       />
-                      {isSupervisor() &&
-                        data.data.statusName !== "FINALIZED" && (
-                          <div
-                            className="col-xl-12 col-lg-12 mt-4"
-                            style={{
-                              display: "flex",
-                              alignItems: "flex-end",
-                              justifyContent: "flex-end",
-                            }}
-                          >
-                            <Button
-                              variant="danger"
-                              size="sm"
-                              onClick={() => updateTimesheetComment()}
-                            >
-                              Update
-                            </Button>
-                          </div>
-                        )}
+                      {isSupervisor() && !data.data.isFinalized && (
+                        <div
+                          className="col-xl-12 col-lg-12 mt-4"
+                          style={{ display: "flex", alignItems: "flex-end", justifyContent: "flex-end", }}
+                        >
+                          <Button variant="danger" size="sm" onClick={() => updateTimesheetComment()}>Update</Button>
+                        </div>
+                      )}
                     </Col>
                   </Row>
                 </Tab.Pane>

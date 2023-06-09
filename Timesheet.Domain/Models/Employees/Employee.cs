@@ -1,6 +1,6 @@
 ﻿using Timesheet.Domain.Exceptions;
 using Timesheet.Models.Referential;
-using Timesheet.DomainEvents.Employees;
+using Timesheet.Domain.DomainEvents.Employees;
 
 namespace Timesheet.Domain.Models.Employees
 {
@@ -165,6 +165,8 @@ namespace Timesheet.Domain.Models.Employees
             relatedTimeoff.Update();
 
             var doesNotRequireApproval = PayrollTypes.PayrollTypesWithoutApproval.Any(t => entry.TypeId == t);
+
+            RaiseDomainEvent(new TimeoffEntryAdded(requestDate, EmploymentData.IsSalaried));
             if (doesNotRequireApproval)
             {
                 RaiseTimeoffWorkflowChangedEvent(timeoff, nameof(TimeoffStatus.APPROVED));
@@ -181,6 +183,11 @@ namespace Timesheet.Domain.Models.Employees
         public void RejectEntries(DateTime date)
         {
             GetTimeoffs(date).ToList().ForEach(t => t.RejectEntries(date));
+        }
+
+        public void RejectEntries(DateTime startDate, DateTime endDate)
+        {
+            Timeoffs.ToList().ForEach(t => t.RejectEntries(startDate, endDate));
         }
 
         public void UpdateTimeoffEntry(TimeoffHeader timeoff, TimeoffEntry timeoffEntry, int typeId, double hours, string label)
@@ -201,6 +208,18 @@ namespace Timesheet.Domain.Models.Employees
             }
 
             timeoffEntry.Update(typeId, hours, label);
+
+            timeoff.Update();
+        }
+
+        public void DeleteEntry(string entryId)
+        {
+            var timeoff = Timeoffs.Where(t => t.TimeoffEntries.Any(e => e.Id == entryId)).SingleOrDefault();
+
+            if(timeoff is not null)
+            {
+                DeleteTimeoffEntry(timeoff, timeoff.TimeoffEntries.FirstOrDefault(e => e.Id == entryId));
+            }
 
             timeoff.Update();
         }

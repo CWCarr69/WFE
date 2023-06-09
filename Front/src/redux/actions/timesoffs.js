@@ -1,268 +1,90 @@
 import { API } from "../../constants";
 import instance from "../../services/axiosInstance";
+import { interactWithAPI } from "./base";
 
-export const getTimeoffsEmployeeHistory = async (employee, approval, page) => {
-  var config = {
-    method: "GET",
-    url: `${API()}/Employee/${employee}/Timeoff/History?page=${page}&requireApproval=${approval}`,
-  };
+export const getSettings = async () => interactWithAPI({
+  method: "GET",
+  url: `${API()}/Settings`,
+});
 
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
+export const getTimeoffsEmployeeHistory = async (employee, page) => interactWithAPI({
+  method: "GET",
+  url: `${API()}/Employee/${employee}/Timeoff/History?page=${page}`,
+});
 
-export const getTimeoffsEmployeeEntriesHistory = async (
-  employee,
-  approval,
-  date
-) => {
-  var config = {
-    method: "GET",
-    url: `${API()}/Employee/${employee}/Timeoff/History/Entries?start=${date}&requireApproval=${approval}`,
-  };
+export const getTimeoffsEmployeeEntriesHistory = async (employee,date) => interactWithAPI({
+  method: "GET",
+  url: `${API()}/Employee/${employee}/Timeoff/History/Entries?start=${date}`,
+});
 
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
+export const getTimeoffsEmployeeMonthStatistics = async (employee) => interactWithAPI({
+  method: "GET",
+  url: `${API()}/Employee/${employee}/Timeoff/MonthsStatistics`,
+});
 
-export const getTimeoffsEmployeeMonthStatistics = async (employee) => {
-  var config = {
-    method: "GET",
-    url: `${API()}/Employee/${employee}/Timeoff/MonthsStatistics`,
-  };
+export const getTimeoffEmployeeDetails = async (employee, timeoffId) => interactWithAPI({
+  method: "GET",
+  url: `${API()}/Employee/${employee}/Timeoff/${timeoffId}`,
+});
 
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
+export const getTimeoffEmployeeSummary = async (employee, timeoffId) => interactWithAPI({
+  method: "GET",
+  url: `${API()}/Employee/${employee}/Timeoff/${timeoffId}/Summary`,
+});
 
-export const getTimeoffEmployeeDetails = async (employee, timeoffId) => {
-  var config = {
-    method: "GET",
-    url: `${API()}/Employee/${employee}/Timeoff/${timeoffId}`,
-  };
+export const getPendingTimesoffs = async (direct) => interactWithAPI({
+  method: "GET",
+  url: `${API()}/Employee/Timeoff/Pending?directReport=${direct}`,
+});
 
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
+export const addTimeoff = async (data)=> interactWithAPI({
+  method: "POST",
+  url: `${API()}/Employee/timeoff`,
+  data: data,
+});
 
-export const getTimeoffEmployeeSummary = async (employee, timeoffId) => {
-  var config = {
-    method: "GET",
-    url: `${API()}/Employee/${employee}/Timeoff/${timeoffId}/Summary`,
-  };
+export const submitTimeoff = async (data) => interactWithAPI({
+  method: "PUT",
+  url: `${API()}/Employee/timeoff/Submit`,
+  data: data,
+});
 
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
+export const deleteTimeoff = async (timeoff, employee) => interactWithAPI({
+  method: "DELETE",
+  url: `${API()}/Employee/timeoff/${timeoff}?employeeId=${employee}`,
+});
 
-export const getPendingTimesoffs = async (direct, page) => {
-  var config = {
-    method: "GET",
-    url: `${API()}/Employee/Timeoff/Pending?directReport=${direct}&page=${page}`,
-  };
+export const rejectTimeOff = async (data) => interactWithAPI({
+  method: "PUT",
+  url: `${API()}/Employee/timeoff/Reject`,
+  data: data,
+});
 
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
+export const approveTimeOff = async (data) => interactWithAPI({
+  method: "PUT",
+  url: `${API()}/Employee/timeoff/Approve`,
+  data: data,
+});
 
-export const addTimeoff = async (data) => {
-  var config = {
-    method: "POST",
-    url: `${API()}/Employee/timeoff`,
-    data: data,
-  };
+export const addEntry = async (data) => interactWithAPI({
+  method: "POST",
+  url: `${API()}/Employee/timeoff/Entry`,
+  data: data,
+});
 
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
+export const updateEntry = async (data) => interactWithAPI({
+  method: "PUT",
+  url: `${API()}/Employee/timeoff/Entry`,
+  data: data,
+});
 
-export const submitTimeoff = async (data) => {
-  var config = {
-    method: "PUT",
-    url: `${API()}/Employee/timeoff/Submit`,
-    data: data,
-  };
+export const deleteEntry = async (timeoff, entry, employee) => interactWithAPI({
+  method: "DELETE",
+  url: `${API()}/Employee/timeoff/${timeoff}/Entry/${entry}?employeeId=${employee}`,
+});
 
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
-
-export const deleteTimeoff = async (timeoff, employee) => {
-  var config = {
-    method: "DELETE",
-    url: `${API()}/Employee/timeoff/${timeoff}?employeeId=${employee}`,
-  };
-
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
-
-export const rejectTimeOff = async (data) => {
-  var config = {
-    method: "PUT",
-    url: `${API()}/Employee/timeoff/Reject`,
-    data: data,
-  };
-
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
-
-export const approveTimeOff = async (data) => {
-  var config = {
-    method: "PUT",
-    url: `${API()}/Employee/timeoff/Approve`,
-    data: data,
-  };
-
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
-
-export const addEntry = async (data) => {
-  var config = {
-    method: "POST",
-    url: `${API()}/Employee/timeoff/Entry`,
-    data: data,
-  };
-
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
-
-export const updateEntry = async (data) => {
-  var config = {
-    method: "PUT",
-    url: `${API()}/Employee/timeoff/Entry`,
-    data: data,
-  };
-
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
-
-export const deleteEntry = async (timeoff, entry, employee) => {
-  var config = {
-    method: "DELETE",
-    url: `${API()}/Employee/timeoff/${timeoff}/Entry/${entry}?employeeId=${employee}`,
-  };
-
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
-
-export const updateComment = async (data) => {
-  var config = {
-    method: "PUT",
-    url: `${API()}/Employee/timeoff/${data.timeoffId}/AddComment`,
-    data: data,
-  };
-
-  return new Promise(async (resolve, reject) => {
-    await instance(config)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
+export const updateComment = async (data) => interactWithAPI({
+  method: "PUT",
+  url: `${API()}/Employee/timeoff/${data.timeoffId}/AddComment`,
+  data: data,
+});
