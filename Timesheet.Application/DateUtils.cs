@@ -41,6 +41,7 @@
         }
 
         public static DateTime LastDayOfYear(this DateTime referenceDate) => new DateTime(referenceDate.Year, 12, 31);
+        public static DateTime NextJanuary(this DateTime referenceDate) => new DateTime(referenceDate.Year, 12, 31).AddDays(1);
         public static DateTime HalfDayOfMonth(this DateTime referenceDate) => new DateTime(referenceDate.Year, referenceDate.Month, 15);
         public static DateTime FirstDayOfMonth(this DateTime referenceDate) => new DateTime(referenceDate.Year, referenceDate.Month, 1);
         public static DateTime LastDayOfMonth(this DateTime referenceDate) => new DateTime(referenceDate.Year, referenceDate.Month, 1)

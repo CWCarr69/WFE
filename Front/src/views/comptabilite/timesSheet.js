@@ -180,11 +180,11 @@ const TimesSheet = () => {
           </div>
         </div>
       </div>
-      <div className="row">
+      {/* <div className="row">
         <div id="orphan-timesheets" className="col-12">
           <OrphanTimesheet />
         </div>
-      </div>
+      </div> */}
     </>
   );
 };

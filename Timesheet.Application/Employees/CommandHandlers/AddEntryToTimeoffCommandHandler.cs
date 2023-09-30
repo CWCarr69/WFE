@@ -39,7 +39,7 @@ namespace Timesheet.Application.Employees.CommandHandlers
                 _workflowService.AuthorizeTransition(timeoff, TimeoffTransitions.ADD_ENTRY, timeoff.Status, currentEmployeeRoleOnData);
             }
 
-            employee.AddTimeoffEntry(command.RequestDate, command.Type, command.Hours, timeoff, command.Label);
+            employee.AddTimeoffEntry(command.RequestDate, command.Type, command.Hours, timeoff, command.Label, command.Author?.IsAdministrator ?? false);
 
             var events = employee.GetDomainEvents();
             if (!LaunchedAsSubCommand)

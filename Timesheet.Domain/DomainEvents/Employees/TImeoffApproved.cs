@@ -9,5 +9,5 @@
         string Description,
         bool IsSalaried);
 
-    public record TimeoffApproved(IEnumerable<TimeoffApprovedEntry> TimeoffEntries) : IDomainEvent;
+    public record TimeoffApproved(IEnumerable<TimeoffApprovedEntry> TimeoffEntries, bool ForceAction) : IDomainEvent;
 }

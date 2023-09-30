@@ -1,5 +1,4 @@
-﻿using Timesheet.Domain.Models;
-using Timesheet.Domain.Models.Employees;
+﻿using Timesheet.Domain.Models.Employees;
 
 namespace Timesheet.Application.Workflow
 {

@@ -33,7 +33,7 @@ namespace Timesheet.Application.Employees.CommandHandlers
             EmployeeRoleOnData currentEmployeeRoleOnData = await GetCurrentEmployeeRoleOnData(command, employee);
             _workflowService.AuthorizeTransition(timeoff, TimeoffTransitions.APPROVE, timeoff.Status, currentEmployeeRoleOnData);
 
-            employee.ApproveTimeoff(timeoff, command.Comment);
+            employee.ApproveTimeoff(timeoff, command.Comment, command.Author?.IsAdministrator ?? false);
 
             var events = employee.GetDomainEvents();
             employee.ClearDomainEvents();

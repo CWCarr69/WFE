@@ -17,7 +17,12 @@ namespace Timesheet.Application.Timesheets.EventHandlers
 
         public override async Task HandleEvent(TimeoffEntryAdded @event)
         {
-            var timesheetType = @event.isSalaried ? TimesheetType.SALARLY : TimesheetType.WEEKLY;
+            if (@event.ForceAction)
+            {
+                return;
+            }
+
+            var timesheetType = @event.IsSalaried ? TimesheetType.SALARLY : TimesheetType.WEEKLY;
             var timesheet = await _readRepository.GetTimesheetByDate(@event.RequestDate, timesheetType);
 
             var timesheetIsFinalized = timesheet != null && timesheet.Status == TimesheetStatus.FINALIZED;

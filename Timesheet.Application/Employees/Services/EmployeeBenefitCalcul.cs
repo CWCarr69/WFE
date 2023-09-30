@@ -16,17 +16,17 @@ namespace Timesheet.Domain.Employees.Services
         IDictionary<(DateTime start, DateTime end), int> ScheduleFirstYears =
         new Dictionary<(DateTime start, DateTime end), int>()
         {
-                        { (new DateTime(DateTime.Now.Year, 1, 1), new DateTime(DateTime.Now.Year, 2, 15)), 10 },
-                        { (new DateTime(DateTime.Now.Year, 2, 16), new DateTime(DateTime.Now.Year, 3, 15)), 9 },
-                        { (new DateTime(DateTime.Now.Year, 3, 16), new DateTime(DateTime.Now.Year, 4, 15)), 8 },
-                        { (new DateTime(DateTime.Now.Year, 4, 16), new DateTime(DateTime.Now.Year, 5, 15)), 7 },
-                        { (new DateTime(DateTime.Now.Year, 5, 16), new DateTime(DateTime.Now.Year, 6, 15)), 6 },
-                        { (new DateTime(DateTime.Now.Year, 6, 16), new DateTime(DateTime.Now.Year, 8, 15)), 5 },
-                        { (new DateTime(DateTime.Now.Year, 8, 16), new DateTime(DateTime.Now.Year, 9, 15)), 4 },
-                        { (new DateTime(DateTime.Now.Year, 9, 16), new DateTime(DateTime.Now.Year, 10, 15)), 3 },
-                        { (new DateTime(DateTime.Now.Year, 10, 16), new DateTime(DateTime.Now.Year, 11, 15)), 2 },
-                        { (new DateTime(DateTime.Now.Year, 11, 16), new DateTime(DateTime.Now.Year, 12, 15)), 1 },
-                        { (new DateTime(DateTime.Now.Year, 12, 16), new DateTime(DateTime.Now.Year, 12, 31)), 0 },
+            { (new DateTime(DateTime.Now.Year, 1, 1), new DateTime(DateTime.Now.Year, 2, 15)), 10 },
+            { (new DateTime(DateTime.Now.Year, 2, 16), new DateTime(DateTime.Now.Year, 3, 15)), 9 },
+            { (new DateTime(DateTime.Now.Year, 3, 16), new DateTime(DateTime.Now.Year, 4, 15)), 8 },
+            { (new DateTime(DateTime.Now.Year, 4, 16), new DateTime(DateTime.Now.Year, 5, 15)), 7 },
+            { (new DateTime(DateTime.Now.Year, 5, 16), new DateTime(DateTime.Now.Year, 6, 15)), 6 },
+            { (new DateTime(DateTime.Now.Year, 6, 16), new DateTime(DateTime.Now.Year, 8, 15)), 5 },
+            { (new DateTime(DateTime.Now.Year, 8, 16), new DateTime(DateTime.Now.Year, 9, 15)), 4 },
+            { (new DateTime(DateTime.Now.Year, 9, 16), new DateTime(DateTime.Now.Year, 10, 15)), 3 },
+            { (new DateTime(DateTime.Now.Year, 10, 16), new DateTime(DateTime.Now.Year, 11, 15)), 2 },
+            { (new DateTime(DateTime.Now.Year, 11, 16), new DateTime(DateTime.Now.Year, 12, 15)), 1 },
+            { (new DateTime(DateTime.Now.Year, 12, 16), new DateTime(DateTime.Now.Year, 12, 31)), 0 },
         };
 
         private IDictionary<(DateTime start, DateTime end), int> ScheduleOtherYears =
@@ -47,7 +47,7 @@ namespace Timesheet.Domain.Employees.Services
         
         private readonly IQueryEmployee _queryEmployee;
 
-        //public EmployeeBenefitCalculator() { }
+        public EmployeeBenefitCalculator() { }
 
         public EmployeeBenefitCalculator(IQueryEmployee queryEmployee)
         {
@@ -95,9 +95,12 @@ namespace Timesheet.Domain.Employees.Services
 
             var employeeCalcultatedBenefits = new EmployeeCalculatedBenefits
             {
-                TotalVacationHours = totalVacations + rollover + (doNotUseCalculatedBenefits ? 0 : employeeBenefitsVariations.VacationHours),
-                TotalPersonalHours = totalPersonals + (doNotUseCalculatedBenefits ? 0 : employeeBenefitsVariations.PersonalHours),
-                RolloverHours = rollover + (doNotUseCalculatedBenefits ? 0 : employeeBenefitsVariations.RolloverHours),
+                TotalVacationHours = totalVacations + rollover,
+                AdditionalVacationHours = doNotUseCalculatedBenefits ? 0 : employeeBenefitsVariations.VacationHours,
+                TotalPersonalHours = totalPersonals,
+                AdditionalPersonalHours = doNotUseCalculatedBenefits ? 0 : employeeBenefitsVariations.PersonalHours,
+                RolloverHours = rollover, 
+                AdditionalRolloverHours = doNotUseCalculatedBenefits ? 0 : employeeBenefitsVariations.RolloverHours,
                 Details = new List<HourInformation> { personalHours, vacationHours }
             };
 
@@ -143,7 +146,7 @@ namespace Timesheet.Domain.Employees.Services
             return months * PERSONAL_TIME_UNITY;
         }
 
-        private double GetTotalCurrentVacationsTime(DateTime employmentDate, DateTime now, int  cumulatedPeviousWorkPeriod)
+        public double GetTotalCurrentVacationsTime(DateTime employmentDate, DateTime now, int  cumulatedPeviousWorkPeriod)
         {
             var oneYearAfterEmploymentDate = employmentDate.Date.AddYears(1);
             if (now < oneYearAfterEmploymentDate)
@@ -154,8 +157,12 @@ namespace Timesheet.Domain.Employees.Services
             var vacations = 0;
 
             var anniversaryDate = new DateTime(now.Year, employmentDate.Month, employmentDate.Day);
-            var yearsDifferencesSinceEmploymenDate = now.YearsBetween(employmentDate.AddMonths(-cumulatedPeviousWorkPeriod));
-            
+
+            var consideredEmploymentDate = employmentDate.AddMonths(-cumulatedPeviousWorkPeriod);
+            var yearsDifferencesSinceEmploymenDate = now.YearsBetween(consideredEmploymentDate);
+            var yearsDifferencesSinceEmploymenDateNextJanuary = now.YearsBetween(consideredEmploymentDate.NextJanuary());
+
+
             var isAnniversaryBenefitDate = PeriodIsSufficentForBonusVacations(yearsDifferencesSinceEmploymenDate)
                 && anniversaryDate <= now;
 
@@ -164,7 +171,7 @@ namespace Timesheet.Domain.Employees.Services
                 vacations += AtAnniversaryVacation(anniversaryDate, yearsDifferencesSinceEmploymenDate);
             }
 
-            vacations += AdditionalVacations(yearsDifferencesSinceEmploymenDate);
+            vacations += AdditionalVacations(yearsDifferencesSinceEmploymenDateNextJanuary);
 
             return vacations * WORK_DAY_HOURS;
         }
@@ -198,6 +205,11 @@ namespace Timesheet.Domain.Employees.Services
         {
 
             if(yearsConsidered >= 15) { return 20; }
+            
+            
+            
+            
+            
             if (yearsConsidered >= 5) { return 15; }
             if (yearsConsidered >= 1) { return 10; }
 

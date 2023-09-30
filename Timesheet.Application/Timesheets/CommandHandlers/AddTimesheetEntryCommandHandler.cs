@@ -60,7 +60,7 @@ namespace Timesheet.Application.Timesheets.CommandHandlers
                 await _writeRepository.Add(timesheet);
             }
 
-            timesheet.AddTimesheetEntry(timesheetEntry);
+            timesheet.AddTimesheetEntry(timesheetEntry, command.Author?.IsAdministrator ?? false);
 
             this.RelatedAuditableEntity = timesheet;
 

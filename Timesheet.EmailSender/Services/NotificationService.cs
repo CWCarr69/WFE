@@ -75,8 +75,8 @@ namespace Timesheet.EmailSender.Services
             {
                 _logger.LogInformation(JsonConvert.SerializeObject(notificationItem));
 
-                _mailEngine.SendEmail(notificationItem);
-                if (completeSend)
+                var done = _mailEngine.SendEmail(notificationItem);
+                if (completeSend && done)
                 {
                     _logger.LogInformation($"Notification {notificationItem.NotificationId} sent");
                     _notificationRepository.CompleteSend(notificationItem.NotificationId);

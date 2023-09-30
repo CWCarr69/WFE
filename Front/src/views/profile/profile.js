@@ -240,7 +240,7 @@ const Profile = ({ match }) => {
                         <dt>Eligible Personal Hours</dt>
                         <dd>{benefit.eligiblePersonalHours}</dd>
                         <dt>Rollover Hours</dt>
-                        <dd>{benefit.rolloverHours}</dd>
+                        <dd>{benefit.eligibleRolloverHours}</dd>
                       </dl>
                     </div>
                     {editBenefit && user.isAdministrator && (

@@ -81,9 +81,12 @@ namespace Timesheet.Domain.Models.Timesheets
             return new TimesheetHeader(payrollPeriod, payrollPeriod, start, end, TimesheetType.WEEKLY, TimesheetStatus.IN_PROGRESS);
         }
 
-        public void AddTimesheetEntry(TimesheetEntry timesheetEntry)
+        public void AddTimesheetEntry(TimesheetEntry timesheetEntry, bool ignoreGuard=false)
         {
-            GuardAgainstIsFinalized();
+            if (!ignoreGuard)
+            {
+                GuardAgainstIsFinalized();
+            }
 
             if (timesheetEntry?.Id is null)
             {

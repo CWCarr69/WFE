@@ -285,14 +285,13 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
         private const string CalculateUsedBenefitsQueryTypeParam = "@type";
         private const string CalculateUsedBenefitsQueryEmployeeIdParam = "@employeeId";
 
-        public const string CalculateUsedBenefitsQuery = $@"SELECT SUM(hours)
-            FROM Employees e
-            JOIN TimeoffHeader th on e.Id = th.employeeId AND th.status = {CalculateUsedBenefitsQueryStatusParam}
-            JOIN TimeoffEntry te on th.Id = te.TimeoffHeaderId
-            WHERE e.Id = {CalculateUsedBenefitsQueryEmployeeIdParam}
-            AND te.TypeId = {CalculateUsedBenefitsQueryTypeParam} 
-            AND te.RequestDate 
-            BETWEEN {CalculateUsedBenefitsQueryStartDateParam} AND {CalculateUsedBenefitsQueryEndDateParam}
+        public const string CalculateUsedBenefitsQuery = $@"SELECT COALESCE(SUM(quantity), 0)
+            FROM AllEmployeeTimesheetEntriesWithoutException ts
+            WHERE ts.TimesheetEntryStatus = {CalculateUsedBenefitsQueryStatusParam}
+            And ts.EmployeeId = {CalculateUsedBenefitsQueryEmployeeIdParam}
+            AND ts.PayrollCodeId = {CalculateUsedBenefitsQueryTypeParam} 
+            AND ts.IsTimeoff = 1 
+            AND ts.WorkDate BETWEEN {CalculateUsedBenefitsQueryStartDateParam} AND {CalculateUsedBenefitsQueryEndDateParam}
         ";
         #endregion
 
@@ -303,14 +302,14 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
         private const string CalculateScheduledBenefitsQueryTypeParam = "@type";
         private const string CalculateScheduledBenefitsQueryEmployeeIdParam = "@employeeId";
 
-        public const string CalculateScheduledBenefitsQuery = $@"SELECT SUM(hours)
-            FROM Employees e
-            JOIN TimeoffHeader th on e.Id = th.employeeId AND th.status != {CalculateScheduledBenefitsQueryStatusParam}
-            JOIN TimeoffEntry te on th.Id = te.TimeoffHeaderId
-            WHERE e.Id = {CalculateScheduledBenefitsQueryEmployeeIdParam}
-            AND te.TypeId = {CalculateScheduledBenefitsQueryTypeParam} 
-            AND te.RequestDate 
-            BETWEEN {CalculateScheduledBenefitsQueryStartDateParam} AND {CalculateScheduledBenefitsQueryEndDateParam}
+        public const string CalculateScheduledBenefitsQuery = $@"SELECT COALESCE(SUM(quantity), 0)
+            FROM AllEmployeeTimesheetEntriesWithoutException ts
+            WHERE ts.TimesheetEntryStatus < {CalculateScheduledBenefitsQueryStatusParam}
+            And ts.EmployeeId = {CalculateScheduledBenefitsQueryEmployeeIdParam}
+            AND ts.PayrollCodeId = {CalculateScheduledBenefitsQueryTypeParam} 
+            AND ts.IsTimeoff = 1
+            AND ts.WorkDate > GetDate() 
+            AND ts.WorkDate BETWEEN {CalculateScheduledBenefitsQueryStartDateParam} AND {CalculateScheduledBenefitsQueryEndDateParam}
         ";
         #endregion
     }
@@ -482,8 +481,9 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
         {
             var query = QueryEmployeeConstants.CalculateUsedBenefitsQuery;
 
-            var status = TimeoffStatus.APPROVED;
-            return await _dbService.ExecuteScalarAsync<double>(query, new { start, end, status, type, employeeId });
+            var status = TimesheetEntryStatus.APPROVED;
+            var test = await _dbService.ExecuteScalarAsync<double>(query, new { start, end, status, type, employeeId });
+            return test;
         }
 
         public async Task<double> CalculateScheduledBenefits(string employeeId, int type)
@@ -494,7 +494,7 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
 
             var query = QueryEmployeeConstants.CalculateScheduledBenefitsQuery;
 
-            var status = TimeoffStatus.APPROVED;
+            var status = TimesheetEntryStatus.APPROVED;
             return await _dbService.ExecuteScalarAsync<double>(query, new { start, end, status, type, employeeId });
         }
 

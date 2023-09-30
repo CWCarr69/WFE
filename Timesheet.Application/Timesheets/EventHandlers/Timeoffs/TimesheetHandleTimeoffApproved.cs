@@ -1,4 +1,5 @@
-﻿using Timesheet.Application.Shared;
+﻿
+using Timesheet.Application.Shared;
 using Timesheet.Domain.DomainEvents.Employees;
 using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Models.Timesheets;
@@ -62,7 +63,7 @@ namespace Timesheet.Application.Timesheets.EventHandlers
                     alreadyAddedtimesheet = timesheet;
                 }
 
-                alreadyAddedtimesheet.AddTimesheetEntry(timesheetEntry);
+                alreadyAddedtimesheet.AddTimesheetEntry(timesheetEntry, @event.ForceAction);
             }
         }
 

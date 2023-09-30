@@ -127,11 +127,11 @@ namespace Timesheet.Domain.Models.Employees
             RaiseTimeoffWorkflowChangedEvent(timeoff, nameof(TimeoffStatus.SUBMITTED));
         }
 
-        public void ApproveTimeoff(TimeoffHeader timeoff, string comment)
+        public void ApproveTimeoff(TimeoffHeader timeoff, string comment, bool force)
         {
             timeoff.Approve(comment);
             RaiseTimeoffWorkflowChangedEvent(timeoff, nameof(TimeoffStatus.APPROVED));
-            RaiseTimeoffApprovedEvent(timeoff);
+            RaiseTimeoffApprovedEvent(timeoff, force);
         }
 
         public void RejectTimeoff(TimeoffHeader timeoff, string comment)
@@ -140,7 +140,7 @@ namespace Timesheet.Domain.Models.Employees
             RaiseTimeoffWorkflowChangedEvent(timeoff, nameof(TimeoffStatus.REJECTED));
         }
 
-        public void AddTimeoffEntry(DateTime requestDate, int typeId, double hours, TimeoffHeader timeoff, string label)
+        public void AddTimeoffEntry(DateTime requestDate, int typeId, double hours, TimeoffHeader timeoff, string label, bool force=false)
         {
             var timeoffEntriesOnSameDate = _timeoffs
                 .Where(t => t.Status != TimeoffStatus.REJECTED)
@@ -166,11 +166,11 @@ namespace Timesheet.Domain.Models.Employees
 
             var doesNotRequireApproval = PayrollTypes.PayrollTypesWithoutApproval.Any(t => entry.TypeId == t);
 
-            RaiseDomainEvent(new TimeoffEntryAdded(requestDate, EmploymentData.IsSalaried));
+            RaiseDomainEvent(new TimeoffEntryAdded(requestDate, EmploymentData.IsSalaried, force));
             if (doesNotRequireApproval)
             {
                 RaiseTimeoffWorkflowChangedEvent(timeoff, nameof(TimeoffStatus.APPROVED));
-                RaiseTimeoffEntryApprovedEvent(entry);
+                RaiseTimeoffEntryApprovedEvent(entry, force);
             }
         }
 
@@ -241,7 +241,7 @@ namespace Timesheet.Domain.Models.Employees
             RaiseDomainEvent(new TimeoffStateChanged(Id, PrimaryApprover?.Id, SecondaryApprover?.Id, status, timeoff.Id)); ;
         }
 
-        private void RaiseTimeoffEntryApprovedEvent(TimeoffEntry entry)
+        private void RaiseTimeoffEntryApprovedEvent(TimeoffEntry entry, bool forceAction)
         {
             List<TimeoffApprovedEntry> timeoffEntries = new() 
             {
@@ -255,10 +255,10 @@ namespace Timesheet.Domain.Models.Employees
                     this.EmploymentData.IsSalaried)
             };
 
-            RaiseDomainEvent(new TimeoffApproved(timeoffEntries));
+            RaiseDomainEvent(new TimeoffApproved(timeoffEntries, forceAction));
         }
 
-        private void RaiseTimeoffApprovedEvent(TimeoffHeader timeoff)
+        private void RaiseTimeoffApprovedEvent(TimeoffHeader timeoff, bool forceAction)
         {
             List<TimeoffApprovedEntry> timeoffEntries = new();
 
@@ -274,7 +274,7 @@ namespace Timesheet.Domain.Models.Employees
                     this.EmploymentData.IsSalaried));
             }
 
-            RaiseDomainEvent(new TimeoffApproved(timeoffEntries));
+            RaiseDomainEvent(new TimeoffApproved(timeoffEntries, forceAction));
         }
 
         public TimeoffHeader? GetTimeoff(string timeoffId) => _timeoffs.SingleOrDefault(t => t.Id == timeoffId);

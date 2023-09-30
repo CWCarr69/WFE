@@ -15,10 +15,16 @@
         public double TotalVacationHours { get; set; }
         public double TotalPersonalHours { get; set; }
         public double RolloverHours { get; set; }
+
+        public double AdditionalVacationHours { get; set; }
+        public double AdditionalPersonalHours { get; set; }
+        public double AdditionalRolloverHours { get; set; }
+        
         public IEnumerable<HourInformation> Details { get; set; }
 
-        public string EligibleVacationHours => $@"{GetBalance(HourInformationType.Vacation)} / {TotalVacationHours}";
-        public string EligiblePersonalHours => $@"{GetBalance(HourInformationType.Personal)} / {TotalPersonalHours}";
+        public string EligibleVacationHours => $@"{GetBalance(HourInformationType.Vacation)} / {TotalVacationHours + AdditionalVacationHours}{(AdditionalVacationHours == 0 ? "" : $"({TotalVacationHours} + {AdditionalVacationHours})" )}";
+        public string EligiblePersonalHours => $@"{GetBalance(HourInformationType.Personal)} / {TotalPersonalHours + AdditionalPersonalHours}{(AdditionalPersonalHours == 0 ? "" : $"({TotalPersonalHours} + {AdditionalPersonalHours})")}";
+        public string EligibleRolloverHours => $@"{RolloverHours + AdditionalRolloverHours}{(AdditionalRolloverHours == 0 ? "" : $"({RolloverHours} + {AdditionalRolloverHours})")}";
 
         private double GetBalance(HourInformationType hourType)
         {
