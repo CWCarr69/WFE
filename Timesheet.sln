@@ -52,6 +52,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timesheet.Domain", "Timeshe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timesheet.Application.Unit.Tests", "Timesheet.Application.Unit.Tests\Timesheet.Application.Unit.Tests.csproj", "{F582DA29-F378-4059-AAE2-D11ED9350000}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Front", "Front", "{5E5DB7C4-9315-4E53-B7E6-2B36B37C164B}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "timesheet.front", "Timesheet.Front\timesheet.front.esproj", "{02A41FF5-5F64-46A2-A23A-C615A19E75D5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -126,6 +130,12 @@ Global
 		{F582DA29-F378-4059-AAE2-D11ED9350000}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F582DA29-F378-4059-AAE2-D11ED9350000}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F582DA29-F378-4059-AAE2-D11ED9350000}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02A41FF5-5F64-46A2-A23A-C615A19E75D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02A41FF5-5F64-46A2-A23A-C615A19E75D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02A41FF5-5F64-46A2-A23A-C615A19E75D5}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{02A41FF5-5F64-46A2-A23A-C615A19E75D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02A41FF5-5F64-46A2-A23A-C615A19E75D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02A41FF5-5F64-46A2-A23A-C615A19E75D5}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -149,6 +159,7 @@ Global
 		{8D27B8C1-987C-410F-85B5-A5A92C34E879} = {FE14FD57-8537-4179-94E1-7660F84976AA}
 		{84E16DF7-0543-41C2-BCD8-462BE989E3F8} = {0F49CFD8-0D3C-4D80-9F2E-06C66D564FAF}
 		{F582DA29-F378-4059-AAE2-D11ED9350000} = {75EC6D6C-400A-46FD-8AED-01E73B3499CD}
+		{02A41FF5-5F64-46A2-A23A-C615A19E75D5} = {5E5DB7C4-9315-4E53-B7E6-2B36B37C164B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50FBDF77-109D-4686-A2D9-F50A5139020D}

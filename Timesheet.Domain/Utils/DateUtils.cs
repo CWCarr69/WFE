@@ -21,8 +21,8 @@
 
         private static DateTime Last(this DateTime referenceDate, DayOfWeek searchedDayOfWeek)
         {
-            var diff = searchedDayOfWeek - referenceDate.DayOfWeek;
-            return referenceDate.AddDays(diff);
+            var diff = Math.Abs(searchedDayOfWeek - referenceDate.DayOfWeek);
+            return referenceDate.AddDays(-diff);
         }
 
         public static DateTime Next(this DateTime now, DayOfWeek searchedDayOfWeek)
@@ -52,7 +52,9 @@
         public static DateTime LastDayOfYear(this DateTime referenceDate, DayOfWeek dateOfWeek)
         {
             var lastDayOfYear = referenceDate.LastDayOfYear();
-            return lastDayOfYear.Last(dateOfWeek);
+            var date = lastDayOfYear.Last(dateOfWeek);
+
+            return date;
         }
 
         public static int WeeksBetweenDays(this DateTime referenceDate, DateTime secondReferenceDate)
