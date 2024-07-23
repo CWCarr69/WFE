@@ -114,7 +114,6 @@
 /Timesheet.Benefits/obj
 /Timesheet.Benefits/bin/Release/net6.0
 /Timesheet.Web.Api/bin/Release/net6.0/Timesheet.Benefits.pdb
-
 /Timesheet.Application/bin/Release/net6.0/win-x64
 /Timesheet.Domain/bin/Release/net6.0/win-x64
 /Timesheet.EmailSender/bin/Release/net6.0/win-x64
@@ -140,6 +139,7 @@
 /Front/node_modules
 /Timesheet.EmailSender/bin/Release/net6.0
 /Timesheet.EmailService/bin/Release/net6.0
+/Timesheet.Web.Api/wwwroot/
 /Timesheet.Web.Api/wwwroot/static/css/main.fd927bf5.css
 /Timesheet.Web.Api/wwwroot/static/css/main.fd927bf5.css.map
 /Timesheet.Web.Api/wwwroot/static/js/main.00b58581.js
@@ -149,7 +149,6 @@
 /Timesheet.Web.Api/wwwroot/static/js/main.03784321.js
 /Timesheet.Web.Api/wwwroot/static/js/main.03784321.js.map
 /Timesheet.Web.Api/wwwroot/static/js/main.11142df4.js.LICENSE.txt
-*.js
 *.map
 /Timesheet.Web.Api/wwwroot/static/js/main.116e71c0.js.LICENSE.txt
 /Timesheet.Web.Api/wwwroot/static/js/main.4786ad4c.js
