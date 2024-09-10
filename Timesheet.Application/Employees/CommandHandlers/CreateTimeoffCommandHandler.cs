@@ -5,6 +5,7 @@ using Timesheet.Domain;
 using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Models.Employees;
 using Timesheet.Domain.Repositories;
+using Timesheet.Models.Referential;
 
 namespace Timesheet.Application.Employees.CommandHandlers
 {
@@ -37,6 +38,8 @@ namespace Timesheet.Application.Employees.CommandHandlers
 
             Employee employee = await RequireEmployee(command.EmployeeId);
 
+            GuardAgainstExceededTimeoffRequest(employee, command.Entries);
+
             var timeoff = employee.CreateTimeoff(command.RequestStartDate, command.RequestEndDate, command.EmployeeComment, command.RequireApproval);
             
             this.RelatedAuditableEntity = timeoff;
@@ -56,6 +59,36 @@ namespace Timesheet.Application.Employees.CommandHandlers
             employee.ClearDomainEvents();
 
             return events;
+        }
+
+        private void GuardAgainstExceededTimeoffRequest(Employee employee, IEnumerable<AddEntryToTimeoff> entries)
+        {
+            var requestedHoursPerType = entries.GroupBy(e => e.Type, e => e.Hours)
+                .ToDictionary(g => g.Key, g => g.Sum());
+
+            var benefitsHoursPerType = new Dictionary<int, double>
+            {
+                { (int)TimesheetFixedPayrollCodeEnum.PERSONAL, employee.BenefitsSnapshot.PersonalHours },
+                { (int)TimesheetFixedPayrollCodeEnum.VACATION, employee.BenefitsSnapshot.VacationHours }
+            };
+
+            var usedAndPendingBenefitsHoursPerType = employee.GetTimeoffEntriesStats();
+
+
+            foreach(var benefitHoursInfo in benefitsHoursPerType)
+            {
+                requestedHoursPerType.TryGetValue(benefitHoursInfo.Key, out var requestedHours);
+                if (requestedHours == 0) continue;
+
+                usedAndPendingBenefitsHoursPerType.TryGetValue(benefitHoursInfo.Key, out var usedAndPendingBenefitsHours);
+
+                var availableBenefitsHours = benefitHoursInfo.Value - usedAndPendingBenefitsHours;
+
+                if(availableBenefitsHours < requestedHours)
+                {
+                    throw new CannotRequestUnavailableBenefits(requestedHours, availableBenefitsHours, (TimesheetFixedPayrollCodeEnum)benefitHoursInfo.Key);
+                }
+            }
         }
     }
 }

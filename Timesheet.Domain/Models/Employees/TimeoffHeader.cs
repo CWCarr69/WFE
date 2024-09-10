@@ -110,7 +110,7 @@
 
         internal void RejectEntries(DateTime startDate, DateTime endDate)
         {
-            TimeoffEntries.Where(e => e.RequestDate >= startDate && e.RequestDate <= endDate)
+            TimeoffEntries.Where(e => e.RequestDate >= startDate && e.RequestDate <= endDate && e.Status == TimeoffEntryStatus.NOT_PROCESSED) 
             .ToList()
             .ForEach(e => e.Reject());
 

@@ -40,7 +40,14 @@ namespace Timesheet.EmailSender.Services
             client.Credentials = new NetworkCredential(_settings.SMTP_Username, _settings.SMTP_Password);
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
 
-            client.Send(mail);
+            try
+            {
+                client.Send(mail);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error while sending mail to {to} with subject [{subject}] : {ex.Message}");
+            }
 
             _logger.LogInformation($"Notification sent to {to} with subject [{subject}]");
 

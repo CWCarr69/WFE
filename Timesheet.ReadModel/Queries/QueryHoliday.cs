@@ -51,6 +51,8 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
                 @params = new { startDate = start, endDate = end };
             }
 
+            query = $"{query} order by date desc";
+
             if(@params is null)
             {
                 return await _dbService.QueryAsync<HolidayDetails>(query);

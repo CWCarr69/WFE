@@ -20,27 +20,35 @@ namespace Timesheet.Infrastructure.Authentication.Providers
         }
 
         public User? Authenticate(Credentials credentials)
-        {  
-            var adServer = _querySetting.GetSetting("AUTHENTICATION_SERVER").Result;
-            if (adServer == null)
+        {
+            var skipCredential = false;
+#if DEBUG
+            skipCredential = true;
+#endif
+            if (!skipCredential)
             {
-                throw new Exception("Active Directory server configuration is missing");
+                var adServer = _querySetting.GetSetting("AUTHENTICATION_SERVER").Result;
+                if (adServer == null)
+                {
+                    throw new Exception("Active Directory server configuration is missing");
+                }
+                var connection = new LdapConnection(adServer.Value);
+                var credential = new NetworkCredential(credentials.Login, credentials.Password);
+                connection.Credential = credential;
+                try
+                {
+                    connection.Bind();
+                }
+                catch (LdapException ex)
+                {
+                    return null;
+                }
+                finally
+                {
+                    connection.Dispose();
+                }
             }
-            var connection = new LdapConnection(adServer.Value);
-            var credential = new NetworkCredential(credentials.Login, credentials.Password);
-            connection.Credential = credential;
-            try
-            {
-                connection.Bind();
-            }
-            catch (LdapException ex)
-            {
-               return null;
-            }
-            finally
-            {
-                connection.Dispose();
-            }
+           
 
             var employee = _queryEmployee.GetEmployeeProfileByLogin(credentials.Login).Result;
 

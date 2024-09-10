@@ -9,10 +9,11 @@ import EmployeeListFilter from "./employeeListFilter";
 import EmployeeListHeader from "./employeeListHeader";
 import EmployeeListDatatable from "./employeeListDatatable";
 import EmployeeListStatusFilter from "./employeeListStatusFilter";
-
+import { useMediaQuery } from 'react-responsive';
 
 const EmployeeList = () => {
   const { setTitle } = useContext(ThemeContext);
+  const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
   const loading = useSelector((state) => state.auth.showLoading);
 
   useEffect(() => {
@@ -61,16 +62,22 @@ const EmployeeList = () => {
     </div>
   ) : (
     <>
-      <NewTimeoff isOpen={isAddTimeoffOpen} selectedEmployeeId={selectedEmployeeId} onClose={() => setIsAddTimeoffOpen(false)}/>
+      <NewTimeoff isOpen={isAddTimeoffOpen} 
+        selectedEmployeeId={selectedEmployeeId} 
+        selectedEmployeeName={employees.find(e => e.employeeId == selectedEmployeeId)?.fullName}
+        onClose={() => setIsAddTimeoffOpen(false)}
+        />
       <EmployeeListFilter onChange={(filter) => setFilter(filter)} />
       <EmployeeListHeader onClickDirectOrAllFilter={() => setDirect(!direct)} count={employees.length} loadDirectEmployees={direct} />
-      <EmployeeListStatusFilter 
+      {!isMobile && (
+        <EmployeeListStatusFilter 
         onTimeoffStatusesFilterChanged={(statuses) => setTimeoffActiveStatusesFilter(statuses)}
         onTimesheetStatusesFilterChanged={(statuses) => setTimesheetActiveStatusesFilter(statuses)}
         />
+      )}
       <EmployeeListDatatable 
         onAddClick={(employeeId) => {
-          console.log(JSON.stringify(employeeId));
+          console.log(JSON.stringify(employees.find(e => e.employeeId == employeeId)?.fullName));
           setSelectedEmployeeId(employeeId);
           setIsAddTimeoffOpen(true);
         }}

@@ -73,15 +73,23 @@ namespace Timesheet.EmailSender.Services
             _logger.LogInformation("Sending notifications : ");
             foreach (var notificationItem in notificationItems)
             {
-                _logger.LogInformation(JsonConvert.SerializeObject(notificationItem));
-
-                var done = _mailEngine.SendEmail(notificationItem);
-                if (completeSend && done)
+                try
                 {
-                    _logger.LogInformation($"Notification {notificationItem.NotificationId} sent");
-                    _notificationRepository.CompleteSend(notificationItem.NotificationId);
-                    _logger.LogInformation($"Notification {notificationItem.NotificationId} processing done (mark as sent)");
+                    _logger.LogInformation(JsonConvert.SerializeObject(notificationItem));
+
+                    var done = _mailEngine.SendEmail(notificationItem);
+                    if (completeSend && done)
+                    {
+                        _logger.LogInformation($"Notification {notificationItem.NotificationId} sent");
+                        _notificationRepository.CompleteSend(notificationItem.NotificationId);
+                        _logger.LogInformation($"Notification {notificationItem.NotificationId} processing done (mark as sent)");
+                    }
                 }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"Error while sending mail to {notificationItem.EmployeeName} : {ex.Message}");
+                }
+                
             }
             _logger.LogInformation("--DONE--");
         }

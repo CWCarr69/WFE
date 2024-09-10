@@ -10,7 +10,7 @@ import { enumerateDaysBetweenDates } from "../../services/util";
 import { displayError, displaySuccess } from "../../services/toast";
 import moment from "moment";
 
-const NewTimeoff = ({ isOpen, onClose, selectedEmployeeId }) => {
+const NewTimeoff = ({ isOpen, onClose, selectedEmployeeId, selectedEmployeeName = undefined }) => {
 
   const [types, setTypes] = useState([]);
   const [employees, setEmployees] = useState([]);
@@ -64,12 +64,16 @@ const NewTimeoff = ({ isOpen, onClose, selectedEmployeeId }) => {
     fetchEmployees();
   }, [])
 
+  useEffect(() => {
+   console.log(timeoff);
+  }, [timeoff])
+
   const close = () => { setTimeoff({employeeId: selectedEmployeeId}); onClose(); }
 
   return (
       <Modal animation={false} show={isOpen} backdrop="static" size="lg">
         <Modal.Header>
-          <Modal.Title>Timeoff edit</Modal.Title>
+          <Modal.Title>Add Timeoff{selectedEmployeeName && <span> for {selectedEmployeeName}</span>}</Modal.Title>
           <Button variant="" className="btn-close" onClick={close}></Button>
         </Modal.Header>
         <Modal.Body>
@@ -169,7 +173,7 @@ const NewTimeoff = ({ isOpen, onClose, selectedEmployeeId }) => {
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={close} variant="danger light">Close</Button>
-          {canSave() && <Button variant="primary" onClick={createTimeOff}> Save changes</Button>}
+          {canSave() && <Button variant="primary" onClick={createTimeOff}> Create</Button>}
         </Modal.Footer>
       </Modal>
   );

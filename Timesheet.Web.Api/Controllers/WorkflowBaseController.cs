@@ -24,6 +24,7 @@ namespace Timesheet.Web.Api.Controllers
             _habilitations = habilitations;
         }
 
+        [NonAction]
         protected async Task<WithHabilitations<T>> SetAuthorizedTransitions<T>(T data, Type entityType, Enum status, User currentUser, string employeeId)
         {
             var dataWithHabilitations = new WithHabilitations<T>(data);
@@ -45,7 +46,7 @@ namespace Timesheet.Web.Api.Controllers
             return dataWithHabilitations;
         }
 
-
+        [NonAction]
         protected async Task<WithHabilitations<U>> CombineAuthorizedTransitions<U, T>(WithHabilitations<U> currentDataWithHabilitations, 
             T data, Type entityType, Enum status, User currentUser, string employeeId)
         {
@@ -58,6 +59,7 @@ namespace Timesheet.Web.Api.Controllers
             return currentDataWithHabilitations;
         }
 
+        [NonAction]
         protected async Task<WithHabilitations<T>> CombineIntersectAuthorizedTransitions<T>(WithHabilitations<T> currentDataWithHabilitations,
     dynamic data, Type entityType, Enum status, User currentUser, string employeeId)
         {

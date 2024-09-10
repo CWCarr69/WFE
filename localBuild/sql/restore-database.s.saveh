@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Wait for SQL Server to start
+sleep 30s
+
+# Connect to SQL Server and restore the database
+/opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P Test12345678* -Q "
+RESTORE DATABASE Timesheet
+FROM DISK = '/var/opt/mssql/backup/back.bak'
+#WITH MOVE 'YourDatabaseLogicalDataFile' TO '/var/opt/mssql/data/YourDatabaseName.mdf',
+#MOVE 'YourDatabaseLogicalLogFile' TO '/var/opt/mssql/data/YourDatabaseName.ldf'"
+

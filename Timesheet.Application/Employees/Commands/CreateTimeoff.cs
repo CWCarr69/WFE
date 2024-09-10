@@ -9,6 +9,7 @@ namespace Timesheet.Application.Employees.Commands
         public DateTime RequestEndDate { get; set; }
         public string? EmployeeId { get; set; }
         public string? EmployeeComment { get; set; }
+        public bool IsCreatedByHr { get; set; } = false;
 
 
         public IEnumerable<AddEntryToTimeoff> Entries { get; set; }

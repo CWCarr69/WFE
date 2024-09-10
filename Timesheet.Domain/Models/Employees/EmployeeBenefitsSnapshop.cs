@@ -1,4 +1,6 @@
-﻿namespace Timesheet.Domain.Models.Employees
+﻿using Timesheet.Models.Referential;
+
+namespace Timesheet.Domain.Models.Employees
 {
     public class EmployeeBenefitsSnapshop : ValueObject
     {
@@ -36,6 +38,12 @@
             PersonalUsed = used;
             PersonalScheduled = scheduled;
             return this;
+        }
+
+        public double GetTotal(TimesheetFixedPayrollCodeEnum type)
+        {
+            if (type == TimesheetFixedPayrollCodeEnum.PERSONAL) return PersonalHours;
+            else return VacationHours;
         }
 
         public override IEnumerable<object> GetAtomicValues()

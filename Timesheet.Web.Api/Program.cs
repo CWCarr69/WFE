@@ -14,6 +14,7 @@ using Hangfire;
 using Timesheet.Benefits;
 using Timesheet.EmailSender;
 using Mustache;
+using System.Reflection;
 
 namespace Timesheet.Web.Api
 {
@@ -21,7 +22,12 @@ namespace Timesheet.Web.Api
     {
         public static void Main(string[] args)
         {
-            var webApplicationOptions = new WebApplicationOptions() { ContentRootPath = AppContext.BaseDirectory, Args = args, ApplicationName = System.Diagnostics.Process.GetCurrentProcess().ProcessName };
+            var webApplicationOptions = new WebApplicationOptions() {
+                ContentRootPath = AppContext.BaseDirectory,
+                Args = args,
+                ApplicationName = Assembly.GetEntryAssembly()?.GetName().Name
+            };
+
             var builder = WebApplication.CreateBuilder(webApplicationOptions);
             builder.Host.UseWindowsService();
 
@@ -66,9 +72,10 @@ namespace Timesheet.Web.Api
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen(
-            options =>
+            builder.Services.AddSwaggerGen(options =>
             {
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+
                 options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
                 {
                     Description = "Authentication using Bearer scheme",
@@ -78,8 +85,7 @@ namespace Timesheet.Web.Api
                 });
 
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
-            }
-            );
+            });
 
             //HostedService
             builder.Services.AddHostedService<TimesheetWebApiService>();
@@ -153,7 +159,7 @@ namespace Timesheet.Web.Api
             app.UseHangfireDashboard();
             app.MapHangfireDashboard();
 
-            RecurringJob.AddOrUpdate<IEmployeeBenefitsService>(x => x.UpdateEmployeeBenefits(), builder.Configuration.GetSection("AppSettings:BenefitsCron").Value);
+            //RecurringJob.AddOrUpdate<IEmployeeBenefitsService>(x => x.UpdateEmployeeBenefits(), builder.Configuration.GetSection("AppSettings:BenefitsCron").Value);
 
             app.Run();
         }

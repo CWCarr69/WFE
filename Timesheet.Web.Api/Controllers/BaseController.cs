@@ -21,6 +21,7 @@ namespace Timesheet.Web.Api.Controllers
             IsAdministrator = User.FindFirstValue(ClaimTypes.Role) == EmployeeRole.ADMINISTRATOR.ToString()
         };
 
+        [NonAction]
         protected PaginatedResult<T> Paginate<T>(int page, int itemsPerPage, WithTotal<T> itemsContainer)
         {
             return new PaginatedResult<T>
@@ -32,6 +33,7 @@ namespace Timesheet.Web.Api.Controllers
             };
         }
 
+        [NonAction]
         protected PaginatedResult<WithHabilitations<T>> Paginate<T>(int page, int itemsPerPage, int totalItems, List<WithHabilitations<T>> timeoffWithHabilitations)
         {
             return new PaginatedResult<WithHabilitations<T>>
@@ -42,12 +44,20 @@ namespace Timesheet.Web.Api.Controllers
                 Items = timeoffWithHabilitations
             };
         }
-    
+
+        [NonAction]
         protected void LogInformation(string message)
         {
             _logger.LogInformation(message);
         }
 
+        [NonAction]
+        protected void LogWarning(string message)
+        {
+            _logger.LogInformation(message);
+        }
+
+        [NonAction]
         public string Manager()
         {
             return CurrentUser.IsAdministrator ? null : CurrentUser.Id;

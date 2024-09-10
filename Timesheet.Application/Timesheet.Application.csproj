@@ -15,4 +15,10 @@
     <ProjectReference Include="..\Timesheet.Domain\Timesheet.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Employees\Exceptions\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Employees\Exceptions\" />
+  </ItemGroup>
 </Project>

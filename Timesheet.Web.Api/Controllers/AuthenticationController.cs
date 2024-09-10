@@ -10,13 +10,17 @@ namespace Timesheet.Web.Api.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
+
         private readonly IAuthenticationService<AuthenticationResponse> _authenticationService;
         private readonly string _JwtSigningKey ;
 
-        public AuthenticationController(IAuthenticationService<AuthenticationResponse> authenticationService, IConfiguration configuration)
+        private readonly ILogger<AuthenticationController> _logger;
+
+        public AuthenticationController(IAuthenticationService<AuthenticationResponse> authenticationService, IConfiguration configuration, ILogger<AuthenticationController> logger)
         {
             this._authenticationService = authenticationService;
             this._JwtSigningKey = configuration.GetSection("AppSettings:Token").Value;
+            this._logger = logger;
         }
 
         [HttpPost]
@@ -28,6 +32,7 @@ namespace Timesheet.Web.Api.Controllers
                 return Ok(response);
             }catch (Exception ex)
             {
+                _logger.LogWarning($"Failed Logon attempt by {credentials.Login}");
                 return Unauthorized(ex.Message);
             }
         }

@@ -101,6 +101,7 @@ namespace Timesheet.Domain.Models.Employees
         #region Time Workflow
         public TimeoffHeader CreateTimeoff(DateTime requestStartDate, DateTime requestEndDate, string employeeComment, bool requireApproval)
         {
+            
             var timeoff = TimeoffHeader.Create(requestStartDate, requestEndDate, employeeComment, requireApproval);
             _timeoffs.Add(timeoff);
 
@@ -287,6 +288,13 @@ namespace Timesheet.Domain.Models.Employees
 
         public IEnumerable<TimeoffHeader> GetTimeoffs(DateTime date) =>
             _timeoffs.Where(t => t.Status == TimeoffStatus.APPROVED && t.TimeoffEntries.Any(e => e.RequestDate == date));
+
+        public IDictionary<int, double> GetTimeoffEntriesStats() =>
+            _timeoffs.Where(t => t.Status != TimeoffStatus.REJECTED)
+                .SelectMany(t => t.TimeoffEntries)
+                .Where(e => e.RequestDate >= new DateTime(DateTime.Now.Year, 1, 1))
+                .GroupBy(e => e.TypeId, e => e.Hours)
+                .ToDictionary(g => g.Key, g => g.Sum());
 
         public void SetPreviousWorkPeriod(int cumulatedPreviousWorkPeriod)
         {

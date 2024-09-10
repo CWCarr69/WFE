@@ -264,6 +264,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             WHERE te.TimesheetHeaderId = {AllTimesheetEntriesBySearchCriteriaQueryPayrollPeriodParam}
             @AllTimesheetEntriesBySearchCriteriaQueryDepartmentWhereClause
             @AllTimesheetEntriesBySearchCriteriaQueryEmployeeWhereClause
+            ORDER BY 3, 4
         ";
         #endregion
 

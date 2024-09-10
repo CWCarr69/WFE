@@ -1,10 +1,13 @@
-﻿using Timesheet.Application.Employees.Commands;
+﻿using System.Collections.Generic;
+using Timesheet.Application.Employees.Commands;
 using Timesheet.Application.Employees.Services;
 using Timesheet.Application.Shared;
 using Timesheet.Application.Workflow;
 using Timesheet.Domain;
+using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Models.Employees;
 using Timesheet.Domain.Repositories;
+using Timesheet.Models.Referential;
 
 namespace Timesheet.Application.Employees.CommandHandlers
 {
@@ -28,6 +31,9 @@ namespace Timesheet.Application.Employees.CommandHandlers
         public override async Task<IEnumerable<IDomainEvent>> HandleCoreAsync(AddEntryToTimeoff command, CancellationToken token)
         {
             var employee = await GetEmployee(command);
+
+            GuardAgainstExceededTimeoffRequest(employee, command.Hours, command.Type);
+
             (var timeoff, var proceedAuthorization) = GetTimeoff(employee, command);
 
 
@@ -48,6 +54,24 @@ namespace Timesheet.Application.Employees.CommandHandlers
             }
 
             return events;
+        }
+
+        private void GuardAgainstExceededTimeoffRequest(Employee employee, double requestedHours, int type)
+        {
+            if (type != (int)TimesheetFixedPayrollCodeEnum.PERSONAL && type != (int)TimesheetFixedPayrollCodeEnum.VACATION) return;
+
+            var benefitsHours = employee.BenefitsSnapshot.GetTotal((TimesheetFixedPayrollCodeEnum) type);
+
+            var usedAndPendingBenefitsHoursPerType = employee.GetTimeoffEntriesStats();
+
+            usedAndPendingBenefitsHoursPerType.TryGetValue(type, out var usedAndPendingBenefitsHours);
+
+            var availableBenefitsHours = benefitsHours - usedAndPendingBenefitsHours;
+
+            if (availableBenefitsHours < requestedHours)
+            {
+                throw new CannotRequestUnavailableBenefits(requestedHours, availableBenefitsHours, (TimesheetFixedPayrollCodeEnum)type);
+            }
         }
 
         private async Task<Employee> GetEmployee(AddEntryToTimeoff command)
