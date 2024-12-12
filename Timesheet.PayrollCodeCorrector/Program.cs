@@ -21,11 +21,11 @@ namespace Timesheet.PayrollCodeCorrector
             ALTER TABLE notificationitems WITH CHECK CHECK CONSTRAINT all;
             ALTER TABLE timesheets WITH CHECK CHECK CONSTRAINT all;";
 
-        private static string _selectTimesheets = "SELECT * FROM Timesheets";
-        private static string _selectTimesheetsEntries = "SELECT * FROM TimesheetEntry";
-        private static string _selectTimesheetsHolidays = "SELECT * FROM TimesheetHoliday";
+        private static string _selectTimesheets = "SELECT * FROM Timesheets WHERE (id like '2024%H%' or id like '2025%H%' or id like '2026%H%' or id like '2027%H%')";
+        private static string _selectTimesheetsEntries = "SELECT * FROM TimesheetEntry Where (timesheetHeaderId like '2024%H%' or timesheetHeaderId like '2025%H%' or timesheetHeaderId like '2026%H%' or timesheetHeaderId like '2027%H%')";
+        private static string _selectTimesheetsHolidays = "SELECT * FROM TimesheetHoliday Where (timesheetHeaderId like '2024%H%' or timesheetHeaderId like '2025%H%' or timesheetHeaderId like '2026%H%' or timesheetHeaderId like '2027%H%')";
 
-        private static string _removeTimesheetDuplicate = $@"
+        /*private static string _removeTimesheetDuplicate = $@"
             DELETE from timesheets where id not in (
             select mid from (
             select startDate, max(id) as mid
@@ -38,7 +38,15 @@ namespace Timesheet.PayrollCodeCorrector
             select startDate, max(id) as mid
             from timesheets
             where payrollPeriod like '%S%'
-            group by startDate)t) and id like '%S%';";
+            group by startDate)t) and id like '%S%';";*/
+
+        private static string _removeTimesheetDuplicate = $@"
+            DELETE from timesheets where id not in (
+            select mid from (
+            select startDate, max(id) as mid
+            from timesheets
+            where id like '2024%H%' or id like '2025%H%' or id like '2026%H%' or id like '2027%H%'
+            group by startDate)t) and (id like '2024%H%' or id like '2025%H%' or id like '2026%H%' or id like '2027%H%');";
 
         private static string _updateTimesheet = "UPDATE Timesheets set id='{0}',payrollperiod='{0}' Where id='{1}' and startDate='{2}';";
         private static string _updateTimesheetEntry = "UPDATE TimesheetEntry set timesheetHeaderId='{0}' Where timesheetHeaderId='{1}' and id='{2}';";

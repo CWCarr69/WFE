@@ -62,6 +62,15 @@ namespace Timesheet.Application.Employees.CommandHandlers
 
             var benefitsHours = employee.BenefitsSnapshot.GetTotal((TimesheetFixedPayrollCodeEnum) type);
 
+            if(type == (int)TimesheetFixedPayrollCodeEnum.PERSONAL)
+            {
+                benefitsHours += employee.ConsiderFixedBenefits ? employee.BenefitsVariation.PersonalHours : 0;
+            }
+            else
+            {
+                benefitsHours += employee.ConsiderFixedBenefits ? employee.BenefitsVariation.VacationHours : 0;
+            }
+
             var usedAndPendingBenefitsHoursPerType = employee.GetTimeoffEntriesStats();
 
             usedAndPendingBenefitsHoursPerType.TryGetValue(type, out var usedAndPendingBenefitsHours);

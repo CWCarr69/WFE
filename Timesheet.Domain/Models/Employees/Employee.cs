@@ -292,7 +292,9 @@ namespace Timesheet.Domain.Models.Employees
         public IDictionary<int, double> GetTimeoffEntriesStats() =>
             _timeoffs.Where(t => t.Status != TimeoffStatus.REJECTED)
                 .SelectMany(t => t.TimeoffEntries)
-                .Where(e => e.RequestDate >= new DateTime(DateTime.Now.Year, 1, 1))
+                .Where(e => e.RequestDate >= new DateTime(DateTime.Now.Year, 1, 1)
+                    && e.RequestDate <= new DateTime(DateTime.Now.Year, 12, 31)
+                    && e.Status != TimeoffEntryStatus.REJECTED)
                 .GroupBy(e => e.TypeId, e => e.Hours)
                 .ToDictionary(g => g.Key, g => g.Sum());
 

@@ -61,8 +61,8 @@ namespace Timesheet.Domain.Models.Timesheets
             var oneYearBefore = workDate.AddYears(-1);
             var oneYearAfter = workDate.AddYears(1);
 
-            var fridayBeforeLastThursdayOfPreviousYear = oneYearBefore.LastDayOfYear(DayOfWeek.Thursday).Previous(DayOfWeek.Friday);
-            var fridayBeforeLastThursdayOfCurrentYear = now.LastDayOfYear(DayOfWeek.Thursday).Previous(DayOfWeek.Friday);
+            var fridayBeforeLastThursdayOfPreviousYear = oneYearBefore.LastDayOfYear(DayOfWeek.Thursday).Last(DayOfWeek.Friday);
+            var fridayBeforeLastThursdayOfCurrentYear = now.LastDayOfYear(DayOfWeek.Thursday).Last(DayOfWeek.Friday);
 
             var firstPayrollStartDateOfYear = now >= fridayBeforeLastThursdayOfCurrentYear
                 ? fridayBeforeLastThursdayOfCurrentYear
@@ -75,7 +75,7 @@ namespace Timesheet.Domain.Models.Timesheets
                 ? WeeklyPayrollPeriod(oneYearAfter.Year, numberOfWeeks)
                 : WeeklyPayrollPeriod(now.Year, numberOfWeeks);
 
-            var start = now.Previous(DayOfWeek.Friday);
+            var start = now.Last(DayOfWeek.Friday);
             var end = nextThursdayFromNow;
 
             return new TimesheetHeader(payrollPeriod, payrollPeriod, start, end, TimesheetType.WEEKLY, TimesheetStatus.IN_PROGRESS);

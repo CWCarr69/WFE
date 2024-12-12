@@ -64,7 +64,7 @@ namespace Timesheet.Domain.Employees.Services
 
             var employeeBenefitsVariations = await _queryEmployee.GetEmployeeBenefitsVariation(employeeId);
 
-            var doNotUseCalculatedBenefits = !employeeProfile.ConsiderFixedBenefits;
+            var doNotUseVariationBenefits = !employeeProfile.ConsiderFixedBenefits;
 
             var scheduledVacations = await GetScheduledVacationTimes(employeeId);
             var usedVacations = await GetUsedVacationTimes(employeeId, DateTime.Now);
@@ -78,7 +78,7 @@ namespace Timesheet.Domain.Employees.Services
             var personalHours = new HourInformation
             {
                 Type = HourInformationType.Personal.ToString(),
-                Balance = totalPersonals - scheduledPersonals - usedPersonals + (doNotUseCalculatedBenefits ? 0 : employeeBenefitsVariations.PersonalHours),
+                Balance = totalPersonals - scheduledPersonals - usedPersonals + (doNotUseVariationBenefits ? 0 : employeeBenefitsVariations.PersonalHours),
                 Used = usedPersonals,
                 Scheduled = scheduledPersonals
             };
@@ -87,8 +87,8 @@ namespace Timesheet.Domain.Employees.Services
             {
                 Type = HourInformationType.Vacation.ToString(),
                 Balance = totalVacations + rollover - scheduledVacations - usedVacations 
-                + (doNotUseCalculatedBenefits ? 0 : employeeBenefitsVariations.VacationHours)
-                +(doNotUseCalculatedBenefits ? 0 : employeeBenefitsVariations.RolloverHours),
+                + (doNotUseVariationBenefits ? 0 : employeeBenefitsVariations.VacationHours)
+                +(doNotUseVariationBenefits ? 0 : employeeBenefitsVariations.RolloverHours),
                 Used = usedVacations,
                 Scheduled = scheduledVacations
             };
@@ -96,11 +96,11 @@ namespace Timesheet.Domain.Employees.Services
             var employeeCalcultatedBenefits = new EmployeeCalculatedBenefits
             {
                 TotalVacationHours = totalVacations + rollover,
-                AdditionalVacationHours = doNotUseCalculatedBenefits ? 0 : employeeBenefitsVariations.VacationHours,
+                AdditionalVacationHours = doNotUseVariationBenefits ? 0 : employeeBenefitsVariations.VacationHours,
                 TotalPersonalHours = totalPersonals,
-                AdditionalPersonalHours = doNotUseCalculatedBenefits ? 0 : employeeBenefitsVariations.PersonalHours,
+                AdditionalPersonalHours = doNotUseVariationBenefits ? 0 : employeeBenefitsVariations.PersonalHours,
                 RolloverHours = rollover, 
-                AdditionalRolloverHours = doNotUseCalculatedBenefits ? 0 : employeeBenefitsVariations.RolloverHours,
+                AdditionalRolloverHours = doNotUseVariationBenefits ? 0 : employeeBenefitsVariations.RolloverHours,
                 Details = new List<HourInformation> { personalHours, vacationHours }
             };
 
