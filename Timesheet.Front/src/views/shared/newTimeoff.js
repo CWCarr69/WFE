@@ -106,7 +106,7 @@ const NewTimeoff = ({ isOpen, onClose, selectedEmployeeId }) => {
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Hours"
+                        placeholder="Hours per day"
                         value={timeoff.hours}
                         onChange={(e) => setTimeoff({ ...timeoff, hours: e.target.value }) }
                       />

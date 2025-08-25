@@ -84,10 +84,10 @@ namespace Timesheet.Application.Employees.CommandHandlers
 
                 var availableBenefitsHours = benefitHoursInfo.Value - usedAndPendingBenefitsHours;
 
-                if(availableBenefitsHours < requestedHours)
-                {
-                    throw new CannotRequestUnavailableBenefits(requestedHours, availableBenefitsHours, (TimesheetFixedPayrollCodeEnum)benefitHoursInfo.Key);
-                }
+                //if(availableBenefitsHours < requestedHours)
+                //{
+                //    throw new CannotRequestUnavailableBenefits(requestedHours, availableBenefitsHours, (TimesheetFixedPayrollCodeEnum)benefitHoursInfo.Key);
+                //}
             }
         }
     }

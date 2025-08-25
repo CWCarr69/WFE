@@ -77,10 +77,11 @@ namespace Timesheet.Application.Employees.CommandHandlers
 
             var availableBenefitsHours = benefitsHours - usedAndPendingBenefitsHours;
 
-            if (availableBenefitsHours < requestedHours)
-            {
-                throw new CannotRequestUnavailableBenefits(requestedHours, availableBenefitsHours, (TimesheetFixedPayrollCodeEnum)type);
-            }
+            // NDO Allow this for now 
+            //if (availableBenefitsHours < requestedHours)
+            //{
+            //    throw new CannotRequestUnavailableBenefits(requestedHours, availableBenefitsHours, (TimesheetFixedPayrollCodeEnum)type);
+            //}
         }
 
         private async Task<Employee> GetEmployee(AddEntryToTimeoff command)
