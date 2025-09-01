@@ -28,6 +28,8 @@ namespace Timesheet.Domain.ReadModels.Employees
         private bool IsFinalized => LastTimesheetStatus == (int)TimesheetStatus.FINALIZED;
         public string LastTimesheetPayrollPeriod { get; set; }
         public DateTime LastTimesheetWorkDate { get; set; }
+        public int PendingPersonnalHours { get; set; }
+        public int PendingVacationHours { get; set; }
         public string LastTimesheetStatusString 
             => IsFinalized 
                 ? ((TimesheetStatus)LastTimesheetStatus).ToString()

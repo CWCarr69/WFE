@@ -210,11 +210,43 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             )
         ";
 
+        private const string PendingPersonalTimeoffPerEmployee = $@" PendingPersonalHours AS (
+                SELECT th.employeeId,
+                       th.status,
+                       the.TypeId,
+                       SUM(the.hours) AS Hours,
+                       MAX(CAST(pt.RequireApproval AS TINYINT)) AS RequireApproval
+                FROM TimeoffEntry the with (nolock)
+                JOIN PayrollTypes pt with (nolock) ON pt.numId = the.TypeId
+                JOIN TimeoffHeader th with (nolock) ON th.Id = the.TimeoffHeaderId
+                WHERE the.Status = 0
+                  AND the.TypeID = 5
+                GROUP BY th.employeeId, th.status, the.TypeId
+            )
+        ";
+
+        private const string PendingVacationTimeoffPerEmployee = $@", PendingVacationHours AS (
+                SELECT th.employeeId,
+                       th.status,
+                       the.TypeId,
+                       SUM(the.hours) AS Hours,
+                       MAX(CAST(pt.RequireApproval AS TINYINT)) AS RequireApproval
+                FROM TimeoffEntry the with (nolock)
+                JOIN PayrollTypes pt with (nolock) ON pt.numId = the.TypeId
+                JOIN TimeoffHeader th with (nolock) ON th.Id = the.TimeoffHeaderId
+                WHERE the.Status = 0
+                  AND the.TypeID = 5
+                GROUP BY th.employeeId, th.status, the.TypeId
+            ),
+        ";
+
         private const string EmployeeTeamQueryUsesTimesheetParam = "@usesTimesheet";
         private const string EmployeeTeamQueryFromClause = $@"
             FROM employees e
             LEFT JOIN LastTimeoffs tos ON e.Id = tos.employeeId
             LEFT JOIN LastTimesheets ts ON e.Id = ts.EmployeeId
+            LEFT JOIN PendingPersonalHours pph ON e.Id = pph.EmployeeId
+            LEFT JOIN PendingVacationHours pvh ON e.Id = pvh.EmployeeId
             WHERE e.Id = {EmployeeTeamQueryEmployeeIdParam} OR (
                 (e.employmentDate is not null or (e.employmentDate is null and ts.TimesheetHeaderId is not null)) AND (e.usesTimesheet = {EmployeeTeamQueryUsesTimesheetParam})
                 @clauseForDirectReport
@@ -225,6 +257,8 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             {EmployeeTeamQueryEmployeeTimesheetIsFinalized}
             {EmployeeTeamQueryLastTimesheetStatusPerEmployee}
             {EmployeeTeamQueryLastTimeOffStatusPerEmployee} 
+            {PendingVacationTimeoffPerEmployee}
+            {PendingPersonalTimeoffPerEmployee}
             SELECT Count(DISTINCT e.Id) AS {nameof(EmployeeTeam.TotalItems)}
             {EmployeeTeamQueryFromClause}
         ";
@@ -233,6 +267,8 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             {EmployeeTeamQueryEmployeeTimesheetIsFinalized}
             {EmployeeTeamQueryLastTimesheetStatusPerEmployee}
             {EmployeeTeamQueryLastTimeOffStatusPerEmployee} 
+            {PendingVacationTimeoffPerEmployee}
+            {PendingPersonalTimeoffPerEmployee}
             SELECT 
             e.Id as {nameof(EmployeeWithTimeStatus.EmployeeId)},
             e.FullName  as {nameof(EmployeeWithTimeStatus.FullName)}, 
@@ -249,7 +285,9 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             ts.PartialStatus as {nameof(EmployeeWithTimeStatus.LastTimesheetPartialStatus)},
             ts.status as {nameof(EmployeeWithTimeStatus.LastTimesheetStatus)},
             ts.payrollPeriod as {nameof(EmployeeWithTimeStatus.LastTimesheetPayrollPeriod)},
-            ts.workDate as {nameof(EmployeeWithTimeStatus.LastTimesheetWorkDate)}
+            ts.workDate as {nameof(EmployeeWithTimeStatus.LastTimesheetWorkDate)},
+            pph.Hours as {nameof(EmployeeWithTimeStatus.PendingPersonnalHours)},
+            pvh.Hours as {nameof(EmployeeWithTimeStatus.PendingVacationHours)}
             {EmployeeTeamQueryFromClause}
         ";
 
