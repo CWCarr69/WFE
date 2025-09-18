@@ -32,10 +32,17 @@ namespace Timesheet.Infrastruture.ReadModel.Queries
             return departments;
         }
 
-        public async Task<IEnumerable<PayrollPeriod>> GetPayrollPeriods()
+        public async Task<IEnumerable<PayrollPeriod>> GetPayrollPeriods(string type = "hourly")
         {
+            if (String.IsNullOrEmpty(type))
+            {
+                type = "hourly";
+            }
+
+            string endDateQry = type == "hourly" ? "DATEADD(DAY, 5 - DATEPART(WEEKDAY, GETDATE()), CAST(GETDATE() AS DATE))" : (DateTime.Now.Day > 15 ? "EOMONTH(GETDATE())" : "DATEADD(DAY, 14, DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()), 0))");
+
             var query = $@"SELECT distinct payrollPeriod as Code, StartDate, EndDate, Type
-                            FROM timesheets order by StartDate desc";
+                            FROM timesheets WHERE Type = {(type == "hourly" ? 0 : 1)} and EndDate <= {endDateQry} ORDER BY StartDate desc";
                             
             var payrollPeriods = await _dbService.QueryAsync<PayrollPeriod>(query);
 

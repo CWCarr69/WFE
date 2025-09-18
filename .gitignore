@@ -219,3 +219,16 @@
 /Timesheet.Web.Api/TimesheetExport/Paylocity_Timesheet_2022-15H
 /Timesheet.Front/build
 /Timesheet.Front/node_modules
+/Timesheet.Application/bin/Debug/net8.0/Timesheet.Application.deps.json
+/Timesheet.Benefits/bin/Debug/net8.0
+/Timesheet.Domain/bin/Debug/net8.0
+/Timesheet.EmailService/bin/Debug/net8.0
+/Timesheet.EmailSender/bin/Debug/net8.0
+/Timesheet.FDPDataIntegrator/bin/Debug/net8.0
+/Timesheet.FDPIntegratorService/bin/Debug/net8.0
+/Timesheet.Infrastructure.Authentication/bin/Debug/net8.0
+/Timesheet.Infrastructure.Dapper/bin/Debug/net8.0
+/Timesheet.Infrastructure.Persistence/bin/Debug/net8.0
+/Timesheet.Tools.IdGenerator/bin/Debug/net8.0
+/Timesheet.Web.Api/bin/Debug/net8.0
+/Timesheet.Front/obj/Debug/timesheet.front.esproj.CoreCompileInputs.cache

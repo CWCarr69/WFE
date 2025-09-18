@@ -87157,5 +87157,7 @@ $color_pallate_15: #ed0b4c; */
     font-weight: bold;
 }
 
-
+.hidden {
+    display: none;
+}
 /*# sourceMappingURL=style.css.map */
