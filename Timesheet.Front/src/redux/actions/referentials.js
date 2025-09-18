@@ -16,9 +16,11 @@ export const getDepartments = async () => interactWithAPI({
   url: `${API()}/Referential/Departments`,
 });
 
-export const getPayrollPeriods = async () => interactWithAPI({
+export const getPayrollPeriods = async (type) => interactWithAPI({
   method: "GET",
-  url: `${API()}/Referential/PayrollPeriods`,
+  url: type
+    ? `${API()}/Referential/PayrollPeriods?type=${encodeURIComponent(type)}`
+    : `${API()}/Referential/PayrollPeriods`,
 });
 
 export const getPayrollCodes = async () => interactWithAPI({

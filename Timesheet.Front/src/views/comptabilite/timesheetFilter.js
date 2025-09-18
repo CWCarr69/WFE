@@ -5,16 +5,25 @@ import { getEmployee } from "../../redux/actions/employees";
 import moment from "moment";
 import { displayError } from "../../services/toast";
 import { DefaultGlobalDateFormat } from "../../services/util";
-  
-const TimesheetFilter = ({onPayrollPeriodChanged, onDepartmentChanged, onEmployeeChanged, totalQuantity}) => {
+
+const TimesheetFilter = ({ onPayrollTypeChanged, onPayrollPeriodChanged, onDepartmentChanged, onEmployeeChanged, totalQuantity }) => {
+    const typeOptions = [
+        { value: "hourly", label: "Hourly" },
+        { value: "salary", label: "Salary" }
+    ];
+    const [types, setTypes] = useState([]);
     const [periods, setPeriods] = useState([]);
     const [departments, setDepartments] = useState([]);
     const [employees, setEmployees] = useState([]);
 
+    const [selectedType, setSelectedType] = useState(typeOptions[0]); // Added state for selected payroll type
+
     const [selectedPeriod, setSelectedPeriod] = useState(null);
 
+    const fetchTypes = async () => {
+        setTypes(typeOptions);
+    }
     const fetchEmployees = async () => {
-
         await getEmployee()
             .then((resp) => {
                 let dts = [{value: "",label: ""}];
@@ -24,8 +33,10 @@ const TimesheetFilter = ({onPayrollPeriodChanged, onDepartmentChanged, onEmploye
             .catch((err) => displayError(err, "Error while fectching employees"));
         };
     
-    const fetchPayrollPeriods = async () => {
-        await getPayrollPeriods()
+    const fetchPayrollPeriods = async (type) => {
+        setPeriods(null);
+        setSelectedPeriod(null);
+        await getPayrollPeriods(type)
         .then((resp) => {
             let adaptedPeriods = resp.map((e) => {
                 return {
@@ -61,15 +72,31 @@ const TimesheetFilter = ({onPayrollPeriodChanged, onDepartmentChanged, onEmploye
     };
 
     useEffect(() => {
+        fetchTypes();
         fetchEmployees();
-        fetchPayrollPeriods();
+        fetchPayrollPeriods(selectedType?.value); // Pass selectedType if available
         fetchDepartments();
-      }, []);
+    }, []);
 
     return (
         <div>
         <div className="basic-form">
           <div className="row mt-4">
+            <div className="form-group mb-1 col-sm-2">
+              <label>Payroll Type</label>
+              <Select
+                  className="basic-single"
+                  classNamePrefix="select"
+                  name="payrollType"
+                  options={types}
+                  value={selectedType}
+                  onChange={(e) => {
+                      setSelectedType(e);
+                      onPayrollTypeChanged && onPayrollTypeChanged(e?.value);
+                      fetchPayrollPeriods(e?.value); // Fetch periods for selected type
+                  }}
+              />
+            </div>
             <div className="form-group mb-1 col-md-3">
               <label>Payroll Period</label>
               <Select className="basic-single" classNamePrefix="select" name="classes"

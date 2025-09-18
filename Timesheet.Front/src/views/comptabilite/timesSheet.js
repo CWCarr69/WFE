@@ -21,7 +21,7 @@ import _ from "lodash";
 import moment from "moment";
 import { DefaultGlobalDateFormat } from "../../services/util";
 import TimesheetDatatable from "./timesheetDatatable";
-import OrphanTimesheet from "./orphanTimesheet";
+//import OrphanTimesheet from "./orphanTimesheet";
 
 
 const TimesSheet = () => {
@@ -29,7 +29,8 @@ const TimesSheet = () => {
   const loading = useSelector((state) => state.auth.showLoading);
 
   const user = useSelector((state) => state.auth.auth);
-  
+
+  //const [selectedType, setSelectedType] = useState(null);
   const [selectedPeriod, setSelectedPeriod] = useState(null);
   const [selectedEmployee, setSelectedEmployee] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState("");
@@ -42,7 +43,7 @@ const TimesSheet = () => {
     otherData: { TotalQuantity: 0 },
   });
 
-  const adaptFectchedEmployeeEntries = (item, array) => {
+  const adaptFectchedEmployeeEntries = useCallback((item, array) => {
     item.data.entries.forEach((entry) => {
       array.push({
         id: item.data.employeeId,
@@ -60,12 +61,12 @@ const TimesSheet = () => {
         labor: entry.laborCode,
         center: entry.profitCenterNumber ?? item.data.defaultProfitCenter,
         area: entry.workArea,
-        timesheetStatus: item.data.statusName == "FINALIZED" ? item.data.statusName : item.data.partialStatusName.replaceAll("_", " "),
+        timesheetStatus: item.data.statusName === "FINALIZED" ? item.data.statusName : item.data.partialStatusName.replaceAll("_", " "),
         status: entry.statusName.replaceAll("_", " "),
         overtime: item.data.overtime,
         authorizedActions: item.authorizedActions,
         timesheetId: item.data.timesheetId,
-        delete: entry.payrollCode != "REGULAR" && entry.payrollCode != "OVERTIME",
+        delete: entry.payrollCode !== "REGULAR" && entry.payrollCode !== "OVERTIME",
         deleteAction: () => createTimesheetException(entry),
         isOrphan: entry.isOrphan,
         isRejected: entry.isRejected,
@@ -75,7 +76,7 @@ const TimesSheet = () => {
         subRows: undefined,
       });
     });
-  }
+  }, [selectedPeriod]); // Add dependencies if needed
 
   const fetchReviewData = useCallback(async () => {
     if (selectedPeriod) {
@@ -88,7 +89,7 @@ const TimesSheet = () => {
         authorizedActions: dt.authorizedActions,
       });
     }
-  }, [selectedPeriod]);
+  }, [selectedPeriod, adaptFectchedEmployeeEntries]);
 
   useEffect(() => fetchReviewData(), [fetchReviewData]);
 

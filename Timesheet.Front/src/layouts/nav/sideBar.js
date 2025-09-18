@@ -82,12 +82,12 @@ const SideBar = () => {
               <span className="nav-text">Timesheets</span>
             </Link>
           </li>
-          <li className={`${path.includes("timesheets") ? "mm-active" : ""}`}>
+          {/*<li className={`${path.includes("timesheets") ? "mm-active" : ""}`}>
             <Link to={`/timesheets/${user.id}`} className="ai-icon">
               <i className="fa fa-business-time"></i>
               <span className="nav-text">History</span>
             </Link>
-          </li>
+          </li>*/}
           {/* <li className={`${path.includes("timeoff") ? "mm-active" : ""}`}>
             <Link to={`/timeoffs/${user.id}`} className="ai-icon">
               <i className="fa fa-calendar"></i>

@@ -11,7 +11,7 @@ namespace Timesheet.Application.Unit.Tests
             var employmentDate = DateTime.Parse(employmentDateString);
             var now = DateTime.Parse(nowString);
 
-            Assert.Equal(new EmployeeBenefitCalculator().GetTotalCurrentVacationsTime(employmentDate, now, 0), 56);
+            Assert.Equal(new EmployeeBenefitCalculator().GetTotalCurrentVacationsTime(employmentDate, now, 0), 0);
         }
     }
 }

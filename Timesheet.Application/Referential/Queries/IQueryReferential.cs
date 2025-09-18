@@ -12,7 +12,7 @@ namespace Timesheet.Application.Referential.Queries
 {
     public interface IQueryReferential
     {
-        Task<IEnumerable<PayrollPeriod>> GetPayrollPeriods();
+        Task<IEnumerable<PayrollPeriod>> GetPayrollPeriods(string type = "hourly");
         Task<IEnumerable<Department>> GetDepartments();
         IEnumerable<EnumReadModel<TimesheetStatus>> GetTimesheetStatuses(bool withoutInProgress);
         IEnumerable<EnumReadModel<TimesheetEntryStatus>> GetTimesheetEntryStatuses();

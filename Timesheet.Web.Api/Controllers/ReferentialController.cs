@@ -69,11 +69,11 @@ namespace Timesheet.Web.Api.Controllers
         }
 
         [HttpGet("PayrollPeriods")]
-        public async Task<ActionResult<IEnumerable<EmployeeLight>>> GetPayrollPeriods()
+        public async Task<ActionResult<IEnumerable<EmployeeLight>>> GetPayrollPeriods([FromQuery] string? type = null)
         {
-            LogInformation($"Listing Payroll periods");
-            
-            var periods = await _referentialQuery.GetPayrollPeriods();
+            LogInformation($"Listing Payroll periods{(type != null ? $" for type {type}" : "")}");
+
+            var periods = await _referentialQuery.GetPayrollPeriods(type);
             return Ok(periods);
         }
 

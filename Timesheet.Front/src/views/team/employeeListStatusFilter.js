@@ -55,7 +55,7 @@ const EmployeeListStatusFilter = ({onTimeoffStatusesFilterChanged, onTimesheetSt
 
   return  (
   <div className="row mb-3 align-items-center">
-    <div className="col-xl-12 col-lg-12">
+    <div className="col-xl-12 col-lg-12 hidden">
       <div className="d-sm-flex  d-block align-items-center">
         <div className="d-flex align-items-center">
           <div className="media-body">
