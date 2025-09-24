@@ -1,20 +1,22 @@
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Timesheet.Application;
-using Timesheet.Infrastructure.Persistence;
-using Timesheet.ReadModel;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Timesheet.Infrastructure.Authentication;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Filters;
+using Mustache;
 using Serilog;
+using Swashbuckle.AspNetCore.Filters;
+using System.Reflection;
+using System.Text;
+using Timesheet.Application;
+using Timesheet.Benefits;
+using Timesheet.Domain.Repositories;
+using Timesheet.EmailSender;
+using Timesheet.Infrastructure.Authentication;
+using Timesheet.Infrastructure.Persistence;
+using Timesheet.Infrastructure.Persistence.Repositories;
+using Timesheet.ReadModel;
 using Timesheet.Web.Api.Middleware;
 using Timesheet.Web.Api.ServiceWorker;
-using Hangfire;
-using Timesheet.Benefits;
-using Timesheet.EmailSender;
-using Mustache;
-using System.Reflection;
 
 namespace Timesheet.Web.Api
 {
@@ -86,7 +88,7 @@ namespace Timesheet.Web.Api
 
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
-
+            
             //HostedService
             builder.Services.AddHostedService<TimesheetWebApiService>();
 
@@ -127,7 +129,7 @@ namespace Timesheet.Web.Api
 
             app.UseCors(p => p
             .SetIsOriginAllowedToAllowWildcardSubdomains()
-            .WithOrigins("https://*.wilsonfire.net", "https://localhost")
+            .WithOrigins("https://*.wilsonfire.net", "https://localhost", "https://localhost:3000", "http://localhost:3000")
             .AllowAnyHeader().AllowAnyMethod()
             .AllowCredentials());
 

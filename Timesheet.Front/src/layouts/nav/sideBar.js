@@ -159,6 +159,11 @@ const SideBar = () => {
                       Audits
                     </Link>
                   </li>
+                  <li>
+                    <Link to="/settings/data" className="ai-icon">
+                      Data
+                    </Link>
+                  </li>
                 </ul>
               </li>
             </>

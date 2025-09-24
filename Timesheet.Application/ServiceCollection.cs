@@ -6,6 +6,7 @@ using Timesheet.Application.Holidays.CommandHandlers;
 using Timesheet.Application.Notifications.CommandHandlers;
 using Timesheet.Application.Notifications.EventHandlers;
 using Timesheet.Application.Notifications.Services;
+using Timesheet.Application.Purge.CommandHandlers;
 using Timesheet.Application.Settings.CommandHandlers;
 using Timesheet.Application.Shared;
 using Timesheet.Application.Timesheets.CommandHandlers;
@@ -17,6 +18,7 @@ using Timesheet.Application.Timesheets.Services.Export;
 using Timesheet.Application.Workflow;
 using Timesheet.Domain.Employees.Services;
 using Timesheet.Domain.ReadModels.Timesheets;
+using Timesheet.Domain.Repositories;
 
 namespace Timesheet.Application
 {
@@ -86,9 +88,10 @@ namespace Timesheet.Application
             .AddScoped<AddTimesheetExceptionCommandHandler, AddTimesheetExceptionCommandHandler>()
 
             .AddScoped<UpdateSettingCommandHandler, UpdateSettingCommandHandler>()
-            
-            .AddScoped<UpdateNotificationCommandHandler, UpdateNotificationCommandHandler>();
-        }
+
+            .AddScoped<UpdateNotificationCommandHandler, UpdateNotificationCommandHandler>()
+            .AddScoped<PurgeOldDataCommandHandler, PurgeOldDataCommandHandler>();
+    }
 
         public static IServiceCollection AddTimesheetExportServices(this IServiceCollection services, string destination)
         {

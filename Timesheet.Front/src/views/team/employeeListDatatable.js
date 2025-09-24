@@ -25,7 +25,7 @@ const EmployeeListDatatable = ({onFilterUpdate, onAddClick}) => {
                                         <strong>
                                             <span
                                                 className={da.pendingPersonalHours > 0 ? 'status-warning' : ''}
-                                                title={`Personal Balance: ${da.personalBalance}\nPending Personal Hours: ${(da.pendingPersonalHours > 0 ? da.pendingPersonalHours : 0) }`}
+                                                title={`Personal Balance: ${da.personalBalance}\nRequested Personal Hours: ${(da.pendingPersonalHours > 0 ? da.pendingPersonalHours : 0) }`}
                                             >
                                                 {da.personalBalance - (da.pendingPersonalHours > 0 ? da.pendingPersonalHours : 0)}
                                             </span>
@@ -34,7 +34,7 @@ const EmployeeListDatatable = ({onFilterUpdate, onAddClick}) => {
                                         <strong>
                                             <span
                                                 className={da.pendingVacationHours > 0 ? 'status-warning' : ''}
-                                                title={`Vacation Balance: ${da.vacationBalance}\nPending Vacation Hours: ${da.pendingVacationHours}`}
+                                                title={`Vacation Balance: ${da.vacationBalance}\nRequested Vacation Hours: ${da.pendingVacationHours}`}
                                             >
                                                 {da.vacationBalance - da.pendingVacationHours}
                                             </span>

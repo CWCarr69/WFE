@@ -84,7 +84,7 @@ const TimesheetDatatable = ({data, onDecisionTaken}) => {
         let isRejected = original.timesheetStatus == "REJECTED";
 
         return (
-        <tr class="fw-bold" style={{textDecoration: isRejected ? 'line-through' : 'none' }}>
+        <tr className="fw-bold" style={{textDecoration: isRejected ? 'line-through' : 'none' }}>
             <td className="py-2">
                 <div style={{ display: "flex" }}>
                     {

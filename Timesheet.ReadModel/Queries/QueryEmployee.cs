@@ -23,8 +23,23 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
         private const string EmployeeProfileQueryEmailParam = "@email";
         private const string EmployeeProfileQueryLoginParam = "@userId";
         private const string WithManagerRoleBaseEmployeeProfileQuery = $@"SELECT DISTINCT e.*, 
-            case when exists (select distinct 1 from employeeHierarchy h where h.managerid = e.id) then 1 else 0 end  as isManager 
+            case when exists (select distinct 1 from employeeHierarchy h where h.managerid = e.id) then 1 else 0 end  as isManager,
+            pvh.pendingVacationHours, pph.pendingPersonalHours
             FROM employees e 
+            left join ( select th.employeeId, sum(the.hours) as pendingVacationHours
+                FROM TimeoffEntry the with (nolock)
+                JOIN PayrollTypes pt with (nolock) ON pt.numId = the.TypeId
+                JOIN TimeoffHeader th with (nolock) ON th.Id = the.TimeoffHeaderId
+                WHERE the.Status = 0
+                  AND the.TypeID = 5 
+                GROUP BY th.employeeId, th.status, the.TypeId) pvh on e.id = pvh.EmployeeId
+            left join ( SELECT th.employeeId, SUM(the.hours) AS pendingPersonalHours
+                FROM TimeoffEntry the with (nolock)
+                JOIN PayrollTypes pt with (nolock) ON pt.numId = the.TypeId
+                JOIN TimeoffHeader th with (nolock) ON th.Id = the.TimeoffHeaderId
+                WHERE the.Status = 0
+                  AND the.TypeID = 4
+                GROUP BY th.employeeId, th.status, the.TypeId) pph on e.Id = pph.EmployeeId
             ";
 
         public const string EmployeeProfileQuery = $@"{WithManagerRoleBaseEmployeeProfileQuery} WHERE id = {EmployeeProfileQueryParam}";
@@ -349,10 +364,28 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             AND ts.WorkDate > GetDate() 
             AND ts.WorkDate BETWEEN {CalculateScheduledBenefitsQueryStartDateParam} AND {CalculateScheduledBenefitsQueryEndDateParam}
         ";
-        #endregion
-    }
+    #endregion
+    
+    #region PendingBenefits
+    private const string CalculatePendingBenefitsQueryStartDateParam = "@start";
+    private const string CalculatePendingBenefitsQueryEndDateParam = "@end";
+    private const string CalculatePendingBenefitsQueryStatusParam = "@status";
+    private const string CalculatePendingBenefitsQueryTypeParam = "@type";
+    private const string CalculatePendingBenefitsQueryEmployeeIdParam = "@employeeId";
 
-    public class QueryEmployee : BaseQuery, IQueryEmployee
+    public const string CalculatePendingBenefitsQuery = $@"SELECT COALESCE(SUM(the.hours), 0)
+            FROM TimeoffEntry the with (nolock)
+                JOIN PayrollTypes pt with (nolock) ON pt.numId = the.TypeId
+                JOIN TimeoffHeader th with (nolock) ON th.Id = the.TimeoffHeaderId
+                WHERE the.Status = 0
+                  AND the.TypeID = {CalculateScheduledBenefitsQueryTypeParam} 
+                  AND th.employeeId = {CalculatePendingBenefitsQueryEmployeeIdParam}
+                GROUP BY th.employeeId, th.status, the.TypeId
+        ";
+    #endregion
+  }
+
+  public class QueryEmployee : BaseQuery, IQueryEmployee
     {
         private readonly IDatabaseService _dbService;
 
@@ -522,21 +555,33 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             var status = TimesheetEntryStatus.APPROVED;
             var test = await _dbService.ExecuteScalarAsync<double>(query, new { start, end, status, type, employeeId });
             return test;
-        }
+    }
 
-        public async Task<double> CalculateScheduledBenefits(string employeeId, int type)
-        {
-            var now = DateTime.Now;
-            var start = new DateTime(now.Year, 1, 1);
-            var end = new DateTime(now.Year, 12, 31);
+    public async Task<double> CalculatePendingBenefits(string employeeId, int type)
+    {
+      var now = DateTime.Now;
+      var start = new DateTime(now.Year, 1, 1);
+      var end = new DateTime(now.Year, 12, 31);
 
-            var query = QueryEmployeeConstants.CalculateScheduledBenefitsQuery;
+      var query = QueryEmployeeConstants.CalculatePendingBenefitsQuery;
 
-            var status = TimesheetEntryStatus.APPROVED;
-            return await _dbService.ExecuteScalarAsync<double>(query, new { start, end, status, type, employeeId });
-        }
+      var status = TimesheetEntryStatus.SUBMITTED;
+      return await _dbService.ExecuteScalarAsync<double>(query, new { start, end, status, type, employeeId });
+    }
 
-        private async Task<T> QueryWithTotal<T, U>(object queryParams, string totalQuery, string query)
+    public async Task<double> CalculateScheduledBenefits(string employeeId, int type)
+    {
+      var now = DateTime.Now;
+      var start = new DateTime(now.Year, 1, 1);
+      var end = new DateTime(now.Year, 12, 31);
+
+      var query = QueryEmployeeConstants.CalculateScheduledBenefitsQuery;
+
+      var status = TimesheetEntryStatus.APPROVED;
+      return await _dbService.ExecuteScalarAsync<double>(query, new { start, end, status, type, employeeId });
+    }
+
+    private async Task<T> QueryWithTotal<T, U>(object queryParams, string totalQuery, string query)
             where T : WithTotal<U>
         {
             var withTotals = (await _dbService.QueryAsync<T>(totalQuery, queryParams)).FirstOrDefault();
