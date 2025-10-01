@@ -1,0 +1,39 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "Timesheet.Tools.IdGenerator/1.0.0": {
+        "dependencies": {
+          "Timesheet.Domain": "1.0.0"
+        },
+        "runtime": {
+          "Timesheet.Tools.IdGenerator.dll": {}
+        }
+      },
+      "Timesheet.Domain/1.0.0": {
+        "runtime": {
+          "Timesheet.Domain.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Timesheet.Tools.IdGenerator/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Timesheet.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
