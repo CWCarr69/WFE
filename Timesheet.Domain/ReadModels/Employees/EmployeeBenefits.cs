@@ -8,7 +8,8 @@
         public double Balance { get; set; }
         public double Used { get; set; }
         public double Scheduled { get; set; }
-    }
+        public double Pending { get; set; }
+  }
 
     public class EmployeeCalculatedBenefits
     {
@@ -24,7 +25,7 @@
 
         public string EligibleVacationHours => $@"{GetBalance(HourInformationType.Vacation)} / {TotalVacationHours + AdditionalVacationHours}{(AdditionalVacationHours == 0 ? "" : $"({TotalVacationHours} + {AdditionalVacationHours})" )}";
         public string EligiblePersonalHours => $@"{GetBalance(HourInformationType.Personal)} / {TotalPersonalHours + AdditionalPersonalHours}{(AdditionalPersonalHours == 0 ? "" : $"({TotalPersonalHours} + {AdditionalPersonalHours})")}";
-        public string EligibleRolloverHours => $@"{RolloverHours + AdditionalRolloverHours}{(AdditionalRolloverHours == 0 ? "" : $"({RolloverHours} + {AdditionalRolloverHours})")}";
+        public string EligibleRolloverHours => $@"{RolloverHours + AdditionalRolloverHours}";
 
         private double GetBalance(HourInformationType hourType)
         {

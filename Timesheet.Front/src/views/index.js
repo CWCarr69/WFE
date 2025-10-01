@@ -25,6 +25,7 @@ import Profile from "./profile/profile";
 import Setting from "../layouts/setting";
 import EmployeeList from "./team/employeeList";
 import Holidays from "./holidays/holidays";
+import PurgeTables from "./admin/purge";
 import Audit from "./audits/audit";
 import Connexions from "./configs/connexions";
 import Notifications from "./configs/notifications";
@@ -69,6 +70,7 @@ const Markup = () => {
     { url: "settings/general", component: Connexions },
     { url: "settings/notifications", component: Notifications },
     { url: "settings/audits", component: Audit },
+    { url: "settings/data", component: PurgeTables },
 
     /// Auhtentication Pages
     // { url: "page-register", component: Registration },

@@ -228,7 +228,7 @@ const Profile = ({ match }) => {
                         style={{ marginLeft: 30, cursor: "pointer" }}
                         onClick={() => setEditBenefit(true)}
                       >
-                        <i class="fa fa-pencil-alt"></i>
+                        <i className="fa fa-pencil-alt"></i>
                       </span>
                     )}
                   </h3>
@@ -368,15 +368,19 @@ const Profile = ({ match }) => {
                       <tbody>
                         <tr>
                           <td></td>
+                          <td>Eligible</td>
                           <td>Balance</td>
                           <td>Used</td>
+                          <td>Requested</td>
                           <td>Scheduled</td>
                         </tr>
                         {benefit.details.map((d) => (
                           <tr>
                             <td>{d.type}</td>
+                            <td>{d.balance+d.used}</td>
                             <td>{d.balance}</td>
                             <td>{d.used}</td>
+                            <td>{d.pending}</td>
                             <td>{d.scheduled}</td>
                           </tr>
                         ))}

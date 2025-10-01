@@ -66,11 +66,13 @@ namespace Timesheet.Domain.Employees.Services
 
             var doNotUseVariationBenefits = !employeeProfile.ConsiderFixedBenefits;
 
+            var pendingVacations = await GetPendingVacationTimes(employeeId);
             var scheduledVacations = await GetScheduledVacationTimes(employeeId);
             var usedVacations = await GetUsedVacationTimes(employeeId, DateTime.Now);
             var rollover = await GetTotalRollOverTimes(employeeId, employmentDate);
             var totalVacations = GetTotalCurrentVacationsTime(employmentDate, DateTime.Now, cumulatedPreviousWorkPeriod);
 
+            var pendingPersonals = await GetPendingPersonalTimes(employeeId);
             var scheduledPersonals = await GetScheduledPersonalTimes(employeeId);
             var usedPersonals = await GetUsedPersonalTimes(employeeId);
             var totalPersonals = GetTotalCurrentPersonalTimes(employmentDate);
@@ -80,7 +82,8 @@ namespace Timesheet.Domain.Employees.Services
                 Type = HourInformationType.Personal.ToString(),
                 Balance = totalPersonals - scheduledPersonals - usedPersonals + (doNotUseVariationBenefits ? 0 : employeeBenefitsVariations.PersonalHours),
                 Used = usedPersonals,
-                Scheduled = scheduledPersonals
+                Scheduled = scheduledPersonals,
+                Pending = pendingPersonals
             };
 
             var vacationHours = new HourInformation
@@ -90,7 +93,8 @@ namespace Timesheet.Domain.Employees.Services
                 + (doNotUseVariationBenefits ? 0 : employeeBenefitsVariations.VacationHours)
                 +(doNotUseVariationBenefits ? 0 : employeeBenefitsVariations.RolloverHours),
                 Used = usedVacations,
-                Scheduled = scheduledVacations
+                Scheduled = scheduledVacations,
+                Pending = pendingVacations
             };
 
             var employeeCalcultatedBenefits = new EmployeeCalculatedBenefits
@@ -112,8 +116,10 @@ namespace Timesheet.Domain.Employees.Services
                 .CalculateUsedBenefits(employeeId, (int)TimesheetFixedPayrollCodeEnum.PERSONAL, new DateTime(DateTime.Now.Year, 1, 1), new DateTime(DateTime.Now.Year, 12, 31));
 
         private async Task<double> GetScheduledPersonalTimes(string employeeId)
-            => await _queryEmployee.CalculateScheduledBenefits(employeeId, (int) TimesheetFixedPayrollCodeEnum.PERSONAL);
-
+            => await _queryEmployee.CalculateScheduledBenefits(employeeId, (int)TimesheetFixedPayrollCodeEnum.PERSONAL);
+        private async Task<double> GetPendingPersonalTimes(string employeeId)
+            => await _queryEmployee.CalculatePendingBenefits(employeeId, (int)TimesheetFixedPayrollCodeEnum.PERSONAL);
+    
         private async Task<double> GetTotalRollOverTimes(string employeeId, DateTime employmentDate)
         {
             var now = DateTime.Now;
@@ -185,6 +191,9 @@ namespace Timesheet.Domain.Employees.Services
 
         private async Task<double> GetScheduledVacationTimes(string employeeId)
             => await _queryEmployee.CalculateScheduledBenefits(employeeId, (int)TimesheetFixedPayrollCodeEnum.VACATION);
+
+        private async Task<double> GetPendingVacationTimes(string employeeId)
+            => await _queryEmployee.CalculatePendingBenefits(employeeId, (int)TimesheetFixedPayrollCodeEnum.VACATION);
 
         private int AtAnniversaryVacation(DateTime anniversaryDate, int yearsSinceEmployment)
         {

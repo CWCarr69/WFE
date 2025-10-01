@@ -17,6 +17,7 @@ namespace Timesheet.Application.Employees.Queries
         Task<EmployeePendingTimesheets> GetEmployeesPendingTimesheets(int page, int itemsPerPage, string? approverId = null, bool directReports = false);
         Task<EmployeeOrphanTimesheets> GetEmployeesOrphanTimesheets(int page, int itemsPerPage, string? approverId = null, bool directReports = false);
         Task<double> CalculateUsedBenefits(string employeeId, int type, DateTime start, DateTime end);
+        Task<double> CalculatePendingBenefits(string employeeId, int type);
         Task<double> CalculateScheduledBenefits(string employeeId, int type);
     }
 }
