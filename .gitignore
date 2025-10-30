@@ -88,7 +88,6 @@
 /Timesheet.Web.Api/bin/Release/net6.0/appsettings.json
 /Timesheet.Web.Api/bin/Release/net6.0/Serilog.Extensions.Hosting.dll
 /Timesheet.Web.Api/bin/Release/net6.0/Serilog.Enrichers.Thread.dll
-*.dll
 /Timesheet.Web.Api/bin/Release/net6.0/Timesheet.Application.dll
 /Timesheet.Web.Api/bin/Release/net6.0/Timesheet.Domain.pdb
 /Timesheet.Web.Api/bin/Release/net6.0/Timesheet.Infrastructure.Authentication.pdb
@@ -195,7 +194,6 @@
 /Timesheet.TimesheetCreator/obj/publish/win-x86
 /Timesheet.TimesheetCreator/bin
 /Timesheet.TimesheetCreator/obj
-*.pdb
 /Timesheet.Tools.IdGenerator/bin/Release/net6.0
 /Test.Timesheet.Unit.Timesheet/bin/Debug/net6.0
 /Test.Timesheet.Unit.Timesheet/obj
