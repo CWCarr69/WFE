@@ -2367,7 +2367,7 @@ progress {
 
 .form-control-lg {
   min-height: calc(1.5em + 1rem + 2px);
-  padding: 0.5rem 1rem;
+  padding: 0.5rem .25rem;
   font-size: 1.09375rem;
   border-radius: 0.3rem;
 }
@@ -7188,7 +7188,8 @@ fieldset:disabled .btn {
 }
 
 .mt-4 {
-  margin-top: 1.5rem !important;
+  margin-top: 1rem !important;
+  margin-right: 0.25rem !important
 }
 
 .mt-5 {
@@ -10548,8 +10549,8 @@ a.active {
 .content-body .container-xl,
 .content-body .container-xxl {
   padding-top: 40px;
-  padding-right: 40px;
-  padding-left: 40px;
+  padding-right: 10px;
+  padding-left: 10px;
 }
 @media only screen and (max-width: 1200px) {
   .content-body .container-fluid,

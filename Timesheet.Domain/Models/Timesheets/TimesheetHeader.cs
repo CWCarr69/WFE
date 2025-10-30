@@ -207,10 +207,12 @@ namespace Timesheet.Domain.Models.Timesheets
             this.UpdateMetadata();
         }
 
-        public void DeleteTimesheetEntry(TimesheetEntry timesheetEntry)
+        public void DeleteTimesheetEntry(TimesheetEntry timesheetEntry, bool force = false)
         {
-            GuardAgainstIsFinalized();
-
+            if (!force)
+            {
+              GuardAgainstIsFinalized();
+            }
             if (timesheetEntry.IsDeletable)
             {
                 throw new TimesheetEntryIsNotDeletableException(timesheetEntry.Id);
@@ -301,7 +303,7 @@ namespace Timesheet.Domain.Models.Timesheets
 
         private void GuardAgainstIsFinalized()
         {
-            if (IsFinalized)
+            if (IsFinalized )
             {
                 throw new TimesheetAlreadyFinalized("Can't proceed", PayrollPeriod, StartDate.ToShortDateString(), EndDate.ToShortDateString());
             }

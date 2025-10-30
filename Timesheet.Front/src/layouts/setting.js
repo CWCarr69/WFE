@@ -1,13 +1,13 @@
-import React, { useState, useContext } from "react";
-import { Nav, Tab } from "react-bootstrap";
-import PerfectScrollbar from "react-perfect-scrollbar";
-import { Link } from "react-router-dom";
-import Select from "react-select";
-import { ThemeContext } from "../context/themeContext";
+import React /*, { useState, useContext }*/ from "react";
+//import { Nav, Tab } from "react-bootstrap";
+//import PerfectScrollbar from "react-perfect-scrollbar";
+//import { Link } from "react-router-dom";
+//import Select from "react-select";
+//import { ThemeContext } from "../context/themeContext";
 const Setting = () => {
-  const [settingToggle, setSettingToggle] = useState(false);
+  /*  const [settingToggle, setSettingToggle] = useState(false);
   const {
-    body,
+  body,
     sideBarOption,
     layoutOption,
     backgroundOption,
@@ -33,10 +33,10 @@ const Setting = () => {
     changeContainerPosition,
     containerPosition_,
     setDemoTheme,
-  } = useContext(ThemeContext);
+  } = useContext(ThemeContext);*/
   return (
     <>
-      <div className={`sidebar-right ${settingToggle ? "show" : ""}`}>
+      {/*<div className={`sidebar-right ${settingToggle ? "show" : ""}`}>
         <div
           className="bg-overlay"
           onClick={() => setSettingToggle(!settingToggle)}
@@ -298,7 +298,7 @@ const Setting = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div>*/}
     </>
   );
 };

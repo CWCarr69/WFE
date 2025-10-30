@@ -142,6 +142,7 @@ export const review = async (period) => interactWithAPI({
 
 export const deleteTimesheet = async (data) => interactWithAPI({
   method: "DELETE",
+  headers: {'Content-Type': 'application/json'},
   url: `${API()}/Timesheet/Entries`,
   data: data,
 });

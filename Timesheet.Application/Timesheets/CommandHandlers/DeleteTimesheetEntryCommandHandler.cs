@@ -27,7 +27,8 @@ namespace Timesheet.Application.Timesheets.CommandHandlers
             )
             : base(auditHandler, employeeReadRepository, readRepository, dispatcher, unitOfWork, employeeHabilitations)
         {
-            this._writeRepository= writeRepository;
+            this._readRepository= readRepository;
+            this._writeRepository= writeRepository;   
         }
 
         public async override Task<IEnumerable<IDomainEvent>> HandleCoreAsync(DeleteTimesheetEntry command, CancellationToken token)
@@ -40,7 +41,7 @@ namespace Timesheet.Application.Timesheets.CommandHandlers
             if (timesheetEntry is not null)
             {
                 this.RelatedAuditableEntity = timesheet;
-                timesheet.DeleteTimesheetEntry(timesheetEntry);
+                timesheet.DeleteTimesheetEntry(timesheetEntry, command.Author?.IsAdministrator ?? false);
             }
 
             var events = timesheet.GetDomainEvents();

@@ -223,7 +223,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
                 {nameof(ExternalTimesheetEntryDetails.End_Date)}
             FROM ExternalEmployeeTimesheetEntries
             WHERE payrollPeriod = {AllEmployeeTimesheetByPayrollPeriodQueryPayrollPeriodParam}
-            ORDER BY 2
+            ORDER BY 6
         ";
         #endregion
 
@@ -264,7 +264,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             WHERE te.TimesheetHeaderId = {AllTimesheetEntriesBySearchCriteriaQueryPayrollPeriodParam}
             @AllTimesheetEntriesBySearchCriteriaQueryDepartmentWhereClause
             @AllTimesheetEntriesBySearchCriteriaQueryEmployeeWhereClause
-            ORDER BY 3, 4
+            ORDER BY 5,3
         ";
         #endregion
 
@@ -423,7 +423,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             );
 
             timesheetReview.Items = GroupEntriesByTimesheetAndEmployee(entries);
-
+      
             return timesheetReview;
         }
 
@@ -528,7 +528,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
                         IsOrphan = e.IsOrphan,
                         IsGlobalHoliday = e.IsGlobalHoliday,
                     })
-                }).ToList();
+                }).OrderBy(o => o.StartDate).ToList();
         }
 
         public async Task<IEnumerable<EmployeeTimesheetEntry>> GetEmployeeTimesheetEntriesInPeriod(string employeeId, DateTime start, DateTime end)

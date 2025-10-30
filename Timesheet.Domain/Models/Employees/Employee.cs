@@ -151,7 +151,7 @@ namespace Timesheet.Domain.Models.Employees
 
             var totalHoursOnSameDateExceedLimit = timeoffEntriesOnSameDate.Sum(e => e.Hours) + hours > EMPLOYEE_REGULAR_HOURS;
 
-            if (totalHoursOnSameDateExceedLimit)
+            if (totalHoursOnSameDateExceedLimit && !force)
             {
                 throw new TimeOffEntryHoursExceededException(requestDate, EMPLOYEE_REGULAR_HOURS);
             }

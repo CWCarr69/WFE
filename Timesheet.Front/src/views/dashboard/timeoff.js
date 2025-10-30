@@ -89,7 +89,7 @@ const Timeoff = () => {
                         <tr key={i}>
                           <td>
                             <Link to={`/timeoffs/${da.data.timeoffId}/employee/${da.data.employeeId}`}>
-                              {da.data.fullName}
+                            {da.data.fullName} - {da.data.employeeId}
                               <span> &nbsp;[ P :{" "} <strong>{da.data.personalBalance}</strong>- V :{" "}<strong>{da.data.vacationBalance}</strong>]</span>
                             </Link>
                           </td>

@@ -52,7 +52,7 @@ const TimesheetDatatable = ({data, onDecisionTaken}) => {
     
     const { pageIndex } = state;
 
-    useEffect(() => tableInstance.toggleAllRowsExpanded(true), [tableInstance]);
+    useEffect(() => tableInstance.toggleAllRowsExpanded(false), [tableInstance]);
 
     const takeDecision = async (timesheet, action, successMessage, errorMessage) => {
         await action({
@@ -81,7 +81,7 @@ const TimesheetDatatable = ({data, onDecisionTaken}) => {
 
     const renderGroup = (rows, isExpanded, expandedProps) => {
         let original = rows[0].original;
-        let isRejected = original.timesheetStatus == "REJECTED";
+        let isRejected = original.timesheetStatus === "REJECTED";
 
         return (
         <tr className="fw-bold" style={{textDecoration: isRejected ? 'line-through' : 'none' }}>

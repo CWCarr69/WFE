@@ -1,10 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState,useContext, useEffect } from 'react';
 import { toast } from "react-toastify";
+import { ThemeContext } from "../../context/themeContext";
 import { purgeTables } from '../../redux/actions/purge';
 
 const Purge = () => {
+  const { setTitle } = useContext(ThemeContext);
   const [isPurging, setIsPurging] = useState(false);
   const [result, setResult] = useState(null);
+
+  useEffect(() => {
+    setTitle("Purge Data");
+  }, [setTitle]);
 
   const handlePurge = async () => {
     setIsPurging(true);
@@ -23,7 +29,6 @@ const Purge = () => {
 
   return (
     <div className="admin-purge">
-      <h2>Purge Data</h2>
       <p>
         This action will permanently delete selected data from the system. 
         Please proceed with caution.

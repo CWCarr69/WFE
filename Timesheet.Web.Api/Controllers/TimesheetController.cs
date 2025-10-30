@@ -111,7 +111,7 @@ namespace Timesheet.Web.Api.Controllers
         }
 
         [HttpGet("Review")]
-        public async Task<ActionResult<WithHabilitations<PaginatedResult<WithHabilitations<EmployeeTimesheetWithTotals>>>>> GetTimesheetReview(string payrollPeriod, string? employeeId, string? department, int page=1, int itemsPerpage=10000)
+        public async Task<ActionResult<WithHabilitations<PaginatedResult<WithHabilitations<EmployeeTimesheetWithTotals>>>>> GetTimesheetReview(string payrollPeriod, string? employeeId, string? department, int page=1, int itemsPerpage= 100000)
         {
             LogInformation($"Getting Timesheet ({payrollPeriod}) review");
             string managerId = Manager();

@@ -9,9 +9,9 @@ import { ThemeContext } from "../../context/themeContext";
 import { displayError, displaySuccess } from "../../services/toast";
 import {
   addTimesheetException,
+  deleteTimesheet,
   review,
 } from "../../redux/actions/timesheets";
-import TimesheetStatusFilter from "./timesheetStatusFilter";
 import TimesheetExportPanel from "./timesheetExportPanel";
 import TimesheetFilter from "./timesheetFilter";
 import TimesheetFinalizeAction from "./timesheetFinalizeAction";
@@ -21,8 +21,6 @@ import _ from "lodash";
 import moment from "moment";
 import { DefaultGlobalDateFormat } from "../../services/util";
 import TimesheetDatatable from "./timesheetDatatable";
-//import OrphanTimesheet from "./orphanTimesheet";
-
 
 const TimesSheet = () => {
   const { setTitle } = useContext(ThemeContext);
@@ -30,12 +28,11 @@ const TimesSheet = () => {
 
   const user = useSelector((state) => state.auth.auth);
 
-  //const [selectedType, setSelectedType] = useState(null);
   const [selectedPeriod, setSelectedPeriod] = useState(null);
   const [selectedEmployee, setSelectedEmployee] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState("");
 
-  const [timesheetEntryActiveStatusesFilter, setTimesheetEntryActiveStatusesFilter] = useState([]);
+//  const [timesheetEntryActiveStatusesFilter, setTimesheetEntryActiveStatusesFilter] = useState([]);
 
   const [reveiwData, setReveiwData] = useState({
     authorizedActions: [],
@@ -67,7 +64,7 @@ const TimesSheet = () => {
         authorizedActions: item.authorizedActions,
         timesheetId: item.data.timesheetId,
         delete: entry.payrollCode !== "REGULAR" && entry.payrollCode !== "OVERTIME",
-        deleteAction: () => createTimesheetException(entry),
+        deleteAction: () => delTimesheet(entry), 
         isOrphan: entry.isOrphan,
         isRejected: entry.isRejected,
         isApproved: entry.isApproved,
@@ -109,18 +106,33 @@ const TimesSheet = () => {
         ? depFilter
         : arrayData;
 
-    var resp = timesheetEntryActiveStatusesFilter.length > 0
-      ? array.filter((d) => timesheetEntryActiveStatusesFilter.includes(d.status))
-      : array;
+    var resp = array;
 
 	  return resp;
-	}, [timesheetEntryActiveStatusesFilter, reveiwData, selectedEmployee, selectedDepartment]);
+	}, [reveiwData, selectedEmployee, selectedDepartment]);
 
   const data = useMemo(() => onFilterUpdate(), [onFilterUpdate]);
 
   useEffect(() => {
     setTitle("Review Timesheet");
   }, [setTitle]);
+
+  const [openModal, setOpenModal] = useState(false);
+
+  const delTimesheet = async (entry) => {
+    setOpenModal(false);
+    await deleteTimesheet({
+      employeeId: entry.employeeId,
+      timesheetEntryId: entry.id,
+      timesheetId: entry.timesheetId,
+      isHoliday: entry.isGlobalHoliday
+    })
+      .then((resp) => {
+        displaySuccess("Employee Timesheet deleted successfully");
+        //history.reload();
+      })
+      .catch((err) => displayError(err, "Error while deleting employee timesheet"))
+  };
 
   const createTimesheetException = async (entry) => {
     await addTimesheetException({
@@ -166,7 +178,6 @@ const TimesSheet = () => {
               totalQuantity= {reveiwData.otherData && reveiwData.otherData.TotalQuantity}
             />
             <div className="row mb-3 mt-2 align-items-center">
-              <TimesheetStatusFilter onTimesheetEntryStatusesFilterChanged={(statuses) => setTimesheetEntryActiveStatusesFilter(statuses)}/>
               <TimesheetExportPanel 
                 showFinalizeButton = { user.isAdministrator && data.find((d) => d.timesheetStatus.toLowerCase() === "finalized") }
                 employee={selectedEmployee}
@@ -181,11 +192,6 @@ const TimesSheet = () => {
           </div>
         </div>
       </div>
-      {/* <div className="row">
-        <div id="orphan-timesheets" className="col-12">
-          <OrphanTimesheet />
-        </div>
-      </div> */}
     </>
   );
 };
