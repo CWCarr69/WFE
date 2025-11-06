@@ -30,7 +30,7 @@ namespace Timesheet.Web.Api.Controllers
     [HttpDelete("purge-old")]
     public async Task<IActionResult> PurgeOldData(CancellationToken token)
     {
-      var olderThan = new DateTime(DateTime.Now.Year - 2, 1, 1);
+      var olderThan = new DateTime(DateTime.Now.Year - 1, 1, 1);
 
       var command = new PurgeOldDataCommand
       {

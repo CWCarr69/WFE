@@ -39,7 +39,7 @@ namespace Timesheet.Infrastruture.ReadModel.Queries
                 type = "hourly";
             }
 
-            string endDateQry = type == "hourly" ? "DATEADD(DAY, 5 - DATEPART(WEEKDAY, GETDATE()), CAST(GETDATE() AS DATE))" : (DateTime.Now.Day > 15 ? "EOMONTH(GETDATE())" : "DATEADD(DAY, 14, DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()), 0))");
+            string endDateQry = type == "hourly" ? "DATEADD(DAY, 5 - DATEPART(WEEKDAY,  DATEADD(YEAR, 2, GETDATE())), CAST(DATEADD(YEAR, 2, GETDATE()) AS DATE))" : (DateTime.Now.Day > 15 ? "EOMONTH(GETDATE())" : "DATEADD(DAY, 14, DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()), 0))");
 
             var query = $@"SELECT distinct payrollPeriod as Code, StartDate, EndDate, Type
                             FROM timesheets WHERE Type = {(type == "hourly" ? 0 : 1)} and EndDate <= {endDateQry} ORDER BY StartDate desc";
