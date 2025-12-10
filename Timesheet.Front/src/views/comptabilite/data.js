@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export const COLUMNS = [
   {
-    Header: "First Name",
+    Header: "Name",
     accessor: "employee",
     Filter: ColumnFilter,
     Cell: ({ original }) => (
@@ -33,7 +33,7 @@ export const COLUMNS = [
     )
   },
   {
-    Header: "Quantity",
+    Header: "Qty",
     accessor: "quantity",
     Filter: ColumnFilter,
   },
@@ -58,16 +58,16 @@ export const COLUMNS = [
     Filter: ColumnFilter,
   },
   {
-    Header: "Profit Center",
+    Header: "PC",
     accessor: "center",
     Filter: ColumnFilter,
   },
   {
-    Header: "Delete",
-    accessor: "delete",
+    Header: "Action",
+    accessor: "action",
     Filter: ColumnFilter,
     Cell: ({ original }) => (
-      original.delete && <a><i style={{ cursor: "pointer" }} className="flaticon-381-multiply-1 text-danger" onClick={original.deleteAction}></i></a>
+      original.delete && <a><i style={{ cursor: "pointer" }} className="flaticon-381-multiply-1 text-danger" onClick={original.deleteAction}></i></a> 
     )
   },
 ];
