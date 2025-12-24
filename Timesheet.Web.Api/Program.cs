@@ -17,188 +17,180 @@ using Timesheet.Infrastructure.Persistence.Repositories;
 using Timesheet.ReadModel;
 using Timesheet.Web.Api.Middleware;
 using Timesheet.Web.Api.ServiceWorker;
-using System.Reflection;
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.OpenApi.Models;
-using Serilog;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Timesheet.Web.Api
 {
-  public class Program
-  {
-    public static void Main(string[] args)
+    public class Program
     {
-      var webApplicationOptions = new WebApplicationOptions()
-      {
-        ContentRootPath = AppContext.BaseDirectory,
-        Args = args,
-        ApplicationName = Assembly.GetEntryAssembly()?.GetName().Name
-      };
-
-      var builder = WebApplication.CreateBuilder(webApplicationOptions);
-
-      var timesheetConnectionString = builder.Configuration.GetConnectionString("Timesheet");
-      var webAppUri = builder.Configuration["WebAppUri"];
-      var templatesBasePath = builder.Configuration["templatesBasePath"];
-      // Add services to the container.
-      builder.Services.AddTimesheetContext(timesheetConnectionString)
-      .AddTimesheedReadModelDatabase(timesheetConnectionString)
-
-      .AddWorkflowService()
-      .RegisterEventDispatcher()
-      .RegisterEventHandlers()
-      .RegisterCommandHandlers()
-      .AddAuthenticationServices()
-      .AddTimesheetExportServices(builder.Configuration.GetSection("TimesheetExport:Destination").Value)
-      .AddOtherApplicationServices()
-      .AddEmailServices(sp => new TimesheetSqlConnection(timesheetConnectionString), webAppUri, templatesBasePath);
-
-      builder.Services.AddBenefitsServices();
-
-      //Hangfire
-      builder.Services.AddHangfire(config => config
-          .UseSimpleAssemblyNameTypeSerializer()
-          .UseRecommendedSerializerSettings()
-          .UseSqlServerStorage(builder.Configuration.GetConnectionString("Timesheet")));
-      builder.Services.AddHangfireServer();
-
-      //Logging
-      builder.Services.AddTransient<LogUserNameMiddleware>();
-
-      Log.Logger = new LoggerConfiguration().CreateBootstrapLogger();
-      builder.Host.UseSerilog(((ctx, lc) => lc
-          .ReadFrom.Configuration(ctx.Configuration)
-          .Enrich.FromLogContext()
-          .Enrich.WithThreadId()
-      ));
-
-      //Controllers
-      builder.Services.AddControllers();
-      builder.Services.AddCors();
-
-      // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-      builder.Services.AddEndpointsApiExplorer();
-      builder.Services.AddSwaggerGen(options =>
-      {
-        options.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
-
-        options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+        public static void Main(string[] args)
         {
-          Description = "Authentication using Bearer scheme",
-          In = ParameterLocation.Header,
-          Name = "Authorization",
-          Type = SecuritySchemeType.ApiKey
-        });
-
-        options.OperationFilter<SecurityRequirementsOperationFilter>();
-      });
-
-      //HostedService
-      builder.Services.AddHostedService<TimesheetWebApiService>();
-
-      //Authentication
-      builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-          .AddJwtBearer(options =>
-          {
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-              ValidateIssuerSigningKey = true,
-              IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                          builder.Configuration.GetSection("AppSettings:Token").Value)),
-              ValidateIssuer = false,
-              ValidateAudience = false,
+            var webApplicationOptions = new WebApplicationOptions() {
+                ContentRootPath = AppContext.BaseDirectory,
+                Args = args,
+                ApplicationName = Assembly.GetEntryAssembly()?.GetName().Name
             };
-          });
 
-      var app = builder.Build();
+            var builder = WebApplication.CreateBuilder(webApplicationOptions);
+            builder.Host.UseWindowsService();
 
-      //Register Handlers
-      ConfigureHandlers(app);
+            var timesheetConnectionString = builder.Configuration.GetConnectionString("Timesheet");
+            var webAppUri = builder.Configuration["WebAppUri"];
+            var templatesBasePath = builder.Configuration["templatesBasePath"];
+            // Add services to the container.
+            builder.Services.AddTimesheetContext(timesheetConnectionString)
+            .AddTimesheedReadModelDatabase(timesheetConnectionString)
 
-      //Initialize DB
-      InitializeDatabase(app);
+            .AddWorkflowService()
+            .RegisterEventDispatcher()
+            .RegisterEventHandlers()
+            .RegisterCommandHandlers()
+            .AddAuthenticationServices()
+            .AddTimesheetExportServices(builder.Configuration.GetSection("TimesheetExport:Destination").Value)
+            .AddOtherApplicationServices()
+            .AddEmailServices(sp => new TimesheetSqlConnection(timesheetConnectionString), webAppUri, templatesBasePath);
 
-      //Use serilog
-      app.UseSerilogRequestLogging();
+            builder.Services.AddBenefitsServices();
 
-      // Define global exception handling
-      app.ConfigureExceptionHandler();
+            //Hangfire
+            builder.Services.AddHangfire(config => config
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UseSqlServerStorage(builder.Configuration.GetConnectionString("Timesheet")));
+            builder.Services.AddHangfireServer();
 
-      // Configure the HTTP request pipeline.
-      if (app.Environment.IsDevelopment())
-      {
-        app.UseSwagger();
-        app.UseSwaggerUI();
-      }
+            //Logging
+            builder.Services.AddTransient<LogUserNameMiddleware>();
 
-      app.UseCors(p => p
-      .SetIsOriginAllowedToAllowWildcardSubdomains()
-      .WithOrigins("https://*.wilsonfire.net", "https://localhost", "https://localhost:3000", "http://localhost:3000")
-      .AllowAnyHeader().AllowAnyMethod()
-      .AllowCredentials());
+            Log.Logger = new LoggerConfiguration().CreateBootstrapLogger();
+            builder.Host.UseSerilog(((ctx, lc) => lc
+                .ReadFrom.Configuration(ctx.Configuration)
+                .Enrich.FromLogContext()
+                .Enrich.WithThreadId()
+            ));
 
-      app.UseHttpsRedirection();
+            //Controllers
+            builder.Services.AddControllers();
+            builder.Services.AddCors();
 
-      app.UseAuthentication();
-      app.UseAuthorization();
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
 
-      app.UseMiddleware<LogUserNameMiddleware>();
+                options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                {
+                    Description = "Authentication using Bearer scheme",
+                    In = ParameterLocation.Header,
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey
+                });
 
-      app.Use(async (context, next) =>
-      {
-        var url = context.Request.Path.Value;
+                options.OperationFilter<SecurityRequirementsOperationFilter>();
+            });
+            
+            //HostedService
+            builder.Services.AddHostedService<TimesheetWebApiService>();
 
-        // Rewrite to index
-        if (!url.Contains("/api") && !url.Contains("/static"))
-        {
-          // rewrite and continue processing
-          context.Request.Path = "/index.html";
+            //Authentication
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                            builder.Configuration.GetSection("AppSettings:Token").Value)),
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                    };
+                });
+
+            var app = builder.Build();
+
+            //Register Handlers
+            ConfigureHandlers(app);
+
+            //Initialize DB
+            InitializeDatabase(app);
+
+            //Use serilog
+            app.UseSerilogRequestLogging();
+
+            // Define global exception handling
+            app.ConfigureExceptionHandler();
+
+            // Configure the HTTP request pipeline.
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
+
+            app.UseCors(p => p
+            .SetIsOriginAllowedToAllowWildcardSubdomains()
+            .WithOrigins("https://*.wilsonfire.net", "https://localhost", "https://localhost:3000", "http://localhost:3000")
+            .AllowAnyHeader().AllowAnyMethod()
+            .AllowCredentials());
+
+            app.UseHttpsRedirection();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseMiddleware<LogUserNameMiddleware>();
+
+            app.Use(async (context, next) =>
+            {
+                var url = context.Request.Path.Value;
+
+                // Rewrite to index
+                if (!url.Contains("/api") && !url.Contains("/static"))
+                {
+                    // rewrite and continue processing
+                    context.Request.Path = "/index.html";
+                }
+
+                await next();
+            });
+
+            app.UseStaticFiles();
+
+            app.MapControllers();
+
+            app.UseHangfireDashboard();
+            app.MapHangfireDashboard();
+
+            //RecurringJob.AddOrUpdate<IEmployeeBenefitsService>(x => x.UpdateEmployeeBenefits(), builder.Configuration.GetSection("AppSettings:BenefitsCron").Value);
+
+            app.Run();
         }
 
-        await next();
-      });
+        private static void ConfigureHandlers(WebApplication app)
+        {
+            using (var scope = app.Services.CreateScope())
+            {
+                var handlersConfiguration = scope.ServiceProvider.GetRequiredService(typeof(HandlersConfiguration)) as HandlersConfiguration;
+                if (handlersConfiguration == null)
+                {
+                    throw new Exception("Cannot configure event handlers. Program cannot start.");
+                }
+                handlersConfiguration.RegisterHandlers();
+            }
+        }
 
-      app.UseStaticFiles();
-
-      app.MapControllers();
-
-      app.UseHangfireDashboard();
-      app.MapHangfireDashboard();
-
-      //RecurringJob.AddOrUpdate<IEmployeeBenefitsService>(x => x.UpdateEmployeeBenefits(), builder.Configuration.GetSection("AppSettings:BenefitsCron").Value);
-
-      app.Run();
+        private static void InitializeDatabase(WebApplication app)
+        {
+            using (var scope = app.Services.CreateScope())
+            {
+                try
+                {
+                    var context = scope.ServiceProvider.GetRequiredService<TimesheetDbContext>();
+                    DbInitializer.Initialize(context);
+                }catch(Exception ex){
+                    throw new Exception($"Cannot initialize Database. Program cannot start. {ex.Message}");
+                }
+            };
+        }
     }
-
-    private static void ConfigureHandlers(WebApplication app)
-    {
-      using (var scope = app.Services.CreateScope())
-      {
-        var handlersConfiguration = scope.ServiceProvider.GetRequiredService(typeof(HandlersConfiguration)) as HandlersConfiguration;
-        if (handlersConfiguration == null)
-        {
-          throw new Exception("Cannot configure event handlers. Program cannot start.");
-        }
-        handlersConfiguration.RegisterHandlers();
-      }
-    }
-
-    private static void InitializeDatabase(WebApplication app)
-    {
-      using (var scope = app.Services.CreateScope())
-      {
-        try
-        {
-          var context = scope.ServiceProvider.GetRequiredService<TimesheetDbContext>();
-          DbInitializer.Initialize(context);
-        }
-        catch (Exception ex)
-        {
-          throw new Exception($"Cannot initialize Database. Program cannot start. {ex.Message}");
-        }
-      }
-    }
-  }
 }
