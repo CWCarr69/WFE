@@ -31,8 +31,6 @@ namespace Timesheet.Web.Api
             };
 
             var builder = WebApplication.CreateBuilder(webApplicationOptions);
-            builder.Host.UseWindowsService();
-
             var timesheetConnectionString = builder.Configuration.GetConnectionString("Timesheet");
             var webAppUri = builder.Configuration["WebAppUri"];
             var templatesBasePath = builder.Configuration["templatesBasePath"];
