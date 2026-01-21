@@ -69,9 +69,8 @@ const EmployeeList = () => {
         onTimesheetStatusesFilterChanged={(statuses) => setTimesheetActiveStatusesFilter(statuses)}
         />
       <EmployeeListDatatable 
-        onAddClick={(employeeId) => {
-          console.log(JSON.stringify(employeeId));
-          setSelectedEmployeeId(employeeId);
+        onAddClick={(employee) => {
+          setSelectedEmployeeId(employee);
           setIsAddTimeoffOpen(true);
         }}
         onFilterUpdate={onFilterUpdate}

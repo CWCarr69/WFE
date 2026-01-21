@@ -61,8 +61,9 @@ const NewTimeoff = ({ isOpen, onClose, selectedEmployeeId }) => {
       return true;
     }
 
+    console.log("selectedEployee=" + JSON.stringify(selectedEmployee));
     const typeLabel = type.label?.toLowerCase() || "";
-    const employee = employees.find(e => e.employeeId === selectedEmployee);
+    const employee = employees.find(e => e.employeeId === selectedEmployee.employeeId);
 
     if (!employee) {
       setAvailableHoursError("");
@@ -71,12 +72,12 @@ const NewTimeoff = ({ isOpen, onClose, selectedEmployeeId }) => {
 
     // Check available hours based on type
     if (typeLabel.includes("vacation")) {
-      if (employee.vacationHours <= 0) {
+      if (selectedEmployee.vacationBalance <= 0) {
         setAvailableHoursError("No vacation hours available.");
         return false;
       }
     } else if (typeLabel.includes("personal")) {
-      if (employee.personalHours <= 0) {
+      if (selectedEmployee.personalBalance <= 0) {
         setAvailableHoursError("No personal hours available.");
         return false;
       }
@@ -125,6 +126,7 @@ const NewTimeoff = ({ isOpen, onClose, selectedEmployeeId }) => {
     const updatedTimeoff = { ...timeoff, hours: value };
     setTimeoff(updatedTimeoff);
     validateHours(value, updatedTimeoff.type);
+    validateAvailableHours(updatedTimeoff.type, updatedTimeoff.employeeId);
   };
 
   const handleTypeChange = (selectedType) => {

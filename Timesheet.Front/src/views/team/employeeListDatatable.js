@@ -60,7 +60,7 @@ const EmployeeListDatatable = ({onFilterUpdate, onAddClick}) => {
                                 ) : (
                                 <Fragment>{da.lastTimeoffStatusString.replace("_", " ")}</Fragment>
                                 )}
-                                <NewTimeoffButton onClick={() => onAddClick(da.employeeId) } />
+                                <NewTimeoffButton onClick={() => onAddClick(da) } />
                             </td>
                             </tr>
                         ))}
