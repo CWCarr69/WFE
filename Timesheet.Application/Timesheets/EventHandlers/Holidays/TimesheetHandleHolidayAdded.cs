@@ -44,20 +44,30 @@ namespace Timesheet.Application.Timesheets.EventHandlers.Holidays
       }
       // employees eligible for holiday entry must have been hired at least 90 days before holiday
       var hireThreshold = @event.Date.AddDays(-90).Date;
-      var employees = _employeeRepository.Get()
-          .Where(e => e.IsActive
-                      && e.UsesTimesheet
-                      && e.EmploymentData is not null
-                      && e.EmploymentData.EmploymentDate <= hireThreshold)
-          .ToList();
+      var eligibleEmployees = _employeeRepository.Get()
+         .Where(e => e.IsActive
+                     && e.UsesTimesheet
+                     && e.EmploymentData is not null
+                     && e.EmploymentData.EmploymentDate <= hireThreshold)
+         .ToList();
+
+      // Separate employees by type
+      var hourlyEmployees = eligibleEmployees.Where(e => !e.EmploymentData.IsSalaried).ToList();
+      var salariedEmployees = eligibleEmployees.Where(e => e.EmploymentData.IsSalaried).ToList();
+
 
       foreach (var timesheet in timesheets)
       {
         var existingTimesheet = await _readRepository.Get(timesheet.Id);
         existingTimesheet.AddHoliday(TimesheetHoliday.Create(@event.Id, @event.Date, @event.Description));
 
+        // Determine which employees to add based on timesheet type
+        var employeesToAdd = timesheet.Type == TimesheetType.WEEKLY
+            ? hourlyEmployees
+            : salariedEmployees;
+
         // add timesheet entry for holiday for eligible employees if one does not already exist
-        foreach (var employee in employees)
+        foreach (var employee in employeesToAdd)
         {
           var exists = existingTimesheet.TimesheetEntries
               .Any(te => te.EmployeeId == employee.Id

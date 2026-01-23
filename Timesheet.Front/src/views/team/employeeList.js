@@ -70,6 +70,7 @@ const EmployeeList = () => {
         />
       <EmployeeListDatatable 
         onAddClick={(employee) => {
+          console.log(JSON.stringify(employee));
           setSelectedEmployeeId(employee);
           setIsAddTimeoffOpen(true);
         }}
