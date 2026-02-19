@@ -164,11 +164,11 @@ const SideBar = () => {
                       Data
                     </Link>
                   </li>
-                  <li>
+                  {/*<li>
                     <Link to="/settings/adjustments" className="ai-icon">
                       Adjustments
                     </Link>
-                  </li>
+                  </li>*/}
                 </ul>
               </li>
             </>

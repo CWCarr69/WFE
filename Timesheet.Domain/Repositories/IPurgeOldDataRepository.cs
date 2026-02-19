@@ -4,6 +4,6 @@ namespace Timesheet.Domain.Repositories
 {
   public interface IPurgeOldDataRepository
   {
-    void PurgeOldDataAsync(DateTime olderThan, CancellationToken cancellationToken);
+    Task<PurgeResult> PurgeOldDataAsync(DateTime olderThan, CancellationToken cancellationToken);
   }
 }

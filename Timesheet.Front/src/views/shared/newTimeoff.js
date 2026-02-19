@@ -28,11 +28,11 @@ const NewTimeoff = ({ isOpen, onClose, selectedEmployeeId }) => {
     var newTimeoff = {
       requestStartDate: timeoff.start,
       requestEndDate: timeoff.end,
-      employeeId: timeoff.employeeId,
+      employeeId: timeoff.employeeId.employeeId,
       employeeComment: timeoff.employeeComment,
       entries: dates.map((d) => {
         return {
-          employeeId: timeoff.employeeId,
+          employeeId: timeoff.employeeId.employeeId,
           requestDate: new Date(d),
           type: timeoff.type.value,
           hours: timeoff.hours,
@@ -40,7 +40,7 @@ const NewTimeoff = ({ isOpen, onClose, selectedEmployeeId }) => {
         };
       }),
     };
-
+    console.log("newtimeoff=" + JSON.stringify(newTimeoff));
     await addTimeoff(newTimeoff)
       .then((res) => {
         close();
@@ -61,7 +61,6 @@ const NewTimeoff = ({ isOpen, onClose, selectedEmployeeId }) => {
       return true;
     }
 
-    console.log("selectedEployee=" + JSON.stringify(selectedEmployee));
     const typeLabel = type.label?.toLowerCase() || "";
     const employee = employees.find(e => e.employeeId === selectedEmployee.employeeId);
 

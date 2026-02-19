@@ -1,3 +1,3 @@
-const API = () => "https://" + window.location.hostname + ":5148/api";
+const API = () => "https://" + window.location.hostname + ":44348/api";
 
 export { API };

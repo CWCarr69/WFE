@@ -4,68 +4,71 @@ using Timesheet.Infrastructure.Dapper;
 
 namespace Timesheet.FDPDataIntegrator.Employees
 {
-    internal class EmployeeRepository : IRepository<Employee>
+  internal class EmployeeRepository : IRepository<Employee>
+  {
+    private const string EmployeeTable = "Employees";
+    private readonly IDatabaseService _databaseService;
+
+    public EmployeeRepository(IDatabaseService databaseService)
     {
-        private const string EmployeeTable = "Employees";
-        private readonly IDatabaseService _databaseService;
+      this._databaseService = databaseService;
+    }
 
-        public EmployeeRepository(IDatabaseService databaseService)
-        {
-            this._databaseService = databaseService;
-        }
+    public async Task BeginTransaction(Action transaction)
+    {
+      await _databaseService.ExecuteTransactionAsync(transaction);
+    }
 
-        public async Task BeginTransaction(Action transaction)
-        {
-            await _databaseService.ExecuteTransactionAsync(transaction);
-        }
+    public async Task Delete(string id)
+    {
+      await Task.CompletedTask;
+    }
 
-        public async Task Delete(string id)
-        {
-            await Task.CompletedTask;
-        }
+    public async Task DisableConstraints()
+    {
+      var employeeTableParam = "@tableName";
+      var query = $"ALTER TABLE {EmployeeTable} NOCHECK CONSTRAINT ALL";
+      await _databaseService.ExecuteAsync(query, new { tableName = EmployeeTable });
+    }
 
-        public async Task DisableConstraints()
-        {
-            var employeeTableParam = "@tableName";
-            var query = $"ALTER TABLE {EmployeeTable} NOCHECK CONSTRAINT ALL";
-            await _databaseService.ExecuteAsync(query, new { tableName = EmployeeTable });
-        }
+    public async Task EnableConstraints()
+    {
+      var employeeTableParam = "@tableName";
+      var query = $"ALTER TABLE {EmployeeTable} WITH CHECK CHECK CONSTRAINT ALL";
+      await _databaseService.ExecuteAsync(query, new { tableName = EmployeeTable });
+    }
 
-        public async Task EnableConstraints()
-        {
-            var employeeTableParam = "@tableName";
-            var query = $"ALTER TABLE {EmployeeTable} WITH CHECK CHECK CONSTRAINT ALL";
-            await _databaseService.ExecuteAsync(query, new { tableName = EmployeeTable });
-        }
+    public IEnumerable<Employee> GetRecents()
+    {
+      throw new NotImplementedException();
+    }
 
-        public IEnumerable<Employee> GetRecents()
-        {
-            throw new NotImplementedException();
-        }
+    public async Task UpSert(Employee employee)
+    {
+      var employeeId = "@employeeId";
+      var employeeFullName = "@employeeFullName";
+      var employeeDefaultProfitCenter = "@employeeDefaultProfitCenter";
+      var employeeManagerId = "@employeeManagerId";
+      var employeePrimaryApproverId = "@employeePrimaryApproverId";
+      var employeeSecondaryApproverId = "@employeeSecondaryApproverId";
+      var employeeJobTitle = "@employeeJobTitle";
+      var employeeDepartment = "@employeeDepartment";
+      var employeeEmploymentDate = "@employeeEmploymentDate";
+      var employeeIsSalaried = "@employeeIsSalaried";
+      var employeeIsAdministrator = "@employeeIsAdministrator";
+      var employeeIsActive = "@employeeIsActive";
+      var employeeUsesTimesheet = "@employeeUsesTimesheet";
+      var employeeCompanyEmail = "@employeeCompanyEmail";
+      var employeeCompanyPhone = "@employeeCompanyPhone";
+      var employeeCreatedDate = "@employeeCreatedDate";
+      var employeeModifiedDate = "@employeeModifiedDate";
+      var employeeUpdatedBy = "@employeeUpdatedBy";
+      var employeeUserId = "@employeeUserId";
 
-        public async Task UpSert(Employee employee)
-        {
-            var employeeId = "@employeeId";
-            var employeeFullName = "@employeeFullName";
-            var employeeDefaultProfitCenter = "@employeeDefaultProfitCenter";
-            var employeeManagerId = "@employeeManagerId";
-            var employeePrimaryApproverId = "@employeePrimaryApproverId";
-            var employeeSecondaryApproverId = "@employeeSecondaryApproverId";
-            var employeeJobTitle = "@employeeJobTitle";
-            var employeeDepartment = "@employeeDepartment";
-            var employeeEmploymentDate = "@employeeEmploymentDate";
-            var employeeIsSalaried = "@employeeIsSalaried";
-            var employeeIsAdministrator = "@employeeIsAdministrator";
-            var employeeIsActive = "@employeeIsActive";
-            var employeeUsesTimesheet = "@employeeUsesTimesheet";
-            var employeeCompanyEmail = "@employeeCompanyEmail";
-            var employeeCompanyPhone = "@employeeCompanyPhone";
-            var employeeCreatedDate = "@employeeCreatedDate";
-            var employeeModifiedDate = "@employeeModifiedDate";
-            var employeeUpdatedBy = "@employeeUpdatedBy";
-            var employeeUserId = "@employeeUserId";
+      employeeEmploymentDate = string.IsNullOrEmpty(employeeEmploymentDate) ? "" : employeeEmploymentDate;
+      employeeModifiedDate = string.IsNullOrEmpty(employeeModifiedDate) ? DateTime.Now.ToString() : employeeModifiedDate;
 
-            var updates = $@"
+      var updates = $@"
             {nameof(Employee.FullName)} = {employeeFullName},
             {nameof(Employee.DefaultProfitCenter)} = {employeeDefaultProfitCenter},
             {nameof(Employee.Manager)}{nameof(Employee.Id)} = {employeeManagerId},
@@ -85,7 +88,7 @@ namespace Timesheet.FDPDataIntegrator.Employees
             {nameof(Employee.UserId)} = {employeeUserId}
             ";
 
-            var insertColums = $@"
+      var insertColums = $@"
             {nameof(Employee.Id)},
             {nameof(Employee.FullName)},
             {nameof(Employee.DefaultProfitCenter)},
@@ -107,7 +110,7 @@ namespace Timesheet.FDPDataIntegrator.Employees
             {nameof(Employee.UserId)}
             ";
 
-            var insertValues = $@"
+      var insertValues = $@"
                 {employeeId},
                 {employeeFullName},
                 {employeeDefaultProfitCenter},
@@ -129,7 +132,7 @@ namespace Timesheet.FDPDataIntegrator.Employees
                 {employeeUserId}
             ";
 
-            var query = $@"IF EXISTS (SELECT * FROM {EmployeeTable} WHERE {nameof(Employee.Id)} = {employeeId})
+      var query = $@"IF EXISTS (SELECT * FROM {EmployeeTable} WHERE {nameof(Employee.Id)} = {employeeId})
                          BEGIN
                              UPDATE {EmployeeTable}
                              SET {updates}
@@ -141,27 +144,28 @@ namespace Timesheet.FDPDataIntegrator.Employees
                              SELECT {insertValues}
                          END";
 
-            await _databaseService.ExecuteAsync(query, new { 
-                employeeId = employee.Id,
-                employeeFullName = employee.FullName,
-                employeeDefaultProfitCenter = employee.DefaultProfitCenter,
-                employeeManagerId = employee.PrimaryApprover?.Id,
-                employeePrimaryApproverId = employee.PrimaryApprover?.Id,
-                employeeSecondaryApproverId = employee.SecondaryApprover?.Id,
-                employeeJobTitle = employee.EmploymentData.JobTitle,
-                employeeDepartment = employee.EmploymentData.Department,
-                employeeEmploymentDate = employee.EmploymentData.EmploymentDate,
-                employeeIsSalaried = employee.EmploymentData.IsSalaried,
-                employeeIsAdministrator = employee.EmploymentData.IsAdministrator,
-                employeeIsActive = employee.IsActive,
-                employeeUsesTimesheet = employee.UsesTimesheet,
-                employeeCompanyEmail = employee.Contacts.CompanyEmail,
-                employeeCompanyPhone = employee.Contacts.CompanyPhone,
-                employeeCreatedDate = employee.CreatedDate,
-                employeeModifiedDate = employee.ModifiedDate,
-                employeeUpdatedBy = employee.UpdatedBy,
-                employeeUserId = employee.UserId
-            });
-        }
+      await _databaseService.ExecuteAsync(query, new
+      {
+        employeeId = employee.Id,
+        employeeFullName = employee.FullName,
+        employeeDefaultProfitCenter = employee.DefaultProfitCenter,
+        employeeManagerId = employee.PrimaryApprover?.Id,
+        employeePrimaryApproverId = employee.PrimaryApprover?.Id,
+        employeeSecondaryApproverId = employee.SecondaryApprover?.Id,
+        employeeJobTitle = employee.EmploymentData.JobTitle,
+        employeeDepartment = employee.EmploymentData.Department,
+        employeeEmploymentDate = employee.EmploymentData.EmploymentDate,
+        employeeIsSalaried = employee.EmploymentData.IsSalaried,
+        employeeIsAdministrator = employee.EmploymentData.IsAdministrator,
+        employeeIsActive = employee.IsActive,
+        employeeUsesTimesheet = employee.UsesTimesheet,
+        employeeCompanyEmail = employee.Contacts.CompanyEmail,
+        employeeCompanyPhone = employee.Contacts.CompanyPhone,
+        employeeCreatedDate = employee.CreatedDate,
+        employeeModifiedDate = employee.ModifiedDate,
+        employeeUpdatedBy = employee.UpdatedBy,
+        employeeUserId = employee.UserId
+      });
     }
+  }
 }
