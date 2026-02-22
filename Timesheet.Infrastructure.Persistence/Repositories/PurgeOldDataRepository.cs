@@ -28,58 +28,56 @@ namespace Timesheet.Infrastructure.Persistence.Repositories
         DeletedCounts = new Dictionary<string, int>()
       };
 
-      var dateParam = olderThan.ToString("yyyy-MM-dd");
-
       try
       {
-        // Execute all deletes in a single batch and return all counts
-        var purgeAllSql = $@"
+        // First execute all deletes
+        var deleteSql = @"
           -- Delete TimeoffEntry
           DELETE te
           FROM TimeoffEntry te
           INNER JOIN TimeoffHeader th ON te.TimeoffHeaderId = th.Id
-          WHERE th.RequestEndDate < '{dateParam}';
-          
-          DECLARE @TimeoffEntryCount INT = @@ROWCOUNT;
+          WHERE th.RequestEndDate < @OlderThan;
 
           -- Delete TimeoffHeader
           DELETE FROM TimeoffHeader 
-          WHERE RequestEndDate < '{dateParam}';
-          
-          DECLARE @TimeoffHeaderCount INT = @@ROWCOUNT;
+          WHERE RequestEndDate < @OlderThan;
 
           -- Delete TimesheetComment
           DELETE tc
           FROM TimesheetComment tc
           INNER JOIN Timesheets t ON tc.TimeSheetId = t.Id
-          WHERE t.EndDate < '{dateParam}';
-          
-          DECLARE @TimesheetCommentCount INT = @@ROWCOUNT;
+          WHERE t.EndDate < @OlderThan;
 
           -- Delete TimesheetEntry
           DELETE FROM TimesheetEntry 
-          WHERE WorkDate < '{dateParam}';
-          
-          DECLARE @TimesheetEntryCount INT = @@ROWCOUNT;
+          WHERE WorkDate < @OlderThan;
 
           -- Delete TimesheetException
           DELETE FROM TimesheetException 
-          WHERE CreatedDate < '{dateParam}';
-          
-          DECLARE @TimesheetExceptionCount INT = @@ROWCOUNT;
+          WHERE CreatedDate < @OlderThan;
 
           -- Delete Timesheets
           DELETE FROM Timesheets 
-          WHERE EndDate < '{dateParam}'
+          WHERE EndDate < @OlderThan;";
 
-          -- Return all counts in one result set
+        // Execute deletes
+        await _dbServices.ExecuteAsync(deleteSql, new { OlderThan = olderThan });
+
+        // Then get counts separately
+        var countSql = @"
           SELECT 
-            @TimeoffEntryCount AS TimeoffEntry,
-            @TimeoffHeaderCount AS TimeoffHeader,
-            @TimesheetCommentCount AS TimesheetComment,
-            @TimesheetEntryCount AS TimesheetEntry,
-            @TimesheetExceptionCount AS TimesheetException;";
-        var counts = (await _dbServices.QueryAsync<PurgeCountResult>(purgeAllSql)).FirstOrDefault();
+            (SELECT COUNT(*) FROM TimeoffEntry te 
+             INNER JOIN TimeoffHeader th ON te.TimeoffHeaderId = th.Id
+             WHERE th.RequestEndDate < @OlderThan) AS TimeoffEntry,
+            (SELECT COUNT(*) FROM TimeoffHeader WHERE RequestEndDate < @OlderThan) AS TimeoffHeader,
+            (SELECT COUNT(*) FROM TimesheetComment tc 
+             INNER JOIN Timesheets t ON tc.TimeSheetId = t.Id
+             WHERE t.EndDate < @OlderThan) AS TimesheetComment,
+            (SELECT COUNT(*) FROM TimesheetEntry WHERE WorkDate < @OlderThan) AS TimesheetEntry,
+            (SELECT COUNT(*) FROM TimesheetException WHERE CreatedDate < @OlderThan) AS TimesheetException,
+            (SELECT COUNT(*) FROM Timesheets WHERE EndDate < @OlderThan) AS Timesheets;";
+
+        var counts = (await _dbServices.QueryAsync<PurgeCountResult>(countSql, new { OlderThan = olderThan })).FirstOrDefault();
         
         if (counts != null)
         {

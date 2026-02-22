@@ -65,8 +65,15 @@ namespace Timesheet.FDPDataIntegrator.Employees
       var employeeUpdatedBy = "@employeeUpdatedBy";
       var employeeUserId = "@employeeUserId";
 
-      employeeEmploymentDate = string.IsNullOrEmpty(employeeEmploymentDate) ? "" : employeeEmploymentDate;
-      employeeModifiedDate = string.IsNullOrEmpty(employeeModifiedDate) ? DateTime.Now.ToString() : employeeModifiedDate;
+      var employmentDate = employee.EmploymentData.EmploymentDate.HasValue
+        ? $"CAST({employeeEmploymentDate} AS DATETIME)"
+        : "NULL";   
+      var createdDate = employee.CreatedDate != DateTime.MinValue
+        ? $"CAST({employeeCreatedDate} AS DATETIME)"
+        : "NULL";
+      var modifiedDate = employee.ModifiedDate != DateTime.MinValue
+        ? $"CAST({employeeModifiedDate} AS DATETIME)"
+        : "NULL";
 
       var updates = $@"
             {nameof(Employee.FullName)} = {employeeFullName},
@@ -119,15 +126,15 @@ namespace Timesheet.FDPDataIntegrator.Employees
                 {employeeSecondaryApproverId},
                 {employeeJobTitle},
                 {employeeDepartment},
-                {employeeEmploymentDate},
+                {employmentDate},
                 {employeeIsSalaried},
                 {employeeIsAdministrator},
                 {employeeIsActive},
                 {employeeUsesTimesheet},
                 {employeeCompanyEmail},
                 {employeeCompanyPhone},
-                {employeeCreatedDate},
-                {employeeModifiedDate},
+                {createdDate},
+                {modifiedDate},
                 {employeeUpdatedBy},
                 {employeeUserId}
             ";
@@ -154,15 +161,15 @@ namespace Timesheet.FDPDataIntegrator.Employees
         employeeSecondaryApproverId = employee.SecondaryApprover?.Id,
         employeeJobTitle = employee.EmploymentData.JobTitle,
         employeeDepartment = employee.EmploymentData.Department,
-        employeeEmploymentDate = employee.EmploymentData.EmploymentDate,
+        employeeEmploymentDate = employmentDate,
         employeeIsSalaried = employee.EmploymentData.IsSalaried,
         employeeIsAdministrator = employee.EmploymentData.IsAdministrator,
         employeeIsActive = employee.IsActive,
         employeeUsesTimesheet = employee.UsesTimesheet,
         employeeCompanyEmail = employee.Contacts.CompanyEmail,
         employeeCompanyPhone = employee.Contacts.CompanyPhone,
-        employeeCreatedDate = employee.CreatedDate,
-        employeeModifiedDate = employee.ModifiedDate,
+        employeeCreatedDate = createdDate,
+        employeeModifiedDate = modifiedDate,
         employeeUpdatedBy = employee.UpdatedBy,
         employeeUserId = employee.UserId
       });
