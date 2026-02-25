@@ -60,9 +60,6 @@ namespace Timesheet.Infrastructure.Persistence.Repositories
           DELETE FROM Timesheets 
           WHERE EndDate < @OlderThan;";
 
-        // Execute deletes
-        await _dbServices.ExecuteAsync(deleteSql, new { OlderThan = olderThan });
-
         // Then get counts separately
         var countSql = @"
           SELECT 
@@ -78,7 +75,10 @@ namespace Timesheet.Infrastructure.Persistence.Repositories
             (SELECT COUNT(*) FROM Timesheets WHERE EndDate < @OlderThan) AS Timesheets;";
 
         var counts = (await _dbServices.QueryAsync<PurgeCountResult>(countSql, new { OlderThan = olderThan })).FirstOrDefault();
-        
+
+        // Execute deletes
+        await _dbServices.ExecuteAsync(deleteSql, new { OlderThan = olderThan });
+
         if (counts != null)
         {
           result.DeletedCounts["TimeoffEntry"] = counts.TimeoffEntry;
