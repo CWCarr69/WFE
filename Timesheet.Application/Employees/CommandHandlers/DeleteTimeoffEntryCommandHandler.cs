@@ -9,11 +9,12 @@ using Timesheet.Domain.Repositories;
 
 namespace Timesheet.Application.Employees.CommandHandlers
 {
-    internal class DeleteTimeoffEntryCommandHandler : BaseEmployeeCommandHandler<TimeoffHeader, DeleteTimeoffEntry>
-    {
-        private readonly IWorkflowService _workflowService;
+  internal class DeleteTimeoffEntryCommandHandler : BaseEmployeeCommandHandler<TimeoffHeader, DeleteTimeoffEntry>
+  {
+    private readonly IWorkflowService _workflowService;
+    private readonly IUnitOfWork _unitOfWork;
 
-        public DeleteTimeoffEntryCommandHandler(
+    public DeleteTimeoffEntryCommandHandler(
             IAuditHandler auditHandler,
             IEmployeeReadRepository readRepository,
             IWorkflowService workflowService,
@@ -21,25 +22,28 @@ namespace Timesheet.Application.Employees.CommandHandlers
             IUnitOfWork unitOfWork,
             IEmployeeHabilitation employeeHabilitations
             ) : base(auditHandler, readRepository, dispatcher, unitOfWork, employeeHabilitations)
-        {
-            _workflowService = workflowService;
-        }
+    {
+      _workflowService = workflowService;
+      _unitOfWork = unitOfWork;
 
-        public override async Task<IEnumerable<IDomainEvent>> HandleCoreAsync(DeleteTimeoffEntry command, CancellationToken token)
-        {
-            var employee = await RequireEmployee(command.EmployeeId);
-            var timeoff = RequireTimeoff(employee, command.TimeoffId);
-            var timeoffEntry = RequireTimeoffEntry(employee, timeoff, command.TimeoffEntryId);
-
-            this.RelatedAuditableEntity = timeoff;
-
-            EmployeeRoleOnData currentEmployeeRoleOnData = await GetCurrentEmployeeRoleOnData(command, employee);
-            _workflowService.AuthorizeTransition(timeoff, TimeoffTransitions.DELETE_ENTRY, timeoff.Status, currentEmployeeRoleOnData);
-            _workflowService.AuthorizeTransition(timeoffEntry, TimeoffEntryTransitions.DELETE, timeoffEntry.Status, currentEmployeeRoleOnData);
-
-            employee.DeleteTimeoffEntry(timeoff, timeoffEntry);
-
-            return employee.GetDomainEvents();
-        }
     }
+
+    public override async Task<IEnumerable<IDomainEvent>> HandleCoreAsync(DeleteTimeoffEntry command, CancellationToken token)
+    {
+      var employee = await RequireEmployee(command.EmployeeId);
+      var timeoff = RequireTimeoff(employee, command.TimeoffId);
+      var timeoffEntry = RequireTimeoffEntry(employee, timeoff, command.TimeoffEntryId);
+
+      this.RelatedAuditableEntity = timeoff;
+
+      EmployeeRoleOnData currentEmployeeRoleOnData = await GetCurrentEmployeeRoleOnData(command, employee);
+      _workflowService.AuthorizeTransition(timeoff, TimeoffTransitions.DELETE_ENTRY, timeoff.Status, currentEmployeeRoleOnData);
+      _workflowService.AuthorizeTransition(timeoffEntry, TimeoffEntryTransitions.DELETE, timeoffEntry.Status, currentEmployeeRoleOnData);
+
+      employee.DeleteTimeoffEntry(timeoff, timeoffEntry);
+      await _unitOfWork.CompleteAsync(token);
+
+      return employee.GetDomainEvents();
+    }
+  }
 }

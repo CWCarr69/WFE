@@ -52,6 +52,7 @@ namespace Timesheet.Application
             .AddScoped<TimehsheetHandleTimesheetFinalized, TimehsheetHandleTimesheetFinalized>()
             .AddScoped<TimesheetHandleTimeoffApproved, TimesheetHandleTimeoffApproved>()
             .AddScoped<TimesheetHandleTimeoffEntryAdded, TimesheetHandleTimeoffEntryAdded>()
+            .AddScoped<TimesheetHandleTimeoffDeleted, TimesheetHandleTimeoffDeleted>()
 
             .AddScoped<IAuditHandler, AuditHandler>();
         }

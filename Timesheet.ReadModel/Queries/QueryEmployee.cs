@@ -11,18 +11,18 @@ using EmployeeBenefits = Timesheet.Domain.ReadModels.Employees.EmployeeBenefits;
 
 namespace Timesheet.Infrastructure.ReadModel.Queries
 {
-    public static class QueryEmployeeConstants
-    {
-        #region Employees
-        private const string EmployeesQueryUsesTimesheetParam = "@usesTimesheet";
-        public const string EmployeesQuery = $@"SELECT * FROM employees where usesTimesheet = {EmployeesQueryUsesTimesheetParam} order by Fullname";
-        #endregion
+  public static class QueryEmployeeConstants
+  {
+    #region Employees
+    private const string EmployeesQueryUsesTimesheetParam = "@usesTimesheet";
+    public const string EmployeesQuery = $@"SELECT * FROM employees where usesTimesheet = {EmployeesQueryUsesTimesheetParam} order by Fullname";
+    #endregion
 
-        #region EmployeeProfile
-        private const string EmployeeProfileQueryParam = "@id";
-        private const string EmployeeProfileQueryEmailParam = "@email";
-        private const string EmployeeProfileQueryLoginParam = "@userId";
-        private const string WithManagerRoleBaseEmployeeProfileQuery = $@"SELECT DISTINCT e.*, 
+    #region EmployeeProfile
+    private const string EmployeeProfileQueryParam = "@id";
+    private const string EmployeeProfileQueryEmailParam = "@email";
+    private const string EmployeeProfileQueryLoginParam = "@userId";
+    private const string WithManagerRoleBaseEmployeeProfileQuery = $@"SELECT DISTINCT e.*, 
             case when exists (select distinct 1 from employeeHierarchy h where h.managerid = e.id) then 1 else 0 end  as isManager,
             pvh.pendingVacationHours, pph.pendingPersonalHours
             FROM employees e 
@@ -42,14 +42,14 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
                 GROUP BY th.employeeId, th.status, the.TypeId) pph on e.Id = pph.EmployeeId
             ";
 
-        public const string EmployeeProfileQuery = $@"{WithManagerRoleBaseEmployeeProfileQuery} WHERE id = {EmployeeProfileQueryParam}";
-        public const string EmployeeProfileQueryByEmail = $@"{WithManagerRoleBaseEmployeeProfileQuery} WHERE email = {EmployeeProfileQueryEmailParam}";
-        public const string EmployeeProfileQueryByLogin = $@"{WithManagerRoleBaseEmployeeProfileQuery} WHERE lower(userId) = lower({EmployeeProfileQueryLoginParam}) or replace(lower(userId), '@wilsonfire', '') = lower({EmployeeProfileQueryLoginParam})";
-        #endregion
+    public const string EmployeeProfileQuery = $@"{WithManagerRoleBaseEmployeeProfileQuery} WHERE id = {EmployeeProfileQueryParam}";
+    public const string EmployeeProfileQueryByEmail = $@"{WithManagerRoleBaseEmployeeProfileQuery} WHERE email = {EmployeeProfileQueryEmailParam}";
+    public const string EmployeeProfileQueryByLogin = $@"{WithManagerRoleBaseEmployeeProfileQuery} WHERE lower(userId) = lower({EmployeeProfileQueryLoginParam}) or replace(lower(userId), '@wilsonfire', '') = lower({EmployeeProfileQueryLoginParam})";
+    #endregion
 
-        #region EmployeeApprovers
-        private const string EmployeeApproversParam = "@id";
-        public const string EmployeeApproversQuery = $@"SELECT e.id as {nameof(EmployeeApprovers.EmployeeId)}, 
+    #region EmployeeApprovers
+    private const string EmployeeApproversParam = "@id";
+    public const string EmployeeApproversQuery = $@"SELECT e.id as {nameof(EmployeeApprovers.EmployeeId)}, 
                 e.PrimaryApproverId,
                 p.FullName as {nameof(EmployeeApprovers.PrimaryApproverFullName)},   
                 e.SecondaryApproverId,
@@ -59,11 +59,11 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
                 LEFT JOIN employees s on s.Id = e.SecondaryApproverId
                 WHERE e.id = {EmployeeApproversParam}";
 
-        #endregion
+    #endregion
 
-        #region EmployeeBenefits
-        private const string EmployeeBenefitsParam = "@id";
-        public const string EmployeeBenefitsQuery = $@"
+    #region EmployeeBenefits
+    private const string EmployeeBenefitsParam = "@id";
+    public const string EmployeeBenefitsQuery = $@"
             SELECT 
             CumulatedPreviousWorkPeriod as {nameof(EmployeeBenefits.CumulatedPreviousWorkPeriod)},
             ConsiderFixedBenefits as {nameof(EmployeeBenefits.ConsiderFixedBenefits)},
@@ -73,12 +73,12 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             FROM employees e
             WHERE e.id = {EmployeeBenefitsParam}
         ";
-        #endregion
+    #endregion
 
-        #region PendingTimeoffs
-        private const string PendingTimeoffsQueryStatusParam = "@submittedStatus";
+    #region PendingTimeoffs
+    private const string PendingTimeoffsQueryStatusParam = "@submittedStatus";
 
-        private const string PendingTimeoffsQueryFromClause = $@"
+    private const string PendingTimeoffsQueryFromClause = $@"
                 FROM employees e
                 JOIN timeoffHeader t on e.Id = t.EmployeeId AND t.status = {PendingTimeoffsQueryStatusParam}
                 JOIN timeoffEntry te on t.id = te.TimeoffHeaderId
@@ -86,12 +86,12 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
                 JOIN timeoffHours thours on thours.id = t.id and thours.employeeId = e.id
         ";
 
-        public const string TotalPendingTimeoffsQuery = $@"SELECT
+    public const string TotalPendingTimeoffsQuery = $@"SELECT
             COUNT(DISTINCT CONCAT(e.Id, t.Id)) AS TotalItems
             {PendingTimeoffsQueryFromClause}
         ";
 
-        public const string PendingTimeoffsQuery = $@"SELECT DISTINCT
+    public const string PendingTimeoffsQuery = $@"SELECT DISTINCT
             e.Id as {nameof(EmployeeTimeoff.EmployeeId)},
             e.Fullname as {nameof(EmployeeTimeoff.FullName)},
             e.BenefitsSnapshot_VacationBalance as {nameof(EmployeeTimeoff.VacationSnapshot)}, 
@@ -109,31 +109,31 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             {PendingTimeoffsQueryFromClause}
         ";
 
-        public const string PendingTimeoffsQueryOrderByClause = $@"t.{ nameof(EmployeeTimeoff.RequestStartDate)}, e.{nameof(EmployeeTimesheet.FullName)}";
+    public const string PendingTimeoffsQueryOrderByClause = $@"t.{nameof(EmployeeTimeoff.RequestStartDate)}, e.{nameof(EmployeeTimesheet.FullName)}";
 
-        #endregion
+    #endregion
 
-        #region PendingTimesheets
-        private const string PendingTimesheetsQueryFinalizedStatusParam = "@timesheetFinalizedStatus";
-        private const string PendingTimesheetsQueryEntryInProgressStatusParam = "@timesheetEntryInProgressStatus";
-        private const string PendingTimesheetsQueryEntrySubmittedStatusParam = "@timesheetEntrySubmittedStatus";
-        private const string PendingTimesheetsQueryEntryRejectedStatusParam = "@timesheetEntryRejectedStatus";
-        private const string PendingTimesheetsQueryEntryApprovedStatusParam = "@timesheetEntryApprovedStatus";
-        private const string PendingTimesheetsQueryPayrollCategoryParam = "@payrollCategory";
+    #region PendingTimesheets
+    private const string PendingTimesheetsQueryFinalizedStatusParam = "@timesheetFinalizedStatus";
+    private const string PendingTimesheetsQueryEntryInProgressStatusParam = "@timesheetEntryInProgressStatus";
+    private const string PendingTimesheetsQueryEntrySubmittedStatusParam = "@timesheetEntrySubmittedStatus";
+    private const string PendingTimesheetsQueryEntryRejectedStatusParam = "@timesheetEntryRejectedStatus";
+    private const string PendingTimesheetsQueryEntryApprovedStatusParam = "@timesheetEntryApprovedStatus";
+    private const string PendingTimesheetsQueryPayrollCategoryParam = "@payrollCategory";
 
-        #region PendingTimesheets Not Finalized
-        private const string PendingTimesheetsQueryFromClause = $@"
+    #region PendingTimesheets Not Finalized
+    private const string PendingTimesheetsQueryFromClause = $@"
             FROM timesheetHours
             WHERE PartialStatus = {PendingTimesheetsQueryEntrySubmittedStatusParam}
             AND Status != {PendingTimesheetsQueryFinalizedStatusParam}
         ";
 
-        public const string TotalPendingTimesheetsQuery = $@"SELECT 
+    public const string TotalPendingTimesheetsQuery = $@"SELECT 
             COUNT(DISTINCT CONCAT(Id, EmployeeId)) AS totalItems
             {PendingTimesheetsQueryFromClause}
         ";
 
-        public const string PendingTimesheetsQuery = $@"SELECT DISTINCT
+    public const string PendingTimesheetsQuery = $@"SELECT DISTINCT
             EmployeeId as {nameof(EmployeeTimesheet.EmployeeId)},
             Fullname as {nameof(EmployeeTimesheet.FullName)},
             Id as {nameof(EmployeeTimesheet.TimesheetId)},
@@ -147,24 +147,24 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             {PendingTimesheetsQueryFromClause}
         ";
 
-        public const string PendingTimesheetsQueryOrderByClause = $@"StartDate, Fullname";
+    public const string PendingTimesheetsQueryOrderByClause = $@"StartDate, Fullname";
 
-        #endregion
+    #endregion
 
-        #region OrphanTimesheets
-        private const string OrphanTimesheetsQueryFromClause = $@"
+    #region OrphanTimesheets
+    private const string OrphanTimesheetsQueryFromClause = $@"
             FROM employees e
             JOIN timesheetEntry te on e.id = te.EmployeeId AND te.Status NOT IN ({PendingTimesheetsQueryEntryApprovedStatusParam}, {PendingTimesheetsQueryEntryRejectedStatusParam})
             JOIN PayrollTypes pt on pt.numId = te.PayrollCodeId and pt.category = {PendingTimesheetsQueryPayrollCategoryParam}
             JOIN timesheets t on t.Id = te.TimesheetHeaderId AND t.status = {PendingTimesheetsQueryFinalizedStatusParam}
         ";
 
-        public const string TotalOrphanTimesheetsQuery = $@"SELECT 
+    public const string TotalOrphanTimesheetsQuery = $@"SELECT 
             COUNT(DISTINCT CONCAT(t.Id, e.Id)) AS totalItems
             {OrphanTimesheetsQueryFromClause}
         ";
 
-        public const string OrphanTimesheetsQuery = $@"SELECT
+    public const string OrphanTimesheetsQuery = $@"SELECT
             e.Id as {nameof(EmployeeTimesheet.EmployeeId)},
             e.Fullname as {nameof(EmployeeTimesheet.FullName)},
             t.Id as {nameof(EmployeeTimesheet.TimesheetId)},
@@ -180,17 +180,17 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             {OrphanTimesheetsQueryFromClause}
         ";
 
-        public const string OrphanTimesheetsQueryGroupByClause = $@"GROUP BY e.Id, e.Fullname, t.Id, t.CreatedDate, t.ModifiedDate, t.StartDate, t.EndDate, t.PayrollPeriod";
-        public const string OrphanTimesheetsQueryOrderByClause = $@"t.{nameof(EmployeeTimesheet.StartDate)}, e.{nameof(EmployeeTimesheet.FullName)}";
+    public const string OrphanTimesheetsQueryGroupByClause = $@"GROUP BY e.Id, e.Fullname, t.Id, t.CreatedDate, t.ModifiedDate, t.StartDate, t.EndDate, t.PayrollPeriod";
+    public const string OrphanTimesheetsQueryOrderByClause = $@"t.{nameof(EmployeeTimesheet.StartDate)}, e.{nameof(EmployeeTimesheet.FullName)}";
 
-        #endregion
+    #endregion
 
-        #endregion
+    #endregion
 
-        #region EmployeeTeam
-        private const string EmployeeTeamQueryEmployeeIdParam = "@approverId";
+    #region EmployeeTeam
+    private const string EmployeeTeamQueryEmployeeIdParam = "@approverId";
 
-        private const string EmployeeTeamQueryEmployeeTimesheetIsFinalized = $@"WITH employeeTimesheetIsFinalized 
+    private const string EmployeeTeamQueryEmployeeTimesheetIsFinalized = $@"WITH employeeTimesheetIsFinalized 
             AS (
                 SELECT e.id, CASE WHEN MIN(CAST(te.isFinalized AS INT)) IS NULL THEN 0 ELSE MIN(CAST(te.isFinalized as int)) END AS isFinalized
                 FROM Employees e 
@@ -198,7 +198,7 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
                 GROUP BY e.id
             ),";
 
-        private const string EmployeeTeamQueryLastTimesheetStatusPerEmployee = $@"LastTimesheets
+    private const string EmployeeTeamQueryLastTimesheetStatusPerEmployee = $@"LastTimesheets
             AS(
                 SELECT EmployeeId, Status, PartialStatus, TimesheetHeaderId, PayrollPeriod, WorkDate
                 FROM (
@@ -214,7 +214,7 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             ),
         ";
 
-        private const string EmployeeTeamQueryLastTimeOffStatusPerEmployee = $@"LastTimeoffs
+    private const string EmployeeTeamQueryLastTimeOffStatusPerEmployee = $@"LastTimeoffs
             AS(
                 SELECT employeeId, status, timeoffHeaderId, requireApproval, requestDate
                 FROM (
@@ -225,7 +225,7 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             )
         ";
 
-        private const string PendingPersonalTimeoffPerEmployee = $@" PendingPersonalHours AS (
+    private const string PendingPersonalTimeoffPerEmployee = $@" PendingPersonalHours AS (
                 SELECT th.employeeId,
                        th.status,
                        the.TypeId,
@@ -240,7 +240,7 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             )
         ";
 
-        private const string PendingVacationTimeoffPerEmployee = $@", PendingVacationHours AS (
+    private const string PendingVacationTimeoffPerEmployee = $@", PendingVacationHours AS (
                 SELECT th.employeeId,
                        th.status,
                        the.TypeId,
@@ -255,8 +255,8 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             ),
         ";
 
-        private const string EmployeeTeamQueryUsesTimesheetParam = "@usesTimesheet";
-        private const string EmployeeTeamQueryFromClause = $@"
+    private const string EmployeeTeamQueryUsesTimesheetParam = "@usesTimesheet";
+    private const string EmployeeTeamQueryFromClause = $@"
             FROM employees e
             LEFT JOIN LastTimeoffs tos ON e.Id = tos.employeeId
             LEFT JOIN LastTimesheets ts ON e.Id = ts.EmployeeId
@@ -268,7 +268,7 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             )
         ";
 
-        public const string TotalEmployeeTeamQuery = $@"
+    public const string TotalEmployeeTeamQuery = $@"
             {EmployeeTeamQueryEmployeeTimesheetIsFinalized}
             {EmployeeTeamQueryLastTimesheetStatusPerEmployee}
             {EmployeeTeamQueryLastTimeOffStatusPerEmployee} 
@@ -278,7 +278,7 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             {EmployeeTeamQueryFromClause}
         ";
 
-        public const string EmployeeTeamQuery = $@"
+    public const string EmployeeTeamQuery = $@"
             {EmployeeTeamQueryEmployeeTimesheetIsFinalized}
             {EmployeeTeamQueryLastTimesheetStatusPerEmployee}
             {EmployeeTeamQueryLastTimeOffStatusPerEmployee} 
@@ -306,15 +306,15 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             {EmployeeTeamQueryFromClause}
         ";
 
-        public const string EmployeeTeamQueryOrderByClause = $@"e.{nameof(EmployeeWithTimeStatus.FullName)}";
+    public const string EmployeeTeamQueryOrderByClause = $@"e.{nameof(EmployeeWithTimeStatus.FullName)}";
 
-        #endregion
+    #endregion
 
-        #region LightEmployeeTeam
-        private const string LightEmployeeTeamQueryEmployeeIdParam = "@approverId";
+    #region LightEmployeeTeam
+    private const string LightEmployeeTeamQueryEmployeeIdParam = "@approverId";
 
-        private const string LightEmployeeTeamQueryUsesTimesheetParam = "@usesTimesheet";
-        private const string LightEmployeeTeamQueryFromClause = $@"
+    private const string LightEmployeeTeamQueryUsesTimesheetParam = "@usesTimesheet";
+    private const string LightEmployeeTeamQueryFromClause = $@"
             FROM employees e
             WHERE e.Id = {LightEmployeeTeamQueryEmployeeIdParam} OR (
                 (e.employmentDate is not null) AND (e.usesTimesheet = {LightEmployeeTeamQueryUsesTimesheetParam})
@@ -323,49 +323,57 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             ORDER BY e.{nameof(EmployeeLight.FullName)}
         ";
 
-        public const string LightEmployeeTeamQuery = $@"
+    public const string LightEmployeeTeamQuery = $@"
             SELECT 
             e.Id as {nameof(EmployeeLight.EmployeeId)},
             e.FullName  as {nameof(EmployeeLight.FullName)}
             {LightEmployeeTeamQueryFromClause}
         ";
-        #endregion
+    #endregion
 
-        #region UsedBenefits
-        private const string CalculateUsedBenefitsQueryStartDateParam = "@start";
-        private const string CalculateUsedBenefitsQueryEndDateParam = "@end";
-        private const string CalculateUsedBenefitsQueryStatusParam = "@status";
-        private const string CalculateUsedBenefitsQueryTypeParam = "@type";
-        private const string CalculateUsedBenefitsQueryEmployeeIdParam = "@employeeId";
+    #region UsedBenefits
+    private const string CalculateUsedBenefitsQueryStartDateParam = "@start";
+    private const string CalculateUsedBenefitsQueryEndDateParam = "@end";
+    private const string CalculateUsedBenefitsQueryStatusParam = "@status";
+    private const string CalculateUsedBenefitsQueryTypeParam = "@type";
+    private const string CalculateUsedBenefitsQueryEmployeeIdParam = "@employeeId";
 
-        public const string CalculateUsedBenefitsQuery = $@"SELECT COALESCE(SUM(quantity), 0)
-            FROM AllEmployeeTimesheetEntriesWithoutException ts
-            WHERE ts.TimesheetEntryStatus = {CalculateUsedBenefitsQueryStatusParam}
-            And ts.EmployeeId = {CalculateUsedBenefitsQueryEmployeeIdParam}
-            AND ts.PayrollCodeId = {CalculateUsedBenefitsQueryTypeParam} 
-            AND ts.IsTimeoff = 1 
-            AND ts.WorkDate BETWEEN {CalculateUsedBenefitsQueryStartDateParam} AND {CalculateUsedBenefitsQueryEndDateParam}
-        ";
-        #endregion
-
-        #region ScheduledBenefits
-        private const string CalculateScheduledBenefitsQueryStartDateParam = "@start";
-        private const string CalculateScheduledBenefitsQueryEndDateParam = "@end";
-        private const string CalculateScheduledBenefitsQueryStatusParam = "@status";
-        private const string CalculateScheduledBenefitsQueryTypeParam = "@type";
-        private const string CalculateScheduledBenefitsQueryEmployeeIdParam = "@employeeId";
-
-        public const string CalculateScheduledBenefitsQuery = $@"SELECT COALESCE(SUM(quantity), 0)
-            FROM AllEmployeeTimesheetEntriesWithoutException ts
-            WHERE ts.TimesheetEntryStatus < {CalculateScheduledBenefitsQueryStatusParam}
-            And ts.EmployeeId = {CalculateScheduledBenefitsQueryEmployeeIdParam}
-            AND ts.PayrollCodeId = {CalculateScheduledBenefitsQueryTypeParam} 
-            AND ts.IsTimeoff = 1
-            AND ts.WorkDate > GetDate() 
-            AND ts.WorkDate BETWEEN {CalculateScheduledBenefitsQueryStartDateParam} AND {CalculateScheduledBenefitsQueryEndDateParam}
+    public const string CalculateUsedBenefitsQuery = $@"SELECT COALESCE(SUM(te.Hours), 0)
+            FROM dbo.TimesheetEntry AS te INNER JOIN
+              dbo.Employees AS e ON e.Id = te.EmployeeId AND e.UsesTimesheet = 1 INNER JOIN
+              dbo.PayrollTypes AS pt ON pt.NumId = te.PayrollCodeId LEFT OUTER JOIN
+              dbo.TimesheetException AS tex ON tex.TimesheetEntryId = te.Id AND tex.EmployeeId = e.Id
+            WHERE te.Status = {CalculateUsedBenefitsQueryStatusParam}
+              And te.EmployeeId = {CalculateUsedBenefitsQueryEmployeeIdParam}
+              AND te.PayrollCodeId = {CalculateUsedBenefitsQueryTypeParam} 
+              AND te.IsTimeoff = 1 
+              AND te.WorkDate BETWEEN {CalculateUsedBenefitsQueryStartDateParam} AND {CalculateUsedBenefitsQueryEndDateParam}
+              AND isnull(te.TimesheetHeaderId,'-99') <> '-99'
         ";
     #endregion
-    
+
+    #region ScheduledBenefits
+    private const string CalculateScheduledBenefitsQueryStartDateParam = "@start";
+    private const string CalculateScheduledBenefitsQueryEndDateParam = "@end";
+    private const string CalculateScheduledBenefitsQueryStatusParam = "@status";
+    private const string CalculateScheduledBenefitsQueryTypeParam = "@type";
+    private const string CalculateScheduledBenefitsQueryEmployeeIdParam = "@employeeId";
+
+    public const string CalculateScheduledBenefitsQuery = $@"SELECT COALESCE(SUM(te.hours), 0)
+             FROM dbo.TimesheetEntry AS te INNER JOIN
+               dbo.Employees AS e ON e.Id = te.EmployeeId AND e.UsesTimesheet = 1 INNER JOIN
+               dbo.PayrollTypes AS pt ON pt.NumId = te.PayrollCodeId LEFT OUTER JOIN
+               dbo.TimesheetException AS tex ON tex.TimesheetEntryId = te.Id AND tex.EmployeeId = e.Id
+            WHERE te.Status < {CalculateScheduledBenefitsQueryStatusParam}
+              And te.EmployeeId = {CalculateScheduledBenefitsQueryEmployeeIdParam}
+              AND te.PayrollCodeId = {CalculateScheduledBenefitsQueryTypeParam} 
+              AND te.IsTimeoff = 1
+              AND te.WorkDate > GetDate() 
+              AND te.WorkDate BETWEEN {CalculateScheduledBenefitsQueryStartDateParam} AND {CalculateScheduledBenefitsQueryEndDateParam}
+              AND isnull(te.TimesheetHeaderId,'-99') <> '-99'
+        ";
+    #endregion
+
     #region PendingBenefits
     private const string CalculatePendingBenefitsQueryStartDateParam = "@start";
     private const string CalculatePendingBenefitsQueryEndDateParam = "@end";
@@ -386,175 +394,177 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
   }
 
   public class QueryEmployee : BaseQuery, IQueryEmployee
+  {
+    private readonly IDatabaseService _dbService;
+
+    public QueryEmployee(IDatabaseService dbService)
     {
-        private readonly IDatabaseService _dbService;
+      this._dbService = dbService;
+    }
 
-        public QueryEmployee(IDatabaseService dbService)
-        {
-            this._dbService = dbService;
-        }
+    public async Task<IEnumerable<EmployeeProfile?>> GetEmployees()
+    {
+      var query = QueryEmployeeConstants.EmployeesQuery;
+      var employees = await _dbService.QueryAsync<EmployeeProfile>(query, new { UsesTimesheet = true });
 
-        public async Task<IEnumerable<EmployeeProfile?>> GetEmployees()
-        {
-            var query = QueryEmployeeConstants.EmployeesQuery;
-            var employees = await _dbService.QueryAsync<EmployeeProfile>(query, new { UsesTimesheet = true});
+      return employees;
+    }
 
-            return employees;
-        }
+    public async Task<EmployeeProfile?> GetEmployeeProfile(string id, bool withApprovers = false)
+    {
+      var query = QueryEmployeeConstants.EmployeeProfileQuery;
+      var employees = await _dbService.QueryAsync<EmployeeProfile>(query, new { id });
 
-        public async Task<EmployeeProfile?> GetEmployeeProfile(string id, bool withApprovers = false)
-        {
-            var query = QueryEmployeeConstants.EmployeeProfileQuery;
-            var employees = await _dbService.QueryAsync<EmployeeProfile>(query, new { id });
+      var employee = employees.FirstOrDefault();
 
-            var employee = employees.FirstOrDefault();
+      if (employee is not null && withApprovers)
+      {
+        query = QueryEmployeeConstants.EmployeeApproversQuery;
+        var employeeApprovers = await _dbService.QueryAsync<EmployeeApprovers>(query, new { id = id });
+        employee.PrimaryApproverId = employeeApprovers.FirstOrDefault()?.PrimaryApproverId;
+        employee.SecondaryApproverId = employeeApprovers.FirstOrDefault()?.SecondaryApproverId;
 
-            if (employee is not null && withApprovers)
-            {
-                query = QueryEmployeeConstants.EmployeeApproversQuery;
-                var employeeApprovers = await _dbService.QueryAsync<EmployeeApprovers>(query, new { id = id });
-                employee.PrimaryApproverId = employeeApprovers.FirstOrDefault()?.PrimaryApproverId;
-                employee.SecondaryApproverId = employeeApprovers.FirstOrDefault()?.SecondaryApproverId;
+      }
+      return employee;
+    }
 
-            }
-            return employee;
-        }
+    public async Task<EmployeeProfile?> GetEmployeeProfileByEmail(string email)
+    {
+      var query = QueryEmployeeConstants.EmployeeProfileQueryByEmail;
+      var employee = await _dbService.QueryAsync<EmployeeProfile>(query, new { email });
 
-        public async Task<EmployeeProfile?> GetEmployeeProfileByEmail(string email)
-        {
-            var query = QueryEmployeeConstants.EmployeeProfileQueryByEmail;
-            var employee = await _dbService.QueryAsync<EmployeeProfile>(query, new { email });
+      return employee.FirstOrDefault();
+    }
 
-            return employee.FirstOrDefault();
-        }
+    public async Task<EmployeeProfile?> GetEmployeeProfileByLogin(string login)
+    {
+      var query = QueryEmployeeConstants.EmployeeProfileQueryByLogin;
+      var employee = await _dbService.QueryAsync<EmployeeProfile>(query, new { userId = login });
 
-        public async Task<EmployeeProfile?> GetEmployeeProfileByLogin(string login)
-        {
-            var query = QueryEmployeeConstants.EmployeeProfileQueryByLogin;
-            var employee = await _dbService.QueryAsync<EmployeeProfile>(query, new { userId=login });
+      return employee.FirstOrDefault();
+    }
 
-            return employee.FirstOrDefault();
-        }
+    public async Task<EmployeeApprovers?> GetEmployeeApprovers(string id)
+    {
+      var query = QueryEmployeeConstants.EmployeeApproversQuery;
+      var employee = await _dbService.QueryAsync<EmployeeApprovers>(query, new { id = id });
 
-        public async Task<EmployeeApprovers?> GetEmployeeApprovers(string id)
-        {
-            var query = QueryEmployeeConstants.EmployeeApproversQuery;
-            var employee = await _dbService.QueryAsync<EmployeeApprovers>(query, new { id = id });
+      return employee.FirstOrDefault();
+    }
 
-            return employee.FirstOrDefault();
-        }
+    public async Task<EmployeeBenefits?> GetEmployeeBenefitsVariation(string id)
+    {
+      var query = QueryEmployeeConstants.EmployeeBenefitsQuery;
+      var employee = await _dbService.QueryAsync<EmployeeBenefits>(query, new { id = id });
 
-        public async Task<EmployeeBenefits?> GetEmployeeBenefitsVariation(string id)
-        {
-            var query = QueryEmployeeConstants.EmployeeBenefitsQuery;
-            var employee = await _dbService.QueryAsync<EmployeeBenefits>(query, new { id = id });
+      return employee.FirstOrDefault();
+    }
 
-            return employee.FirstOrDefault();
-        }
+    public async Task<EmployeeTeam> GetEmployeeTeam(int page, int itemsPerPage, string approverId = null, bool directReports = false)
+    {
+      var totalQuery = QueryEmployeeConstants.TotalEmployeeTeamQuery;
+      totalQuery = AddWhereClauseForDirectReports(approverId, directReports, totalQuery, whereKey: "", replace: "@clauseForDirectReport", addAnd: ADD_AND.AND_BEFORE);
 
-        public async Task<EmployeeTeam> GetEmployeeTeam(int page, int itemsPerPage, string approverId = null, bool directReports = false)
-        {
-            var totalQuery = QueryEmployeeConstants.TotalEmployeeTeamQuery;
-            totalQuery = AddWhereClauseForDirectReports(approverId, directReports, totalQuery, whereKey: "", replace: "@clauseForDirectReport", addAnd: ADD_AND.AND_BEFORE);
+      var query = QueryEmployeeConstants.EmployeeTeamQuery;
+      query = AddWhereClauseForDirectReports(approverId, directReports, query, whereKey: "", replace: "@clauseForDirectReport", addAnd: ADD_AND.AND_BEFORE);
+      query = Paginate(page, itemsPerPage, query, QueryEmployeeConstants.EmployeeTeamQueryOrderByClause);
 
-            var query = QueryEmployeeConstants.EmployeeTeamQuery;
-            query = AddWhereClauseForDirectReports(approverId, directReports, query, whereKey: "", replace: "@clauseForDirectReport", addAnd: ADD_AND.AND_BEFORE);
-            query = Paginate(page, itemsPerPage, query, QueryEmployeeConstants.EmployeeTeamQueryOrderByClause);
+      var queryParams = new { approverId, usesTimesheet = true };
+      var employeeTeam = await QueryWithTotal<EmployeeTeam, EmployeeWithTimeStatus>(queryParams, totalQuery, query);
 
-            var queryParams = new { approverId, usesTimesheet = true };
-            var employeeTeam = await QueryWithTotal<EmployeeTeam, EmployeeWithTimeStatus>(queryParams, totalQuery, query);
-                
-            return employeeTeam;
-        }
+      return employeeTeam;
+    }
 
-        public async Task<IEnumerable<EmployeeLight>> GetLightEmployeeTeam(string approverId = null, bool directReports = false)
-        {
-            var query = QueryEmployeeConstants.LightEmployeeTeamQuery;
-            query = AddWhereClauseForDirectReports(approverId, directReports, query, whereKey: "", replace: "@clauseForDirectReport", addAnd: ADD_AND.AND_BEFORE);
+    public async Task<IEnumerable<EmployeeLight>> GetLightEmployeeTeam(string approverId = null, bool directReports = false)
+    {
+      var query = QueryEmployeeConstants.LightEmployeeTeamQuery;
+      query = AddWhereClauseForDirectReports(approverId, directReports, query, whereKey: "", replace: "@clauseForDirectReport", addAnd: ADD_AND.AND_BEFORE);
 
-            var queryParams = new { approverId, usesTimesheet = true };
-            var employeeTeam = await _dbService.QueryAsync<EmployeeLight>(query, queryParams);
+      var queryParams = new { approverId, usesTimesheet = true };
+      var employeeTeam = await _dbService.QueryAsync<EmployeeLight>(query, queryParams);
 
-            return employeeTeam;
-        }
+      return employeeTeam;
+    }
 
-        public async Task<EmployeePendingTimeoffs> GetEmployeesPendingTimeoffs(int page, int itemsPerPage, string approverId = null, bool directReports = false)
-        {
-            var submittedStatus = TimeoffStatus.SUBMITTED;
+    public async Task<EmployeePendingTimeoffs> GetEmployeesPendingTimeoffs(int page, int itemsPerPage, string approverId = null, bool directReports = false)
+    {
+      var submittedStatus = TimeoffStatus.SUBMITTED;
 
-            var totalQuery = QueryEmployeeConstants.TotalPendingTimeoffsQuery;
-            totalQuery = AddWhereClauseForDirectReports(approverId, directReports, totalQuery);
+      var totalQuery = QueryEmployeeConstants.TotalPendingTimeoffsQuery;
+      totalQuery = AddWhereClauseForDirectReports(approverId, directReports, totalQuery);
 
-            var query = QueryEmployeeConstants.PendingTimeoffsQuery;
-            query = AddWhereClauseForDirectReports(approverId, directReports, query);
-            query = Paginate(page, itemsPerPage, query, QueryEmployeeConstants.PendingTimeoffsQueryOrderByClause);
+      var query = QueryEmployeeConstants.PendingTimeoffsQuery;
+      query = AddWhereClauseForDirectReports(approverId, directReports, query);
+      query = Paginate(page, itemsPerPage, query, QueryEmployeeConstants.PendingTimeoffsQueryOrderByClause);
 
-            var queryParams = new { submittedStatus, approverId };
-            var employeePendingTimeoffs = await QueryWithTotal<EmployeePendingTimeoffs, EmployeeTimeoff>(queryParams, totalQuery, query);
+      var queryParams = new { submittedStatus, approverId };
+      var employeePendingTimeoffs = await QueryWithTotal<EmployeePendingTimeoffs, EmployeeTimeoff>(queryParams, totalQuery, query);
 
-            return employeePendingTimeoffs;
-        }
+      return employeePendingTimeoffs;
+    }
 
-        public async Task<EmployeePendingTimesheets> GetEmployeesPendingTimesheets(int page, int itemsPerPage, string? approverId = null, bool directReports = false)
-        {
+    public async Task<EmployeePendingTimesheets> GetEmployeesPendingTimesheets(int page, int itemsPerPage, string? approverId = null, bool directReports = false)
+    {
 
-            var timesheetEntrySubmittedStatus = TimesheetEntryStatus.SUBMITTED;
-            var timesheetFinalizedStatus = TimesheetStatus.FINALIZED;
-            var payrollCategory = (int)PayrollTypesCategory.BILLABLE;
+      var timesheetEntrySubmittedStatus = TimesheetEntryStatus.SUBMITTED;
+      var timesheetFinalizedStatus = TimesheetStatus.FINALIZED;
+      var payrollCategory = (int)PayrollTypesCategory.BILLABLE;
 
-            var totalQuery = QueryEmployeeConstants.TotalPendingTimesheetsQuery;
-            totalQuery = AddWhereClauseForDirectReports(approverId, directReports, totalQuery, whereKey:"", employeeIdKey:"employeeId", addAnd:ADD_AND.AND_BEFORE);
+      var totalQuery = QueryEmployeeConstants.TotalPendingTimesheetsQuery;
+      totalQuery = AddWhereClauseForDirectReports(approverId, directReports, totalQuery, whereKey: "", employeeIdKey: "employeeId", addAnd: ADD_AND.AND_BEFORE);
 
-            var query = QueryEmployeeConstants.PendingTimesheetsQuery;
-            query = AddWhereClauseForDirectReports(approverId, directReports, query, whereKey: "", employeeIdKey: "employeeId", addAnd: ADD_AND.AND_BEFORE);
-            query = Paginate(page, itemsPerPage, query, QueryEmployeeConstants.PendingTimesheetsQueryOrderByClause);
+      var query = QueryEmployeeConstants.PendingTimesheetsQuery;
+      query = AddWhereClauseForDirectReports(approverId, directReports, query, whereKey: "", employeeIdKey: "employeeId", addAnd: ADD_AND.AND_BEFORE);
+      query = Paginate(page, itemsPerPage, query, QueryEmployeeConstants.PendingTimesheetsQueryOrderByClause);
 
-            var queryParams = new { approverId, timesheetEntrySubmittedStatus, timesheetFinalizedStatus, payrollCategory };
-            var employeePendingTimesheets = await QueryWithTotal<EmployeePendingTimesheets, EmployeeTimesheet>(queryParams, totalQuery, query);
+      var queryParams = new { approverId, timesheetEntrySubmittedStatus, timesheetFinalizedStatus, payrollCategory };
+      var employeePendingTimesheets = await QueryWithTotal<EmployeePendingTimesheets, EmployeeTimesheet>(queryParams, totalQuery, query);
 
-            return employeePendingTimesheets;
-        }
+      return employeePendingTimesheets;
+    }
 
-        public async Task<EmployeeOrphanTimesheets> GetEmployeesOrphanTimesheets(int page, int itemsPerPage, string? approverId = null, bool directReports = false)
-        {
-            var timesheetEntryInProgressStatus = TimesheetEntryStatus.IN_PROGRESS;
-            var timesheetEntrySubmittedStatus = TimesheetEntryStatus.SUBMITTED;
-            var timesheetEntryApprovedStatus = TimesheetEntryStatus.APPROVED;
-            var timesheetEntryRejectedStatus = TimesheetEntryStatus.REJECTED;
-            var timesheetFinalizedStatus = TimesheetStatus.FINALIZED;
+    public async Task<EmployeeOrphanTimesheets> GetEmployeesOrphanTimesheets(int page, int itemsPerPage, string? approverId = null, bool directReports = false)
+    {
+      var timesheetEntryInProgressStatus = TimesheetEntryStatus.IN_PROGRESS;
+      var timesheetEntrySubmittedStatus = TimesheetEntryStatus.SUBMITTED;
+      var timesheetEntryApprovedStatus = TimesheetEntryStatus.APPROVED;
+      var timesheetEntryRejectedStatus = TimesheetEntryStatus.REJECTED;
+      var timesheetFinalizedStatus = TimesheetStatus.FINALIZED;
 
-            var payrollCategory = (int)PayrollTypesCategory.BILLABLE;
+      var payrollCategory = (int)PayrollTypesCategory.BILLABLE;
 
 
-            var totalQuery = QueryEmployeeConstants.TotalOrphanTimesheetsQuery;
-            totalQuery = AddWhereClauseForDirectReports(approverId, directReports, totalQuery);
+      var totalQuery = QueryEmployeeConstants.TotalOrphanTimesheetsQuery;
+      totalQuery = AddWhereClauseForDirectReports(approverId, directReports, totalQuery);
 
-            var query = QueryEmployeeConstants.OrphanTimesheetsQuery;
-            query = AddWhereClauseForDirectReports(approverId, directReports, query);
-            query = $"{query} {QueryEmployeeConstants.OrphanTimesheetsQueryGroupByClause}";
-            query = Paginate(page, itemsPerPage, query, QueryEmployeeConstants.OrphanTimesheetsQueryOrderByClause);
+      var query = QueryEmployeeConstants.OrphanTimesheetsQuery;
+      query = AddWhereClauseForDirectReports(approverId, directReports, query);
+      query = $"{query} {QueryEmployeeConstants.OrphanTimesheetsQueryGroupByClause}";
+      query = Paginate(page, itemsPerPage, query, QueryEmployeeConstants.OrphanTimesheetsQueryOrderByClause);
 
-            var queryParams = new { approverId, 
-                timesheetEntryApprovedStatus, 
-                timesheetEntryRejectedStatus, 
-                timesheetFinalizedStatus, 
-                payrollCategory,
-                timesheetEntryInProgressStatus,
-                timesheetEntrySubmittedStatus
-            };
+      var queryParams = new
+      {
+        approverId,
+        timesheetEntryApprovedStatus,
+        timesheetEntryRejectedStatus,
+        timesheetFinalizedStatus,
+        payrollCategory,
+        timesheetEntryInProgressStatus,
+        timesheetEntrySubmittedStatus
+      };
 
-            var employeeOrphanTimesheets = await QueryWithTotal<EmployeeOrphanTimesheets, EmployeeTimesheetWhithHoursPerStatus>(queryParams, totalQuery, query);
+      var employeeOrphanTimesheets = await QueryWithTotal<EmployeeOrphanTimesheets, EmployeeTimesheetWhithHoursPerStatus>(queryParams, totalQuery, query);
 
-            return employeeOrphanTimesheets;
-        }
+      return employeeOrphanTimesheets;
+    }
 
-        public async Task<double> CalculateUsedBenefits(string employeeId, int type, DateTime start, DateTime end)
-        {
-            var query = QueryEmployeeConstants.CalculateUsedBenefitsQuery;
+    public async Task<double> CalculateUsedBenefits(string employeeId, int type, DateTime start, DateTime end)
+    {
+      var query = QueryEmployeeConstants.CalculateUsedBenefitsQuery;
 
-            var status = TimesheetEntryStatus.APPROVED;
-            var test = await _dbService.ExecuteScalarAsync<double>(query, new { start, end, status, type, employeeId });
-            return test;
+      var status = TimesheetEntryStatus.APPROVED;
+      var test = await _dbService.ExecuteScalarAsync<double>(query, new { start, end, status, type, employeeId });
+      return test;
     }
 
     public async Task<double> CalculatePendingBenefits(string employeeId, int type)
@@ -583,17 +593,17 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
 
     private async Task<T> QueryWithTotal<T, U>(object queryParams, string totalQuery, string query)
             where T : WithTotal<U>
-        {
-            var withTotals = (await _dbService.QueryAsync<T>(totalQuery, queryParams)).FirstOrDefault();
+    {
+      var withTotals = (await _dbService.QueryAsync<T>(totalQuery, queryParams)).FirstOrDefault();
 
-            if (withTotals is not null)
-            {
-                var items = await _dbService.QueryAsync<U>(query, queryParams);
-                withTotals.Items = items;
-            }
+      if (withTotals is not null)
+      {
+        var items = await _dbService.QueryAsync<U>(query, queryParams);
+        withTotals.Items = items;
+      }
 
-            return withTotals;
-        }
-
+      return withTotals;
     }
+
+  }
 }
