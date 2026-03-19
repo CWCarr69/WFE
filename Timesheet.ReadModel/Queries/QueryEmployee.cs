@@ -287,6 +287,7 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
             SELECT 
             e.Id as {nameof(EmployeeWithTimeStatus.EmployeeId)},
             e.FullName  as {nameof(EmployeeWithTimeStatus.FullName)}, 
+            e.DefaultProfitCenter as {nameof(EmployeeWithTimeStatus.DefaultProfitCenter)},
             e.BenefitsSnapshot_VacationBalance as {nameof(EmployeeWithTimeStatus.VacationSnapshot)}, 
             e.VacationHours + e.RolloverHours as {nameof(EmployeeWithTimeStatus.VacationVariation)}, 
             e.BenefitsSnapshot_PersonalBalance as {nameof(EmployeeWithTimeStatus.PersonalSnapshot)}, 

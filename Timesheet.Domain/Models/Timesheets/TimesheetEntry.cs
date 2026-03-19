@@ -27,7 +27,7 @@ namespace Timesheet.Domain.Models.Timesheets
         }
 
         public static TimesheetEntry CreateFromApprovedTimeOff (string id, string employeeId, DateTime workDate, int payrollCodeId, double hours,
-            string description, TimesheetEntryStatus status) => new TimesheetEntry(id)
+            string description, TimesheetEntryStatus status, string? profitCenter = null) => new TimesheetEntry(id)
         {
             EmployeeId = employeeId.ToString(),
             WorkDate = workDate,
@@ -35,7 +35,8 @@ namespace Timesheet.Domain.Models.Timesheets
             Hours = hours,
             Description = description,
             Status = status,
-            IsTimeoff = true
+            IsTimeoff = true,
+            ProfitCenterNumber = profitCenter
         };
 
 

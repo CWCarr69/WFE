@@ -246,15 +246,6 @@ const Profile = ({ match }) => {
                     {editBenefit && user.isAdministrator && (
                       <div className="col-lg-8">
                         <div className="row mt-4" style={{ alignItems: "center" }}>
-                          <div className="col-sm-3"><label>Previous Work Period </label></div>
-                          <div className="col-sm-3 mt-2 mt-sm-0">
-                            <input
-                              type="text"
-                              className="form-control"
-                              value={upBenefits.cumulatedPreviousWorkPeriod}
-                              onChange={(e) => setUpBenefits({ ...upBenefits, cumulatedPreviousWorkPeriod: e.target.value, })}
-                            />
-                          </div>
                         </div>
                         <hr />
                         <div className="row" style={{ alignItems: "baseline" }}>

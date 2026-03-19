@@ -9,6 +9,7 @@ namespace Timesheet.Domain.ReadModels.Employees
         public string FullName { get; set; }
         public string TimeoffId { get; set; }
         public string TimesheetId { get; set; }
+        public string DefaultProfitCenter { get; set; }
 
         public double VacationSnapshot { private get; set; }
         public double PersonalSnapshot { private get; set; }

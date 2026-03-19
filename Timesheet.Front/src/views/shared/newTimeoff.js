@@ -30,6 +30,7 @@ const NewTimeoff = ({ isOpen, onClose, selectedEmployeeId }) => {
       requestEndDate: timeoff.end,
       employeeId: timeoff.employeeId.employeeId,
       employeeComment: timeoff.employeeComment,
+      defaultProfitCenter: timeoff.employeeId.defaultProfitCenter,
       entries: dates.map((d) => {
         return {
           employeeId: timeoff.employeeId.employeeId,
@@ -41,6 +42,7 @@ const NewTimeoff = ({ isOpen, onClose, selectedEmployeeId }) => {
       }),
     };
     console.log("newtimeoff=" + JSON.stringify(newTimeoff));
+    console.log("employee=" + JSON.stringify(timeoff.employeeId));
     await addTimeoff(newTimeoff)
       .then((res) => {
         close();
@@ -169,6 +171,7 @@ const NewTimeoff = ({ isOpen, onClose, selectedEmployeeId }) => {
     const updatedTimeoff = { ...timeoff, employeeId: selectedEmployeeId };
     setTimeoff(updatedTimeoff);
     validateAvailableHours(updatedTimeoff.type, selectedEmployeeId);
+    validateHours(updatedTimeoff.hours, updatedTimeoff.type);
   }, [selectedEmployeeId])
 
   useEffect(() => {

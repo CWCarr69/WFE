@@ -39,9 +39,9 @@
             this.UpdateMetadata();
         }
 
-        internal TimeoffEntry AddEntry(DateTime requestDate, int TypeId, double hours, string label)
+        internal TimeoffEntry AddEntry(DateTime requestDate, int typeId, double hours, string label, string? profitCenter = null)
         {
-            var entry = TimeoffEntry.Create(requestDate, TypeId, hours, label);
+            var entry = TimeoffEntry.Create(requestDate, typeId, hours, label, profitCenter);
             TimeoffEntries.Add(entry);
 
             var timeoffAlreadyProcessed = this.Status == TimeoffStatus.REJECTED || Status == TimeoffStatus.APPROVED;

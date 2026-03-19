@@ -7,7 +7,8 @@
         int TypeId,
         double Hours,
         string Description,
-        bool IsSalaried);
+        bool IsSalaried,
+        string? ProfitCenter);
 
     public record TimeoffApproved(IEnumerable<TimeoffApprovedEntry> TimeoffEntries, bool ForceAction) : IDomainEvent;
 }

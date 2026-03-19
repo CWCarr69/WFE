@@ -1,5 +1,4 @@
-﻿
-using Timesheet.Application.Shared;
+﻿using Timesheet.Application.Shared;
 using Timesheet.Domain.DomainEvents.Employees;
 using Timesheet.Domain.Exceptions;
 using Timesheet.Domain.Models.Timesheets;
@@ -27,7 +26,6 @@ namespace Timesheet.Application.Timesheets.EventHandlers
 
         public override async Task HandleEvent(TimeoffApproved @event)
         {
-            //var @type = EventTypeToTimesheetPayrollCode(@event.Type);
             foreach (var entry in @event.TimeoffEntries)
             {
                 var entryExists = await _readRepository.DoesEntryExists(entry.Id);
@@ -49,7 +47,8 @@ namespace Timesheet.Application.Timesheets.EventHandlers
                     entry.TypeId,
                     entry.Hours,
                     entry.Description,
-                    TimesheetEntryStatus.APPROVED);
+                    TimesheetEntryStatus.APPROVED,
+                    entry.ProfitCenter); // Add profit center here
 
                 var timesheet = entry.IsSalaried
                         ? TimesheetHeader.CreateMonthlyTimesheet(entry.RequestDate)

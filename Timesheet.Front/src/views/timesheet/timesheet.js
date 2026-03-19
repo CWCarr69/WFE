@@ -289,13 +289,13 @@ const Timesheet = ({ match, history }) => {
     let calendarApi = calendarRef.current.getApi();
     let previousCalendarFirstDayOfMonth = getFirstDayOfPreviousMonth(calendarApi.getDate());
 
-    var startDate = data?.data?.endDate;
-    var currentTimesheetHaveEntriesOnPreviousMonth = startDate &&
+    var startDate = data?.data?.startDate; // FIXED: Was using endDate instead of startDate
+  var currentTimesheetHaveEntriesOnPreviousMonth = startDate &&
       new Date(startDate).getMonth() <= previousCalendarFirstDayOfMonth.getMonth() &&
       new Date(startDate).getYear() <= previousCalendarFirstDayOfMonth.getYear();
 
     if (currentTimesheetHaveEntriesOnPreviousMonth) {
-      calendarApi.next();
+      calendarApi.prev(); // FIXED: Was calling next() instead of prev()
       return;
     }
     if (data.data.previousTimesheetId !== null) {

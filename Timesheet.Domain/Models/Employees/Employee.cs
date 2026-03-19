@@ -162,7 +162,7 @@ namespace Timesheet.Domain.Models.Employees
                 throw new EntityNotFoundException<TimeoffHeader>(timeoff.Id);
             }
 
-            var entry = relatedTimeoff.AddEntry(requestDate, typeId, hours, label);
+            var entry = relatedTimeoff.AddEntry(requestDate, typeId, hours, label, DefaultProfitCenter);
             relatedTimeoff.Update();
 
             var doesNotRequireApproval = PayrollTypes.PayrollTypesWithoutApproval.Any(t => entry.TypeId == t);
@@ -253,7 +253,8 @@ namespace Timesheet.Domain.Models.Employees
                     entry.TypeId,
                     entry.Hours,
                     entry.TypeId.ToString(),
-                    this.EmploymentData.IsSalaried)
+                    this.EmploymentData.IsSalaried,
+                    entry.ProfitCenter ?? DefaultProfitCenter)
             };
 
             RaiseDomainEvent(new TimeoffApproved(timeoffEntries, forceAction));
@@ -272,7 +273,8 @@ namespace Timesheet.Domain.Models.Employees
                     entry.TypeId,
                     entry.Hours,
                     entry.TypeId.ToString(),
-                    this.EmploymentData.IsSalaried));
+                    this.EmploymentData.IsSalaried,
+                    entry.ProfitCenter ?? DefaultProfitCenter));
             }
 
             RaiseDomainEvent(new TimeoffApproved(timeoffEntries, forceAction));
@@ -304,5 +306,8 @@ namespace Timesheet.Domain.Models.Employees
         }
     }
 }
+
+
+
 
 
