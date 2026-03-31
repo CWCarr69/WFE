@@ -65,16 +65,6 @@ namespace Timesheet.FDPDataIntegrator.Employees
       var employeeUpdatedBy = "@employeeUpdatedBy";
       var employeeUserId = "@employeeUserId";
 
-      var employmentDate = employee.EmploymentData.EmploymentDate.HasValue
-        ? $"CAST({employeeEmploymentDate} AS DATETIME)"
-        : "NULL";   
-      var createdDate = employee.CreatedDate != DateTime.MinValue
-        ? $"CAST({employeeCreatedDate} AS DATETIME)"
-        : "NULL";
-      var modifiedDate = employee.ModifiedDate != DateTime.MinValue
-        ? $"CAST({employeeModifiedDate} AS DATETIME)"
-        : "NULL";
-
       var updates = $@"
             {nameof(Employee.FullName)} = {employeeFullName},
             {nameof(Employee.DefaultProfitCenter)} = {employeeDefaultProfitCenter},
@@ -126,15 +116,15 @@ namespace Timesheet.FDPDataIntegrator.Employees
                 {employeeSecondaryApproverId},
                 {employeeJobTitle},
                 {employeeDepartment},
-                {employmentDate},
+                {employeeEmploymentDate},
                 {employeeIsSalaried},
                 {employeeIsAdministrator},
                 {employeeIsActive},
                 {employeeUsesTimesheet},
                 {employeeCompanyEmail},
                 {employeeCompanyPhone},
-                {createdDate},
-                {modifiedDate},
+                {employeeCreatedDate},
+                {employeeModifiedDate},
                 {employeeUpdatedBy},
                 {employeeUserId}
             ";
@@ -156,20 +146,20 @@ namespace Timesheet.FDPDataIntegrator.Employees
         employeeId = employee.Id,
         employeeFullName = employee.FullName,
         employeeDefaultProfitCenter = employee.DefaultProfitCenter,
-        employeeManagerId = employee.PrimaryApprover?.Id,
+        employeeManagerId = employee.Manager?.Id,
         employeePrimaryApproverId = employee.PrimaryApprover?.Id,
         employeeSecondaryApproverId = employee.SecondaryApprover?.Id,
         employeeJobTitle = employee.EmploymentData.JobTitle,
         employeeDepartment = employee.EmploymentData.Department,
-        employeeEmploymentDate = employmentDate,
+        employeeEmploymentDate = employee.EmploymentData.EmploymentDate != DateTime.MinValue ? (DateTime?)employee.EmploymentData.EmploymentDate : null, // Pass DateTime? directly
         employeeIsSalaried = employee.EmploymentData.IsSalaried,
         employeeIsAdministrator = employee.EmploymentData.IsAdministrator,
         employeeIsActive = employee.IsActive,
         employeeUsesTimesheet = employee.UsesTimesheet,
         employeeCompanyEmail = employee.Contacts.CompanyEmail,
         employeeCompanyPhone = employee.Contacts.CompanyPhone,
-        employeeCreatedDate = createdDate,
-        employeeModifiedDate = modifiedDate,
+        employeeCreatedDate = employee.CreatedDate != DateTime.MinValue ? (DateTime?)employee.CreatedDate : DateTime.Now, // Pass as DateTime?
+        employeeModifiedDate = employee.ModifiedDate != DateTime.MinValue ? (DateTime?)employee.ModifiedDate : DateTime.Now, // Pass as DateTime?
         employeeUpdatedBy = employee.UpdatedBy,
         employeeUserId = employee.UserId
       });

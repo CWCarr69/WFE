@@ -205,10 +205,12 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
                     SELECT ROW_NUMBER() OVER (PARTITION BY EmployeeId ORDER by Status ASC, PartialStatus ASC, StartDate ASC) AS rowNum, EmployeeId, Status, TimesheetHeaderId, PayrollPeriod, Workdate, PartialStatus
                     FROM FirstTimesheetEntryOfLastTimesheet f
                     JOIN employeeTimesheetIsFinalized e on e.id = f.EmployeeId and e.isFinalized = 0
+                    WHERE f.StartDate >= DATEADD(day, -180, GETDATE())
                     UNION ALL
                     SELECT ROW_NUMBER() OVER (PARTITION BY EmployeeId ORDER by Status ASC, PartialStatus ASC, StartDate DESC) AS rowNum, EmployeeId, Status, TimesheetHeaderId, PayrollPeriod, Workdate, PartialStatus
                     FROM FirstTimesheetEntryOfLastTimesheet f
                     JOIN employeeTimesheetIsFinalized e on e.id = f.EmployeeId and e.isFinalized = 1
+                    WHERE f.StartDate >= DATEADD(day, -180, GETDATE())
                 ) T
                 WHERE rowNum = 1
             ),
@@ -220,6 +222,7 @@ namespace Timesheet.Infrastructure.ReadModel.Queries
                 FROM (
                     SELECT ROW_NUMBER() OVER (PARTITION BY employeeId ORDER by status ASC, RequestStartDate DESC) AS rowNum, employeeId, status, TimeoffHeaderId, requireApproval, requestDate
                     FROM FirstTimeoffEntryOfLastTimeoff
+                    WHERE RequestStartDate > '2025-01-01' 
                 ) T
                 WHERE rowNum = 1
             )

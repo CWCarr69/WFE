@@ -29,8 +29,9 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
             var timesheetCreatedDate = "@timesheetCreatedDate";
             var timesheetModifiedDate = "@timesheetModifiedDate";
             var timesheetUpdatedBy = "@timesheetUpdatedBy";
+            var timesheetType = "@timesheetType";
 
-            var updates = $@"
+      var updates = $@"
             {nameof(TimesheetHeader.PayrollPeriod)} = {timesheetPayrollPeriod},
             {nameof(TimesheetHeader.StartDate)} = {timesheetStartDate},
             {nameof(TimesheetHeader.EndDate)} = {timesheetEndDate},
@@ -46,7 +47,8 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
             {nameof(TimesheetHeader.Status)},
             {nameof(TimesheetHeader.CreatedDate)},
             {nameof(TimesheetHeader.ModifiedDate)},
-            {nameof(TimesheetHeader.UpdatedBy)}
+            {nameof(TimesheetHeader.UpdatedBy)},
+            {nameof(TimesheetHeader.Type)}
             ";
 
             var insertValues = $@"
@@ -57,7 +59,8 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
             {timesheetStatus},
             {timesheetCreatedDate},
             {timesheetModifiedDate},
-            {timesheetUpdatedBy}
+            {timesheetUpdatedBy},
+            {timesheetType}
             ";
 
 
@@ -82,7 +85,8 @@ namespace Timesheet.FDPDataIntegrator.Payrolls
                 timesheetStatus = timesheet.Status,
                 timesheetCreatedDate = timesheet.CreatedDate,
                 timesheetModifiedDate = timesheet.ModifiedDate,
-                timesheetUpdatedBy = timesheet.UpdatedBy
+                timesheetUpdatedBy = timesheet.UpdatedBy,
+                timesheetType = timesheet.Type
             }).Wait();
             
             UpSertEntry(timesheet).Wait();
