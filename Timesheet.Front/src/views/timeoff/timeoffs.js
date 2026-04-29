@@ -98,6 +98,18 @@ const Timeoffs = ({ history, match }) => {
 
   const onClickDetailLink = (timeoff) => history.push(`/timeoffs/${timeoff.timeoffId}/employee/${timeoff.employeeId}`);
 
+  const handleAddTimeoffClick = () => {
+    // Pass employee object with structure matching what NewTimeoff expects
+    const employeeData = {
+      employeeId: employee.id,
+      fullName: employee.fullName,
+      defaultProfitCenter: employee.defaultProfitCenter,
+      vacationBalance: employee.vacationBalance || 0,
+      personalBalance: employee.personalBalance || 0
+    };
+    setIsOpen(true);
+  }; 
+
   return loading ? (
     <div
       style={{
@@ -113,7 +125,17 @@ const Timeoffs = ({ history, match }) => {
   ) : (
     <>
       <ConfirmModal action={delTimeOff} close={() => setOpenModal(false)} isOpen={openModal} />
-      <NewTimeoff isOpen={isOpen} onClose={() => setIsOpen(false)} selectedEmployeeId={match.params.id} />
+        <NewTimeoff
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          selectedEmployeeId={{
+            employeeId: employee.id,
+            fullName: employee.fullName,
+            defaultProfitCenter: employee.defaultProfitCenter,
+            vacationBalance: employee.vacationBalance || 0,
+            personalBalance: employee.personalBalance || 0
+          }}
+        />
       <div className="card">
         <div className="card-body">
           <div className="custom-tab-1">
@@ -134,7 +156,7 @@ const Timeoffs = ({ history, match }) => {
                       </div>
                     </Col>
                     <Col>
-                      <NewTimeoffButton onClick={() => setIsOpen(true)} />
+                        <NewTimeoffButton onClick={handleAddTimeoffClick} />
                     </Col>
                   </Row>
                   <Table responsive striped className="mt-3">
