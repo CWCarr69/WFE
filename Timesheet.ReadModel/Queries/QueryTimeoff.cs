@@ -57,6 +57,7 @@ namespace Timesheet.Infrastructure.Persistence.Queries
             JOIN timeoffEntry te on t.id = te.TimeoffHeaderId
             JOIN payrollTypes pt on pt.numId = te.TypeId
             Where e.Id = {TimeoffsQueryEmployeeIdParam} 
+            and t.RequestStartDate not in (select workdate from timesheetentry where EmployeeId = {TimeoffsQueryEmployeeIdParam} and TimesheetHeaderId is null) 
             --AND pt.RequireApproval = {TimeoffsQueryRequireApprovalParam}
             GROUP BY e.Id, e.Fullname, t.Id, t.CreatedDate, t.ModifiedDate, t.RequestStartDate, t.RequestEndDate, t.status
         ";

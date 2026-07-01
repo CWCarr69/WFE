@@ -12,6 +12,7 @@
           "Hangfire.Core": "1.7.32",
           "Hangfire.SqlServer": "1.7.32",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "8.0.20",
+          "Microsoft.AspNetCore.SpaServices.Extensions": "8.0.21",
           "Microsoft.EntityFrameworkCore.Design": "8.0.20",
           "Microsoft.Extensions.Hosting.WindowsServices": "8.0.1",
           "Serilog.AspNetCore": "6.0.1",
@@ -20,6 +21,7 @@
           "Swashbuckle.AspNetCore.Filters": "7.0.5",
           "Swashbuckle.AspNetCore.SwaggerUI": "6.9.0",
           "System.Net.Http": "4.3.4",
+          "System.ServiceProcess.ServiceController": "8.0.1",
           "System.Text.RegularExpressions": "4.3.1",
           "Timesheet.Application": "1.0.0",
           "Timesheet.Benefits": "1.0.0",
@@ -176,6 +178,17 @@
           "lib/net8.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll": {
             "assemblyVersion": "8.0.20.0",
             "fileVersion": "8.0.2025.42002"
+          }
+        }
+      },
+      "Microsoft.AspNetCore.SpaServices.Extensions/8.0.21": {
+        "dependencies": {
+          "Microsoft.Extensions.FileProviders.Physical": "8.0.0"
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.AspNetCore.SpaServices.Extensions.dll": {
+            "assemblyVersion": "8.0.21.0",
+            "fileVersion": "8.0.2125.47515"
           }
         }
       },
@@ -2063,6 +2076,13 @@
       "sha512": "sha512-ojfy39qaCtNOrXOut4Jreqj5WYSRJMqvQif46KzMtaJiZcByAbZtO+QDM9JQvQAzPtWnzWSCz5DcZJ/82IeOFQ==",
       "path": "microsoft.aspnetcore.authentication.jwtbearer/8.0.20",
       "hashPath": "microsoft.aspnetcore.authentication.jwtbearer.8.0.20.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.SpaServices.Extensions/8.0.21": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-UUOK6JldBc41XJGPMG5UrlnPkbFxWdWHq+W3I4b2noSoQDBnwiNTaRLG6mfcJkCsmEyypLY/PbX6RXzWsOneNg==",
+      "path": "microsoft.aspnetcore.spaservices.extensions/8.0.21",
+      "hashPath": "microsoft.aspnetcore.spaservices.extensions.8.0.21.nupkg.sha512"
     },
     "Microsoft.Bcl.AsyncInterfaces/6.0.0": {
       "type": "package",

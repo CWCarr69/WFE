@@ -38,6 +38,7 @@ namespace Timesheet.Infrastructure.Persistence
             .AddScoped<IWriteRepository<Setting>, WriteRepository<Setting>>()
             .AddScoped<IWriteRepository<TimesheetException>, WriteRepository<TimesheetException>>()
             .AddScoped<IPurgeOldDataRepository, PurgeOldDataRepository>()
+            .AddScoped<IPayPeriodRepository, PayPeriodRepository>()
 
             .AddScoped<IWriteRepository<Audit>, WriteRepository<Audit>>()
 

@@ -164,6 +164,11 @@ const SideBar = () => {
                       Data
                     </Link>
                   </li>
+                  <li>
+                    <Link to="/settings/payperiods" className="ai-icon">
+                      Pay Periods
+                    </Link>
+                  </li>
                   {/*<li>
                     <Link to="/settings/adjustments" className="ai-icon">
                       Adjustments
